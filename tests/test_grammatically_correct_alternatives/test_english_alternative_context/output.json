@@ -58,9 +58,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "context": "Identity first",
                     "text": "a chair",
                     "type": "identity_first",
@@ -79,8 +76,11 @@
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
+                    "text": "they"
+                },
+                {
                     "context": "Identity first",
-                    "text": "a committee head",
+                    "text": "a presiding officer",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }

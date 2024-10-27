@@ -257,9 +257,6 @@
                     "text": "der Sicherheitsleitungsperson"
                 },
                 {
-                    "text": "des Person, die das Team beim Erreichen gemeinsamer Ziele unterstützt"
-                },
-                {
                     "text": "der Sicherheitsleitung"
                 },
                 {
@@ -267,6 +264,9 @@
                 },
                 {
                     "text": "des Management"
+                },
+                {
+                    "text": "der*des Sicherheitschef*in"
                 }
             ],
             "category": "gender-orientation",

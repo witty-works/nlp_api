@@ -5,16 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
-                    "context": "💡 Person first",
-                    "inspiration": true,
-                    "text": "person speaking for (...)",
-                    "type": "person_first",
-                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
-                },
-                {
                     "context": "Identity first",
                     "text": "a press officer",
                     "type": "identity_first",
@@ -29,6 +19,15 @@
                 {
                     "context": "Identity first",
                     "text": "a representative",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "context": "if gender is known",
+                    "text": "a spokeswoman",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }

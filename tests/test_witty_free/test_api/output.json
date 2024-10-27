@@ -24,9 +24,6 @@
         {
             "alternatives": [
                 {
-                    "text": "ein Personal"
-                },
-                {
                     "text": "eine*n Mitarbeiter*in"
                 },
                 {
@@ -41,6 +38,9 @@
                     "context": "💡",
                     "inspiration": true,
                     "text": "eine Mitarbeitende"
+                },
+                {
+                    "text": "eine*n Arbeitnehmer*in"
                 }
             ],
             "category": "cultural-diversity",

@@ -499,14 +499,14 @@ def fetch_static_rules():
         static_rules[LangType.FR]["inclusive_articles"] = {
             "la∙le": "la∙le",
             "un∙e": "un∙e",
-            "iel": "lels",
-            "elle": "lels",
+            "iel": "iel",
             "lels": "lels",
             "ellui": "ellui",
             "cellui": "cellui",
             "celleux": "celleux",
             "les": "les",
             "leur": "leur",
+            "lels": "lels",
         }
         static_rules[LangType.FR]["articles"] = set(
             list(static_rules[LangType.FR]["masculine_articles"].keys())

@@ -8,9 +8,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Personal"
-                },
-                {
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
@@ -25,6 +22,11 @@
                 },
                 {
                     "text": "Arbeitnehmerin/Arbeitnehmer"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Arbeitnehmende"
                 }
             ],
             "category": "cultural-diversity",

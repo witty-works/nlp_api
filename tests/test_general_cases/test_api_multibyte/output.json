@@ -62,13 +62,13 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "context": "Identity first",
                     "text": "resourceful person",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                },
+                {
+                    "text": "they"
                 }
             ],
             "category": "social-motive",

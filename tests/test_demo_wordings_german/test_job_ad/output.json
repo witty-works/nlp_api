@@ -304,6 +304,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Sternstunden"
+                },
+                {
                     "text": "Meilensteine"
                 },
                 {
@@ -311,9 +314,6 @@
                 },
                 {
                     "text": "zuverlässige Ergebnisse"
-                },
-                {
-                    "text": "Sternstunden"
                 }
             ],
             "category": "social-motive",
