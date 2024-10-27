@@ -36,7 +36,7 @@ from app.http import Http
 
 
 class AppContext:
-    version = "2.3.8"
+    version = "2.3.9"
     translations: dict[str, dict[str, str]]
     declensions_config: dict
     verb_form_map: dict
