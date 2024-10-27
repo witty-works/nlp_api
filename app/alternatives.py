@@ -1051,7 +1051,7 @@ class Alternatives:
                         self.get_noun_conjunction(lang, not is_plural)
                         + forms["feminine"]
                     )
-        elif article:
+        elif article and result["gender_1"]:
             alternative.lemma = self.add_article(
                 lang,
                 alternative.lemma,
