@@ -1575,8 +1575,8 @@ def test_rule_patterns():
                 "context": "Wir suchen super schnelle Entwickler unter <NUMBER>",
                 "category": "corporate_rules",
                 "subcategory": "corporate_rules",
-                "start": 37,
-                "end": 71,
+                "start": 11,
+                "end": 45,
                 "alternatives": [],
                 "label": "Wörterbuch",
                 "explanation": {

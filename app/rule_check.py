@@ -168,8 +168,9 @@ class RuleCheck:
                     continue
 
                 skip_token = token_index + token._.token_index_offset
+                start_token_index = token_index
             else:
-                skip_token, text = await self.is_phrase_match(
+                skip_token, start_token_index, text = await self.is_phrase_match(
                     language.lang,
                     token_index,
                     tokens,
@@ -319,7 +320,7 @@ class RuleCheck:
                     ):
                         alternative.lemma += ending
 
-            start = token.idx
+            start = tokens[start_token_index].idx
             if language.lang == LangType.FR:
                 first_word_type = rule.get_first_word_type()
                 match first_word_type:
@@ -484,12 +485,14 @@ class RuleCheck:
                     and tokens[token_index - 1].text.lower()
                     in self.static_rules[language.lang]["articles"]
                 ):
-                    start = tokens[token_index - 1].idx
-                    text = (
-                        tokens[token_index - 1].text
-                        + tokens[token_index - 1].whitespace_
-                        + text
-                    )
+                    # Check if the article has not yet been included (f.e. via a pattern)
+                    if start != tokens[token_index - 1].idx:
+                        start = tokens[token_index - 1].idx
+                        text = (
+                            tokens[token_index - 1].text
+                            + tokens[token_index - 1].whitespace_
+                            + text
+                        )
                     article = tokens[token_index - 1].text.lower()
                     article_index = list(
                         self.static_rules[LangType.FR]["inclusive_articles"].keys()
@@ -1189,7 +1192,7 @@ class RuleCheck:
             try:
                 word_token = tokens[token_index + word_index]
             except IndexError:
-                return None, None
+                return None, None, None
 
             word_type = (
                 rule.word_types[word_index] if word_index < word_types_count else None
@@ -1202,7 +1205,7 @@ class RuleCheck:
                 word_type,
                 suffix,
             ):
-                return None, None
+                return None, None, None
 
             text += word_token.text
 
@@ -1211,8 +1214,9 @@ class RuleCheck:
         if false_positive_matcher is not None and self.model.is_false_positive_match(
             false_positive_matcher, token_index, tokens, rule.lemma
         ):
-            return None, None
+            return None, None, None
 
+        start_token_index = token_index
         if rule.pattern is not None:
             pattern = rule.pattern.split("|")
             if pattern[0] == "*" or pattern[-1] == "*":
@@ -1223,7 +1227,7 @@ class RuleCheck:
                     tokens[token_index].idx,
                 )
 
-                return None, None
+                return None, None, None
 
             token_count = word_count
             prefix_tokens_match_count = 0
@@ -1236,7 +1240,7 @@ class RuleCheck:
                     lang, tokens, prefix_pattern, token_index - 1, -1
                 )
                 if tokens_match_count is False:
-                    return None, None
+                    return None, None, None
 
                 prefix_tokens_match_count += tokens_match_count
 
@@ -1246,25 +1250,25 @@ class RuleCheck:
                     lang, tokens, suffix_pattern, token_index + token_count, 1
                 )
                 if tokens_match_count is False:
-                    return None, None
+                    return None, None, None
 
                 token_count += tokens_match_count
 
             if rule.is_pattern_match:
-                token_index -= prefix_tokens_match_count
+                start_token_index -= prefix_tokens_match_count
                 text = ""
                 for k in range(prefix_tokens_match_count + token_count):
                     if k > 0:
-                        text += tokens[token_index + k - 1].whitespace_
+                        text += tokens[start_token_index + k - 1].whitespace_
 
-                    text += tokens[token_index + k].text
+                    text += tokens[start_token_index + k].text
 
-                skip_token_index = token_index + token_count + 1
+                skip_token_index = start_token_index + token_count + 1
 
-        if token_index + tokens[token_index]._.token_index_offset > skip_token_index:
-            skip_token_index = token_index + tokens[token_index]._.token_index_offset
+        if start_token_index + tokens[start_token_index]._.token_index_offset > skip_token_index:
+            skip_token_index = start_token_index + tokens[start_token_index]._.token_index_offset
 
-        return skip_token_index, text
+        return skip_token_index, start_token_index, text
 
     async def find_form(
         self,
