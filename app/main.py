@@ -2115,24 +2115,25 @@ async def witty_rules(
             ):
                 continue
 
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                None,
-                false_positive_matcher,
-                True,
-            )
+            if language.lang == LangType.DE:
+                new_token_index = await context.rule_check.handle(
+                    config,
+                    client,
+                    language,
+                    text,
+                    token_index,
+                    tokens,
+                    offsets,
+                    list_full,
+                    None,
+                    false_positive_matcher,
+                    True,
+                )
 
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check"
-            ):
-                continue
+                if check_continue(
+                    list_full, token_index, new_token_index, tokens, "rule_check"
+                ):
+                    continue
 
         if language.lang == LangType.DE:
             new_token_index = await german_gender_endings(
@@ -2147,7 +2148,7 @@ async def witty_rules(
             )
 
             if check_continue(
-                list_full, token_index, new_token_index, tokens, "german_rule"
+                list_full, token_index, new_token_index, tokens, "rule_check"
             ):
                 continue
 
