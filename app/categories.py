@@ -56,6 +56,12 @@ def is_category_advanced(category):
     return category.endswith("_advanced")
 
 
+def make_category_advanced(category):
+    if is_category_advanced(category):
+        return category
+    return category + "_advanced"
+
+
 def get_category(category):
     category = get_category_name(category)
 
@@ -133,7 +139,9 @@ def map_importance(category):
     return 2.0
 
 
-def is_sub_category_enabled(disabled_categories: list, subcategories: list[str]) -> bool | str:
+def is_sub_category_enabled(
+    disabled_categories: list, subcategories: list[str]
+) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 

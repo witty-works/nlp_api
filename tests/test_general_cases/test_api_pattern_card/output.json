@@ -1,0 +1,172 @@
+{
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "ayant l'expérience requise"
+                },
+                {
+                    "text": "expérimenté·e"
+                },
+                {
+                    "text": "expérimenté ou expérimentée"
+                },
+                {
+                    "text": "ayant de l'expérience"
+                },
+                {
+                    "remove": true
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Nous cherchons une personne de plus de <NUMBER> ans. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler so",
+            "end": 45,
+            "explanation": {
+                "icon": "🤔",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Est-ce pertinent de mentionner l'âge ?",
+                "url": "https://www.witty.works/fr/categories/diversité-acquise/information-sur-lâge?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Diversité acquise: Information sur l'âge",
+            "proficiency_level": "unconscious_bias",
+            "start": 28,
+            "subcategory": "age",
+            "text": "de plus de 35 ans",
+            "text_id": "de plus de"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "La candidature"
+                },
+                {
+                    "text": "La personne candidate"
+                },
+                {
+                    "text": "La∙le candidat·e"
+                },
+                {
+                    "text": "Le candidat ou la candidate"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Nous cherchons une personne de plus de <NUMBER> ans. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler sous pression.",
+            "end": 58,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/nom-de-métier?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Nom de métier",
+            "proficiency_level": "unconscious_bias",
+            "source": {
+                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
+                "url": "http://www.canada.ca/our-languages"
+            },
+            "start": 47,
+            "subcategory": "titles",
+            "text": "Le candidat",
+            "text_id": "candidat"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ayant l'expérience requise"
+                },
+                {
+                    "text": "expérimenté·es"
+                },
+                {
+                    "text": "expérimentés et expérimentées"
+                },
+                {
+                    "text": "ayant de l'expérience"
+                },
+                {
+                    "remove": true
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Nous cherchons une personne de plus de <NUMBER> ans. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler sous pression.",
+            "end": 112,
+            "explanation": {
+                "icon": "🤔",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Est-ce pertinent de mentionner l'âge ?",
+                "url": "https://www.witty.works/fr/categories/diversité-acquise/information-sur-lâge?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Diversité acquise: Information sur l'âge",
+            "proficiency_level": "unconscious_bias",
+            "start": 91,
+            "subcategory": "age",
+            "text": "cinq ans d’expérience",
+            "text_id": "ans d’expérience"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "pouvoir"
+                },
+                {
+                    "text": "savoir"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "ne personne de plus de <NUMBER> ans. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler sous pression.",
+            "end": 131,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "text": "Ajoute de la complexité sans précision de sens",
+                "url": "https://www.witty.works/fr/categories/diversité-culturelle/mot-inutile?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Diversité culturelle: Mot inutile",
+            "proficiency_level": "unconscious_bias",
+            "start": 116,
+            "subcategory": "filler",
+            "text": "être capable de",
+            "text_id": "être capable de"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "dans des situations difficiles"
+                },
+                {
+                    "text": "face à un enjeu important"
+                },
+                {
+                    "text": "lorsque les délais sont serrés"
+                },
+                {
+                    "text": "lorsque les attentes sont élevées"
+                }
+            ],
+            "category": "social-motive",
+            "context": "ns. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler sous pression.",
+            "end": 156,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/langage-agentique?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Motivation sociale: Langage agentique",
+            "proficiency_level": "unconscious_bias",
+            "start": 143,
+            "subcategory": "agentic",
+            "text": "sous pression",
+            "text_id": "sous pression"
+        }
+    ]
+}

@@ -85,6 +85,7 @@ from app.categories import (
     get_category_keys,
     get_parent_category_name,
     is_sub_category_enabled,
+    make_category_advanced,
 )
 from app.alternatives import Alternatives
 from app.llm_alternatives import LlmAlternatives
@@ -1281,7 +1282,9 @@ def apply_configs(
 
                 # BC handling for old category names -> needs to be fixed in the dashboard
                 if category.startswith("advanced_"):
-                    category = category.removeprefix("advanced_") + "_advanced"
+                    category = make_category_advanced(
+                        category.removeprefix("advanced_")
+                    )
 
                 if category_data["value"]:
                     if category in disabled_categories:
@@ -2112,24 +2115,25 @@ async def witty_rules(
             ):
                 continue
 
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                None,
-                false_positive_matcher,
-                True,
-            )
+            if language.lang == LangType.DE:
+                new_token_index = await context.rule_check.handle(
+                    config,
+                    client,
+                    language,
+                    text,
+                    token_index,
+                    tokens,
+                    offsets,
+                    list_full,
+                    None,
+                    false_positive_matcher,
+                    True,
+                )
 
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check"
-            ):
-                continue
+                if check_continue(
+                    list_full, token_index, new_token_index, tokens, "rule_check"
+                ):
+                    continue
 
         if language.lang == LangType.DE:
             new_token_index = await german_gender_endings(
@@ -2144,7 +2148,7 @@ async def witty_rules(
             )
 
             if check_continue(
-                list_full, token_index, new_token_index, tokens, "german_rule"
+                list_full, token_index, new_token_index, tokens, "rule_check"
             ):
                 continue
 

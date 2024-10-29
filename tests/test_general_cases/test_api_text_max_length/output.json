@@ -152,9 +152,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "text": "team"
                 },
                 {
@@ -168,6 +165,9 @@
                 },
                 {
                     "text": "co-workers"
+                },
+                {
+                    "text": "they"
                 }
             ],
             "category": "gender-orientation",
@@ -306,9 +306,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "text": "team"
                 },
                 {
@@ -322,6 +319,9 @@
                 },
                 {
                     "text": "co-workers"
+                },
+                {
+                    "text": "they"
                 }
             ],
             "category": "gender-orientation",

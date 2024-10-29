@@ -16,10 +16,12 @@
                     "text": "Erwachsene"
                 },
                 {
-                    "text": "Person"
+                    "text": "höflicher Mensch"
                 },
                 {
-                    "text": "höflicher Mensch"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",
@@ -86,10 +88,12 @@
                     "text": "Erwachsene"
                 },
                 {
-                    "text": "Person"
+                    "text": "höflicher Mensch"
                 },
                 {
-                    "text": "höflicher Mensch"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",

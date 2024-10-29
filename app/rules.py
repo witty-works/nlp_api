@@ -483,6 +483,7 @@ def fetch_static_rules():
             "celui": "cellui",
             "ceux": "celleux",
             "les": "les",
+            "leur": "leur",
         }
         static_rules[LangType.FR]["feminine_articles"] = {
             "la": "la∙le",
@@ -493,6 +494,7 @@ def fetch_static_rules():
             "celle": "cellui",
             "celles": "celleux",
             "les": "les",
+            "leur": "leur",
         }
         static_rules[LangType.FR]["inclusive_articles"] = {
             "la∙le": "la∙le",
@@ -503,6 +505,8 @@ def fetch_static_rules():
             "cellui": "cellui",
             "celleux": "celleux",
             "les": "les",
+            "leur": "leur",
+            "lels": "lels",
         }
         static_rules[LangType.FR]["articles"] = set(
             list(static_rules[LangType.FR]["masculine_articles"].keys())

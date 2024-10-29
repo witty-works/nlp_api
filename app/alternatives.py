@@ -21,7 +21,7 @@ from app.model import Model
 from app.nouns import Nouns
 from app.verbs import Verbs
 from app.adjectives import Adjectives
-from app.categories import is_sub_category_enabled
+from app.categories import is_sub_category_enabled, make_category_advanced
 from app.helper import upperfirst, find_common_prefix
 from app.query_definitions import declensions_config
 
@@ -483,7 +483,7 @@ class Alternatives:
                     else "gendered_denominations_ending"
                 )
                 if rule.is_advanced:
-                    subcategory += "_advanced"
+                    subcategory = make_category_advanced(subcategory)
 
             if not is_sub_category_enabled(config.disabled_categories, subcategory):
                 return None, None, []
@@ -978,3 +978,95 @@ class Alternatives:
 
         alternative.word_types = word_types
         alternative.lemma = lemma.strip()
+
+    def nouns_with_articles(
+        self,
+        config: Config,
+        lang: LangType,
+        article: str | None,
+        article_index: int | None,
+        result: dict,
+        is_plural: bool,
+        alternative: Alternative,
+        alternatives: list[Alternative],
+    ):
+        alternative.lemma = result["plural"] if is_plural else result["base_form"]
+
+        if result["female_form"] or self.nouns.is_gender_neutral(result):
+            if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
+                new_alternative = deepcopy(alternative)
+                new_alternative.is_gendered_noun = True
+                if article:
+                    new_alternative.lemma = self.add_article(
+                        lang,
+                        new_alternative.lemma,
+                        self.static_rules[LangType.FR]["articles_inclusive_map"][
+                            article
+                        ],
+                    )
+                alternatives.append(new_alternative)
+
+            if (
+                # "la", "le", "la∙le"
+                article_index == 0
+                and result["base_form"][0] not in ["a", "e", "i", "o", "u", "h"]
+                and (
+                    config.gendered_roles_format == GenderedRolesFormatType.BOTH
+                    or config.gendered_roles_format
+                    == GenderedRolesFormatType.INCLUSIVE_GENDER
+                )
+            ):
+                new_alternative = deepcopy(alternative)
+                new_alternative.is_gendered_noun = True
+                new_alternative.lemma = "les " + result["plural"]
+                alternatives.append(new_alternative)
+
+            if config.gendered_roles_format == GenderedRolesFormatType.INCLUSIVE_GENDER:
+                alternative.lemma = new_alternative.lemma
+                if article:
+                    alternative.lemma = self.add_article(
+                        lang,
+                        new_alternative.lemma,
+                        (
+                            self.static_rules[LangType.FR]["articles_inclusive_map"][
+                                article
+                            ],
+                        ),
+                    )
+            elif article:
+                forms = {}
+                for form in ["masculine", "feminine"]:
+                    forms[form] = self.add_article(
+                        lang,
+                        alternative.lemma,
+                        self.get_article_by_index(
+                            lang,
+                            form + "_articles",
+                            article_index,
+                        ),
+                    )
+                alternative.lemma = forms["masculine"]
+                if forms["masculine"] != forms["feminine"]:
+                    alternative.lemma += (
+                        self.get_noun_conjunction(lang, not is_plural)
+                        + forms["feminine"]
+                    )
+        elif article and result["gender_1"]:
+            alternative.lemma = self.add_article(
+                lang,
+                alternative.lemma,
+                self.get_article_by_index(
+                    lang,
+                    result["gender_1"] + "_articles",
+                    article_index,
+                ),
+            )
+
+        alternatives.append(alternative)
+
+        return alternatives
+
+    def get_article_by_index(
+        self, lang: LangType, articles_list: str, article_index: int
+    ):
+        return list(self.static_rules[lang][articles_list].keys())[article_index]
