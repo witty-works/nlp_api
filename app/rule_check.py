@@ -480,8 +480,9 @@ class RuleCheck:
 
                 is_plural = self.model.is_token_plural(language.lang, token)
                 article = article_index = None
-                if (
-                    token_index > 0
+                # when using pattern matching, the rule should explicitly state if the article should be included
+                if (not rule.pattern
+                    and token_index > 0
                     and tokens[token_index - 1].text.lower()
                     in self.static_rules[language.lang]["articles"]
                 ):
