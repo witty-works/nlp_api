@@ -11,6 +11,8 @@ class Http:
 
     def __init__(self, settings: Settings, logger: Logger):
         self.settings = settings
+        self.logger = logger
+
         self.session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
         self.ssl_session = aiohttp.ClientSession(
             connector=aiohttp.TCPConnector(ssl=True)
