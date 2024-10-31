@@ -6238,6 +6238,7 @@
     "ambulanci\u00e8re": "ambulancier",
     "amie": "ami",
     "amirale": "amiral",
+    "analyste financi\u00e8re": "analyste financier",
     "anesth\u00e9siste-r\u00e9animatrice": "anesth\u00e9siste-r\u00e9animateur",
     "anesth\u00e9siste-r\u00e9animatrices": "anesth\u00e9siste-r\u00e9animateur",
     "animali\u00e8re": "animalier",
@@ -6553,6 +6554,7 @@
     "fille": "fils",
     "financi\u00e8re": "financier",
     "fonceuse": "fonceur",
+    "fondatrice": "fondateur",
     "footballeuse": "footballeur",
     "footballeuses": "footballeur",
     "foreuse": "foreur",
@@ -8669,6 +8671,10 @@
     "audiences": "audience",
     "cibles": "cible",
     "attitudes": "attitude",
-    "approches": "approche"
+    "approches": "approche",
+    "analyste financiers": "analyste financier",
+    "fondateurs": "fondateur",
+    "fondatrices": "fondateur",
+    "analyste financi\u00e8res": "analyste financier"
   }
 }
