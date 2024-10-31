@@ -325,43 +325,47 @@ class RuleCheck:
                 first_word_type = rule.get_first_word_type()
                 match first_word_type:
                     case WordType.ADJECTIVE:
-                        source_noun = None
+                        category_name = get_category_name(subcategory)
+                        # Nous cherchons des *stagiaires actifs*.
+                        # Les *volcans* sont *actifs*.
+                        if category_name == "hidden_image":
+                            source_noun = None
 
-                        for a in token.ancestors:
-                            if a.dep_ == "nsubj":
-                                source_noun = a.text
-                                break
-
-                            for atok in a.children:
-                                if atok.dep_ == "nsubj":
-                                    source_noun = atok.text
+                            for a in token.ancestors:
+                                if a.dep_ == "nsubj":
+                                    source_noun = a.text
                                     break
 
-                        if source_noun is None:
-                            source_index = word_index = None
-                            for word in token.sent:
-                                if word.dep_ != "nsubj":
-                                    continue
+                                for atok in a.children:
+                                    if atok.dep_ == "nsubj":
+                                        source_noun = atok.text
+                                        break
 
-                                if word.i < word.head.i:
-                                    word_index = word.head.i
-                                    source_index = word.i
-                                elif word.i > word.head.i:
-                                    word_index = word.i
-                                    source_index = word.head.i
+                            if source_noun is None:
+                                source_index = word_index = None
+                                for word in token.sent:
+                                    if word.dep_ != "nsubj":
+                                        continue
 
-                                if word_index == token_index:
-                                    source_noun = tokens[source_index].text
-                                    break
+                                    if word.i < word.head.i:
+                                        word_index = word.head.i
+                                        source_index = word.i
+                                    elif word.i > word.head.i:
+                                        word_index = word.i
+                                        source_index = word.head.i
 
-                        if (
-                            source_noun is None
-                            or source_noun.lower()
-                            not in self.static_rules[LangType.FR][
-                                "gender_neutral_nouns"
-                            ]
-                        ):
-                            continue
+                                    if word_index == token_index:
+                                        source_noun = tokens[source_index].text
+                                        break
+
+                            if (
+                                source_noun is None
+                                or source_noun.lower()
+                                not in self.static_rules[LangType.FR][
+                                    "gender_neutral_nouns"
+                                ]
+                            ):
+                                continue
                     case WordType.NOUN:
                         category_name = get_category_name(subcategory)
                         if (
@@ -481,7 +485,8 @@ class RuleCheck:
                 is_plural = self.model.is_token_plural(language.lang, token)
                 article = article_index = None
                 # when using pattern matching, the rule should explicitly state if the article should be included
-                if (not rule.pattern
+                if (
+                    not rule.pattern
                     and token_index > 0
                     and tokens[token_index - 1].text.lower()
                     in self.static_rules[language.lang]["articles"]
@@ -1266,8 +1271,13 @@ class RuleCheck:
 
                 skip_token_index = start_token_index + token_count + 1
 
-        if start_token_index + tokens[start_token_index]._.token_index_offset > skip_token_index:
-            skip_token_index = start_token_index + tokens[start_token_index]._.token_index_offset
+        if (
+            start_token_index + tokens[start_token_index]._.token_index_offset
+            > skip_token_index
+        ):
+            skip_token_index = (
+                start_token_index + tokens[start_token_index]._.token_index_offset
+            )
 
         return skip_token_index, start_token_index, text
 
