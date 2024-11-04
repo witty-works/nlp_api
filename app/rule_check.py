@@ -603,7 +603,7 @@ class RuleCheck:
                                 result = await self.nouns.french_noun_lookup(
                                     config.disabled_categories,
                                     subcategory,
-                                    male_form,
+                                    collective_noun,
                                     token,
                                 )
                                 if result is not None:
