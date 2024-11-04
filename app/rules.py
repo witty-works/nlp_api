@@ -3,7 +3,7 @@ import re
 from app.models import LangWithAutoType, Rule, EntityType, LangType
 
 
-def fetch_static_rules():
+def fetch_static_rules(langs: list[str]):
     files = {
         LangType.DE: {
             # load articles for gendered denom
@@ -12,7 +12,6 @@ def fetch_static_rules():
         LangType.EN: {},
         LangType.FR: {},
     }
-    langs = files.keys()
 
     static_rules = {
         "male_specific_dimensions": ["function", "titles", "male_stereotype"],

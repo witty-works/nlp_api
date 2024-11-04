@@ -43,6 +43,7 @@ class AppContext:
     categories: dict
     settings: Settings
     logger: logging.Logger
+    model: Model
     db: Db
     http: Http
     nouns: Nouns
@@ -54,6 +55,7 @@ class AppContext:
     rule_check: RuleCheck
     regex_check: RegexCheck
     emoji_check: EmojiCheck
+    langs: list = []
 
     def __init__(self):
         self.translations = translations
@@ -65,26 +67,26 @@ class AppContext:
         self.logger.debug("app started with settings: %s", self.settings)
 
         self.sentry_sdk = set_up_sentry_sdk(self.version, self.settings)
-        self.static_rules = fetch_static_rules()
 
         self.supported_word_types = list(WordType._member_map_.values())
+
+        self.term_replacement_langs = []
+        for model_name in self.settings.models:
+            lang = model_name[0:2]
+
+            self.langs.append(lang)
+            self.term_replacement_langs.append("|" + lang)
+
+        self.static_rules = fetch_static_rules(self.langs)
 
         with open("./training_data/lemma_plural_lookup.json", "r") as fp:
             self.lemma_plural_lookup = json.load(fp)
             for lang in self.lemma_plural_lookup:
                 self.lemma_plural_lookup[lang] = set(self.lemma_plural_lookup[lang])
 
-        self.term_replacement_langs = []
-        for model_name in self.settings.models:
-            lang = model_name[0:2]
-            self.term_replacement_langs.append("|" + lang)
-
         self.model = Model(
             self.settings, self.logger, self.static_rules, self.lemma_plural_lookup
         )
-        for model_name in self.settings.models:
-            lang = model_name[0:2]
-            self.model.load_nlp_model(lang, model_name)
 
         self.languages = {}
         for locale in LangWithAutoType._member_map_.values():

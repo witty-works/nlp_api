@@ -56,6 +56,10 @@ class Model:
         self.static_rules = static_rules
         self.lemma_plural_lookup = lemma_plural_lookup
 
+        for model_name in self.settings.models:
+            lang = model_name[0:2]
+            self.load_nlp_model(lang, model_name)
+
     adj_tags = {
         "AFX",
         "ADJA",

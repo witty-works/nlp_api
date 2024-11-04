@@ -402,9 +402,7 @@ async def handle_command_witty(
     await ack()
 
     check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
-    text, language, limit_reached = fetch_text(
-        check_request_in, context.model.models.keys()
-    )
+    text, language, limit_reached = fetch_text(check_request_in, context.langs)
 
     if language is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -449,9 +447,8 @@ async def get_health(check_external: bool = False):
         LangType.FR: "Je m'appelle Luc",
     }
 
-    for model_name in context.settings.models:
+    for lang in context.langs:
         try:
-            lang = model_name[0:2]
             context.model.fetch_tokens(lang, langs[lang])
             health["model_" + lang] = True
         except Exception:
@@ -1450,9 +1447,7 @@ async def check(
         check_request_in.config.plan is not None
         and check_request_in.config.plan.startswith("witty_")
     ):
-        text, language, limit_reached = fetch_text(
-            check_request_in, context.model.models.keys()
-        )
+        text, language, limit_reached = fetch_text(check_request_in, context.langs)
 
         if language is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -1592,7 +1587,7 @@ def fetch_term_replacements(
 
     term_replacement_rules = []
     for lemma in configs["term_replacements"]:
-        if lemma.endswith("|en") or lemma.endswith("|de"):
+        if lemma[-3:] in context.term_replacement_langs:
             if not lemma.endswith(lang):
                 continue
 
