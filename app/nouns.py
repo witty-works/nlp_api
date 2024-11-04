@@ -2,6 +2,7 @@ from inflex import Noun
 from app.models import (
     LangType,
     WordType,
+    Alternative,
 )
 from app.model import Model
 from app.helper import (
@@ -266,39 +267,47 @@ class Nouns:
         disabled_categories,
         subcategory: str,
         text: str,
-        token: Token | None = None,
-        log: bool = True,
+        token: Token,
+        alternative: Alternative,
+        postfix: list | None = None,
     ) -> dict:
         if text is None:
             return None
 
-        word = text
-        if " " in word:
-            word = word[: word.index(" ")]
-
-        result = await self.db.fetch_declensions(LangType.FR, WordType.NOUN, word)
+        result = await self.db.fetch_declensions(LangType.FR, WordType.NOUN, text)
         if result is None:
-            if log and not word[0].isupper():
-                message = f"French noun missing for '{word}' - '{text}'"
-                if token:
-                    message += f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
-                self.logger.error(message)
-        else:
             if (
-                result["female_form"]
-                and self.is_gender_neutral(result)
-                and not is_sub_category_enabled(
-                    disabled_categories,
-                    make_category_advanced(subcategory),
-                )
+                not text[0].isupper()
+                and WordType.NOUN == alternative.get_first_word_type()
             ):
-                result["female_form"] = None
+                message = (
+                    f"French noun missing for '{text}"
+                    + (postfix if postfix else "")
+                    + "'"
+                    + f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
+                )
 
-            if word != text:
-                result["base_form"] = text
-                for key in ["plural", "male_form", "female_form"]:
-                    if result[key] is not None:
-                        result[key] = result[key] + text[len(word) :]
+                self.logger.error(message)
+
+            return None
+
+        if (
+            result["female_form"]
+            and self.is_gender_neutral(result)
+            and not is_sub_category_enabled(
+                disabled_categories,
+                make_category_advanced(subcategory),
+            )
+        ):
+            result["female_form"] = None
+
+        if postfix:
+            postfix = " " + (" ".join(postfix))
+            for key in ["base_form", "plural", "male_form", "female_form"]:
+                if result[key] is None:
+                    continue
+
+                result[key] = result[key] + postfix
 
         return result
 
