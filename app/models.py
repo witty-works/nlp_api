@@ -214,10 +214,41 @@ class GenderedRolesFormatType(str, Enum):
     BINARY_GENDER = "binary_gender"
 
 
-class Alternative:
+class Lemma:
     lemma: str
-    words: Optional[list] = None
-    word_types: Optional[list] = None
+    words: tuple
+    word_types: tuple
+
+    def __init__(
+        self,
+        lemma: str,
+        words: list = None,
+        word_types: list = None,
+    ):
+        self.lemma = lemma
+        if words is None:
+            words = [lemma]
+        self.words = words
+        if word_types is None or len(word_types) == 0:
+            word_types = [
+                {"word_type": "", "lower_case": True, "lemmatize": True}
+            ] * len(self.words)
+        self.word_types = word_types
+
+    def get_word_types(self):
+        word_types = []
+        if self.word_types is not None:
+            for word_type in self.word_types:
+                word_types.append(word_type["word_type"])
+
+        return word_types
+
+    def get_first_word_type(self):
+        word_types = self.get_word_types()
+        return word_types[0] if len(word_types) else ""
+
+
+class Alternative(Lemma):
     type: Optional[AlternativeType] = AlternativeType.DEFAULT
     label: Optional[str] = None
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
@@ -242,15 +273,7 @@ class Alternative:
         is_gendered_noun: list = False,
         label: str | None = None,
     ):
-        self.lemma = lemma
-        if words is None:
-            words = [lemma]
-        self.words = words
-        if word_types is None or len(word_types) == 0:
-            word_types = [
-                {"word_type": "", "lower_case": True, "lemmatize": True}
-            ] * len(self.words)
-        self.word_types = word_types
+        super().__init__(lemma, words, word_types)
 
         self.is_remove = is_remove
         self.is_inspiration = is_inspiration or is_placeholder
@@ -266,14 +289,11 @@ class ResultSource(BaseModel):
     url: Optional[str] = None
 
 
-class Rule:
+class Rule(Lemma):
     id: str
     text_id: Optional[str]
     parent_id: Optional[int]
     lang: str
-    lemma: str
-    words: tuple
-    word_types: tuple
     actual_word_types: Optional[str] = None
     subcategories: Optional[list[str]] = []
     is_advanced: bool = False
@@ -307,9 +327,8 @@ class Rule:
         self.id = id
         self.text_id = id
         self.lang = lang
-        self.lemma = lemma
-        self.words = words
-        self.word_types = word_types
+
+        super().__init__(lemma, words, word_types)
 
         if subcategories is None:
             subcategories = []
@@ -326,17 +345,7 @@ class Rule:
         if self.actual_word_types is not None:
             return self.actual_word_types
 
-        word_types = []
-        if self.word_types is not None:
-            for word_type in self.word_types:
-                word_types.append(word_type["word_type"])
-
-        return word_types
-
-    def get_first_word_type(self):
-        word_types = self.get_word_types()
-        return word_types[0] if len(word_types) else ""
-
+        return super().get_word_types()
 
     @staticmethod
     def factory(
