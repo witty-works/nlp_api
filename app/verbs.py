@@ -155,7 +155,7 @@ class Verbs:
         if (
             (source_lemma[-1] == "t" or source_lemma[-1] == "s")
             and len(ending)
-            and ending[0] == "e"
+            and ending.startswith("e")
         ):
             ending = ending[1:]
 
@@ -184,11 +184,11 @@ class Verbs:
                             and not target_text.endswith("ön")
                             and target_text[-1] != "h"
                             and ending[0:1] != "st"
-                        ) or ending[0] == "n":
+                        ) or ending.startswith("n"):
                             target_text += "e"
                     elif target_text[-1] == "s":
                         target_text += "s"
-                    elif target_text[-1] == "e" and ending[0] == "e":
+                    elif target_text[-1] == "e" and ending.startswith("e"):
                         target_text = target_text[0:-1]
 
         if self.settings.log_missing_declension and not source_text.isupper():

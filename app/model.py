@@ -56,6 +56,10 @@ class Model:
         self.static_rules = static_rules
         self.lemma_plural_lookup = lemma_plural_lookup
 
+        for model_name in self.settings.models:
+            lang = model_name[0:2]
+            self.load_nlp_model(lang, model_name)
+
     adj_tags = {
         "AFX",
         "ADJA",
@@ -442,7 +446,10 @@ class Model:
 
         return False
 
-    def fetch_false_positive_matchers(self, lang: LangType, tokens: Doc) -> list:
+    def fetch_false_positive_matchers(self, lang: LangType, tokens: Doc) -> list | None:
+        if "pattern_false_positives" not in self.static_rules[lang]:
+            return None
+
         return self.fetch_false_positive_matcher(
             lang, tokens, self.static_rules[lang]["pattern_false_positives"]
         )

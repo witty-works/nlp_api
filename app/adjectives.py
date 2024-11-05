@@ -7,6 +7,7 @@ from app.logger import Logger
 from app.helper import check_word_case, get_target_declension_form, find_matching_form
 from app.db import Db
 
+
 class Adjectives:
     settings: Settings
     logger: Logger
@@ -122,7 +123,7 @@ class Adjectives:
                 ending = ""
             elif text.endswith("t") or text.endswith("s"):
                 ending = "e" + ending
-        elif text[-1] == "e":
+        elif text.endswith("e"):
             ending = ending[1:]
 
         return text + ending

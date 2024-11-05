@@ -189,6 +189,29 @@
             "text_id": "guys"
         },
         {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of",
+            "end": 16,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 10,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
+        },
+        {
             "alternatives": [],
             "category": "social-motive",
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
@@ -341,6 +364,29 @@
             "subcategory": "gender_identity",
             "text": "guys",
             "text_id": "guys"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "d approximately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of",
+            "end": 637,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 631,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
         },
         {
             "alternatives": [],

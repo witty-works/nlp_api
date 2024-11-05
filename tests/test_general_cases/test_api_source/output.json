@@ -5,19 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Les personnes"
+                    "text": "Les touristes"
                 },
                 {
                     "text": "Les personnes en visite"
-                },
-                {
-                    "text": "Les personnes invitée"
                 },
                 {
                     "text": "Les visiteur·ses"
                 },
                 {
                     "text": "Les visiteurs et les visiteuses"
+                },
+                {
+                    "text": "Les personnes invitée"
                 }
             ],
             "category": "gender-orientation",

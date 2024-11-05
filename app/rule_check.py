@@ -514,6 +514,7 @@ class RuleCheck:
                         new_alternatives.append(alternative)
                         continue
 
+                    result = None
                     if alternative.is_gendered_noun:
                         male_form, female_form = alternative.lemma.split("~")
                         result = (
@@ -522,6 +523,7 @@ class RuleCheck:
                                 subcategory,
                                 male_form,
                                 token,
+                                alternative,
                             )
                             if WordType.NOUN == rule.get_first_word_type()
                             else None
@@ -603,8 +605,9 @@ class RuleCheck:
                                 result = await self.nouns.french_noun_lookup(
                                     config.disabled_categories,
                                     subcategory,
-                                    male_form,
+                                    collective_noun,
                                     token,
+                                    new_alternative,
                                 )
                                 if result is not None:
                                     articles_list = (
@@ -632,8 +635,10 @@ class RuleCheck:
                         result = await self.nouns.french_noun_lookup(
                             config.disabled_categories,
                             subcategory,
-                            alternative.lemma,
+                            alternative.words[0],
                             token,
+                            alternative,
+                            alternative.words[1:],
                         )
                         if result is not None:
                             new_alternatives = self.alternatives.nouns_with_articles(

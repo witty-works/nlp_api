@@ -96,6 +96,29 @@
             "text_id": "guys"
         },
         {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be chall",
+            "end": 16,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 10,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
+        },
+        {
             "alternatives": [],
             "category": "social-motive",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.",
@@ -212,6 +235,29 @@
             "subcategory": "medical_state",
             "text": "challenged",
             "text_id": "challenged"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 129,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 123,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
         },
         {
             "alternatives": [

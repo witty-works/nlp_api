@@ -140,6 +140,11 @@ async def lifespan(app: FastAPI):
         key = organization_rules["id"]
         context.redis.db.set(key, json.dumps(organization_rules))
 
+    if context.settings.redis_default_log_emails:
+        log_emails = json.loads(context.settings.redis_default_log_emails)
+        for email in log_emails:
+            context.redis.db.lpush("debug_emails", email)
+
     context.nouns = Nouns(
         context.settings,
         context.logger,
@@ -402,9 +407,7 @@ async def handle_command_witty(
     await ack()
 
     check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
-    text, language, limit_reached = fetch_text(
-        check_request_in, context.model.models.keys()
-    )
+    text, language, limit_reached = fetch_text(check_request_in, context.langs)
 
     if language is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -449,9 +452,8 @@ async def get_health(check_external: bool = False):
         LangType.FR: "Je m'appelle Luc",
     }
 
-    for model_name in context.settings.models:
+    for lang in context.langs:
         try:
-            lang = model_name[0:2]
             context.model.fetch_tokens(lang, langs[lang])
             health["model_" + lang] = True
         except Exception:
@@ -1128,6 +1130,18 @@ async def get_user_configs(
     return await fetch_user_organization_configs(email)
 
 
+@app.get(
+    "/user/logs",
+    response_class=PrettyJSONResponse,
+    responses={404: {"model": ErrorMessage}},
+)
+async def get_user_configs(
+    email: str,
+    username: str = Depends(fetch_current_username),
+):
+    return context.redis.get_user_logs(email)
+
+
 def fetch_text(
     check_request_in: CheckRequestIn, supported_langs: list
 ) -> tuple[str, Language | None, bool]:
@@ -1446,13 +1460,20 @@ async def check(
 
     context.redis.store_metrics(request, configs, version, "check")
 
+    context.redis.store_request_log(
+        check_request_in,
+        user_email,
+        request,
+        configs,
+        version,
+        "check",
+    )
+
     if (
         check_request_in.config.plan is not None
         and check_request_in.config.plan.startswith("witty_")
     ):
-        text, language, limit_reached = fetch_text(
-            check_request_in, context.model.models.keys()
-        )
+        text, language, limit_reached = fetch_text(check_request_in, context.langs)
 
         if language is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -1479,14 +1500,22 @@ async def check(
     if "has_consented_to_mailing" in configs:
         has_consented_to_mailing = configs["has_consented_to_mailing"]
 
-    return ResultsOut(
-        results=results,
-        language=lang,
-        limit_reached=limit_reached,
-        config_changed=fetch_config_change(configs, check_request_in),
-        notifications=notifications,
-        has_consented_to_mailing=has_consented_to_mailing,
+    if not isinstance(results, Result):
+        results = ResultsOut(
+            results=results,
+            language=lang,
+            limit_reached=limit_reached,
+            config_changed=fetch_config_change(configs, check_request_in),
+            notifications=notifications,
+            has_consented_to_mailing=has_consented_to_mailing,
+        )
+
+    context.redis.store_response_log(
+        user_email,
+        results,
     )
+
+    return results
 
 
 def fetch_config_change(
@@ -1592,7 +1621,7 @@ def fetch_term_replacements(
 
     term_replacement_rules = []
     for lemma in configs["term_replacements"]:
-        if lemma.endswith("|en") or lemma.endswith("|de"):
+        if lemma[-3:] in context.term_replacement_langs:
             if not lemma.endswith(lang):
                 continue
 
@@ -1883,7 +1912,7 @@ async def german_gender_endings(
     if is_sub_category_enabled(config.disabled_categories, subcategory):
         word_types = (
             (-1, 1, config.german_gender_ending[0])
-            if config.german_gender_ending[0] == "/"
+            if config.german_gender_ending.startswith("/")
             else (None, None, config.german_gender_ending[0])
         )
 
@@ -1954,7 +1983,9 @@ async def german_gender_endings(
                 # only check if relevant regexp is defined
                 and key in config._gendereddenom_ending_article
             ):
-                word_types = (-1, 2, key[0]) if key[0] == "/" else (None, None, key[0])
+                word_types = (
+                    (-1, 2, key[0]) if key.startswith("/") else (None, None, key[0])
+                )
 
                 ending = Rule(
                     key + "article",
@@ -1996,15 +2027,13 @@ async def witty_rules(
     language: Language,
     text: str,
 ) -> list:
-    false_positive_matcher = (
-        None
-        if language.lang == LangType.DE
-        else context.model.fetch_false_positive_matchers(language.lang, tokens)
+    false_positive_matcher = context.model.fetch_false_positive_matchers(
+        language.lang, tokens
     )
 
     list_full = []
 
-    token_index = new_token_index = 0
+    new_token_index = 0
     token_count = len(tokens)
     while new_token_index < token_count:
         token_index = new_token_index
@@ -2077,7 +2106,7 @@ async def witty_rules(
 
         token_text = tokens[token_index].text
 
-        if token_text[0] == "#":
+        if token_text.startswith("#"):
             new_token_index = await context.regex_check.handle(
                 config,
                 client,

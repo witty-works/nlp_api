@@ -3,7 +3,7 @@ import re
 from app.models import LangWithAutoType, Rule, EntityType, LangType
 
 
-def fetch_static_rules():
+def fetch_static_rules(langs: list[str]):
     files = {
         LangType.DE: {
             # load articles for gendered denom
@@ -12,7 +12,6 @@ def fetch_static_rules():
         LangType.EN: {},
         LangType.FR: {},
     }
-    langs = files.keys()
 
     static_rules = {
         "male_specific_dimensions": ["function", "titles", "male_stereotype"],
@@ -458,7 +457,6 @@ def fetch_static_rules():
                 )
 
     if LangType.FR in langs:
-        static_rules[LangType.FR]["pattern_false_positives"] = []
         static_rules[LangType.FR]["salutations"] = []
 
         rule = Rule(
@@ -808,8 +806,6 @@ def fetch_static_rules():
             "head",
             "tragende",
         ]
-
-        static_rules[LangType.DE]["pattern_false_positives"] = []
 
         static_rules[LangType.DE]["gender_neutral_nouns"] = {
             "Ierende": {
