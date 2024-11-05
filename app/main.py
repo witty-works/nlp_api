@@ -1993,15 +1993,13 @@ async def witty_rules(
     language: Language,
     text: str,
 ) -> list:
-    false_positive_matcher = (
-        None
-        if language.lang == LangType.DE
-        else context.model.fetch_false_positive_matchers(language.lang, tokens)
+    false_positive_matcher = context.model.fetch_false_positive_matchers(
+        language.lang, tokens
     )
 
     list_full = []
 
-    token_index = new_token_index = 0
+    new_token_index = 0
     token_count = len(tokens)
     while new_token_index < token_count:
         token_index = new_token_index

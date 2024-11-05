@@ -446,7 +446,10 @@ class Model:
 
         return False
 
-    def fetch_false_positive_matchers(self, lang: LangType, tokens: Doc) -> list:
+    def fetch_false_positive_matchers(self, lang: LangType, tokens: Doc) -> list | None:
+        if "pattern_false_positives" not in self.static_rules[lang]:
+            return None
+
         return self.fetch_false_positive_matcher(
             lang, tokens, self.static_rules[lang]["pattern_false_positives"]
         )

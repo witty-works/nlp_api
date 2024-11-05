@@ -457,7 +457,6 @@ def fetch_static_rules(langs: list[str]):
                 )
 
     if LangType.FR in langs:
-        static_rules[LangType.FR]["pattern_false_positives"] = []
         static_rules[LangType.FR]["salutations"] = []
 
         rule = Rule(
@@ -807,8 +806,6 @@ def fetch_static_rules(langs: list[str]):
             "head",
             "tragende",
         ]
-
-        static_rules[LangType.DE]["pattern_false_positives"] = []
 
         static_rules[LangType.DE]["gender_neutral_nouns"] = {
             "Ierende": {
