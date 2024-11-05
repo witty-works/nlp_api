@@ -1878,7 +1878,7 @@ async def german_gender_endings(
     if is_sub_category_enabled(config.disabled_categories, subcategory):
         word_types = (
             (-1, 1, config.german_gender_ending[0])
-            if config.german_gender_ending[0] == "/"
+            if config.german_gender_ending.startswith("/")
             else (None, None, config.german_gender_ending[0])
         )
 
@@ -1949,7 +1949,9 @@ async def german_gender_endings(
                 # only check if relevant regexp is defined
                 and key in config._gendereddenom_ending_article
             ):
-                word_types = (-1, 2, key[0]) if key[0] == "/" else (None, None, key[0])
+                word_types = (
+                    (-1, 2, key[0]) if key.startswith("/") else (None, None, key[0])
+                )
 
                 ending = Rule(
                     key + "article",
@@ -2072,7 +2074,7 @@ async def witty_rules(
 
         token_text = tokens[token_index].text
 
-        if token_text[0] == "#":
+        if token_text.startswith("#"):
             new_token_index = await context.regex_check.handle(
                 config,
                 client,
