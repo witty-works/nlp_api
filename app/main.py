@@ -140,6 +140,11 @@ async def lifespan(app: FastAPI):
         key = organization_rules["id"]
         context.redis.db.set(key, json.dumps(organization_rules))
 
+    if context.settings.redis_default_log_emails:
+        log_emails = json.loads(context.settings.redis_default_log_emails)
+        for email in log_emails:
+            context.redis.db.lpush("debug_emails", email)
+
     context.nouns = Nouns(
         context.settings,
         context.logger,
@@ -1125,6 +1130,18 @@ async def get_user_configs(
     return await fetch_user_organization_configs(email)
 
 
+@app.get(
+    "/user/logs",
+    response_class=PrettyJSONResponse,
+    responses={404: {"model": ErrorMessage}},
+)
+async def get_user_configs(
+    email: str,
+    username: str = Depends(fetch_current_username),
+):
+    return context.redis.get_user_logs(email)
+
+
 def fetch_text(
     check_request_in: CheckRequestIn, supported_langs: list
 ) -> tuple[str, Language | None, bool]:
@@ -1443,6 +1460,15 @@ async def check(
 
     context.redis.store_metrics(request, configs, version, "check")
 
+    context.redis.store_request_log(
+        check_request_in,
+        user_email,
+        request,
+        configs,
+        version,
+        "check",
+    )
+
     if (
         check_request_in.config.plan is not None
         and check_request_in.config.plan.startswith("witty_")
@@ -1474,14 +1500,22 @@ async def check(
     if "has_consented_to_mailing" in configs:
         has_consented_to_mailing = configs["has_consented_to_mailing"]
 
-    return ResultsOut(
-        results=results,
-        language=lang,
-        limit_reached=limit_reached,
-        config_changed=fetch_config_change(configs, check_request_in),
-        notifications=notifications,
-        has_consented_to_mailing=has_consented_to_mailing,
+    if not isinstance(results, Result):
+        results = ResultsOut(
+            results=results,
+            language=lang,
+            limit_reached=limit_reached,
+            config_changed=fetch_config_change(configs, check_request_in),
+            notifications=notifications,
+            has_consented_to_mailing=has_consented_to_mailing,
+        )
+
+    context.redis.store_response_log(
+        user_email,
+        results,
     )
+
+    return results
 
 
 def fetch_config_change(

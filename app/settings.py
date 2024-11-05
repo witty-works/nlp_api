@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     redis_default_user: Optional[str] = ""
     redis_default_rules: Optional[str] = ""
     redis_default_organization_rules: Optional[str] = ""
+    redis_default_log_emails: Optional[str] = ""
     redis_verify_ssl: bool = True
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
