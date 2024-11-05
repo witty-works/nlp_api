@@ -2,9 +2,11 @@ from redis import Redis as RedisCache
 from fakeredis import FakeStrictRedis
 import json
 from fastapi import Request, HTTPException
+from pydantic import BaseModel
+import datetime
 
 from app.settings import Settings
-from app.models import MetricsType
+from app.models import MetricsType, CheckRequestIn
 
 
 """Class to handle Redis setup and provide Redis connection."""
@@ -37,6 +39,17 @@ class Redis:
 
     def get_user_id(self, email: str):
         return "dashboard-user-email:" + email.lower()
+
+    def get_log_id(self, user_email: str | None):
+        return "log-" + self.get_user_id(user_email if user_email else "none")
+
+    def get_log_key(self, user_email: str | None):
+        key = self.get_log_id(user_email)
+        if user_email is None:
+            user_email = "none"
+
+        debug_emails = self.db.lrange("debug_emails", 0, -1)
+        return key if user_email.encode() in debug_emails else None
 
     async def fetch_organization_configs_from_redis(
         self,
@@ -95,3 +108,61 @@ class Redis:
             self.db.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.REPHRASE_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
+
+    def get_user_logs(
+        self,
+        user_email: str | None,
+    ):
+        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
+        if data is None:
+            return data
+
+        data.reverse()
+        results = []
+        for result in data:
+            result = json.loads(result)
+            results.append(result)
+
+        return results
+
+    def store_request_log(
+        self,
+        check_request_in: CheckRequestIn,
+        user_email: str | None,
+        request: Request,
+        configs: dict,
+        version: str | None,
+        endpoint: str,
+    ):
+        key = self.get_log_key(user_email)
+        if key is None:
+            return
+
+        data = {
+            "type": "request",
+            "date": datetime.datetime.now().isoformat(),
+            "plan": check_request_in.config.plan,
+            "text": check_request_in.text,
+            "auth_token": request.headers.get("Authorization", None),
+            "configs": configs,
+            "version": version,
+            "endpoint": endpoint,
+        }
+
+        self.db.lpush(key, json.dumps(data))
+
+    def store_response_log(
+        self,
+        user_email: str | None,
+        results: BaseModel,
+    ):
+        key = self.get_log_key(user_email)
+        if key is None:
+            return
+
+        data = {
+            "type": "response",
+            "results": results.model_dump(),
+        }
+
+        self.db.lpush(key, json.dumps(data))
