@@ -59,6 +59,29 @@
         {
             "alternatives": [
                 {
+                    "text": "you'll"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive",
+            "end": 43,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 35,
+            "subcategory": "formality_advanced",
+            "text": "you will",
+            "text_id": "you will"
+        },
+        {
+            "alternatives": [
+                {
                     "remove": true
                 },
                 {
@@ -171,6 +194,29 @@
             "subcategory": "agentic",
             "text": "ambitious",
             "text_id": "ambitious"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "you'll"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "anager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 135,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 127,
+            "subcategory": "formality_advanced",
+            "text": "you will",
+            "text_id": "you will"
         },
         {
             "alternatives": [

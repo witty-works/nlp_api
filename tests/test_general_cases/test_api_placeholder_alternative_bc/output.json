@@ -5,26 +5,25 @@
         {
             "alternatives": [
                 {
-                    "text": "They are"
+                    "text": "He's"
                 }
             ],
-            "category": "gender-orientation",
+            "category": "acquired-diversity",
             "context": "He is ok",
             "end": 5,
             "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Confident you're not excluding non-binary people?",
-                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Gender + Orientation: Binary pronouns",
+            "label": "Acquired Diversity: Formality",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "binary_pronouns_advanced",
+            "subcategory": "formality_advanced",
             "text": "He is",
-            "text_id": "he"
+            "text_id": "He is"
         }
     ]
 }

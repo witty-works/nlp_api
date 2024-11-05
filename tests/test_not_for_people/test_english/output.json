@@ -63,6 +63,29 @@
         {
             "alternatives": [
                 {
+                    "text": "You're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Employees are flexible, so are companies. You are flexible. We are looking for flexible employees for our flexible company.",
+            "end": 49,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "formality_advanced",
+            "text": "You are",
+            "text_id": "You are"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "adaptable"
                 },
                 {
@@ -93,6 +116,29 @@
             "subcategory": "hollow_advanced",
             "text": "flexible",
             "text_id": "flexible"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Employees are flexible, so are companies. You are flexible. We are looking for flexible employees for our flexible company.",
+            "end": 66,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 60,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
         },
         {
             "alternatives": [

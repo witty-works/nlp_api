@@ -35,26 +35,25 @@
         {
             "alternatives": [
                 {
-                    "text": "they have"
+                    "text": "he's"
                 }
             ],
-            "category": "gender-orientation",
+            "category": "acquired-diversity",
             "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
             "end": 40,
             "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Confident you're not excluding non-binary people?",
-                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Gender + Orientation: Binary pronouns",
+            "label": "Acquired Diversity: Formality",
             "proficiency_level": "unconscious_bias",
             "start": 34,
-            "subcategory": "binary_pronouns_advanced",
+            "subcategory": "formality_advanced",
             "text": "he has",
-            "text_id": "he"
+            "text_id": "he has"
         },
         {
             "alternatives": [

@@ -72,6 +72,29 @@
         {
             "alternatives": [
                 {
+                    "text": "aren't"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Lower-class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-perform",
+            "end": 43,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 36,
+            "subcategory": "formality_advanced",
+            "text": "are not",
+            "text_id": "are not"
+        },
+        {
+            "alternatives": [
+                {
                     "context": "💡 about a person",
                     "inspiration": true,
                     "text": "contributing to business success"
@@ -151,6 +174,29 @@
             "subcategory": "exaggerating",
             "text": "top-performer",
             "text_id": "top-performer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "We're"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "ss) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art cl",
+            "end": 129,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 123,
+            "subcategory": "formality_advanced",
+            "text": "We are",
+            "text_id": "we are"
         },
         {
             "alternatives": [

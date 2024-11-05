@@ -62,6 +62,29 @@
         {
             "alternatives": [
                 {
+                    "text": "I'm"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 15,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
+            "start": 11,
+            "subcategory": "formality_advanced",
+            "text": "I am",
+            "text_id": "I am"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "walking"
                 }
             ],
