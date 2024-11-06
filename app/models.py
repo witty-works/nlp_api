@@ -141,6 +141,12 @@ class LangWithAutoType(str, Enum):
     frFR = "fr-FR"
 
 
+class ReviewType(str, Enum):
+    EXPLAIN_EDITS = "explain_edits"
+    NO_EXPLANATION = "no_explanation"
+    USE_EXPLANATION = "use_explanation"
+
+
 class RuleType(str, Enum):
     DEFAULT = "default"
     PREFIX = "prefix"

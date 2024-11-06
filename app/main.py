@@ -70,6 +70,7 @@ from app.models import (
     BasicWordType,
     WordType,
     MetricsType,
+    ReviewType,
 )
 from app.helper import is_valid_text, remove_gender_ending, utf16_offsets
 from app.db import Db
@@ -384,6 +385,7 @@ async def review_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
+    review_type: ReviewType = ReviewType.EXPLAIN_EDITS,
 ) -> Result | str:
     check_request_in.config.disabled_categories.append("communal")
     check_request_in.config.disabled_categories.append("d_and_i")
@@ -397,7 +399,7 @@ async def review_prompt(
     if len(check_result.results) == 0:
         return "WITTYNOCHANGES"
 
-    return ReviewPrompt.handle(check_result.results)
+    return ReviewPrompt.handle(check_result.results, review_type)
 
 
 @bolt.command("/witty")
