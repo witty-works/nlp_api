@@ -1,0 +1,172 @@
+{
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Les profs"
+                },
+                {
+                    "text": "Les professeur·ses"
+                },
+                {
+                    "text": "Le professorat"
+                },
+                {
+                    "text": "Les enseignant·es"
+                },
+                {
+                    "text": "Les corps enseignant"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 15,
+            "explanation": {
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/masculin-générique?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Masculin générique",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "function",
+            "text": "Les professeurs",
+            "text_id": "professeur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Les profs"
+                },
+                {
+                    "text": "La∙le prof"
+                },
+                {
+                    "text": "La∙le professeur·se"
+                },
+                {
+                    "text": "Les professeurs"
+                },
+                {
+                    "text": "La∙le professeur"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 40,
+            "explanation": {
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/masculin-générique?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Masculin générique",
+            "proficiency_level": "unconscious_bias",
+            "start": 27,
+            "subcategory": "function",
+            "text": "Le professeur",
+            "text_id": "professeur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Les profs"
+                },
+                {
+                    "text": "Les professeur·ses"
+                },
+                {
+                    "text": "Le professorat"
+                },
+                {
+                    "text": "Les enseignant·es"
+                },
+                {
+                    "text": "Les corps enseignant"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 65,
+            "explanation": {
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/masculin-générique?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Masculin générique",
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "subcategory": "function",
+            "text": "Les professeurs",
+            "text_id": "professeur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "prof"
+                },
+                {
+                    "text": "professeur·ses"
+                },
+                {
+                    "text": "professeurs"
+                },
+                {
+                    "text": "professorat"
+                },
+                {
+                    "text": "enseignant·es"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 81,
+            "explanation": {
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Entretient la vision traditionnelle binaire du genre",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
+            "proficiency_level": "unconscious_bias",
+            "start": 69,
+            "subcategory": "gender_identity_advanced",
+            "text": "professeuses",
+            "text_id": "professeur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "un∙e peintr·sse"
+                },
+                {
+                    "text": "un∙e peintre"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 110,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/nom-de-métier?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Nom de métier",
+            "proficiency_level": "unconscious_bias",
+            "start": 100,
+            "subcategory": "titles",
+            "text": "un peintre",
+            "text_id": "peintre"
+        }
+    ]
+}

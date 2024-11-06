@@ -1010,47 +1010,43 @@ class Alternatives:
                 # "la", "le", "la∙le"
                 article_index == 0
                 and result["base_form"][0] not in ["a", "e", "i", "o", "u", "h"]
-                and (
-                    config.gendered_roles_format == GenderedRolesFormatType.BOTH
-                    or config.gendered_roles_format
-                    == GenderedRolesFormatType.INCLUSIVE_GENDER
-                )
+                and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
             ):
                 new_alternative = deepcopy(alternative)
                 new_alternative.is_gendered_noun = True
                 new_alternative.lemma = "les " + result["plural"]
                 alternatives.append(new_alternative)
 
-            if config.gendered_roles_format == GenderedRolesFormatType.INCLUSIVE_GENDER:
-                alternative.lemma = new_alternative.lemma
-                if article:
+            if article:
+                if (
+                    config.gendered_roles_format
+                    == GenderedRolesFormatType.INCLUSIVE_GENDER
+                ):
                     alternative.lemma = self.add_article(
                         lang,
-                        new_alternative.lemma,
-                        (
-                            self.static_rules[LangType.FR]["articles_inclusive_map"][
-                                article
-                            ],
-                        ),
-                    )
-            elif article:
-                forms = {}
-                for form in ["masculine", "feminine"]:
-                    forms[form] = self.add_article(
-                        lang,
                         alternative.lemma,
-                        self.get_article_by_index(
+                        self.static_rules[LangType.FR]["articles_inclusive_map"][
+                            article
+                        ],
+                    )
+                else:
+                    forms = {}
+                    for form in ["masculine", "feminine"]:
+                        forms[form] = self.add_article(
                             lang,
-                            form + "_articles",
-                            article_index,
-                        ),
-                    )
-                alternative.lemma = forms["masculine"]
-                if forms["masculine"] != forms["feminine"]:
-                    alternative.lemma += (
-                        self.get_noun_conjunction(lang, not is_plural)
-                        + forms["feminine"]
-                    )
+                            alternative.lemma,
+                            self.get_article_by_index(
+                                lang,
+                                form + "_articles",
+                                article_index,
+                            ),
+                        )
+                    alternative.lemma = forms["masculine"]
+                    if forms["masculine"] != forms["feminine"]:
+                        alternative.lemma += (
+                            self.get_noun_conjunction(lang, not is_plural)
+                            + forms["feminine"]
+                        )
         elif article and result["gender_1"]:
             alternative.lemma = self.add_article(
                 lang,

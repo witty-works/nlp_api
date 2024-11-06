@@ -1,0 +1,6 @@
+{
+    "text": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+    "config": {
+        "gendered_roles_format": "inclusive_gender"
+    }
+}
