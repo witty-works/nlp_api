@@ -874,7 +874,7 @@ class Alternatives:
         lang: LangType,
         male_form: str,
         female_form: str,
-        prefix: str,
+        prefix_words: str,
         separator: str,
         noun_separator: str,
     ):
@@ -890,7 +890,7 @@ class Alternatives:
             )
             if len(male_form) - len(common_prefix) > 2:
                 common_prefix = female_form
-                suffix = self.add_german_prefix(male_form, prefix)
+                suffix = self.add_german_prefix(male_form, prefix_words)
                 short_gender_star = False
             elif len(female_form) >= len(male_form):
                 # Mitarbeiterin + Mitarbeiter = Mitarbeiter
@@ -908,7 +908,7 @@ class Alternatives:
                     temp_separator = "/"
 
             return self.add_german_prefix(
-                common_prefix + temp_separator + suffix, prefix
+                common_prefix + temp_separator + suffix, prefix_words
             )
 
         if lang == LangType.FR:
@@ -922,23 +922,22 @@ class Alternatives:
                 return inclusive_form
 
             common_prefix = find_common_prefix(male_form, female_form, False, False)
+            # Il est un poète
             if len(common_prefix) < 3:
-                return male_form + separator + female_form.lower()
+                return prefix_words + male_form + separator + female_form.lower()
 
             if len(female_form) >= len(male_form):
                 suffix = female_form[len(common_prefix) :]
-                common_prefix = male_form
+                prefix = male_form
             else:
                 suffix = male_form[len(common_prefix) :]
-                common_prefix = female_form
+                prefix = female_form
 
-            common_prefix = (
-                common_prefix[0:-1]
-                if common_prefix[-1] == suffix[-1]
-                else common_prefix
-            )
+            # expérimentés / expérimentées => expérimenté·es
+            if prefix.endswith("s"):
+                prefix = prefix[0:-1]
 
-            return prefix + common_prefix + separator + suffix
+            return prefix_words + prefix + separator + suffix
 
     def handle_single_tilde(
         self, alternative: Alternative, prefix: bool, is_singular: bool
@@ -990,7 +989,11 @@ class Alternatives:
         alternative: Alternative,
         alternatives: list[Alternative],
     ):
-        alternative.lemma = result["plural"] if is_plural else result["base_form"]
+        alternative.lemma = (
+            result["plural"]
+            if (is_plural and result["plural"] is not None)
+            else result["base_form"]
+        )
 
         if result["female_form"] or self.nouns.is_gender_neutral(result):
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
