@@ -557,7 +557,11 @@ class RuleCheck:
                                 collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
-                            male_form = pluralize(male_form)
+                            male_form = (
+                                pluralize(male_form)
+                                if result is None or result["plural"] is None
+                                else result["plural"]
+                            )
                             female_form = pluralize(female_form)
 
                         gendered_alternatives = (
