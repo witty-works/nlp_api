@@ -535,6 +535,9 @@ platformshconfig==2.4.0 \
 pluggy==1.5.0 \
     --hash=sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1 \
     --hash=sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669
+pluralizefr==0.0.1 \
+    --hash=sha256:59163d5a40f5233f6e150b303cb667fdf26b3ad592d34aa122b376a63f0457cf \
+    --hash=sha256:dc3d2912b9b9ca8bf973178ae428f7affb505e0f1395e5ff1d965b1c518a58aa
 polib==1.2.0 \
     --hash=sha256:1c77ee1b81feb31df9bca258cbc58db1bbb32d10214b173882452c73af06d62d \
     --hash=sha256:f3ef94aefed6e183e342a8a269ae1fc4742ba193186ad76f175938621dbfc26b

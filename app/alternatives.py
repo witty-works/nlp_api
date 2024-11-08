@@ -28,6 +28,7 @@ from app.query_definitions import declensions_config
 from copy import deepcopy
 from spacy.tokens import Doc
 from logging import Logger
+from pluralizefr import pluralize
 
 
 class Alternatives:
@@ -989,11 +990,12 @@ class Alternatives:
         alternative: Alternative,
         alternatives: list[Alternative],
     ):
-        alternative.lemma = (
-            result["plural"]
-            if (is_plural and result["plural"] is not None)
-            else result["base_form"]
-        )
+        alternative.lemma = result["base_form"]
+        if is_plural:
+            if result["plural"] is None:
+                result["plural"] = pluralize(result["base_form"])
+
+            alternative.lemma = result["plural"]
 
         if result["female_form"] or self.nouns.is_gender_neutral(result):
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
