@@ -506,6 +506,29 @@ def fetch_static_rules(langs: list[str]):
             "leur": "leur",
             "lels": "lels",
         }
+        static_rules[LangType.FR]["articles_map"] = dict(
+            zip(
+                static_rules[LangType.FR]["masculine_articles"].keys(),
+                static_rules[LangType.FR]["feminine_articles"].keys(),
+            )
+        )
+        static_rules[LangType.FR]["articles_map"].update(
+            dict(
+                zip(
+                    static_rules[LangType.FR]["feminine_articles"].keys(),
+                    static_rules[LangType.FR]["masculine_articles"].keys(),
+                )
+            )
+        )
+        static_rules[LangType.FR]["articles_map"].update(
+            dict(
+                zip(
+                    static_rules[LangType.FR]["inclusive_articles"].keys(),
+                    static_rules[LangType.FR]["masculine_articles"].keys(),
+                )
+            )
+        )
+
         static_rules[LangType.FR]["articles"] = set(
             list(static_rules[LangType.FR]["masculine_articles"].keys())
             + list(static_rules[LangType.FR]["feminine_articles"].keys())

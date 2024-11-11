@@ -5,45 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "pas là"
-                },
-                {
-                    "text": "indisponible"
-                },
-                {
-                    "text": "absent·es"
-                },
-                {
-                    "text": "absents et absentes"
-                },
-                {
-                    "text": "absence"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
-            "end": 47,
-            "explanation": {
-                "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Évoque une représentation genrée",
-                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Genre + Orientation sexuelle: Expression genrée",
-            "proficiency_level": "unconscious_bias",
-            "source": {
-                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
-                "url": "http://www.canada.ca/our-languages"
-            },
-            "start": 41,
-            "subcategory": "hidden_image",
-            "text": "absent",
-            "text_id": "absent"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Les personnes participante"
                 },
                 {
@@ -60,7 +21,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagia",
             "end": 84,
             "explanation": {
                 "icon": "😒",
@@ -99,7 +60,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curie",
             "end": 93,
             "explanation": {
                 "icon": "😒",
@@ -118,6 +79,146 @@
             "subcategory": "gender_identity_advanced",
             "text": "absentes",
             "text_id": "absent"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "ez absent de votre domicile. Les participantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous ch",
+            "end": 158,
+            "explanation": {
+                "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "text": "Cultive la sécurité émotionnelle",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/émotions-positives?reducedView=true"
+            },
+            "label": "Motivation sociale: Émotions positives",
+            "proficiency_level": "inclusive",
+            "start": 138,
+            "subcategory": "emotional_security",
+            "text": "curieux et curieuses",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "un∙e stagiaire"
+                },
+                {
+                    "text": "un stagiaire ou une stagiaire"
+                },
+                {
+                    "text": "personne en stage"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "icipantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieu",
+            "end": 187,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/nom-de-métier?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Nom de métier",
+            "proficiency_level": "unconscious_bias",
+            "start": 175,
+            "subcategory": "titles",
+            "text": "un stagiaire",
+            "text_id": "stagiaire"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "entes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous",
+            "end": 195,
+            "explanation": {
+                "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "text": "Cultive la sécurité émotionnelle",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/émotions-positives?reducedView=true"
+            },
+            "label": "Motivation sociale: Émotions positives",
+            "proficiency_level": "inclusive",
+            "start": 188,
+            "subcategory": "emotional_security",
+            "text": "curieux",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "curieux·ses"
+                },
+                {
+                    "text": "curieux et curieuses"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "eux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "end": 249,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque une représentation genrée",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Expression genrée",
+            "proficiency_level": "unconscious_bias",
+            "start": 242,
+            "subcategory": "hidden_image",
+            "text": "curieux",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "curieux·ses"
+                },
+                {
+                    "text": "curieux et curieuses"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "giaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "end": 288,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque une représentation genrée",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Expression genrée",
+            "proficiency_level": "unconscious_bias",
+            "start": 281,
+            "subcategory": "hidden_image",
+            "text": "curieux",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "curieuses"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "aire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "end": 327,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque une représentation genrée",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Expression genrée",
+            "proficiency_level": "unconscious_bias",
+            "start": 320,
+            "subcategory": "hidden_image",
+            "text": "curieux",
+            "text_id": "curieux"
         }
     ]
 }
