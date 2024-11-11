@@ -996,6 +996,16 @@ class Alternatives:
                 result["plural"] = pluralize(result["base_form"])
 
             alternative.lemma = result["plural"]
+            if article:
+                alternative.lemma = self.add_article(
+                    lang,
+                    alternative.lemma,
+                    article,
+                )
+            alternatives.append(alternative)
+
+            return alternatives
+
 
         if result["female_form"] or self.nouns.is_gender_neutral(result):
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
@@ -1071,3 +1081,26 @@ class Alternatives:
         self, lang: LangType, articles_list: str, article_index: int
     ):
         return list(self.static_rules[lang][articles_list].keys())[article_index]
+
+
+    def get_adjective_alternatives_french(self, male_form, female_form):
+        lemma = male_form + "~" + female_form
+        return [
+            Alternative(
+                lemma,
+                [lemma],
+                [
+                    {
+                        "word_type": "a",
+                        "lower_case": True,
+                        "lemmatize": True,
+                    }
+                ],
+                False,
+                False,
+                False,
+                False,
+                False,
+                True,
+            )
+        ]        
