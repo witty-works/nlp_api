@@ -462,17 +462,24 @@ async def get_health(check_external: bool = False):
             health["model_" + lang] = False
 
     if check_external:
-        languagetool_health = await context.model.fetch_json_get(
-            context.settings.languagetool_api + "/healthcheck",
-            {},
-            {},
-            "LanguageTool",
-            context.settings.languagetool_verify_ssl,
-            False,
-        )
+        try:
+            languagetool_health = await context.http.fetch_json_get(
+                context.settings.languagetool_api + "/healthcheck",
+                {},
+                {},
+                "LanguageTool",
+                context.settings.languagetool_verify_ssl,
+                False,
+            )
 
-        health["spelling"] = languagetool_health == "OK"
-        health["config"] = context.redis.db.ping()
+            health["spelling"] = languagetool_health == "OK"
+        except Exception:
+            health["spelling"] = False
+
+        try:
+            health["config"] = context.redis.db.ping()
+        except Exception:
+            health["config"] = False
 
     content = jsonable_encoder(health)
 
