@@ -239,3 +239,77 @@ class Adjectives:
             )
 
         return target_form
+
+    def get_feminine_form_french(self, word: str):
+        # https://www.wikifunctions.org/view/pcm/Z11591
+        # See also:
+        # https://vitrinelinguistique.oqlf.gouv.qc.ca/25840/banque-de-depannage-linguistique/la-grammaire/ladjectif/formation-de-ladjectif-au-feminin
+        # https://la-conjugaison.nouvelobs.com/fle/les-adjectifs-qualificatifs-24.php
+
+        # TODO expand list
+        if word in [
+            "antichoc",
+            "cajun",
+            "chic",
+            "kaki",
+            "standard",
+            "tout-terrain",
+            "zen",
+        ]:
+            return word
+
+        if word.endswith("f"):
+            return word[:-1] + "vex"
+
+        if word.endswith("teur"):
+            return word[:-4] + "trice"
+
+        if word.endswith("er"):
+            return word[:-2] + "ère"
+
+        if word.endswith("x"):
+            if word.endswith(("roux", "faux")):
+                return word[:-1] + "sse"
+
+            if word.endswith(("doux")):
+                return word[:-1] + "ce"
+
+            if word.endswith(("vieux")):
+                return word[:-2] + "ille"
+
+            return word[:-1] + "se"
+
+        if word.endswith("eur"):
+            if word.endswith(("érieur", "majeur", "mineur", "meilleur")):
+                return word + "e"
+
+            return word[:-1] + "se"
+
+        if word.endswith("et"):
+            if word.endswith(("inquiet", "complet", "désuet", "replet", "cret")):
+                return word[:-2] + "ète"
+
+            return word + "te"
+
+        if word.endswith("gu"):
+            return word + "ë"
+
+        if (
+            word.endswith("el")
+            or word.endswith("en")
+            or word.endswith("on")
+            or word.endswith("eil")
+            or word.endswith("ul")
+        ):
+            return word + word[-1] + "e"
+
+        if word.endswith("eau"):
+            return word[:-2] + "lle"
+
+        if word.endswith("anc"):
+            return word + "he"
+
+        if word.endswith("e") or word.endswith("a"):
+            return word
+
+        return word + "e"

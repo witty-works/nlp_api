@@ -18,6 +18,7 @@ from app.helper import is_valid_text, check_word_case, is_addon_enabled, upperfi
 from app.categories import (
     is_sub_category_enabled,
     get_category_name,
+    get_proficiency_level,
 )
 from app.model import Model
 from app.db import Db
@@ -67,6 +68,9 @@ class RuleCheck:
         self.adjectives = adjectives
         self.alternatives = alternatives
 
+    def is_target_noun(self, token: Token):
+        return token.dep_.endswith("subj") or token.dep_.endswith("obj")
+
     async def handle(
         self,
         config: Config,
@@ -102,6 +106,49 @@ class RuleCheck:
                 config.addons,
                 suffix_check,
             )
+
+            if (
+                len(rules) == 0
+                and language.lang == LangType.FR
+                and self.model.is_token_plural(LangType.FR, token)
+                and await self.model.check_word_type(
+                    language.lang, token, WordType.ADJECTIVE, True, True
+                )
+            ):
+                male_form = pluralize(token.lemma_)
+                female_form = pluralize(
+                    self.adjectives.get_feminine_form_french(male_form)
+                )
+
+                if male_form != female_form:
+                    adjective_rule = Rule(
+                        "fr_adjective_rule",
+                        LangType.FR,
+                        token.lemma_,
+                        [token.lemma_],
+                        [{"word_type": "a", "lower_case": True, "lemmatize": True}],
+                        ["hidden_image"],
+                        self.alternatives.get_adjective_alternatives_french(
+                            male_form, female_form
+                        ),
+                    )
+                    adjective_rule.false_positives = [
+                        male_form + " et " + female_form,
+                        female_form + " et " + male_form,
+                    ]
+                    return await self.handle(
+                        config,
+                        client,
+                        language,
+                        full_text,
+                        token_index,
+                        tokens,
+                        offsets,
+                        list_full,
+                        [adjective_rule],
+                        false_positive_matcher,
+                        suffix_check,
+                    )
 
         for rule in rules:
             subcategory = is_sub_category_enabled(
@@ -321,51 +368,116 @@ class RuleCheck:
                         alternative.lemma += ending
 
             start = tokens[start_token_index].idx
+            is_plural = self.model.is_token_plural(language.lang, token)
+            false_positives = []
+
             if language.lang == LangType.FR:
                 first_word_type = rule.get_first_word_type()
                 match first_word_type:
                     case WordType.ADJECTIVE:
-                        category_name = get_category_name(subcategory)
-                        # Nous cherchons des *stagiaires actifs*.
-                        # Les *volcans* sont *actifs*.
-                        if category_name == "hidden_image":
-                            source_noun = None
+                        source_noun = None
 
-                            for a in token.ancestors:
-                                if a.dep_ == "nsubj":
-                                    source_noun = a.text
+                        for a in token.ancestors:
+                            if self.is_target_noun(a):
+                                source_noun = a
+                                break
+
+                            for atok in a.children:
+                                if self.is_target_noun(atok):
+                                    source_noun = atok
                                     break
 
-                                for atok in a.children:
-                                    if atok.dep_ == "nsubj":
-                                        source_noun = atok.text
-                                        break
+                        if source_noun is None:
+                            source_index = word_index = None
+                            for word in token.sent:
+                                if not self.is_target_noun(word):
+                                    continue
 
-                            if source_noun is None:
-                                source_index = word_index = None
-                                for word in token.sent:
-                                    if word.dep_ != "nsubj":
+                                if word.i < word.head.i:
+                                    word_index = word.head.i
+                                    source_index = word.i
+                                elif word.i > word.head.i:
+                                    word_index = word.i
+                                    source_index = word.head.i
+
+                                if word_index == token_index:
+                                    source_noun = tokens[source_index]
+                                    break
+
+                        # Nous cherchons des stagiaires *curieux*
+                        if (
+                            self.model.is_token_plural(language.lang, source_noun)
+                            and get_proficiency_level(subcategory) == "inclusive"
+                            and source_noun is not None
+                            and source_noun.text.lower()
+                            in self.static_rules[LangType.FR]["gender_neutral_nouns"]
+                        ):
+                            male_form = pluralize(token.lemma_)
+                            female_form = pluralize(
+                                self.adjectives.get_feminine_form_french(male_form)
+                            )
+
+                            # adjective is not gender neutral
+                            if male_form != female_form:
+                                false_positive_check = None
+                                is_prev = False
+                                if (
+                                    token_index - 1 > 0
+                                    and tokens[token_index - 1].lemma_ == "et"
+                                    and tokens[token_index - 2].text.lower()
+                                    in [male_form, female_form]
+                                ):
+                                    false_positive_check = tokens[
+                                        token_index - 2
+                                    ].text.lower()
+                                    is_prev = True
+                                elif (
+                                    token_index + 1 < len(tokens)
+                                    and tokens[token_index + 1].lemma_ == "et"
+                                    and tokens[token_index + 2].text.lower()
+                                    in [male_form, female_form]
+                                ):
+                                    false_positive_check = tokens[
+                                        token_index + 2
+                                    ].text.lower()
+
+                                if false_positive_check is None:
+                                    subcategory = "hidden_image"
+                                    alternatives = self.alternatives.get_adjective_alternatives_french(
+                                        male_form, female_form
+                                    )
+                                else:
+                                    if is_prev:
                                         continue
 
-                                    if word.i < word.head.i:
-                                        word_index = word.head.i
-                                        source_index = word.i
-                                    elif word.i > word.head.i:
-                                        word_index = word.i
-                                        source_index = word.head.i
+                                    if false_positive_check == token.text.lower():
+                                        subcategory = "hidden_image"
+                                        alternatives = [
+                                            Alternative(
+                                                male_form
+                                                if false_positive_check == female_form
+                                                else female_form
+                                            )
+                                        ]
+                                    else:
+                                        text += (
+                                            token.whitespace_
+                                            + tokens[token_index + 1].text
+                                            + tokens[token_index + 1].whitespace_
+                                            + tokens[token_index + 2].text
+                                        )
+                                        skip_token += 2
 
-                                    if word_index == token_index:
-                                        source_noun = tokens[source_index].text
-                                        break
-
-                            if (
-                                source_noun is None
-                                or source_noun.lower()
-                                not in self.static_rules[LangType.FR][
-                                    "gender_neutral_nouns"
-                                ]
-                            ):
-                                continue
+                        # Nous cherchons des *stagiaires actifs*.
+                        # Les *volcans* sont *actifs*.
+                        elif get_category_name(subcategory) == "hidden_image" and (
+                            source_noun is None
+                            or source_noun.text.lower()
+                            not in self.static_rules[LangType.FR][
+                                "gender_neutral_nouns"
+                            ]
+                        ):
+                            continue
                     case WordType.NOUN:
                         category_name = get_category_name(subcategory)
                         if (
@@ -433,10 +545,10 @@ class RuleCheck:
                                         and tokens[token_index + 3].lemma_.lower()
                                         == tokens[token_index].lemma_.lower()
                                         and await self.model.check_word_type(
-                                            language.lang
-                                        ),
-                                        tokens[token_index + 2],
-                                        WordType.ARTICLE,
+                                            language.lang,
+                                            tokens[token_index + 2],
+                                            WordType.ARTICLE,
+                                        )
                                     ):
                                         other_token = tokens[token_index + 3]
 
@@ -482,7 +594,6 @@ class RuleCheck:
                             if not subcategory:
                                 continue
 
-                is_plural = self.model.is_token_plural(language.lang, token)
                 article = article_index = None
                 # when using pattern matching, the rule should explicitly state if the article should be included
                 if (
@@ -557,7 +668,11 @@ class RuleCheck:
                                 collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
-                            male_form = pluralize(male_form)
+                            male_form = (
+                                pluralize(male_form)
+                                if result is None or result["plural"] is None
+                                else result["plural"]
+                            )
                             female_form = pluralize(female_form)
 
                         gendered_alternatives = (
@@ -584,7 +699,7 @@ class RuleCheck:
                                 new_alternatives.append(new_alternative)
 
                         # add gender neutral option on top of the male/female variation
-                        if self.nouns.is_gender_neutral(result):
+                        if self.nouns.is_gender_neutral(result) and (not is_plural or male_form != token.text.lower()):
                             alternative.lemma = male_form
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
@@ -654,6 +769,73 @@ class RuleCheck:
                         else:
                             new_alternatives.append(alternative)
                     else:
+                        if (
+                            language.lang == LangType.FR
+                            and alternative.lemma == token.lemma_
+                            and rule.pattern.startswith("article|l")
+                            and not is_plural
+                        ):
+                            gendered_article = tokens[token_index - 1].lemma_
+                            gender_neutral_noun = alternative.lemma
+                            if Config.gendered_roles_format_inclusive(
+                                config.gendered_roles_format
+                            ):
+                                alternative.lemma = (
+                                    self.static_rules[LangType.FR][
+                                        "masculine_articles"
+                                    ][gendered_article]
+                                    + " "
+                                    + gender_neutral_noun
+                                )
+
+                                if (
+                                    config.gendered_roles_format
+                                    == GenderedRolesFormatType.BOTH
+                                ):
+                                    new_alternative = deepcopy(alternative)
+                                    new_alternatives.append(new_alternative)
+
+                            if Config.gendered_roles_format_binary(
+                                config.gendered_roles_format
+                            ):
+                                if (
+                                    gendered_article
+                                    in self.static_rules[LangType.FR][
+                                        "masculine_articles"
+                                    ][gendered_article]
+                                ):
+                                    male_article = gendered_article
+                                    female_article = self.static_rules[LangType.FR][
+                                        "articles_map"
+                                    ][gendered_article]
+                                else:
+                                    male_article = self.static_rules[LangType.FR][
+                                        "articles_map"
+                                    ][gendered_article]
+                                    female_article = gendered_article
+
+                                alternative.lemma = (
+                                    male_article
+                                    + " "
+                                    + gender_neutral_noun
+                                    + " ou "
+                                    + female_article
+                                    + " "
+                                    + gender_neutral_noun
+                                )
+
+                                false_positives.append(
+                                    (
+                                        female_article
+                                        + " "
+                                        + gender_neutral_noun
+                                        + " ou "
+                                        + male_article
+                                        + " "
+                                        + gender_neutral_noun
+                                    )
+                                )
+
                         new_alternatives.append(alternative)
 
                 if len(alternatives) and len(new_alternatives) == 0:
@@ -661,6 +843,23 @@ class RuleCheck:
                     continue
 
                 alternatives = new_alternatives
+
+                for alternative in alternatives:
+                    if (
+                        alternative.is_remove
+                        or alternative.lemma.lower() == text.lower()
+                    ):
+                        continue
+
+                    false_positives.append(alternative.lemma)
+
+                rule.false_positives = false_positives
+
+                if await self.is_rule_false_positive(
+                    full_text, token_index, tokens, rule
+                ):
+                    continue
+
             elif len(alternatives):
                 # TODO make it possible to handle cases with multiple alternatives
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":

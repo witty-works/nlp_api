@@ -32,15 +32,3 @@ subcategories.csv
 .python-version
 .blackfire.ini
 .pdm-python
-
-# Massdriver files to ignore
-**/schema-artifacts.json
-**/schema-connections.json
-**/schema-params.json
-**/schema-ui.json
-**/*.tfvars.json
-**/*.tfvars
-**/_connections_variables.tf.json
-**/_md_variables.tf.json
-**/_params_variables.tf.json
-database/db.sqlite3

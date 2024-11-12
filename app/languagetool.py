@@ -140,7 +140,10 @@ class LanguageTool:
                     continue
 
                 # Ignore typos in French female noun forms
-                if language.lang == LangType.FR and text in self.db.french_feminine_nouns:
+                if (
+                    language.lang == LangType.FR
+                    and text in self.db.french_feminine_nouns
+                ):
                     continue
 
             if (
@@ -170,20 +173,39 @@ class LanguageTool:
                 if match["rule"]["id"] in ["SONDERZEICHEN", "ROEMISCHE_ZAHL"]:
                     continue
                 elif subcategory in self.lt_style_categories_plain_language:
-                    if (
-                        subcategory == "STYLE"
-                        and (
-                            match["rule"]["id"]
-                            in [
-                                "TWITTER_X",
-                                "SERIAL_COMMA_ON",
-                            ]
-                        )
-                        or match["rule"]["id"].endswith("REPEAT_BEGINNING_RULE")
-                    ):
-                        subcategory = "orthography"
-                    else:
+                    subcategory = "orthography"
+
+                    if match["rule"]["category"]["id"] == "COLLOQUIALISMS":
                         subcategory = "plain_language"
+                    elif match["rule"]["category"]["id"] == "STYLE":
+                        if match["rule"]["id"] in [
+                            "PASSIVE_VOICE_SIMPLE",
+                            "PASSIVE_VOICE",
+                            "TOO_LONG_SENTENCE",
+                            "TOO_LONG_SENTENCE_DE",
+                            "TOO_LONG_PARAGRAPH",
+                            "INDIAN_ENGLISH",
+                            "THREE_NN",
+                            "FOUR_NN",
+                            "GOTTA",
+                            "GONNA_TEMP",
+                            "TRYNA",
+                            "DONTCHA",
+                            "DUNNO",
+                            "WANNA",
+                            "GOTCHA",
+                            "GIMME",
+                            "DIS",
+                            "DAT",
+                            "LUV",
+                            "BOUT_TO",
+                            "LEMME",
+                            "Y_ALL",
+                            "WHATCHA",
+                        ]:
+                            subcategory = "plain_language"
+                        elif match["rule"]["id"] in ["PROFANITY_XML", "RUDE_SARCASTIC"]:
+                            subcategory = "offensive_language"
                 elif subcategory == "PLAIN_ENGLISH":
                     subcategory = "plain_language_advanced"
                 elif subcategory == "DIFFICULT_WORDS":
@@ -273,8 +295,8 @@ class LanguageTool:
                 # Ignore unpaired brackets like a)
                 "EN_UNPAIRED_BRACKETS",
                 "UNPAIRED_BRACKETS",
-                # Profanity
-                "PROFANITY_XML",
+                # People prever to keep using Twitter
+                "TWITTER_X",
             ],
         }
 
