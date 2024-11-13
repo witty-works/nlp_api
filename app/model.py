@@ -69,9 +69,6 @@ class Model:
         "JJ",
         "JJR",
         "JJS",
-        "VVPP",
-        "VAPP",
-        "VMPP",
     }
 
     pronoun_tags = [
@@ -190,6 +187,9 @@ class Model:
 
             return word_type
 
+        if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
+            return WordType.ADJECTIVE
+
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
             if token.pos_ == "NOUN" or token.tag_ == "NN":
                 return WordType.NOUN
@@ -209,9 +209,6 @@ class Model:
                 return WordType.ADJECTIVE
 
             return WordType.VERB
-
-        if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
-            return WordType.ADJECTIVE
 
         if token.pos_ in self.pronoun_tags or token.tag_ in self.pronoun_tags:
             if expected_word_type == WordType.NOUN:

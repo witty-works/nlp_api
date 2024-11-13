@@ -110,41 +110,6 @@
         {
             "alternatives": [
                 {
-                    "text": "prof"
-                },
-                {
-                    "text": "professeur·ses"
-                },
-                {
-                    "text": "professeurs"
-                },
-                {
-                    "text": "professorat"
-                },
-                {
-                    "text": "enseignant·es"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
-            "end": 81,
-            "explanation": {
-                "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Entretient la vision traditionnelle binaire du genre",
-                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Genre + Orientation sexuelle: Binarité de genre",
-            "proficiency_level": "unconscious_bias",
-            "start": 69,
-            "subcategory": "gender_identity_advanced",
-            "text": "professeuses",
-            "text_id": "professeur"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "un∙e peintre·sse"
                 },
                 {
