@@ -699,7 +699,9 @@ class RuleCheck:
                                 new_alternatives.append(new_alternative)
 
                         # add gender neutral option on top of the male/female variation
-                        if self.nouns.is_gender_neutral(result) and (not is_plural or male_form != token.text.lower()):
+                        if self.nouns.is_gender_neutral(result) and (
+                            not is_plural or male_form != token.text.lower()
+                        ):
                             alternative.lemma = male_form
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
@@ -772,6 +774,7 @@ class RuleCheck:
                         if (
                             language.lang == LangType.FR
                             and alternative.lemma == token.lemma_
+                            and rule.pattern is not None
                             and rule.pattern.startswith("article|l")
                             and not is_plural
                         ):
