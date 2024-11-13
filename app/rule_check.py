@@ -405,10 +405,9 @@ class RuleCheck:
                                     break
 
                         # Nous cherchons des stagiaires *curieux*
-                        if (
-                            self.model.is_token_plural(language.lang, source_noun)
-                            and get_proficiency_level(subcategory) == "inclusive"
+                        if (get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
+                            and self.model.is_token_plural(language.lang, source_noun)
                             and source_noun.text.lower()
                             in self.static_rules[LangType.FR]["gender_neutral_nouns"]
                         ):
@@ -699,7 +698,9 @@ class RuleCheck:
                                 new_alternatives.append(new_alternative)
 
                         # add gender neutral option on top of the male/female variation
-                        if self.nouns.is_gender_neutral(result) and (not is_plural or male_form != token.text.lower()):
+                        if self.nouns.is_gender_neutral(result) and (
+                            not is_plural or male_form != token.text.lower()
+                        ):
                             alternative.lemma = male_form
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
@@ -772,6 +773,7 @@ class RuleCheck:
                         if (
                             language.lang == LangType.FR
                             and alternative.lemma == token.lemma_
+                            and rule.pattern is not None
                             and rule.pattern.startswith("article|l")
                             and not is_plural
                         ):
