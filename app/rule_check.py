@@ -405,10 +405,9 @@ class RuleCheck:
                                     break
 
                         # Nous cherchons des stagiaires *curieux*
-                        if (
-                            self.model.is_token_plural(language.lang, source_noun)
-                            and get_proficiency_level(subcategory) == "inclusive"
+                        if (get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
+                            and self.model.is_token_plural(language.lang, source_noun)
                             and source_noun.text.lower()
                             in self.static_rules[LangType.FR]["gender_neutral_nouns"]
                         ):
