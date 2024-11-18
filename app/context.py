@@ -21,6 +21,7 @@ from app.lang_detection import LangDetection
 from app.categories import get_categories
 from app.alternatives import Alternatives
 from app.llm_alternatives import LlmAlternatives
+from app.prompt import Prompt
 from app.languagetool import LanguageTool
 from app.db import Db
 from app.settings import Settings
@@ -51,10 +52,12 @@ class AppContext:
     adjectives: Adjectives
     alternatives: Alternatives
     languagetool: LanguageTool
+    prompt: Prompt
     llm_alternatives: LlmAlternatives
     rule_check: RuleCheck
     regex_check: RegexCheck
     emoji_check: EmojiCheck
+    prompt: Prompt
     langs: list = []
 
     def __init__(self):

@@ -1,5 +1,3 @@
-import boto3
-
 from app.settings import Settings
 from app.models import (
     RephraseRequestIn,
@@ -8,7 +6,7 @@ from app.models import (
     Config,
 )
 from app.alternatives import Alternatives
-import json_repair
+from app.prompt import Prompt
 import json
 
 
@@ -22,10 +20,12 @@ lang_map = {
 class LlmAlternatives:
     settings: Settings
     alternatives: Alternatives
+    prompt: Prompt
 
-    def __init__(self, settings: Settings, alternatives: Alternatives):
+    def __init__(self, settings: Settings, alternatives: Alternatives, prompt: Prompt):
         self.settings = settings
         self.alternatives = alternatives
+        self.prompt = prompt
 
     async def handle(
         self,
@@ -35,14 +35,6 @@ class LlmAlternatives:
             self.settings.aws_model_id
             if rephrase_request_in.model is None
             else rephrase_request_in.model
-        )
-
-        # Initialize the Bedrock runtime client
-        aws_client = boto3.client(
-            service_name="bedrock-runtime",
-            region_name=self.settings.aws_region_name,
-            aws_access_key_id=self.settings.aws_key,
-            aws_secret_access_key=self.settings.aws_secret_key,
         )
 
         placeholder = "|---|"
@@ -239,44 +231,8 @@ class LlmAlternatives:
             + json.dumps(input_data)
         )
 
-        conversation = []
-
-        if "mistral" in aws_model_id:
-            user_prompt = f"{system_prompt}\n{user_prompt}"
-            system_prompt = []
-        else:
-            system_prompt = [{"text": system_prompt}]
-
-        user_prompt = {
-            "role": "user",
-            "content": [{"text": user_prompt}],
-        }
-
-        conversation.append(user_prompt)
-
-        result = ""
-
-        streaming_response = aws_client.converse_stream(
-            system=system_prompt,
-            modelId=aws_model_id,
-            messages=conversation,
-            inferenceConfig={
-                # This is the maximum number of tokens that the LLM generates.
-                "maxTokens": 300,
-                # Temperature is a hyperparameter that controls the randomness of language model output. (lower is more predictable)
-                "temperature": 0.1,
-                # Top p, also known as nucleus sampling, is another hyperparameter that controls the randomness of language model output.
-                "topP": 1,
-            },
-        )
-
-        for chunk in streaming_response["stream"]:
-            if "contentBlockDelta" in chunk:
-                text = chunk["contentBlockDelta"]["delta"]["text"]
-                result += text
-
-        result = result[result.find("{") : result.rfind("}") + 1]
-        result = json_repair.loads(result)
+        result = await self.prompt.handle(user_prompt, system_prompt, aws_model_id)
+        result = self.prompt.parseJson(result)
 
         if rephrase_request_in.gender_separator is None:
             separator = noun_separator = "∙"
