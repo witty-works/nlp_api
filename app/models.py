@@ -142,6 +142,7 @@ class LangWithAutoType(str, Enum):
 
 
 class ReviewType(str, Enum):
+    INCLUDE_PREVIOUS = "include_previous"
     EXPLAIN_EDITS = "explain_edits"
     NO_EXPLANATION = "no_explanation"
     USE_EXPLANATION = "use_explanation"

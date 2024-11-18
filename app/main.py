@@ -80,6 +80,7 @@ from app.regex_check import RegexCheck
 from app.nouns import Nouns
 from app.verbs import Verbs
 from app.adjectives import Adjectives
+from app.prompt import Prompt
 from app.llm_alternatives import LlmAlternatives
 from app.review_prompt import ReviewPrompt
 from app.categories import (
@@ -179,7 +180,10 @@ async def lifespan(app: FastAPI):
         context.categories,
         context.http,
     )
-    context.llm_alternatives = LlmAlternatives(context.settings, context.alternatives)
+    context.prompt = Prompt(context.settings)
+    context.llm_alternatives = LlmAlternatives(
+        context.settings, context.alternatives, context.prompt
+    )
     context.rule_check = RuleCheck(
         context.settings,
         context.logger,
@@ -381,7 +385,7 @@ async def rephrase_sentence(
     dependencies=[Depends(HTTPBearer(auto_error=False))],
     include_in_schema=not context.settings.is_prod,
 )
-async def review_prompt(
+async def debug_review_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
@@ -399,7 +403,50 @@ async def review_prompt(
     if len(check_result.results) == 0:
         return "WITTYNOCHANGES"
 
-    return ReviewPrompt.handle(check_result.results, review_type)
+    return ReviewPrompt.handle(
+        check_result.results, review_type, check_request_in.text, 1900
+    )
+
+
+@app.post(
+    "/debug/prompt",
+    response_model=dict,
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not context.settings.is_prod,
+)
+async def debug_prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+) -> Result | str:
+
+    check_request_in.text = await context.prompt.handle(check_request_in.text)
+    check_request_in.text = context.prompt.parseJson(check_request_in.text)
+
+    check_request_in.config.disabled_categories.append("communal")
+    check_request_in.config.disabled_categories.append("d_and_i")
+    check_request_in.config.disabled_categories.append("emotional_security")
+    check_request_in.config.disabled_categories.append("orthography")
+
+    check_result = await check(request, response, check_request_in, None)
+    if isinstance(check_result, Result):
+        return check_result
+
+    reviewed_response = None
+    if len(check_result.results) != 0:
+        review_prompt = ReviewPrompt.handle(
+            check_result.results, ReviewType.INCLUDE_PREVIOUS, check_request_in.text
+        )
+
+        reviewed_response = await context.prompt.handle(review_prompt)
+        reviewed_response = context.prompt.parseJson(reviewed_response)
+
+    return {
+        "inititial_response": check_request_in.text,
+        "reviewed_response": reviewed_response,
+        "check_results": check_result.results,
+    }
 
 
 @bolt.command("/witty")

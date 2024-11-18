@@ -4,16 +4,31 @@ import json
 
 class ReviewPrompt:
     @staticmethod
-    def handle(results: ResultsOut, review_type: ReviewType):
-        prompt = f"""You are an expert in inclusive language.
-You are tasked with editing the "previous response" from your previous response.
+    def handle(
+        results: ResultsOut,
+        review_type: ReviewType,
+        previous_prompt: str | None = None,
+        max_prompt_length: int | None = None,
+    ):
+        prompt = (
+            'You are an expert in inclusive language. You are tasked with editing the "previous response".'
+            + "\n"
+        )
 
-For each item in the below "issues list", replace the content provided in "issue" within the "previous response" using any of the provided "alternatives".
+        if review_type != ReviewType.INCLUDE_PREVIOUS:
+            prompt += 'The "previous response" is the response you returned from the previous prompt send just before this prompt.'
+        else:
+            prompt += (
+                'The "previous response" is the following JSON string: '
+                + json.dumps(previous_prompt)
+            )
+
+        prompt += """For each item in the below "issues list", replace the content provided in "issue" within the "previous response" using any of the provided "alternatives".
 Pick which ever element in the "alternatives" list fits best in the given context.
 Either using the text in "alt" or if "remove" is set to True, consider removing the given "issue" from the text entirely.
 If no "alternatives" are provided, try to rephrase the given text portion.
 
-Do not include the "issues list" or a "foreword message" in your response.
+Do not include the "issues list" or a "foreword message" in your response, like "Here is ..".
 """
 
         if review_type == ReviewType.EXPLAIN_EDITS:
@@ -36,7 +51,7 @@ Do not include the "issues list" or a "foreword message" in your response.
                 "alternatives": [],
             }
 
-            if review_type != ReviewType.NO_EXPLANATION:
+            if review_type in [ReviewType.EXPLAIN_EDITS, ReviewType.USE_EXPLANATION]:
                 change["explanation"] = result.explanation.text
 
             for alternative in result.alternatives:
@@ -47,7 +62,8 @@ Do not include the "issues list" or a "foreword message" in your response.
 
             changes.append(change)
 
-        while len(json.dumps(changes)) > 1900 - len(prompt):
-            changes.pop()
+        if max_prompt_length is not None:
+            while len(json.dumps(changes)) > max_prompt_length - len(prompt):
+                changes.pop()
 
         return prompt + '\nBelow is the "issues list":\n' + json.dumps(changes)
