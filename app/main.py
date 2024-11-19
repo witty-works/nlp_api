@@ -237,6 +237,14 @@ secure_headers = secure.Secure(
     xfo=xfo,
 )
 
+disabled_categories_api = [
+    "communal",
+    "d_and_i",
+    "emotional_security",
+    "inclusive",
+    "orthography",
+]
+
 
 @app.middleware("http")
 async def add_security_headers(request, call_next):
@@ -391,10 +399,11 @@ async def debug_review_prompt(
     check_request_in: CheckRequestIn,
     review_type: ReviewType = ReviewType.EXPLAIN_EDITS,
 ) -> Result | str:
-    check_request_in.config.disabled_categories.append("communal")
-    check_request_in.config.disabled_categories.append("d_and_i")
-    check_request_in.config.disabled_categories.append("emotional_security")
-    check_request_in.config.disabled_categories.append("orthography")
+    for category in disabled_categories_api:
+        if category in check_request_in.config.disabled_categories:
+            continue
+
+        check_request_in.config.disabled_categories.append(category)
 
     check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
@@ -424,10 +433,11 @@ async def debug_prompt(
     check_request_in.text = await context.prompt.handle(check_request_in.text)
     check_request_in.text = context.prompt.parseJson(check_request_in.text)
 
-    check_request_in.config.disabled_categories.append("communal")
-    check_request_in.config.disabled_categories.append("d_and_i")
-    check_request_in.config.disabled_categories.append("emotional_security")
-    check_request_in.config.disabled_categories.append("orthography")
+    for category in disabled_categories_api:
+        if category in check_request_in.config.disabled_categories:
+            continue
+
+        check_request_in.config.disabled_categories.append(category)
 
     check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
@@ -1387,6 +1397,13 @@ def apply_configs(
                 check_request_in.config.__setattr__("llm_alternatives", True)
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
+
+    for category in disabled_categories_api:
+        if (
+            category in check_request_in.config.disabled_categories
+            and category not in disabled_categories
+        ):
+            disabled_categories.append(category)
 
     check_request_in.config.__setattr__("disabled_categories", disabled_categories)
     check_request_in.config.__setattr__("plan", plan)
