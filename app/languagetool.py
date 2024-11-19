@@ -237,6 +237,10 @@ class LanguageTool:
             if label == "":
                 try:
                     label = match["rule"]["category"]["name"]
+                    if language.lang == LangType.FR and label == "style rules":
+                        label = "Règles de style"
+                    else:
+                        label = label[0].upper() + label[1:]
                 except KeyError:
                     pass
 
