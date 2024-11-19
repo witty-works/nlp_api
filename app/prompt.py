@@ -17,13 +17,23 @@ class Prompt:
         user_prompt: str,
         system_prompt: str | None = None,
         aws_model_id: str | None = None,
+        temperature: int | None = None,
     ):
         if aws_model_id is None:
             aws_model_id = self.settings.aws_model_id
 
+        if temperature is None:
+            temperature = 0.1
+
         if system_prompt is None:
             system_prompt = f"""
             You are an expert in inclusive language.
+            Try to avoid language that is needlessly gendered (f.e. use truely gender neutral nouns, avoid pronouns).
+            Do not use derogatory language even as a joke.
+            Avoid jargon terms, specially sports or military terms.
+            Specifically make use of communal and inclusive language.
+
+            Follow instructions without mentioning them in your response. Specifically do not add phrases like "Greetings", "Here is .." or "Sure .." to the beginning of your response.
             """
 
         conversation = []
@@ -59,7 +69,7 @@ class Prompt:
                 # This is the maximum number of tokens that the LLM generates.
                 "maxTokens": 300,
                 # Temperature is a hyperparameter that controls the randomness of language model output. (lower is more predictable)
-                "temperature": 0.1,
+                "temperature": temperature,
                 # Top p, also known as nucleus sampling, is another hyperparameter that controls the randomness of language model output.
                 "topP": 1,
             },

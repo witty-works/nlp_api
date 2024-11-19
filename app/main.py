@@ -55,6 +55,7 @@ from app.models import (
     Result,
     ResultOut,
     ResultsOut,
+    PromptOut,
     RephrasesOut,
     UserConfRequest,
     OrganizationConfRequest,
@@ -419,7 +420,7 @@ async def debug_review_prompt(
 
 @app.post(
     "/debug/prompt",
-    response_model=dict,
+    response_model=Union[Result, PromptOut, None],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
     include_in_schema=not context.settings.is_prod,
@@ -428,9 +429,52 @@ async def debug_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
-) -> Result | str:
+) -> Result | PromptOut:
+    return await prompt(request, response, check_request_in)
 
-    check_request_in.text = await context.prompt.handle(check_request_in.text)
+
+@app.post(
+    "/v1.0/prompt",
+    response_model=Union[Result, PromptOut, None],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not context.settings.is_prod,
+)
+async def post_prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+) -> Result | PromptOut:
+    return await prompt(request, response, check_request_in, "1.0")
+
+
+async def prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+    version: str | None = None,
+) -> Result | PromptOut:
+    if version is not None:
+        user_email = await fetch_user(
+            request, context.settings, context.redis, context.http
+        )
+
+        configs = await fetch_configs_for_request(check_request_in, user_email)
+    else:
+        configs = debug_configs(check_request_in)
+
+    context.redis.store_metrics(request, configs, version, "prompt")
+
+    if (
+        check_request_in.config.plan is None
+        or not check_request_in.config.plan.startswith("witty_")
+    ):
+        response.status_code = status.HTTP_402_PAYMENT_REQUIRED
+        return Result.factory("Plan missing")
+
+    check_request_in.text = await context.prompt.handle(
+        check_request_in.text, None, None, 0.4
+    )
     check_request_in.text = context.prompt.parseJson(check_request_in.text)
 
     for category in disabled_categories_api:
@@ -452,11 +496,11 @@ async def debug_prompt(
         reviewed_response = await context.prompt.handle(review_prompt)
         reviewed_response = context.prompt.parseJson(reviewed_response)
 
-    return {
-        "inititial_response": check_request_in.text,
-        "reviewed_response": reviewed_response,
-        "check_results": check_result.results,
-    }
+    return PromptOut(
+        inititial_response=check_request_in.text,
+        reviewed_response=reviewed_response,
+        check_results=check_result.results,
+    )
 
 
 @bolt.command("/witty")
@@ -732,7 +776,7 @@ async def post_auth_debug(
         request, context.settings, context.redis, context.http
     )
     if not user_email:
-        return user_email
+        return None
 
     configs = await fetch_configs_for_request(check_request_in, user_email)
 
@@ -1501,6 +1545,22 @@ def check_client_version(client: Client):
         )
 
 
+def debug_configs(
+    request_in: BaseRequestIn,
+):
+    if "none" in request_in.config.disabled_categories:
+        request_in.config.__setattr__("disabled_categories", [])
+    elif request_in.config.disabled_categories == []:
+        request_in.config.__setattr__(
+            "disabled_categories", ["plain_language_advanced"]
+        )
+
+    configs = {"categories": {}}
+    apply_configs(request_in, configs, "witty_teams")
+
+    return configs
+
+
 async def check(
     request: Request,
     response: Response,
@@ -1510,26 +1570,17 @@ async def check(
     client = parse_client(check_request_in.client)
     check_client_version(client)
 
+    user_email = None
     if version is not None:
         check_api_version(version)
 
         user_email = await fetch_user(
             request, context.settings, context.redis, context.http
         )
+
         configs = await fetch_configs_for_request(check_request_in, user_email)
     else:
-        # debug
-        user_email = None
-
-        if "none" in check_request_in.config.disabled_categories:
-            check_request_in.config.__setattr__("disabled_categories", [])
-        elif check_request_in.config.disabled_categories == []:
-            check_request_in.config.__setattr__(
-                "disabled_categories", ["plain_language_advanced"]
-            )
-
-        configs = {"categories": {}}
-        apply_configs(check_request_in, configs, "witty_teams")
+        configs = debug_configs(check_request_in)
 
     context.redis.store_metrics(request, configs, version, "check")
 

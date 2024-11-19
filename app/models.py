@@ -95,6 +95,9 @@ class MetricsType(str, Enum):
     REPHRASE_COUNTS = "rephrase_counts"
     REPHRASE_PLANS = "rephrase_plans"
     REPHRASE_HOST = "rephrase_host"
+    PROMPT_COUNTS = "prompt_counts"
+    PROMPT_PLANS = "prompt_plans"
+    PROMPT_HOST = "prompt_host"
 
 
 class ContentType(str, Enum):
@@ -1096,6 +1099,12 @@ class RephrasesOut(BaseModel):
     @staticmethod
     def factory(results: list):
         return RephrasesOut(results=results)
+
+
+class PromptOut(BaseModel):
+    check_results: list[ResultOut]
+    inititial_response: str
+    reviewed_response: Optional[str] = None
 
 
 class ResultsOut(BaseModel):

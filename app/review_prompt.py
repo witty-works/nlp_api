@@ -28,7 +28,7 @@ Pick which ever element in the "alternatives" list fits best in the given contex
 Either using the text in "alt" or if "remove" is set to True, consider removing the given "issue" from the text entirely.
 If no "alternatives" are provided, try to rephrase the given text portion.
 
-Do not include the "issues list" or a "foreword message" in your response, like "Here is ..".
+Do not include the "issues list" in your response.
 """
 
         if review_type == ReviewType.EXPLAIN_EDITS:
