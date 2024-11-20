@@ -324,11 +324,11 @@
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 6,
-            "subcategory": "formality",
+            "subcategory": "formality_advanced",
             "text": "Sie",
             "text_id": "sie"
         },
@@ -353,11 +353,11 @@
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 15,
-            "subcategory": "formality",
+            "subcategory": "formality_advanced",
             "text": "Ihren",
             "text_id": "ihren"
         },
@@ -379,11 +379,11 @@
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 44,
-            "subcategory": "formality",
+            "subcategory": "formality_advanced",
             "text": "Sie",
             "text_id": "sie"
         },
@@ -483,11 +483,11 @@
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 237,
-            "subcategory": "formality",
+            "subcategory": "formality_advanced",
             "text": "Sie",
             "text_id": "sie"
         },

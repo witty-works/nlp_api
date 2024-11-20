@@ -85,11 +85,11 @@
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 67,
-            "subcategory": "formality",
+            "subcategory": "formality_advanced",
             "text": "Sie",
             "text_id": "sie"
         },
