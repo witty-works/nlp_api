@@ -1694,7 +1694,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|a|a|n|n||n|emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1740,7 +1740,7 @@ def test_spacy():
             {
                 "text": "Müller",
                 "lemma": "Müller",
-                "word_type": "",
+                "word_type": "n",
                 "is_singular": True,
                 "ner": "",
             },
@@ -1754,7 +1754,7 @@ def test_spacy():
             {
                 "text": "London",
                 "lemma": "London",
-                "word_type": "",
+                "word_type": "n",
                 "is_singular": True,
                 "ner": "LOC",
             },
@@ -1762,7 +1762,7 @@ def test_spacy():
                 "text": "😃",
                 "lemma": "😃",
                 "word_type": "emoji",
-                "is_singular": None,
+                "is_singular": False,
                 "ner": "",
             },
         ]
@@ -1776,13 +1776,14 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|a|a|n|n||n|emoji"},
             {
                 "noun chunks": [
                     {"text": "👩🏻‍🚒", "start": 0, "end": 1},
                     {"text": "Das", "start": 1, "end": 2},
                     {"text": "Herr Müller", "start": 5, "end": 7},
                     {"text": "London", "start": 8, "end": 9},
+                    {"text": "😃", "start": 9, "end": 10},
                 ]
             },
             {
@@ -1826,10 +1827,10 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1875,10 +1876,10 @@ def test_spacy():
                 "children": [
                     {"dep": "mo", "token": "sehr", "ner": ""},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1894,15 +1895,15 @@ def test_spacy():
                 "morph": {"Degree": "Pos"},
                 "tag": "ADJD",
                 "pos": "ADV",
-                "dep": "mo",
+                "dep": "pd",
                 "head": "ist",
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1923,16 +1924,16 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
                 "text": "Müller",
                 "lemma": "Müller",
-                "word_type": "",
+                "word_type": "n",
                 "is_singular": True,
                 "ner": "",
                 "start": 33,
@@ -1948,10 +1949,10 @@ def test_spacy():
                 "children": [
                     {"dep": "nk", "token": "Müller", "ner": ""},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1972,16 +1973,16 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
                 "text": "London",
                 "lemma": "London",
-                "word_type": "",
+                "word_type": "n",
                 "is_singular": True,
                 "ner": "LOC",
                 "start": 43,
@@ -1997,34 +1998,34 @@ def test_spacy():
                 "children": [
                     {"dep": "nk", "token": "London", "ner": "LOC"},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
                 "text": "😃",
                 "lemma": "😃",
                 "word_type": "emoji",
-                "is_singular": None,
+                "is_singular": False,
                 "ner": "",
                 "start": 50,
                 "whitespace": "",
                 "emoji_desc": "grinning face with big eyes",
                 "is_emoji": True,
-                "morph": {},
-                "tag": "KON",
-                "pos": "CCONJ",
-                "dep": "punct",
+                "morph": {"Case": "Acc", "Gender": "Neut", "Number": "Plur"},
+                "tag": "NN",
+                "pos": "NOUN",
+                "dep": "pd",
                 "head": "ist",
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
                     {"dep": "pd", "token": "Herr", "ner": ""},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
         ]

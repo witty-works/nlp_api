@@ -44,49 +44,6 @@
             "subcategory": "exaggerating_advanced",
             "text": "best",
             "text_id": "best"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "current"
-                },
-                {
-                    "text": "best available"
-                },
-                {
-                    "text": "advanced"
-                },
-                {
-                    "text": "sophisticated"
-                },
-                {
-                    "text": "technologically advanced"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
-            "end": 71,
-            "explanation": {
-                "content": "advanced",
-                "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
-                "image_url": {
-                    "alt": "Witty Works illustration: One person says,\" That's how we move the needle on sales.\" The other person says, \"Great\" but secretly wonders, \"Needles?\" ",
-                    "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20Works%20Empty%20words.png",
-                    "width": 900
-                },
-                "long_text": "To connect and engage your audience, avoid empty words and generic messages.",
-                "text": "It's overused and might distract from your message",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/empty-words?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Cultural Diversity: Empty word",
-            "proficiency_level": "unconscious_bias",
-            "start": 55,
-            "subcategory": "hollow",
-            "text": "state-of-the-art",
-            "text_id": "state-of-the-art"
         }
     ]
 }

@@ -6,39 +6,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Einflussvermögen"
-                },
-                {
-                    "text": "Einflugvermögen"
-                },
-                {
-                    "text": "Eisflussvermögen"
-                },
-                {
-                    "text": "Genflussvermögen"
-                },
-                {
-                    "text": "Einglasvermögen"
-                }
-            ],
-            "category": "orthography",
-            "context": "Einflußvermögen der einzelnen Regierungen auf diese Märkte weit überlegen ist",
-            "end": 15,
-            "explanation": {
-                "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 0,
-            "subcategory": "typos",
-            "text": "Einflußvermögen",
-            "text_id": "Einflußvermögen"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "angesehen"
                 },
                 {

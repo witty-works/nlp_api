@@ -55,25 +55,25 @@
         {
             "alternatives": [
                 {
-                    "female_form": "Technikexpertinnen",
+                    "female_form": "Technikexpertin",
                     "gender_role": "inclusive_gender",
-                    "male_form": "Technikexperten",
-                    "text": "Technikexpert*innen"
+                    "male_form": "Technikexperte",
+                    "text": "Technikexpert*in"
                 },
                 {
-                    "female_form": "Technikexpertinnen",
+                    "female_form": "Technikexpertin",
                     "gender_role": "binary_gender",
-                    "male_form": "Technikexperten",
-                    "text": "Technikexpertinnen und Technikexperten"
+                    "male_form": "Technikexperte",
+                    "text": "Technikexpertin/Technikexperte"
                 },
                 {
-                    "text": "Technikfachkräfte"
+                    "text": "Technikfachgröße"
                 },
                 {
-                    "text": "Technikfachpersonen"
+                    "text": "Kapazität"
                 },
                 {
-                    "text": "Techniksachverständige"
+                    "text": "Technikfachkraft"
                 }
             ],
             "category": "gender-orientation",

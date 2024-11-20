@@ -36,7 +36,7 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
     "gunicorn",
-    "spacy",
+    "spacy>=3.8.0",
     "pandas",
     "aiofiles",
     "babel",
@@ -50,9 +50,9 @@ dependencies = [
     "german-nouns",
     "inflex",
     "spacy-lookups-data",
-    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl",
-    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.7.0/de_core_news_lg-3.7.0-py3-none-any.whl",
-    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl",
+    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl",
+    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl",
+    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl",
     "secure>=0.3.0",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
@@ -68,9 +68,10 @@ dependencies = [
     "boto3>=1.34.130",
     "json-repair>=0.28.3",
     "rsa>=4.9",
-    "pluralizefr>=0.0.1",
+    "pluralizefr>=0.1.0",
+    "numpy>=1.0.0,<2.0.0",
 ]
-requires-python = ">3.12"
+requires-python = ">=3.12,<3.14"
 license = "Proprietary"
 
 [build-system]

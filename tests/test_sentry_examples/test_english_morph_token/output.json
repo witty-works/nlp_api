@@ -71,47 +71,6 @@
         {
             "alternatives": [
                 {
-                    "text": "an internship"
-                },
-                {
-                    "context": "💡 Identity first",
-                    "inspiration": true,
-                    "text": "interns",
-                    "type": "identity_first",
-                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
-                },
-                {
-                    "text": "they"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSW",
-            "end": 63,
-            "explanation": {
-                "content": "advanced",
-                "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "image_url": {
-                    "alt": "Illustration: A man in a suit with his arms akimbo stands in the spotlight surrounded by a diverse crowd in the shadows",
-                    "height": 409,
-                    "src": "https://www.witty.works/hs-fs/hubfs/witty-works-Generic-masculine-810x410.jpg.png?width=809&quality=high",
-                    "width": 810
-                },
-                "long_text": "To include everyone, use options that nudge people’s brains into seeing all gender possibilities.",
-                "text": "Generally provokes a mental image of men",
-                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Gender + Orientation: Generic masculine",
-            "proficiency_level": "unconscious_bias",
-            "start": 55,
-            "subcategory": "function_advanced",
-            "text": "a intern",
-            "text_id": "intern"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "They"
                 }
             ],

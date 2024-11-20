@@ -207,7 +207,7 @@ class Model:
             return WordType.ADJECTIVE
 
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
-            if token.pos_ == "NOUN" or token.tag_ == "NN":
+            if token.pos_ == "NOUN" or token.tag_ in ["NN", "NNP"]:
                 return WordType.NOUN
 
         if token.pos_ == "VERB":
@@ -244,7 +244,7 @@ class Model:
             return WordType.CONJUNCTION
 
         if token.pos_ == "PROPN":
-            return expected_word_type
+            return expected_word_type if expected_word_type else WordType.NOUN
 
         return ""
 

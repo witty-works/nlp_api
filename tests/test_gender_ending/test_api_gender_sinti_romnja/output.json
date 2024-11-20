@@ -139,30 +139,49 @@
             "text_id": "Zigeuner"
         },
         {
-            "alternatives": [],
-            "category": "social-motive",
+            "alternatives": [
+                {
+                    "female_form": "eine Romni",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Rom",
+                    "text": "eine*n Rom*ni"
+                },
+                {
+                    "female_form": "eine Romni",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Rom",
+                    "text": "eine/n Romni/Rom"
+                },
+                {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Sinto",
+                    "text": "eine*n Sint*eza"
+                },
+                {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Sinto",
+                    "text": "eine/n Sinteza/Sinto"
+                }
+            ],
+            "category": "cultural-diversity",
             "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
             "end": 91,
             "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
-                "image_url": {
-                    "alt": "Illustration einer vielfältigen Gruppe mit 5 Personen unterschiedlichen Alters, Körperbaus und ethnischer Herkunft",
-                    "height": 525,
-                    "src": "https://www.witty.works/hubfs/diversity-and-inclusion.png",
-                    "width": 900
-                },
-                "long_text": "Um Bewusstsein zu schaffen und Einfühlungsvermögen zu stärken, greife in Gesprächen über DEIB auf einen gemeinsamen Wortschatz zurück.",
-                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "long_text": "Damit sich alle in deinem Umfeld sicher, respektiert, engagiert und wertgeschätzt fühlen, vermeide Sprache, die Menschen aufgrund ihrer Herkunft bewertet oder als anders definiert.",
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abstammung?reducedView=true"
             },
-            "label": "Soziale Motivation: DEIB",
-            "proficiency_level": "inclusive",
-            "start": 88,
-            "subcategory": "d_and_i",
-            "text": "*in",
-            "text_id": "*in"
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
+            "start": 75,
+            "subcategory": "racist_source",
+            "text": "eine Zigeuner*in",
+            "text_id": "Zigeuner"
         },
         {
             "alternatives": [
