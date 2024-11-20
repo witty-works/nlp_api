@@ -33,6 +33,13 @@
                 "context": "Man Firefighter",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "text": "Enforces the traditional binary form of gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -71,6 +78,13 @@
                 "context": "Woman Firefighter",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "text": "Enforces the traditional binary form of gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -113,6 +127,13 @@
                 "context": "Man Firefighter Light Skin Tone",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -151,6 +172,13 @@
                 "context": "Woman Firefighter Dark Skin Tone",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -193,6 +221,13 @@
                 "context": "Man Firefighter Medium Skin Tone",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -219,6 +254,7 @@
             "explanation": {
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "long_text": "To respect everyone, avoid basing how you talk to, and about, people on your ideas of \"normal.\"",
                 "text": "Emoji overuse may exclude screen reader users",
                 "url": "https://www.witty.works/en/categories/ability-physicality/ability?reducedView=true"
             },

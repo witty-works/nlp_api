@@ -36,6 +36,7 @@
                 "content": "advanced",
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "long_text": "Setze auf konkete Aussagen und Beispiele. Worthülsen und Phrasen schwächen deine Aussage oder lenken von ihr ab. ",
                 "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
@@ -56,8 +57,16 @@
                 "content": "video",
                 "icon": "✅",
                 "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/hubfs/Communal_DE.mp4"
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",

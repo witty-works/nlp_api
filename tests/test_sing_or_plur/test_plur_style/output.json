@@ -14,6 +14,7 @@
             "explanation": {
                 "icon": "🧊",
                 "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
+                "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
             },
@@ -45,6 +46,13 @@
                 "content": "advanced",
                 "icon": "😮‍💨",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "image_url": {
+                    "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "width": 900
+                },
+                "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
                 "text": "This term is a over-the-top and not inviting.",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },

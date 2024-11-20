@@ -321,12 +321,7 @@
                     "height": "492",
                     "alt": "Illustration: A person curses loudly into his cell phone. Two people stand expressionless next to it with question marks in a shared thought bubble."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "<span>Ableist slurs or disability-related hate speech are calculated to wound, upset, anger, intimidate, or embarrass. They are hate incidents and constitute verbal, physical, social or psychological abuse. Indulging in this form of behavior not only shapes how people see you, but adversely affects everyone around you. Not least because slurs and hate speech create a social climate, in which bullying and harrassment are more likely to occur.<\/span>",
                 "hard_facts": "",
@@ -350,7 +345,7 @@
             "de": {
                 "hs_path": "behindertenfeindlichkeit",
                 "hs_name": "Behindertenfeindlichkeit",
-                "sub_head": "",
+                "sub_head": "<p>Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"?<\/p>\n<p>Versetze dich in die Lage eines Menschen mit Behinderung:<\/p>\n<p>Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihrer Behinderung verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte soziale Gruppe, da sie als \"abnormal\" abgestempelt werden. Vorurteile werden dadurch geschaffen oder verst\u00e4rkt.<\/p><br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/behindertenfeindlichkeit",
                 "is_active": "1",
                 "short_explanation": "Feindlich gegen\u00fcber Menschen mit Behinderung",
@@ -362,12 +357,7 @@
                     "height": "492",
                     "alt": "Illustration: Eine Person flucht laut ins Handy. Zwei Personen stehen ausdruckslos daneben mit Fragezeichen in einer gemeinsamen Denkblase."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -403,12 +393,7 @@
                     "height": "492",
                     "alt": "Illustration: Une personne jure \u00e0 voix haute dans son t\u00e9l\u00e9phone portable. Deux personnes se tiennent \u00e0 c\u00f4t\u00e9, inexpressives, avec des points d'interrogation dans une bulle de r\u00e9flexion commune."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -910,7 +895,8 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings<\/a><span style=\"color: #000000;\">, <\/span>witty.works blog<\/span>",
-                "anchor": "agentic"
+                "anchor": "agentic",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Agentic Language.mp4"
             },
             "de": {
                 "hs_path": "agentische-sprache",
@@ -956,7 +942,8 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings<\/a><span style=\"color: #000000;\">, <\/span>witty.works blog<\/span>",
-                "anchor": "agentisch"
+                "anchor": "agentisch",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Agentische Sprache.mp4"
             },
             "fr": {
                 "hs_path": "langage-agentique",
@@ -1002,7 +989,8 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "agentic"
+                "anchor": "agentic",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Agentic Language.mp4"
             }
         },
         "has_rules": [
@@ -1024,7 +1012,7 @@
             "en": {
                 "hs_path": "anglicism",
                 "hs_name": "Anglicism",
-                "sub_head": "",
+                "sub_head": "In today's business jargon, we often use expressions from English business language. Depending on the audience, however, these expressions exclude people:&nbsp;<br>\n<ul>\n<li>They do not understand an Anglicism or misinterpret it because they have been through a different education or do not work in the same professional field.<\/li>\n<li>The use of Anglicisms is perceived as exclusionary, arrogant and 'from above'.<\/li>\n<\/ul><br \/><br \/><p>Try to remember the German terms and use them. You may also need several words to describe your thoughts. This will make your statement a little longer, but more precise.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/anglicism",
                 "is_active": "1",
                 "short_explanation": "Sure that all readers understand this?",
@@ -1055,7 +1043,7 @@
             "de": {
                 "hs_path": "anglizismen",
                 "hs_name": "Anglizismen",
-                "sub_head": "",
+                "sub_head": "<p>Im heutigen Business-Jargon nutzen wir oft Ausdr\u00fccke aus der englischen Business-Sprache . Je nach Publikum schliessen diese Ausdr\u00fccke jedoch Menschen aus:&nbsp;<\/p>\n<ol>\n<li>Sie verstehen einen Anglizismus nicht oder missdeuten ihn, weil sie eine andere Ausbildung durchlaufen haben oder nicht im selben Berufsfeld arbeiten.<\/li>\n<li>Das Verwenden des Anglizismus wird als ausgrenzend und arrogant und 'von oben herab' erlebt.&nbsp;<\/li>\n<\/ol><br \/><br \/><p>Versuche dich auf die deutschen Begriffe zu besinnen und diese zu verwenden. Vielleicht brauchst du auch mehrere W\u00f6rter, deinen Gedanken zu beschreiben. Das macht deine Aussage zwar etwas l\u00e4nger, aber pr\u00e4ziser.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/anglizismen",
                 "is_active": "1",
                 "short_explanation": "Sicher, dass das alle Lesenden verstehen?",
@@ -1148,7 +1136,7 @@
             "en": {
                 "hs_path": "islamophobia-and-anti-muslim-sentiment",
                 "hs_name": "Islamophobia",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a person of Islamic faith: It is extremely offending to them because it defames them as human beings due to their religion. Publishing it has consequences for the whole social group as it creates or reinforces a prejudice against Muslims.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/islamophobia-and-anti-muslim-sentiment",
                 "is_active": "1",
                 "short_explanation": "Does this insult the Islamic religion?",
@@ -1160,12 +1148,7 @@
                     "height": "450",
                     "alt": "Illustration: A person curses at a person wearing a hijab."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1189,7 +1172,7 @@
             "de": {
                 "hs_path": "islam-und-muslimfeindlichkeit",
                 "hs_name": "Islam- und Muslimfeindlichkeit",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines Menschen mit islamischem Glauben: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihrer Religion verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber Muslimen schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/islam-und-muslimfeindlichkeit",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter Islam- und muslimfeindliche Verunglimpfungen",
@@ -1201,12 +1184,7 @@
                     "height": "450",
                     "alt": "Illustration: Eine Person schimpft \u00fcber eine Person, die eine Hijab tr\u00e4gt."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1242,12 +1220,7 @@
                     "height": "450",
                     "alt": "Illustration : Une personne insulte une personne portant une hijab."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1288,7 +1261,7 @@
             "en": {
                 "hs_path": "anti-semitism",
                 "hs_name": "Anti-semitism",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a person of Jewish faith: It is extremely offending to them because it defames them as human beings due to their religion. Using it has consequences for the whole social group as it creates or reinforces a prejudice against Jewish people.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/anti-semitism",
                 "is_active": "1",
                 "short_explanation": "Does this insult the Jewish religion?",
@@ -1300,12 +1273,7 @@
                     "height": "450",
                     "alt": "Illustration: A person curses at a person wearing a kippah."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1329,7 +1297,7 @@
             "de": {
                 "hs_path": "antisemitismus",
                 "hs_name": "Antisemitismus",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines Menschen j\u00fcdischen Glaubens: Es ist f\u00fcr sie extrem beleidigend, weil es sie als Menschen wegen ihrer Religion verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber Menschen j\u00fcdischen Glaubens schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/antisemitismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter antisemitische Verunglimpfungen",
@@ -1341,12 +1309,7 @@
                     "height": "450",
                     "alt": "Illustration: Eine Person beschimpft eine Person, die eine Kippa tr\u00e4gt."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1382,12 +1345,7 @@
                     "height": "450",
                     "alt": "Illustration : Une personne insulte une personne portant une kippa."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1428,7 +1386,7 @@
             "en": {
                 "hs_path": "behavior",
                 "hs_name": "Behavior",
-                "sub_head": "",
+                "sub_head": "<p>Sometimes a behavior of a person is considered as \"other\" according to a stereotypical view by the society, meaning the society's behavior is \"normal\" and this person's not. But this thinking is outdated. \u00abThe research of \"<span>Neurodiversity\" describes the idea that people experience and interact with the world around them in many different ways; there is no one \"right\" way of thinking, learning, and behaving, and&nbsp;<\/span>differences are not viewed as deficits\u00bb, as described in this <a href=\"https:\/\/www.health.harvard.edu\/blog\/what-is-neurodiversity-202111232645\" rel=\"noopener\" target=\"_blank\">article of Harvard Health<\/a>.&nbsp;<\/p>\n<p>&nbsp;<\/p>\n<p>&nbsp;<\/p><br \/><br \/><p>Prevent such wording as it pigeonholes people in outdated stereotypes. In order to find other wording, think of it as \"everyone is normal\" and each person is authentic to themself. That helps you to use language that applies to any kind of person and in the same way.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/behavior",
                 "is_active": "1",
                 "short_explanation": "Frames authentic behavior as undesirable and other",
@@ -1469,7 +1427,7 @@
             "de": {
                 "hs_path": "verhalten",
                 "hs_name": "Verhalten",
-                "sub_head": "",
+                "sub_head": "Manchmal wird das Verhalten einer Person von der Gesellschaft als \"anders\" bezeichnet, quasi das Verhalten der Gesellschaft ist \"normal\" und das dieser Person nicht. Aber dieses Denken ist \u00fcberholt. \"Die Forschung zur \"Neurodiversit\u00e4t\" beschreibt die Idee, dass Menschen die Welt um sie herum auf viele verschiedene Arten erleben und mit ihr interagieren; es gibt nicht die eine \"richtige\" Art zu denken, zu lernen und sich zu verhalten, und Unterschiede werden nicht als Defizite angesehen\", wie in diesem <a href=\"https:\/\/www.health.harvard.edu\/blog\/what-is-neurodiversity-202111232645\" rel=\"noopener\" target=\"_blank\">Artikel von Harvard Health<\/a> beschrieben.<br \/><br \/><p>Vermeide solche Formulierungen, da sie die Menschen in \u00fcberholten Stereotypen gefangen halten. Um andere Formulierungen zu finden, sage dir \"alle sind normal\" und jede Person ist authentisch. Das hilft dir, eine Sprache zu verwenden, die f\u00fcr jede Art von Person und in gleicher Weise gilt.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/verhalten",
                 "is_active": "1",
                 "short_explanation": "Stellt authentisches Verhalten als unerw\u00fcnscht dar",
@@ -1568,7 +1526,7 @@
             "en": {
                 "hs_path": "belief",
                 "hs_name": "Belief",
-                "sub_head": "",
+                "sub_head": "Wording pigeonholing people of a certain belief or unconsciously expressing one belief as the standard; thereby devaluing other beliefs.&nbsp;<br \/><br \/><p>Rephrase with words that do not transport any idea of belief or religion.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/belief",
                 "is_active": "1",
                 "short_explanation": "Sure this religious reference is universally accepted?",
@@ -1609,7 +1567,7 @@
             "de": {
                 "hs_path": "glauben",
                 "hs_name": "Glauben",
-                "sub_head": "",
+                "sub_head": "Formulierungen, die Menschen eines bestimmten Glaubens in eine Schublade stecken oder unbewusst einen bestimmten Glauben zum Standard erheben und damit andere Glaubensrichtungen abwerten.&nbsp;<br \/><br \/><p>Formuliere mit Worten um, die keine Vorstellung von Glauben oder Religion transportieren.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/glauben",
                 "is_active": "1",
                 "short_explanation": "Ausdruck eines Glaubens, dem nicht jede*r angeh\u00f6rt",
@@ -1853,7 +1811,7 @@
             "en": {
                 "hs_path": "classism",
                 "hs_name": "Classism",
-                "sub_head": "",
+                "sub_head": "<p>Try to imagine a reader lower in hierarchy or socio-economic level than yourself: How would you feel when re-reading your own words?<\/p>\n<p>For many people, this formulation implicitly communicates a feeling of condescension. It is associated with a power imbalance and can be perceived as \"a top down\" mindset. It may or may not also express a sense of social class difference. In short, readers unconsciously realize that the text is not at their eye level. And thus excludes them from the conversation.&nbsp;<\/p><br \/><br \/><p><p>In many situations, we are not aware of our own position and privilege that comes with it. We might have privilege due to our socio-economic background (education was always paid for, the parents never had to worry at the end of the month) or due to our position in a company (faster access to information, being taken more seriously due to seniority). These privileges do influence how we formulate our sentences. Daniel Kahnemann, one of the founders of behavioral economics, once realized that he inadvertently uses different tone of voice in emails when he writes to other professors or to his assistant. The first was at eye level while the second was almost bossy.<\/p>\n<p>When writing, try to be aware of that \"classism\" bias that happens to all of us. Ask yourself: \"Would I write it the same way with an addressee that has the same position as I?\"<\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/classism",
                 "is_active": "1",
                 "short_explanation": "Implies socioeconomic status sets the value of a person ",
@@ -1894,7 +1852,7 @@
             "de": {
                 "hs_path": "klassismus",
                 "hs_name": "Klassismus",
-                "sub_head": "",
+                "sub_head": "<p>Versetze dich in jemand, die in der Hierarchie oder auf sozio\u00f6konomischer Ebene niedriger steht als du selbst: Wenn du deine eigenen Worte erneut liest, wie f\u00fchlst du dich?<\/p>\n<p>F\u00fcr viele vermittelt diese Formulierung implizit ein Gef\u00fchl der Herablassung. Sie wird mit einem Machtungleichgewicht in Verbindung gebracht und kann als eine \"von oben herab\"-Denkweise wahrgenommen werden. Sie kann, muss aber nicht, auch ein Gef\u00fchl des sozialen Klassenunterschieds ausdr\u00fccken. Kurz gesagt, Leser*innen nehmen unbewusst wahr, dass sich der Text nicht auf ihrer Augenh\u00f6he befindet. Dadurch werden sie von der Konversation ausgeschlossen.<\/p><br \/><br \/><p>In vielen Situationen sind wir uns unserer eigenen Position und des damit verbundenen Privilegs nicht bewusst. Vielleicht haben wir Privilegien aufgrund unseres sozio\u00f6konomischen Hintergrunds (die Ausbildung wurde immer bezahlt, die Eltern mussten sich am Monatsende nie Sorgen machen) oder aufgrund unserer Position in einem Unternehmen (schnellerer Zugang zu Informationen, mehr Respekt aufgrund des h\u00f6heren Dienstalters). Diese Privilegien haben Einfluss darauf, wie wir unsere S\u00e4tze formulieren. Daniel Kahnemann, einer der Begr\u00fcnder der Verhaltens\u00f6konomie, stellte einmal fest, dass er in E-Mails unbeabsichtigt einen unterschiedlichen Tonfall verwendet, je nach dem, ob er an andere Professor*innen oder an seinen Assistenten schreibt. Die erste Mail war auf Augenh\u00f6he, die zweite eher 'von oben herab' formuliert.<br><br>Versuche, dich dieser \"klassistischen\" Voreingenommenheit bewusst zu sein, die uns allen widerf\u00e4hrt. Frage dich selbst: \"W\u00fcrde ich Adressat*innen, die die gleichen Positionen haben wie ich, genauso schreiben?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/klassismus",
                 "is_active": "1",
                 "short_explanation": "Impliziert sozio\u00f6konomischer Status bestimmt den Wert einer Person",
@@ -2133,7 +2091,7 @@
             "en": {
                 "hs_path": "cognitive-perception",
                 "hs_name": "Misuses mental health",
-                "sub_head": "",
+                "sub_head": "<p>We all experience the world through our senses - seeing, listening, smelling, tasting, and feeling. This is called cognitive perception. Another aspect of cognitive perception is how we deal with the information we receive from senses. Our individual cognitive perception influences how we respond to people, assess risks, and behave in different settings. We use our personal experiences and our ideas of what is \"normal\" to assess the responses and behaviors of others. But we all experience the world differently. Making judgements about people who do not perceive the world the same way we do, can have serious social ramifications for the person we judge. Labelling someone as \"not normal\" and questioning their ability to perceive reality \"correctly\" can make them vulnerable to marginalization, stigmatization, and bullying.<\/p><br \/><br \/><p><p>Avoid using words related to sanity and mental illness to describe people or situations. Try to give context instead, and focus on describing actions and impact. This way, you communicate more inclusively, show respect, and people will better understand what you're saying.<\/p>\n<p>\ud83d\ude14 The event planner? They're insane<em>.<br><\/em>\ud83e\udd17 The event planner? They're suggestions are too expensive, not to mention impractical<em>.<\/em><\/p>\n<p>\ud83d\ude14 <em>We had a cray cray weekend<br><\/em>\ud83e\udd17 <em>We had an unexpectedly busy weekend.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-perception",
                 "is_active": "1",
                 "short_explanation": "Discriminatory wording on the back of people with mental health issues",
@@ -2174,7 +2132,7 @@
             "de": {
                 "hs_path": "wahrnehmung",
                 "hs_name": "Wahrnehmung",
-                "sub_head": "",
+                "sub_head": "<h4>Kognitive Wahrnehmung<\/h4>\n<p>Wir alle erleben die Welt mit unseren Sinnen - sehen, h\u00f6ren, riechen, schmecken und f\u00fchlen. Das nennt man kognitive Wahrnehmung. Ein weiterer Aspekt der kognitiven Wahrnehmung ist, wie wir mit den Informationen umgehen, die wir mit unseren Sinnen wahrnehmen. Unsere individuelle kognitive Wahrnehmung beeinflusst, wie wir auf Menschen reagieren, Risiken einsch\u00e4tzen und uns in verschiedenen Situationen verhalten. Wir nutzen unsere pers\u00f6nlichen Erfahrungen und unsere Vorstellungen davon, was \"normal\" ist, um die Reaktionen und Verhaltensweisen anderer zu beurteilen. Aber wir alle erleben die Welt auf unterschiedliche Weise. Urteile \u00fcber Menschen zu f\u00e4llen, die die Welt anders wahrzunehmen scheinen als wir selbst, kann schwerwiegende soziale Folgen f\u00fcr die Person haben, die wir beurteilen. Jemanden als \"nicht normal\" in seiner Wahrnehmung der Welt abzustempeln, kann zu Ausgrenzung, Stigmatisierung und Mobbing f\u00fchren.<\/p><br \/><br \/><p><p>Vermeide es, Menschen oder Situationen mit Worten zu beschreiben, die sich auf geistige Gesundheit und psychische Krankheiten beziehen. Du kannst Kontext liefern und dich auf Handlungen oder Aussagen konzentrieren. So kommunizierst du inklusiver und wirst gleichzeitig besser verstanden.<\/p>\n<p>\ud83d\ude14&nbsp;<em>Die Leute von der Veranstaltungsplanung? Die sind doch verr\u00fcckt.<br><\/em>\ud83e\udd17 <em>Die Leute von der Veranstaltungsplanung? Ihre Vorschl\u00e4ge sind zu teuer und nicht praktikabel.<\/em><\/p>\n<p>&nbsp;<\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/wahrnehmung",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile \u00fcber kognitive Wahrnehmungsf\u00e4higkeit",
@@ -2459,7 +2417,8 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" style=\"\"><em><span>Gendered Wording in Job Ads - Scientific Findings<\/span><\/em><\/a><span style=\" color: #000000;\">, <\/span><a href=\"https:\/\/www.witty.works\/blog\" style=\"\"><span>witty.works blog<\/span><\/a><span style=\" color: #000000;\">, post 2021<\/span>",
-                "anchor": "communal"
+                "anchor": "communal",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Communal Language.mp4"
             },
             "de": {
                 "hs_path": "kommunale-sprache",
@@ -2500,7 +2459,8 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\"><em><span>Gendered Wording in Job Ads - Scientific Findings<\/span><\/em><\/a><span>,&nbsp;<\/span><a href=\"https:\/\/www.witty.works\/blog\"><span>witty.works blog<\/span><\/a><span>&nbsp;2021<\/span>",
-                "anchor": "kommunal"
+                "anchor": "kommunal",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Communal_DE.mp4"
             },
             "fr": {
                 "hs_path": "coop\u00e9ration",
@@ -2541,7 +2501,8 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "communal"
+                "anchor": "communal",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Communal Language.mp4"
             }
         },
         "has_rules": [
@@ -2845,7 +2806,7 @@
             "en": {
                 "hs_path": "positive-emotions",
                 "hs_name": "Positive emotions",
-                "sub_head": "",
+                "sub_head": "<h4>Positive emotions<\/h4>\n<p>Feelings, and the words that describe them, are indicators. They communicate whether our needs are met or whether we trust our needs will be met. &nbsp;Communicating how we feel about something is a powerful way to connect with our experience and with the people who interact with us. Sharing how we feel helps improve a team's well-being and builds emotional trust. When someone emotionally trusts you, they know you have their back and treat them with respect.<\/p><br \/><br \/><p><span style=\"\">Choose words that give emotional context, whether it's joy, anticipation, appreciation, or concern. Help people understand the motivation behind your words and ideas.<\/span><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/positive-emotions",
                 "is_active": "1",
                 "short_explanation": "Conveys emotional security",
@@ -2881,7 +2842,7 @@
             "de": {
                 "hs_path": "positive-emotionen",
                 "hs_name": "Positive Emotionen",
-                "sub_head": "",
+                "sub_head": "<h4>Positive Gef\u00fchle<\/h4>\n<p>Gef\u00fchle und die Worte, die sie beschreiben, sind Indikatoren. Sie signalisieren, ob unsere Bed\u00fcrfnisse erf\u00fcllt werden oder ob wir darauf vertrauen, dass unsere Bed\u00fcrfnisse erf\u00fcllt werden. Wenn wir kommunizieren, wie wir uns f\u00fchlen, \u00f6ffnen wir uns f\u00fcr unsere eigenen Empfindungen und f\u00fcr die Gef\u00fchle der Menschen ums uns herum. Gef\u00fchle zu kommunizieren, hilft, einen Raum zu schaffen, indem Menschen und ihre Gef\u00fchle gesehen werden. Das tr\u00e4gt zum Wohlbefinden des Teams bei, steigert die emotionale Intelligenz im Umgang miteinander und schafft emotionales Vertrauen. Wenn Menschen dir emotional vertrauen, wissen sie, dass du hinter ihnen stehst und ihnen mit Respekt begegnest.<\/p><br \/><br \/><p>W\u00e4hle Worte, die einen emotionalen Rahmen schaffen, sei es Freude, Vorfreude, Wertsch\u00e4tzung oder Sorge. Hilf Menschen, die Motivation hinter deinen Worten und Ideen zu verstehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/positive-emotionen",
                 "is_active": "1",
                 "short_explanation": "Vermittelt emotionale Sicherheit",
@@ -3118,7 +3079,7 @@
             "en": {
                 "hs_path": "female-stereotype",
                 "hs_name": "Female stereotype",
-                "sub_head": "",
+                "sub_head": "Traps women in outdated stereotypes. Such stereotypes can hinder them to develop their full potential, according to their own wishes, talents and skills.<br \/><br \/><p>Ask yourself \"What would I write if this person was male?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/female-stereotype",
                 "is_active": "1",
                 "short_explanation": "Limits women to traditional roles and behaviors",
@@ -3159,7 +3120,7 @@
             "de": {
                 "hs_path": "frauenklischee",
                 "hs_name": "Frauenklischee",
-                "sub_head": "",
+                "sub_head": "Frauen werden in \u00fcberholten Stereotypen gefangen gehalten. Solche Stereotypen k\u00f6nnen sie daran hindern, ihr volles Potenzial nach ihren eigenen W\u00fcnschen, Talenten und F\u00e4higkeiten zu entfalten.<br \/><br \/><p>Fragen Sie sich: \"Was w\u00fcrde ich schreiben, wenn diese Person m\u00e4nnlich w\u00e4re?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/frauenklischee",
                 "is_active": "1",
                 "short_explanation": "Reduziert Frauen auf traditionelle Rollenklischees",
@@ -3302,7 +3263,8 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "filler_words"
+                "anchor": "filler_words",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Fillers_EN.mp4"
             },
             "de": {
                 "hs_path": "f\u00fcllw\u00f6rter",
@@ -3348,7 +3310,8 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "f\u00fcllw\u00f6rter"
+                "anchor": "f\u00fcllw\u00f6rter",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Fillers_DE.mp4"
             },
             "fr": {
                 "hs_path": "mot-inutile",
@@ -3358,7 +3321,7 @@
                 "is_active": "1",
                 "short_explanation": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
                 "sort_internal": "filler",
-                "lead_video": "65919079898",
+                "lead_video": "65429849296",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
                     "width": "921",
@@ -3389,7 +3352,8 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "filler_words"
+                "anchor": "filler_words",
+                "lead_video_url": "https:\/\/www.witty.works\/hubfs\/Fillers_EN.mp4"
             }
         },
         "has_rules": [
@@ -3411,7 +3375,7 @@
             "en": {
                 "hs_path": "formality",
                 "hs_name": "Formality",
-                "sub_head": "",
+                "sub_head": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br \/><br \/><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/formality",
                 "is_active": "1",
                 "short_explanation": "A less formal tone makes you sound more accessible",
@@ -3452,7 +3416,7 @@
             "de": {
                 "hs_path": "f\u00f6rmlichkeit",
                 "hs_name": "F\u00f6rmlichkeit",
-                "sub_head": "",
+                "sub_head": "Im diplomatischen Kontext wird oft formelle Sprache angewendet. Sie bringt Respekt zwischen den L\u00e4ndern zum Ausdruck. In allt\u00e4glichen Gesch\u00e4ftssituationen kann dies jedoch merkw\u00fcrdig wirken. Sie kann implizit vermitteln, dass ein:e Gespr\u00e4chsteilnehmer:in \"etwas Besseres\" ist. Formelle Ausdr\u00fccke k\u00f6nnen die Emotionalit\u00e4t t\u00f6ten und sind einer Zusammenarbeit auf Augenh\u00f6he nicht f\u00f6rderlich. Dies steht im Gegensatz zu dem, was wir erreichen wollen: eine inklusive Kultur, in der alle ihre Perspektive einbringen und ihr volles Potenzial entfalten k\u00f6nnen.<br \/><br \/><p>Versuche so zu schreiben, dass die Ebenb\u00fcrtigkeit zwischen dir und den Lesenden zum Ausdruck kommt. Oft hilft es sich vorzustellen, du schreibst an eine*n Freund*in.&nbsp;<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/f\u00f6rmlichkeit",
                 "is_active": "1",
                 "short_explanation": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
@@ -3862,7 +3826,7 @@
             "en": {
                 "hs_path": "gender-specific-abbreviation",
                 "hs_name": "Gender-specific abbreviation",
-                "sub_head": "",
+                "sub_head": "<h4>Abbreviations: (m\/f\/d) or (d\/f\/m)?<\/h4>\n<p>Out of habit, we often mention the male gender first when we use abbreviations in job offers, forms, or other documents. This reinforces the male gender as the norm, often without us even realizing it. Although such an order in an abbreviation may seem insignificant, it influences the reader. In Latin script, we read from left to right, and this order allows us to recognize who the writer puts first quickly.&nbsp;<br><br>If you want to know more about \"the male gender as default,\" please read the amazing book by Caroline Criado Perez, \"Invisible Women, Exposing Data Bias in a World Designed for Men.\" &nbsp;This standard has sometimes even deadly consequences for women and non-binary people.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-specific-abbreviation",
                 "is_active": "1",
                 "short_explanation": "Men as default; non-binary persons are excluded",
@@ -3903,7 +3867,7 @@
             "de": {
                 "hs_path": "geschlechter-spezifische-abk\u00fcrzung",
                 "hs_name": "Geschlechter-Spezifische Abk\u00fcrzung",
-                "sub_head": "",
+                "sub_head": "<h4>Abk\u00fcrzungen: (m\/f\/d) oder (d\/f\/m)?<\/h4>\n<p>Aus Gewohnheit erw\u00e4hnen wir oft das m\u00e4nnliche Geschlecht zuerst, wenn wir Abk\u00fcrzungen in Stellenanzeigen, Formularen oder anderen Dokumenten verwenden. Dadurch wird das m\u00e4nnliche Geschlecht als Norm gefestigt, oft ohne dass wir uns dessen bewusst sind. Obwohl eine solche Reihenfolge in einer Abk\u00fcrzung unbedeutend zu sein scheint, beeinflusst sie die Lesenden. Wir lesen in der lateinischen Schrift von links nach rechts und erkennen so durch diese Reihenfolge schnell, wen der*die Schreiber*in an die erste Stelle setzt.&nbsp;<br><br>Wenn Sie mehr \u00fcber \"das m\u00e4nnliche Geschlecht als Standard\" wissen m\u00f6chten, lesen Sie bitte das erstaunliche Buch von Caroline Criado Perez \"Invisible Women, Exposing Data Bias in a World Designed for Men\".&nbsp; Dieser Standard hat f\u00fcr Frauen und non-bin\u00e4re Menschen teilweise sogar t\u00f6dliche Konsequenzen.<br><br><\/p><br \/><br \/><p>Es hilft unserem Gehirn, wenn wir die \u00c4nderung der Reihenfolge solcher Abk\u00fcrzungen \u00e4ndern. So kommt es n\u00e4mlich aus dem Standarddenken heraus. Zudem zeigt eine andere Reihenfolge nicht-bin\u00e4ren Personen und Frauen deutlich, dass sie in der Botschaft eines*r Autors*in an erster Stelle stehen.&nbsp;<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/geschlechter-spezifische-abk\u00fcrzung",
                 "is_active": "1",
                 "short_explanation": "M\u00e4nner als Standard; non-bin\u00e4re Menschen ausgeschlossen",
@@ -3992,7 +3956,7 @@
             "en": {
                 "hs_path": "gendered_denominations_ending",
                 "hs_name": "Gendered denominations ending",
-                "sub_head": "",
+                "sub_head": "Consistent spelling is more confidence-inspiring.<br \/><br \/><p>Correct the spelling or adjust the setting of the \"Configuration for inclusive language in German\" according to the preference in Witty.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gendered_denominations_ending",
                 "is_active": "1",
                 "short_explanation": "Inconsistent gender ending spelling",
@@ -4033,7 +3997,7 @@
             "de": {
                 "hs_path": "inklusive-endung",
                 "hs_name": "Inklusive Endung",
-                "sub_head": "",
+                "sub_head": "Konsistente Schreibweise ist vertrauenserweckender.&nbsp;<br \/><br \/><p>Korrigiere die Schreibweise oder passe die Einstellung der \u201cInklusive Geschlechter-Nennung\u201d entsprechend der Pr\u00e4ferenz in Witty an.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/inklusive-endung",
                 "is_active": "1",
                 "short_explanation": "Nicht konsistente Geschlechts-Schreibweise",
@@ -4074,7 +4038,7 @@
             "fr": {
                 "hs_path": "terminaisons-genr\u00e9es",
                 "hs_name": "Terminaisons genr\u00e9es",
-                "sub_head": "",
+                "sub_head": "Terminaisons genr\u00e9es",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/terminaisons-genr\u00e9es",
                 "is_active": "1",
                 "short_explanation": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
@@ -4353,7 +4317,7 @@
             "fr": {
                 "hs_path": "expression-genr\u00e9e",
                 "hs_name": "Expression genr\u00e9e",
-                "sub_head": "Pour montrer que vous avez \u00e0 c\u0153ur de repr\u00e9senter tous les genres, uitilisez des expressions non genr\u00e9es.",
+                "sub_head": "Pour montrer que vous avez \u00e0 c\u0153ur de repr\u00e9senter tous les genres, utilisez des expressions non genr\u00e9es.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/expression-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
@@ -4361,13 +4325,13 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e-1.png",
                     "width": "605",
                     "height": "455",
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e%20Advanced.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e%20Advanced-1.png",
                     "width": "605",
                     "height": "455",
                     "alt": ""
@@ -4554,7 +4518,7 @@
             "en": {
                 "hs_path": "homophobia",
                 "hs_name": "Homophobia",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a homosexual person: It is extremely offending to them because it defames them as human beings due to their sexual orientation. Using it has consequences for the whole social group as it creates or reinforces a prejudice against homosexuals.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/homophobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a homophobic slur",
@@ -4566,12 +4530,7 @@
                     "height": "450",
                     "alt": "Illustration a person cursing at two people with short hair holding each other."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration a person cursing at two people with short hair holding each other."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -4595,7 +4554,7 @@
             "de": {
                 "hs_path": "homophobie",
                 "hs_name": "Homophobie",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines homosexuellen Menschen: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihrer sexuellen Orientierung verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber Homosexuellen schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/homophobie",
                 "is_active": "1",
                 "short_explanation": "Stellt eine homophobe Verunglimpfung dar",
@@ -4607,12 +4566,7 @@
                     "height": "450",
                     "alt": "Illustration einer Person, die zwei Personen mit kurzen Haaren beschimpft, die sich gegenseitig umarmen."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration einer Person, die zwei Personen mit kurzen Haaren beschimpft, die sich gegenseitig umarmen."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -4648,12 +4602,7 @@
                     "height": "450",
                     "alt": "Illustration d'une personne maudissant deux personnes aux cheveux courts se tenant l'une l'autre."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration d'une personne maudissant deux personnes aux cheveux courts se tenant l'une l'autre."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -4869,7 +4818,7 @@
             "en": {
                 "hs_path": "male-stereotype",
                 "hs_name": "Male stereotype",
-                "sub_head": "",
+                "sub_head": "Traps men in outdated stereotypes. These stereotypes hinders them to develop their full potential, according to their own wishes, talents and skills.&nbsp;<br \/><br \/><p>Ask yourself \"What would I write if this person was female?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/male-stereotype",
                 "is_active": "1",
                 "short_explanation": "Limits men to traditional roles and behaviors",
@@ -4910,7 +4859,7 @@
             "de": {
                 "hs_path": "m\u00e4nnerklischee",
                 "hs_name": "M\u00e4nnerklischee",
-                "sub_head": "",
+                "sub_head": "M\u00e4nner werden in \u00fcberholten Stereotypen gefangen gehalten. Diese Stereotypen hindern sie daran, ihr volles Potenzial zu entfalten, entsprechend ihren eigenen W\u00fcnschen, Talenten und F\u00e4higkeiten.<br \/><br \/><p>Fragen Sie sich: \"Was w\u00fcrde ich schreiben, wenn diese Person weiblich w\u00e4re?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/m\u00e4nnerklischee",
                 "is_active": "1",
                 "short_explanation": "Reduziert M\u00e4nner auf traditionelle Rollenbilder",
@@ -5149,7 +5098,7 @@
             "en": {
                 "hs_path": "mental-wellbeing",
                 "hs_name": "Mental wellbeing",
-                "sub_head": "",
+                "sub_head": "<h4>Mental health and well-being<\/h4>\n<p>Using words related to mental health casually and with negative connotations can be hurtful and distressing to people who are invested in managing their mental wellbeing and people living with an invisible disability. Treating mental health <span>as a joke, metaphor, or euphemism<\/span> and making assumptions about what it\u2019s like to experience mental health problems enables others to internalize mental health stigma.<\/p><br \/><br \/><p><p>Avoid using mental health terms casually and <span>trivializing the difficulties people <\/span>who work on their mental health experience face. Explore descriptive words instead.<\/p>\n<p>\ud83d\ude14 <em>Mason is so OCD when it comes to filing.<br><\/em>\ud83e\udd17 <em>Mason is perfectionist when it come to filing.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mental-wellbeing",
                 "is_active": "1",
                 "short_explanation": "Repeats outdated ideas about mental health and wellbeing",
@@ -5190,7 +5139,7 @@
             "de": {
                 "hs_path": "mentales-wohlbefinden",
                 "hs_name": "Mentales Wohlbefinden",
-                "sub_head": "",
+                "sub_head": "<h4>Mentale Gesundheit und seelische Wohlbefinden<\/h4>\n<p>Der beil\u00e4ufige und negativ konnotierte Gebrauch von W\u00f6rtern, die sich auf psychische Krankheitsbilder beziehen, kann f\u00fcr Menschen, die sich f\u00fcr das eigene seelische Wohlbefinden engagieren, kr\u00e4nkend und schmerzhaft sein. Diese abwertende Sprache best\u00e4rkt Stereotypen \u00fcber psychische Gesundheit und Vorurteile dar\u00fcber, wie es ist, psychische Belastungen zu erleben.<\/p><br \/><br \/><p><p>Verzichte auf den saloppen Gebrauch von Begriffen f\u00fcr psychische Erkrankungen, und vermeide es, die Schwierigkeiten von Menschen, die an ihrer psychischen Gesundheit arbeiten, zu bagatellisieren. W\u00e4hle lieber beschreibende Formulierungen.<\/p>\n<p>\ud83d\ude14 <em>Mason ist so zwanghaft, wenn es um die Ablage geht.<br><\/em>\ud83e\udd17 <em>Mason ist perfektionistisch, wenn es um die Ablage geht.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/mentales-wohlbefinden",
                 "is_active": "1",
                 "short_explanation": "Bedient \u00fcberholte Vorstellungen von mentaler Gesundheit oder Wohlbefinden",
@@ -5429,7 +5378,7 @@
             "en": {
                 "hs_path": "military-inspired-lingo",
                 "hs_name": "Military-inspired lingo",
-                "sub_head": "",
+                "sub_head": "<h4>Military-inspired lingo<\/h4>\n<p>A military-inspired lingo is part of business communications in many organisations. While many terms favored in business are more inspired by movies about war than the reality of military life, this jargon is associated with a historically almost exclusively masculine environment. As such, it perpetuates a culture of masculinity that subtly prevents women from joining conversations in the workplace. Studies show we have different expectations for how men and women should communicate. Women who adopt more aggressive masculine speech patterns, such as military jargon, are perceived less favorably by their colleagues than women who conform to feminine speech patterns. Moreover, many people do not feel comfortable with the aggressive undertones of military lingo, regardless of gender.<\/p><br \/><br \/><p>Avoid military-inspired jargon wherever possible. In doing so, you contribute to the kind of inclusive culture women feel more comfortable to join, participate and succeed in.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/military-inspired-lingo",
                 "is_active": "1",
                 "short_explanation": "Reframes the business landscape as a theater of war",
@@ -5470,7 +5419,7 @@
             "de": {
                 "hs_path": "milit\u00e4risch-inspirierter-jargon",
                 "hs_name": "Milit\u00e4risch-inspirierter Jargon",
-                "sub_head": "",
+                "sub_head": "<h4>Milit\u00e4r-Jargon<\/h4>\n<p>Ein milit\u00e4risch inspirierter Jargon ist in vielen Unternehmen Teil der Gesch\u00e4ftskommunikation. Viele Begriffe, die am Arbeitsplatz verwendet werden, sind eher von Kriegsfilmen inspiriert als von der milit\u00e4rischen Realit\u00e4t. Ob realistisch oder nicht, dieser Jargon wird mit einem historisch fast ausschlie\u00dflich m\u00e4nnlichen Umfeld in Verbindung gebracht. Damit zitiert er eine m\u00e4nnlich dominierte Kultur, die Frauen auf subtile Weise davon abh\u00e4lt, sich an Gespr\u00e4chen am Arbeitsplatz zu beteiligen. Studien zeigen, dass wir unterschiedliche Erwartungen haben, wie M\u00e4nner und Frauen kommunizieren sollten. Frauen, die aggressivere m\u00e4nnliche Sprachmuster, wie zum Beispiel Milit\u00e4r-Jargon, \u00fcbernehmen, werden von ihren Kolleg*innen weniger wohlwollend wahrgenommen als Frauen, die sich an als weiblich geltende Sprachmuster halten. Dar\u00fcber hinaus f\u00fchlen sich viele Menschen, ganz unabh\u00e4ngig vom Geschlecht, mit den aggressiven Untert\u00f6nen des Milit\u00e4rjargons nicht wohl.<\/p><br \/><br \/><p>Vermeide milit\u00e4risch angehauchten Jargon. Auf diese Weise tr\u00e4gst du zu einer integrativen Kultur bei, der sich Frauen lieber anschlie\u00dfen, in der sie sich engagierter einbringen und erfolgreich sein k\u00f6nnen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/milit\u00e4risch-inspirierter-jargon",
                 "is_active": "1",
                 "short_explanation": "Inszeniert den Berufsalltag als Kriegsschauplatz",
@@ -5861,12 +5810,7 @@
                     "height": "492",
                     "alt": "Illustration: Eine Person flucht laut ins Handy. Zwei Personen stehen ausdruckslos daneben mit Fragezeichen in einer gemeinsamen Denkblase."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "<p style=\"\">If you tend to use foul language to express anger or frustration, take a moment to step back and look at your cursing from the perspective of people around you. Using offensive language not only shapes how others see you professionally but also creates an abusive atmosphere.<\/p>\n<p style=\"\">Offensive words are calculated to wound, upset, anger, intimidate, or embarrass. And that\u2019s how your audience is likely to read them, even when you curse in jest. Offensive language can constitute bullying or harassment \u2013 verbal, physical, social, or psychological abuse. Those who witness foul language go unchecked may read this as a signal that their shared environment is permissive toward abusive behavior.<\/p>",
                 "hard_facts": "",
@@ -5902,12 +5846,7 @@
                     "height": "492",
                     "alt": "Illustration: A person curses loudly into his cell phone. Two people stand expressionless next to it with question marks in a shared thought bubble."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "Menschen verwenden gelegentlich Kraftausdr\u00fccke, um Wut oder Frustration loszuwerden. Wenn du das auch tust, versuche, das Ganze aus der Perspektive deiner Umgebung zu betrachten. Schimpfw\u00f6rter sind darauf ausgelegt, zu verletzen, zu ver\u00e4rgern, einzusch\u00fcchtern oder zu besch\u00e4men. Offensive Sprache pr\u00e4gt wie andere dich sehen und kann eine Arbeitsatmosph\u00e4re schaffen, in der sich andere gestresst und verwundbar f\u00fchlen. Anst\u00f6\u00dfige Sprache, Kraftausdr\u00fccke, und Beleidigungen k\u00f6nnen Mobbing oder Bel\u00e4stigung gleichkommen, also verbalen, k\u00f6rperlichen, sozialen oder psychologischen Missbrauch darstellen. Menschen, die erleben, wie du andere beschimpfst, k\u00f6nnen dein Verhalten als Signal deuten, dass verbale \u00dcbergriffe in eurem gemeinsamen Umfeld akzeptabel ist.",
                 "hard_facts": "",
@@ -5943,12 +5882,7 @@
                     "height": "492",
                     "alt": "Illustration: Une personne jure \u00e0 voix haute dans son t\u00e9l\u00e9phone portable. Deux personnes se tiennent \u00e0 c\u00f4t\u00e9, inexpressives, avec des points d'interrogation dans une bulle de r\u00e9flexion commune."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": ""
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6278,7 +6212,7 @@
             "en": {
                 "hs_path": "racism",
                 "hs_name": "Racism",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a person of color or underrepresented race: It is extremely offending to them because it defames them as human beings due to their race. Using it has consequences for the whole social group as it creates or reinforces prejudices against them.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/racism",
                 "is_active": "1",
                 "short_explanation": "Constitutes a racist slur ",
@@ -6290,12 +6224,7 @@
                     "height": "450",
                     "alt": "Illustration of a people cursing at a person of color."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration of a people cursing at a person of color."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6319,7 +6248,7 @@
             "de": {
                 "hs_path": "rassismus",
                 "hs_name": "Rassismus",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines Menschen mit dunkler Hautfarbe: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihrer Hautfarbe verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber \u2018People of Color\u2019 schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/rassismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter rassistische Verunglimpfungen",
@@ -6331,12 +6260,7 @@
                     "height": "450",
                     "alt": "Illustration eines Menschen, der eine Person of Color beschimpft."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration eines Menschen, der eine Person of Color beschimpft."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6372,12 +6296,7 @@
                     "height": "450",
                     "alt": "Illustration d'une personne injuriant une personne de couleur."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration d'une personne injuriant une personne de couleur."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6553,7 +6472,7 @@
             "en": {
                 "hs_path": "sexism",
                 "hs_name": "Sexism",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a woman: It is extremely offending to them because it defames them as human beings due to their gender. Using it has consequences for the whole social group as it creates or reinforces prejudices against women.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexism",
                 "is_active": "1",
                 "short_explanation": "Constitutes a sexist slur",
@@ -6565,12 +6484,7 @@
                     "height": "450",
                     "alt": "Illustration of a people cursing at a person wearing a skirt."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/sexism.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration of a people cursing at a person wearing a skirt."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6594,7 +6508,7 @@
             "de": {
                 "hs_path": "sexismus",
                 "hs_name": "Sexismus",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage einer Frau: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihres Geschlechts verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber Frauen schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter sexistische Verunglimpfungen",
@@ -6606,12 +6520,7 @@
                     "height": "450",
                     "alt": "Illustration einer Person, die eine Person, die einen Rock tr\u00e4gt, beschimpft."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration einer Person, die eine Person, die einen Rock tr\u00e4gt, beschimpft."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6647,12 +6556,7 @@
                     "height": "450",
                     "alt": "Illustration d'une personne maudissant une personne portant une jupe."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration d'une personne maudissant une personne portant une jupe."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6693,7 +6597,7 @@
             "en": {
                 "hs_path": "sexual-orientation",
                 "hs_name": "Sexual orientation",
-                "sub_head": "",
+                "sub_head": "Outdated and perhaps even discriminatory understanding of sexual orientation that pigeonholes LGBTQIA+ people and transporting heterosexuality as the norm.&nbsp;<br \/><br \/><p>Ask yourself \"What would I write if this person was heterosexual?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexual-orientation",
                 "is_active": "1",
                 "short_explanation": "Promotes a heterosexual value system and roles",
@@ -6734,7 +6638,7 @@
             "de": {
                 "hs_path": "sexuelle-orientierung",
                 "hs_name": "Sexuelle Orientierung",
-                "sub_head": "",
+                "sub_head": "Ein veraltetes und vielleicht sogar diskriminierendes Verst\u00e4ndnis von sexueller Orientierung, das LGBTQIA+ Menschen in eine Schublade steckt und Heterosexualit\u00e4t als die Norm darstellt.<br \/><br \/><p>Fragen Sie sich: \"Was w\u00fcrde ich schreiben, wenn diese Person heterosexuell w\u00e4re?\"<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexuelle-orientierung",
                 "is_active": "1",
                 "short_explanation": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
@@ -6833,7 +6737,7 @@
             "en": {
                 "hs_path": "speech-ability",
                 "hs_name": "Speech ability",
-                "sub_head": "",
+                "sub_head": "<h4>Speech and language-related disabilities<\/h4>\n<p>Terms describing non-speaking people or people living with speech and language-related disabilities are often closely linked to negative stereotypes and misguided assumptions. People with speech and language-related disabilities are assumed to be struggling because they're \"insecure\" or \"nervous\" or interpreted as showing mental limitations or a lack of thinking ability. Related terms are often used figuratively to describe something as \"different\" or \"limited in function.\"<\/p><br \/><br \/><p>Refrain from using terms that are hurtful, defamatory, or discriminatory to anyone living with speech or language disorders. Also avoid using such terms figuratively.<br><br>\ud83d\ude14 <em>The starter is sputtering again. Will you please let fleet management know? I'll take a cab now.<br><\/em>\ud83e\udd17 <em>The starter is misfiring again. Will you please let fleet management know? I'll take a cab now.<\/em><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/speech-ability",
                 "is_active": "1",
                 "short_explanation": "Repeats preconceived notions about the ability to speak",
@@ -6874,7 +6778,7 @@
             "de": {
                 "hs_path": "sprech-f\u00e4higkeit",
                 "hs_name": "Sprech-F\u00e4higkeit",
-                "sub_head": "",
+                "sub_head": "<h4>Sprach- und Sprechbehinderungen<\/h4>\n<p>Begriffe, die nicht-sprechende Menschen oder Menschen mit Sprech- und Sprachbehinderungen beschreiben, sind oft eng mit negativen Stereotypen und falschen Annahmen verbunden. Menschen mit Sprach- und Sprechbehinderungen wird unterstellt, sie seien \"unsicher\" oder \"nerv\u00f6s\", oder es werden ihnen geistige Behinderungen oder ein Mangel an Denkverm\u00f6gen attestiert. Begriffe aus diesem Zusammenhang werden oft im \u00fcbertragenen Sinne verwendet, um etwas als \"anders\" oder \"funktionell eingeschr\u00e4nkt\" zu beschreiben.<\/p><br \/><br \/><p><p>Verzichte auf Begriffe, die verletzend, verleumdend oder diskriminierend sind f\u00fcr nicht-sprechende Personen und Menschen, die mit Sprech- oder Sprachst\u00f6rungen leben. Vermeide es auch solche Begriffe figurativ zu verwenden.<br><br>\ud83d\ude14 <em>Der Anlasser stottert schon wieder. Gibst du bitte der Fuhrparkleitung Bescheid? Ich nehme jetzt ein Taxi.<br><\/em>\ud83e\udd17 <em>Der Anlasser verursacht schon wieder Fehlz\u00fcndungen. Gibst du bitte der Fuhrparkleitung Bescheid? Ich nehme jetzt ein Taxi.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/sprech-f\u00e4higkeit",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile und Klischees \u00fcber Sprechf\u00e4higkeit",
@@ -6963,7 +6867,7 @@
             "en": {
                 "hs_path": "sports-terms",
                 "hs_name": "Sports terms",
-                "sub_head": "",
+                "sub_head": "<h4>Sports metaphors<\/h4>\n<p>Metaphors taken from the world of sports have become a mainstay of business communication, especially in messages aiming to motivate. Framing business interactions as a sport often overemphasizes their competitive aspects. While this communication style may resonate with people who share your love of the game, others may feel you're trivializing the complexity of doing business, or feel you don't value more collaborative mindsets.<\/p>\n<p>Apart from the competitive aspect, there are gender biases to consider. Many of the sports referenced in business environments are traditionally male-dominated. Using sports terms can subtly signal a preference for a business world where people who identify as female have no place.<\/p>\n<p>Last not least, when using terms related to a specific sport only those familiar with that exact sport will get your point.<\/p><br \/><br \/><p><p>Use commonly used and well-understood words and metaphors to get your message across in a way that connects with everyone. You can use broad sports metaphors that convey fairness, playful creativity, and the fun of working together.<br><br>\ud83d\ude14<em> Purchasing is throwing us a curveball. We've reached a point in our negotiations where the boss has to step up to the plate.<br><\/em>\ud83e\udd17 <em>Purchasing is demanding greater concessions than we can make. We've reached a point in our negotiations where management has to take over.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/sports-terms",
                 "is_active": "1",
                 "short_explanation": "Shuts out people not into this sport; overemphasizes competitiveness",
@@ -7004,7 +6908,7 @@
             "de": {
                 "hs_path": "sport-jargon",
                 "hs_name": "Sport Jargon",
-                "sub_head": "",
+                "sub_head": "<h4>Sport als Metapher<\/h4>\n<p>Sportmetaphern sind in vielen Unternehmen ganz allt\u00e4glich, vor allem in Botschaften, die motivieren sollen. Wenn du gesch\u00e4ftliche Interaktionen mit Sportsmetaphern beschreibst, wird der Wettbewerbsaspekt oft \u00fcberbetont. W\u00e4hrend dieser Kommunikationsstil bei Menschen, die deine Liebe zum Sport teilen, auf Gegenliebe st\u00f6\u00dft, haben andere vielleicht das Gef\u00fchl, dass du die Komplexit\u00e4t des Gesch\u00e4ftslebens trivialisierst oder kooperative Denkweisen nicht sch\u00e4tzt. Abgesehen vom Wettbewerbsaspekt gibt es auch geschlechtsspezifische Vorurteile zu ber\u00fccksichtigen. Viele der Sportarten, auf die in der Gesch\u00e4ftswelt Bezug genommen wird, sind traditionell von M\u00e4nnern dominiert. Die Verwendung von Sportbegriffen kann also auf subtile Weise eine Vorliebe f\u00fcr eine Gesch\u00e4ftswelt signalisieren, in der Menschen, die sich als Frauen sehen, keinen Platz haben. Begriffe aus dem Sport haben noch einen weiteren Nachteil: Sie werden nur von denen wirklich verstanden, die mit genau dieser Sportart vertraut sind.<\/p><br \/><br \/><p><p>Nimm allgemeinverst\u00e4ndliche Begriffe, um deine Botschaft f\u00fcr alle unmissverst\u00e4ndlich r\u00fcberzubringen. Du kannst auch auf Sportmetaphern zur\u00fcckgreifen, die Fairness, spielerische Kreativit\u00e4t und Spa\u00df am gemeinsamen Engagement anschaulich auf den Punkt bringen.<\/p>\n<p>\ud83d\ude14 <em>Der Einkauf k\u00e4mpft mit harten Bandagen. Wir sind an einem Punkt in den Verhandlungen angekommen, wo der Chef in den Ring steigen muss.<br><\/em>\ud83e\udd17 <em>Der Einkauf fordert gr\u00f6\u00dfere Zugest\u00e4ndnisse, als wir verantworten k\u00f6nnen. Wir sind an einem Punkt in den Verhandlungen angekommen, wo die Gesch\u00e4ftsleitung \u00fcbernehmen muss.<\/em><\/p><\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/sport-jargon",
                 "is_active": "1",
                 "short_explanation": "Reduziert auf den Wettbewerbsaspekt; f\u00fcr Nicht-Sportinteressierte unverst\u00e4ndlich",
@@ -7258,7 +7162,7 @@
             "en": {
                 "hs_path": "transphobia",
                 "hs_name": "Transphobia",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a trans person: It is extremely offending to them because it defames them as human beings due to their gender identity. Using it has consequences for the whole social group as it creates or reinforces prejudices against trans people.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/transphobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a trans hostile slur",
@@ -7270,12 +7174,7 @@
                     "height": "450",
                     "alt": "Illustration of a person cursing at a person wearing a shirt and short hair."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration of a person cursing at a person wearing a shirt and short hair."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7299,7 +7198,7 @@
             "de": {
                 "hs_path": "transphobie",
                 "hs_name": "Transphobie",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines trans Menschen: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegem ihrer Geschlechtsidentit\u00e4t verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile gegen\u00fcber trans Menschen schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/transphobie",
                 "is_active": "1",
                 "short_explanation": "Stellt eine transfeindliche Verunglimpfung dar",
@@ -7311,12 +7210,7 @@
                     "height": "450",
                     "alt": "Illustration einer Person, die eine Person mit einem Hemd und kurzen Haaren beschimpft."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration einer Person, die eine Person mit einem Hemd und kurzen Haaren beschimpft."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7352,12 +7246,7 @@
                     "height": "450",
                     "alt": "Illustration d'une personne maudissant une personne portant une chemise et des cheveux courts."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration d'une personne maudissant une personne portant une chemise et des cheveux courts."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7538,7 +7427,7 @@
             "en": {
                 "hs_path": "xenophobia",
                 "hs_name": "Xenophobia",
-                "sub_head": "",
+                "sub_head": "Do you write this expression on purpose or as a \u201cit\u2019s just a joke\u201d? Try to take the perspective of a person having another culture\/nationality: It is extremely offending to them because it defames them as human beings due to their origins. Using it has consequences for the whole social group as it creates or reinforces prejudices against them.&nbsp;<br \/><br \/><p>Never use this expression. The publication of this word may result in legal consequences.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/xenophobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a xenophobic slur",
@@ -7550,12 +7439,7 @@
                     "height": "450",
                     "alt": "Illustration two people cursing at a person with a beard."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration two people cursing at a person with a beard."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7579,7 +7463,7 @@
             "de": {
                 "hs_path": "fremdenfeindlichkeit-xenophobie",
                 "hs_name": "Fremdenfeindlichkeit \/ Xenophobie",
-                "sub_head": "",
+                "sub_head": "Schreibst du diesen Ausdruck absichtlich oder als \"ist ja nur ein Scherz\"? Versetze dich in die Lage eines Menschen mit anderer Kultur oder Nationalit\u00e4t: Es ist f\u00fcr sie extrem beleidigend, weil sie als Menschen wegen ihrer Urspr\u00fcnge verunglimpft werden. Die Nutzung dieses Ausdrucks hat Folgen f\u00fcr die gesamte gesellschaftliche Gruppe, da sie Vorurteile schafft oder verst\u00e4rkt.&nbsp;<br \/><br \/><p>Verwende diesen Ausdruck niemals. Die Ver\u00f6ffentlichung dieses Wortes kann rechtliche Konsequenzen nach sich ziehen.<\/p>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/fremdenfeindlichkeit-xenophobie",
                 "is_active": "1",
                 "short_explanation": "Fremdenfeindlich, xenophob",
@@ -7591,12 +7475,7 @@
                     "height": "450",
                     "alt": "Illustration: Zwei Personen beschimpfen eine Person mit Bart."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration: Zwei Personen beschimpfen eine Person mit Bart."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7632,12 +7511,7 @@
                     "height": "450",
                     "alt": "Illustration de deux personnes injuriant une personne portant une barbe."
                 },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
-                    "width": "900",
-                    "height": "450",
-                    "alt": "Illustration de deux personnes injuriant une personne portant une barbe."
-                },
+                "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7678,7 +7552,7 @@
             "en": {
                 "hs_path": "yiddish-pejoratives",
                 "hs_name": "Yiddish Pejoratives",
-                "sub_head": "",
+                "sub_head": "We \"schachern\" (haggle), get annoyed about \"Gemauschel\" (jiggery-pokery) or fear being \"abgezockt\" (ripped off). Everyday German is full of loan words from Yiddish. But caution is advised when using Yiddish loan words with a negative or derogatory meaning. This is because many Yiddish words that originally had a completely neutral or positive connotation have been given a derogatory reinterpretation in German. And that makes them an expression of anti-Semitism. Yiddish words that have retained their casually charming character, such as \"schmusen\", \"malochen\", \"Tacheles reden\", finding something \"meschugge\" or being \"angeschickert\", are harmless.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/yiddish-pejoratives",
                 "is_active": "1",
                 "short_explanation": "Pejorative reinterpretation of a neutral or positive Yiddish word",
@@ -7709,7 +7583,7 @@
             "de": {
                 "hs_path": "negative-verwendung-jiddischer-worte",
                 "hs_name": "Negative Verwendung jiddischer Worte",
-                "sub_head": "",
+                "sub_head": "<span>Wir schachern, \u00e4rgern uns \u00fcber Gemauschel oder f\u00fcrchten abgezockt zu werden. Die deutsche Alltagssprache ist voller Lehnw\u00f6rter aus dem Jiddischen. Aber bei jiddischen Lehnw\u00f6rtern mit negativer oder abf\u00e4lliger Bedeutung ist Vorsicht geboten. Denn viele urspr\u00fcnglich ganz neutrale oder positive besetzte jiddische W\u00f6rter haben im Deutschen eine abwertende Umdeutung erfahren. Und das macht sie zu einem Ausdruck von Antisemitismus. Unverf\u00e4nglich sind jiddische W\u00f6rter, die ihren l\u00e4ssig charmanten Charakter behalten haben, wie schmusen, malochen, Tacheles reden, etwas meschugge finden oder angeschickert sein.&nbsp;<\/span>",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/negative-verwendung-jiddischer-worte",
                 "is_active": "1",
                 "short_explanation": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",

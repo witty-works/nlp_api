@@ -10,6 +10,13 @@
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
                 "text": "Vermeiden Sie Nebensätze.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
@@ -50,6 +57,7 @@
                 "content": "advanced",
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "long_text": "Setze auf konkete Aussagen und Beispiele. Worthülsen und Phrasen schwächen deine Aussage oder lenken von ihr ab. ",
                 "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
@@ -86,6 +94,13 @@
                 "content": "advanced",
                 "icon": "💡",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
                 "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
@@ -122,6 +137,7 @@
                 "content": "advanced",
                 "icon": "😮‍💨",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "long_text": "Wenn du Ideen konkret und sachlich präsentierst, wirkst du seriös, greifbar und authentisch.",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
