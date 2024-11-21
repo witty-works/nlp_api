@@ -1104,6 +1104,7 @@ class RephrasesOut(BaseModel):
 class PromptOut(BaseModel):
     check_results: list[ResultOut]
     inititial_response: str
+    limit_reached: bool
     reviewed_response: Optional[str] = None
 
 

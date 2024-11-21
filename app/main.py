@@ -420,55 +420,55 @@ async def debug_review_prompt(
     "/debug/prompt",
     response_model=Union[Result, PromptOut, None],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
     include_in_schema=not context.settings.is_prod,
 )
 async def debug_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
+    username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
-    return await prompt(request, response, check_request_in)
+    configs = debug_configs(check_request_in)
+    return await prompt(request, response, check_request_in, configs)
 
 
 @app.post(
     "/v1.0/prompt",
     response_model=Union[Result, PromptOut, None],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
-    include_in_schema=not context.settings.is_prod,
 )
 async def post_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
+    user_email: str,
+    username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
-    return await prompt(request, response, check_request_in, "1.0")
+    configs = await fetch_configs_for_request(check_request_in, user_email)
+    if configs == {}:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config missing")
+
+    context.redis.store_metrics(request, configs, "1.0", "prompt")
+    return await prompt(request, response, check_request_in, configs)
 
 
 async def prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
-    version: str | None = None,
+    configs: dict,
 ) -> Result | PromptOut:
-    if version is not None:
-        user_email = await fetch_user(
-            request, context.settings, context.redis, context.http
-        )
-
-        configs = await fetch_configs_for_request(check_request_in, user_email)
-    else:
-        configs = debug_configs(check_request_in)
-
-    context.redis.store_metrics(request, configs, version, "prompt")
-
     if (
         check_request_in.config.plan is None
         or not check_request_in.config.plan.startswith("witty_")
     ):
         response.status_code = status.HTTP_402_PAYMENT_REQUIRED
         return Result.factory("Plan missing")
+
+    if not check_request_in.config.llm_alternatives:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config disallows LLM use")
 
     check_request_in.text = await context.prompt.handle(
         check_request_in.text, None, None, 0.4
@@ -481,14 +481,21 @@ async def prompt(
 
         check_request_in.config.disabled_categories.append(category)
 
-    check_result = await check(request, response, check_request_in, None)
-    if isinstance(check_result, Result):
-        return check_result
+    text, language, limit_reached = fetch_text(check_request_in, context.langs)
+
+    if language is None:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Language could not be determined")
+
+    client = parse_client(check_request_in.client)
+    check_result = await apply_language_rules(
+        client, check_request_in.config, configs, language, text
+    )
 
     reviewed_response = None
-    if len(check_result.results) != 0:
+    if len(check_result) != 0:
         review_prompt = ReviewPrompt.handle(
-            check_result.results, ReviewType.INCLUDE_PREVIOUS, check_request_in.text
+            check_result, ReviewType.INCLUDE_PREVIOUS, check_request_in.text
         )
 
         reviewed_response = await context.prompt.handle(review_prompt)
@@ -497,7 +504,8 @@ async def prompt(
     return PromptOut(
         inititial_response=check_request_in.text,
         reviewed_response=reviewed_response,
-        check_results=check_result.results,
+        check_results=check_result,
+        limit_reached=limit_reached,
     )
 
 
