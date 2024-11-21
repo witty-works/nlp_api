@@ -1038,6 +1038,7 @@ class RuleCheck:
 
             if is_formal:
                 if subcategory.startswith("formality"):
+                    rule.text_id = rule.text_id.capitalize()
                     return subcategory
             elif subcategory.startswith("binary_pronouns"):
                 return subcategory

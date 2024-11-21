@@ -309,10 +309,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Du"
+                    "text": "sie"
                 },
                 {
-                    "text": "Dich"
+                    "text": "du"
+                },
+                {
+                    "text": "dich"
                 }
             ],
             "category": "acquired-diversity",
@@ -330,18 +333,18 @@
             "start": 6,
             "subcategory": "formality_advanced",
             "text": "Sie",
-            "text_id": "sie"
+            "text_id": "Sie"
         },
         {
             "alternatives": [
                 {
-                    "text": "Ihren*seinen"
+                    "text": "ihren*seinen"
                 },
                 {
-                    "text": "Ihren/seinen"
+                    "text": "ihren/seinen"
                 },
                 {
-                    "text": "Deinen"
+                    "text": "deinen"
                 }
             ],
             "category": "acquired-diversity",
@@ -359,15 +362,18 @@
             "start": 15,
             "subcategory": "formality_advanced",
             "text": "Ihren",
-            "text_id": "ihren"
+            "text_id": "Ihren"
         },
         {
             "alternatives": [
                 {
-                    "text": "Du"
+                    "text": "sie"
                 },
                 {
-                    "text": "Dich"
+                    "text": "du"
+                },
+                {
+                    "text": "dich"
                 }
             ],
             "category": "acquired-diversity",
@@ -385,7 +391,7 @@
             "start": 44,
             "subcategory": "formality_advanced",
             "text": "Sie",
-            "text_id": "sie"
+            "text_id": "Sie"
         },
         {
             "alternatives": [
@@ -462,16 +468,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Sie*er"
+                    "text": "sie*er"
                 },
                 {
-                    "text": "Sie/er"
+                    "text": "sie/er"
                 },
                 {
-                    "text": "Du"
+                    "text": "du"
                 },
                 {
-                    "text": "Dich"
+                    "text": "dich"
                 }
             ],
             "category": "acquired-diversity",
@@ -489,7 +495,7 @@
             "start": 237,
             "subcategory": "formality_advanced",
             "text": "Sie",
-            "text_id": "sie"
+            "text_id": "Sie"
         },
         {
             "alternatives": [
