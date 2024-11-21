@@ -352,24 +352,22 @@ async def rephrase_sentence(
         user_email = await fetch_user(
             request, context.settings, context.redis, context.http
         )
-        configs = (
-            await fetch_configs_for_request(rephrase_request_in, user_email)
-            if user_email
-            else {}
-        )
+        if user_email is None:
+            response.status_code = status.HTTP_401_UNAUTHORIZED
+            return Result.factory("User not found")
+
+        configs = await fetch_configs_for_request(rephrase_request_in, user_email)
 
         if (
             rephrase_request_in.config.plan is None
             or not rephrase_request_in.config.plan.startswith("witty_")
         ):
             response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("An error occurred: No valid plan on user")
+            return Result.factory("No valid plan on user")
 
         if not rephrase_request_in.config.llm_alternatives:
             response.status_code = status.HTTP_403_FORBIDDEN
-            return Result.factory(
-                "An error occurred: Rephrasing via LLM not enabled on user"
-            )
+            return Result.factory("Rephrasing via LLM not enabled on user")
     else:
         # debug
         configs = {}
