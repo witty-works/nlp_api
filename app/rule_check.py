@@ -69,7 +69,11 @@ class RuleCheck:
         self.alternatives = alternatives
 
     def is_target_noun(self, token: Token):
-        return token.dep_.endswith("subj") or token.dep_.endswith("obj")
+        return (
+            token.dep_.endswith("subj")
+            or token.dep_.endswith("obj")
+            or token.dep_.startswith("obl")
+        )
 
     async def handle(
         self,
@@ -405,7 +409,8 @@ class RuleCheck:
                                     break
 
                         # Nous cherchons des stagiaires *curieux*
-                        if (get_proficiency_level(subcategory) == "inclusive"
+                        if (
+                            get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
                             and self.model.is_token_plural(language.lang, source_noun)
                             and source_noun.text.lower()
