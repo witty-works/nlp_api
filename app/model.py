@@ -121,6 +121,14 @@ class Model:
         if cache:
             token._.word_type = word_type
 
+        if (
+            word_type in self.static_rules[lang]["lemma_by_word_type"]
+            and token.lemma_ in self.static_rules[lang]["lemma_by_word_type"][word_type]
+        ):
+            token.lemma_ = self.static_rules[lang]["lemma_by_word_type"][word_type][
+                token.lemma_
+            ]
+
         return word_type
 
     async def _fetch_word_type(

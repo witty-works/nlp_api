@@ -55,6 +55,7 @@ from app.models import (
     Result,
     ResultOut,
     ResultsOut,
+    PromptOut,
     RephrasesOut,
     UserConfRequest,
     OrganizationConfRequest,
@@ -80,6 +81,7 @@ from app.regex_check import RegexCheck
 from app.nouns import Nouns
 from app.verbs import Verbs
 from app.adjectives import Adjectives
+from app.prompt import Prompt
 from app.llm_alternatives import LlmAlternatives
 from app.review_prompt import ReviewPrompt
 from app.categories import (
@@ -179,7 +181,10 @@ async def lifespan(app: FastAPI):
         context.categories,
         context.http,
     )
-    context.llm_alternatives = LlmAlternatives(context.settings, context.alternatives)
+    context.prompt = Prompt(context.settings)
+    context.llm_alternatives = LlmAlternatives(
+        context.settings, context.alternatives, context.prompt
+    )
     context.rule_check = RuleCheck(
         context.settings,
         context.logger,
@@ -232,6 +237,14 @@ secure_headers = secure.Secure(
     cache=cache_value,
     xfo=xfo,
 )
+
+disabled_categories_api = [
+    "communal",
+    "d_and_i",
+    "emotional_security",
+    "inclusive",
+    "orthography",
+]
 
 
 @app.middleware("http")
@@ -339,24 +352,22 @@ async def rephrase_sentence(
         user_email = await fetch_user(
             request, context.settings, context.redis, context.http
         )
-        configs = (
-            await fetch_configs_for_request(rephrase_request_in, user_email)
-            if user_email
-            else {}
-        )
+        if user_email is None:
+            response.status_code = status.HTTP_401_UNAUTHORIZED
+            return Result.factory("User not found")
+
+        configs = await fetch_configs_for_request(rephrase_request_in, user_email)
 
         if (
             rephrase_request_in.config.plan is None
             or not rephrase_request_in.config.plan.startswith("witty_")
         ):
             response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("An error occurred: No valid plan on user")
+            return Result.factory("No valid plan on user")
 
         if not rephrase_request_in.config.llm_alternatives:
             response.status_code = status.HTTP_403_FORBIDDEN
-            return Result.factory(
-                "An error occurred: Rephrasing via LLM not enabled on user"
-            )
+            return Result.factory("Rephrasing via LLM not enabled on user")
     else:
         # debug
         configs = {}
@@ -381,16 +392,17 @@ async def rephrase_sentence(
     dependencies=[Depends(HTTPBearer(auto_error=False))],
     include_in_schema=not context.settings.is_prod,
 )
-async def review_prompt(
+async def debug_review_prompt(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
     review_type: ReviewType = ReviewType.EXPLAIN_EDITS,
 ) -> Result | str:
-    check_request_in.config.disabled_categories.append("communal")
-    check_request_in.config.disabled_categories.append("d_and_i")
-    check_request_in.config.disabled_categories.append("emotional_security")
-    check_request_in.config.disabled_categories.append("orthography")
+    for category in disabled_categories_api:
+        if category in check_request_in.config.disabled_categories:
+            continue
+
+        check_request_in.config.disabled_categories.append(category)
 
     check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
@@ -399,7 +411,102 @@ async def review_prompt(
     if len(check_result.results) == 0:
         return "WITTYNOCHANGES"
 
-    return ReviewPrompt.handle(check_result.results, review_type)
+    return ReviewPrompt.handle(
+        check_result.results, review_type, check_request_in.text, 1900
+    )
+
+
+@app.post(
+    "/debug/prompt",
+    response_model=Union[Result, PromptOut, None],
+    response_model_exclude_none=True,
+    include_in_schema=not context.settings.is_prod,
+)
+async def debug_prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+    username: str = Depends(fetch_current_username),
+) -> Result | PromptOut:
+    configs = debug_configs(check_request_in)
+    return await prompt(request, response, check_request_in, configs)
+
+
+@app.post(
+    "/v1.0/prompt",
+    response_model=Union[Result, PromptOut, None],
+    response_model_exclude_none=True,
+)
+async def post_prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+    user_email: str,
+    username: str = Depends(fetch_current_username),
+) -> Result | PromptOut:
+    configs = await fetch_configs_for_request(check_request_in, user_email)
+    if configs == {}:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config missing")
+
+    context.redis.store_metrics(request, configs, "1.0", "prompt")
+    return await prompt(request, response, check_request_in, configs)
+
+
+async def prompt(
+    request: Request,
+    response: Response,
+    check_request_in: CheckRequestIn,
+    configs: dict,
+) -> Result | PromptOut:
+    if (
+        check_request_in.config.plan is None
+        or not check_request_in.config.plan.startswith("witty_")
+    ):
+        response.status_code = status.HTTP_402_PAYMENT_REQUIRED
+        return Result.factory("Plan missing")
+
+    if not check_request_in.config.llm_alternatives:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config disallows LLM use")
+
+    check_request_in.text = await context.prompt.handle(
+        check_request_in.text, None, None, 0.4
+    )
+    check_request_in.text = context.prompt.parseJson(check_request_in.text)
+
+    for category in disabled_categories_api:
+        if category in check_request_in.config.disabled_categories:
+            continue
+
+        check_request_in.config.disabled_categories.append(category)
+
+    text, language, limit_reached = fetch_text(check_request_in, context.langs)
+
+    if language is None:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Language could not be determined")
+
+    client = parse_client(check_request_in.client)
+    check_result = await apply_language_rules(
+        client, check_request_in.config, configs, language, text
+    )
+
+    reviewed_response = None
+    if len(check_result) != 0:
+        review_prompt = ReviewPrompt.handle(
+            check_result, ReviewType.INCLUDE_PREVIOUS, check_request_in.text
+        )
+
+        reviewed_response = await context.prompt.handle(review_prompt)
+        reviewed_response = context.prompt.parseJson(reviewed_response)
+
+    return PromptOut(
+        inititial_response=check_request_in.text,
+        reviewed_response=reviewed_response,
+        check_results=check_result,
+        limit_reached=limit_reached,
+    )
 
 
 @bolt.command("/witty")
@@ -675,7 +782,7 @@ async def post_auth_debug(
         request, context.settings, context.redis, context.http
     )
     if not user_email:
-        return user_email
+        return None
 
     configs = await fetch_configs_for_request(check_request_in, user_email)
 
@@ -1341,6 +1448,13 @@ def apply_configs(
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
 
+    for category in disabled_categories_api:
+        if (
+            category in check_request_in.config.disabled_categories
+            and category not in disabled_categories
+        ):
+            disabled_categories.append(category)
+
     check_request_in.config.__setattr__("disabled_categories", disabled_categories)
     check_request_in.config.__setattr__("plan", plan)
 
@@ -1437,6 +1551,22 @@ def check_client_version(client: Client):
         )
 
 
+def debug_configs(
+    request_in: BaseRequestIn,
+):
+    if "none" in request_in.config.disabled_categories:
+        request_in.config.__setattr__("disabled_categories", [])
+    elif request_in.config.disabled_categories == []:
+        request_in.config.__setattr__(
+            "disabled_categories", ["plain_language_advanced"]
+        )
+
+    configs = {"categories": {}}
+    apply_configs(request_in, configs, "witty_teams")
+
+    return configs
+
+
 async def check(
     request: Request,
     response: Response,
@@ -1446,26 +1576,17 @@ async def check(
     client = parse_client(check_request_in.client)
     check_client_version(client)
 
+    user_email = None
     if version is not None:
         check_api_version(version)
 
         user_email = await fetch_user(
             request, context.settings, context.redis, context.http
         )
+
         configs = await fetch_configs_for_request(check_request_in, user_email)
     else:
-        # debug
-        user_email = None
-
-        if "none" in check_request_in.config.disabled_categories:
-            check_request_in.config.__setattr__("disabled_categories", [])
-        elif check_request_in.config.disabled_categories == []:
-            check_request_in.config.__setattr__(
-                "disabled_categories", ["plain_language_advanced"]
-            )
-
-        configs = {"categories": {}}
-        apply_configs(check_request_in, configs, "witty_teams")
+        configs = debug_configs(check_request_in)
 
     context.redis.store_metrics(request, configs, version, "check")
 

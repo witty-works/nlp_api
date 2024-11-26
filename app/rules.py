@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from app.models import LangWithAutoType, Rule, EntityType, LangType
+from app.models import LangWithAutoType, Rule, EntityType, LangType, WordType
 
 
 def fetch_static_rules(langs: list[str]):
@@ -456,8 +456,11 @@ def fetch_static_rules(langs: list[str]):
                     keep_default_na=False,
                 )
 
+        static_rules[lang]["lemma_by_word_type"] = {}
+        static_rules[lang]["salutations"] = []
+        static_rules[lang]["context_check"] = []
+
     if LangType.FR in langs:
-        static_rules[LangType.FR]["salutations"] = []
 
         rule = Rule(
             "#parexemple",
@@ -471,7 +474,6 @@ def fetch_static_rules(langs: list[str]):
         rule.explanation = "Lorsque vous mettez des majuscules, tout le monde sait immédiatement ce que vous voulez dire. #ParExemple"
 
         static_rules[LangType.FR]["hashtags"] = [rule]
-        static_rules[LangType.FR]["context_check"] = []
         static_rules[LangType.FR]["masculine_articles"] = {
             "le": "la∙le",
             "un": "un∙e",
@@ -559,6 +561,10 @@ def fetch_static_rules(langs: list[str]):
         static_rules[LangType.FR]["articles_binary_map"].update(
             static_rules[LangType.FR]["inclusive_articles"]
         )
+
+        static_rules[LangType.FR]["lemma_by_word_type"][WordType.ADJECTIVE] = {
+            "privilégier": "privilégié",
+        }
 
         static_rules[LangType.FR]["noun_separator_options"] = ["et", "ou", "/"]
 

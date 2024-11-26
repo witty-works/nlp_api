@@ -69,7 +69,11 @@ class RuleCheck:
         self.alternatives = alternatives
 
     def is_target_noun(self, token: Token):
-        return token.dep_.endswith("subj") or token.dep_.endswith("obj")
+        return (
+            token.dep_.endswith("subj")
+            or token.dep_.endswith("obj")
+            or token.dep_.startswith("obl")
+        )
 
     async def handle(
         self,
@@ -117,7 +121,7 @@ class RuleCheck:
             ):
                 male_form = pluralize(token.lemma_)
                 female_form = pluralize(
-                    self.adjectives.get_feminine_form_french(male_form)
+                    self.adjectives.get_feminine_form_french(token.lemma_)
                 )
 
                 if male_form != female_form:
@@ -405,7 +409,8 @@ class RuleCheck:
                                     break
 
                         # Nous cherchons des stagiaires *curieux*
-                        if (get_proficiency_level(subcategory) == "inclusive"
+                        if (
+                            get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
                             and self.model.is_token_plural(language.lang, source_noun)
                             and source_noun.text.lower()
@@ -485,15 +490,16 @@ class RuleCheck:
                             in self.static_rules["male_specific_dimensions"]
                         ):
                             # false positive check
-                            gender = token.morph.get("Gender")
-                            if len(gender):
-                                gender = gender[0]
-                            else:
+                            gender = self.get_token_gender(token)
+                            if gender is None:
                                 result = await self.db.fetch_declensions(
                                     language.lang, WordType.NOUN, token.text, token
                                 )
-                                if result:
-                                    gender = "Masc" if result["female_form"] else "Fem"
+
+                                if result and (
+                                    result["male_form"] or result["female_form"]
+                                ):
+                                    gender = "Fem" if result["male_form"] else "Masc"
                                 elif token_index > 0:
                                     gender = (
                                         "Fem"
@@ -505,6 +511,10 @@ class RuleCheck:
                                     )
                                 else:
                                     gender = "Masc"
+
+                            # false positive check
+                            if self.is_gender_false_positive(token):
+                                continue
 
                             # TODO if BINARY_GENDER not enabled but inclusive is, then propose to switch the entire phrase to inclusive
                             if (
@@ -1038,6 +1048,7 @@ class RuleCheck:
 
             if is_formal:
                 if subcategory.startswith("formality"):
+                    rule.text_id = rule.text_id.capitalize()
                     return subcategory
             elif subcategory.startswith("binary_pronouns"):
                 return subcategory
@@ -1273,6 +1284,38 @@ class RuleCheck:
             alternatives_with_article.append(alternative)
 
         return alternatives_with_article
+
+    def get_token_gender(self, token: Token):
+        gender = token.morph.get("Gender")
+        if len(gender):
+            return gender[0]
+
+        return None
+
+    def is_gender_false_positive(self, token: Token) -> bool:
+        gender = self.get_token_gender(token)
+        if gender is None:
+            return False
+
+        lemma = token.lemma_.lower()
+        male_form_found = True if gender == "Masc" else False
+        female_form_found = True if gender == "Fem" else False
+
+        doc = token.sent.doc
+        for token in doc:
+            if lemma != token.lemma_.lower():
+                continue
+
+            gender = self.get_token_gender(token)
+            if not male_form_found and gender == "Masc":
+                male_form_found = True
+            elif not female_form_found and gender == "Fem":
+                female_form_found = True
+
+            if male_form_found and female_form_found:
+                break
+
+        return male_form_found and female_form_found
 
     async def is_rule_false_positive(
         self, full_text: str, token_index: int, tokens: Doc, rule: Rule

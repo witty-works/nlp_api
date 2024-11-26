@@ -8,29 +8,7 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "in vielen Ländern vertreten"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "auf allen Kontinenten vertreten"
-                },
-                {
-                    "context": "💡 'Länder' nennen",
-                    "inspiration": true,
-                    "text": "in ((Länder)) tätig"
-                },
-                {
-                    "context": "💡 'Kontinente' nennen",
-                    "inspiration": true,
-                    "text": "in Ländern in ((Kontinente)) tätig"
-                },
-                {
-                    "context": "💡 'Zahl' nennen",
-                    "inspiration": true,
-                    "text": "mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten"
+                    "text": "länderübergreifend"
                 }
             ],
             "category": "cultural-diversity",
@@ -43,11 +21,11 @@
                 "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Worthülsen",
             "proficiency_level": "unconscious_bias",
             "start": 34,
-            "subcategory": "hollow",
+            "subcategory": "hollow_advanced",
             "text": "internationale",
             "text_id": "international"
         },

@@ -95,6 +95,9 @@ class MetricsType(str, Enum):
     REPHRASE_COUNTS = "rephrase_counts"
     REPHRASE_PLANS = "rephrase_plans"
     REPHRASE_HOST = "rephrase_host"
+    PROMPT_COUNTS = "prompt_counts"
+    PROMPT_PLANS = "prompt_plans"
+    PROMPT_HOST = "prompt_host"
 
 
 class ContentType(str, Enum):
@@ -142,6 +145,7 @@ class LangWithAutoType(str, Enum):
 
 
 class ReviewType(str, Enum):
+    INCLUDE_PREVIOUS = "include_previous"
     EXPLAIN_EDITS = "explain_edits"
     NO_EXPLANATION = "no_explanation"
     USE_EXPLANATION = "use_explanation"
@@ -1095,6 +1099,13 @@ class RephrasesOut(BaseModel):
     @staticmethod
     def factory(results: list):
         return RephrasesOut(results=results)
+
+
+class PromptOut(BaseModel):
+    check_results: list[ResultOut]
+    inititial_response: str
+    limit_reached: bool
+    reviewed_response: Optional[str] = None
 
 
 class ResultsOut(BaseModel):
