@@ -121,7 +121,7 @@ class RuleCheck:
             ):
                 male_form = pluralize(token.lemma_)
                 female_form = pluralize(
-                    self.adjectives.get_feminine_form_french(male_form)
+                    self.adjectives.get_feminine_form_french(token.lemma_)
                 )
 
                 if male_form != female_form:
