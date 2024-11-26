@@ -60,35 +60,6 @@
             "text_id": "curieux"
         },
         {
-            "alternatives": [
-                {
-                    "text": "un∙e stagiaire"
-                },
-                {
-                    "text": "un stagiaire ou une stagiaire"
-                },
-                {
-                    "text": "personne en stage"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "icipantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieu",
-            "end": 187,
-            "explanation": {
-                "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Fait généralement penser à des hommes",
-                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/nom-de-métier?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Genre + Orientation sexuelle: Nom de métier",
-            "proficiency_level": "unconscious_bias",
-            "start": 175,
-            "subcategory": "titles",
-            "text": "un stagiaire",
-            "text_id": "stagiaire"
-        },
-        {
             "alternatives": [],
             "category": "social-motive",
             "context": "entes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous",
@@ -116,7 +87,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "eux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "context": "eux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux. Nous cher",
             "end": 249,
             "explanation": {
                 "icon": "😟",
@@ -142,7 +113,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "giaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "context": "giaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagi",
             "end": 288,
             "explanation": {
                 "icon": "😟",
@@ -165,7 +136,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "aire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux",
+            "context": "aire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagiaire curieux.",
             "end": 327,
             "explanation": {
                 "icon": "😟",
@@ -178,6 +149,42 @@
             "proficiency_level": "unconscious_bias",
             "start": 320,
             "subcategory": "hidden_image",
+            "text": "curieux",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "s stagiaires curieux. Nous cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagiaire curieux.",
+            "end": 375,
+            "explanation": {
+                "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "text": "Cultive la sécurité émotionnelle",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/émotions-positives?reducedView=true"
+            },
+            "label": "Motivation sociale: Émotions positives",
+            "proficiency_level": "inclusive",
+            "start": 368,
+            "subcategory": "emotional_security",
+            "text": "curieux",
+            "text_id": "curieux"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "s cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagiaire curieux.",
+            "end": 400,
+            "explanation": {
+                "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "text": "Cultive la sécurité émotionnelle",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/émotions-positives?reducedView=true"
+            },
+            "label": "Motivation sociale: Émotions positives",
+            "proficiency_level": "inclusive",
+            "start": 393,
+            "subcategory": "emotional_security",
             "text": "curieux",
             "text_id": "curieux"
         }
