@@ -412,6 +412,12 @@ class AlternativeIn(BaseModel):
     is_placeholder: Optional[bool] = False
 
 
+class LemmatizationIn(BaseModel):
+    text: str
+    lemma: str
+    word_type: str
+
+
 class RuleIn(BaseModel):
     text: str
     lang: LangType
@@ -427,7 +433,7 @@ class RuleIn(BaseModel):
     type: Optional[RuleType] = RuleType.DEFAULT
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
-    lemmatizations: Optional[dict[str, str]] = {}
+    lemmatizations: Optional[list[LemmatizationIn]] = []
 
 
 class Config(BaseModel):
