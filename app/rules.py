@@ -564,6 +564,7 @@ def fetch_static_rules(langs: list[str]):
 
         static_rules[LangType.FR]["lemma_by_word_type"][WordType.ADJECTIVE] = {
             "privilégier": "privilégié",
+            "passionner": "passionné",
         }
 
         static_rules[LangType.FR]["noun_separator_options"] = ["et", "ou", "/"]
