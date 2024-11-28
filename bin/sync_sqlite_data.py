@@ -64,7 +64,7 @@ lookup = {}
 lemma_plural_lookup = {}
 langs = [LangType.EN, LangType.DE, LangType.FR]
 for lang in langs:
-    query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
+    query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE word_type = '' and language = ?"
 
     if lang == LangType.FR:
         query += " UNION SELECT base_form, male_form, 0 FROM rules_frenchnoun WHERE male_form IS NOT NULL"
@@ -104,13 +104,13 @@ for lang in langs:
                     if columns[i].startswith("pl_") or columns[i].startswith("plural"):
                         lemma_plural_lookup[lang].append(row[i])
 
+source.execute("DELETE FROM rules_lemmatization WHERE word_type = ''")
+
 with open("./training_data/lookup.json", "w") as fp:
     json.dump(lookup, fp, indent=2)
 
 with open("./training_data/lemma_plural_lookup.json", "w") as fp:
     json.dump(lemma_plural_lookup, fp, indent=2)
-
-source.execute("DROP table IF EXISTS rules_lemmatization")
 
 with open("./database/dump.sql", "w") as f:
     for line in source.iterdump():

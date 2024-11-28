@@ -887,8 +887,13 @@ async def post_debug_rule(
 
     tokens = context.model.fetch_tokens(language.lang, rule_data.text)
     for token in tokens:
-        if token.text in rule_data.lemmatizations:
-            token.lemma_ = rule_data.lemmatizations[token.text]
+        word_type = await context.model.fetch_word_type(language.lang, token)
+        for lemmatization in rule_data.lemmatizations:
+            if token.text.lower() == lemmatization.text.lower() and (
+                word_type == lemmatization.word_type or lemmatization.word_type == ""
+            ):
+                token.lemma_ = rule_data.lemmatizations[token.text]
+                break
 
     offsets = utf16_offsets(rule_data.text)
     false_positive_matcher = context.model.fetch_false_positive_matchers(
