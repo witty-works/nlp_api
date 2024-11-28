@@ -4,6 +4,7 @@ from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
 import json
+from cmp_version import VersionString
 
 from starlette.responses import Response
 
@@ -638,8 +639,18 @@ class RuleConfig(BaseModel):
             return v
 
 
+class Image(BaseModel):
+    src: str
+    width: Optional[int] = None
+    height: Optional[int] = None
+    alt: Optional[str] = None
+
+
 class Explanation(BaseModel):
     text: str
+    long_text: Optional[str] = None
+    video_url: Optional[str] = None
+    image_url: Optional[Image] = None
     icon: Optional[str] = None
     icon_image: Optional[str] = None
     url: Optional[str] = None
@@ -754,11 +765,7 @@ class ResultAlternative(BaseModel):
     context: Optional[str] = None
 
 
-class ResultExplanation(BaseModel):
-    text: str
-    icon: Optional[str] = None
-    icon_image: Optional[str] = None
-    url: Optional[str] = None
+class ResultExplanation(Explanation):
     context: Optional[str] = None
     content: Optional[ContentType] = None
 
@@ -801,6 +808,9 @@ class ResultOut(BaseModel):
         gravity: float | None = None,
         proficiency_level: str | None = None,
         icon_image: str | None = None,
+        long_explanation: str | None = None,
+        video_url: str | None = None,
+        image_url: str | None = None,
     ):
         if end is None:
             end = start + len(text)
@@ -859,7 +869,11 @@ class ResultOut(BaseModel):
             if url is not None and len(url) == 0:
                 url = None
 
-            if url is not None and client.name == "web-ext":
+            if (
+                url is not None
+                and client.name == "web-ext"
+                and client.version < VersionString("1.40.0")
+            ):
                 url += "?reducedView=true"
 
         explanation = (
@@ -867,6 +881,27 @@ class ResultOut(BaseModel):
             if explanation
             else language._(subcategory_key, "short_explanation")
         )
+
+        if category != "orthography":
+            long_explanation = (
+                long_explanation
+                if long_explanation
+                else language._(subcategory_key, "sub_head")
+            )
+            if long_explanation is None or long_explanation == "":
+                long_explanation = explanation
+
+            video_url = (
+                video_url if video_url else language._(subcategory_key, "lead_video_url")
+            )
+            if video_url == "":
+                video_url = None
+
+            image_url = (
+                image_url if image_url else language._(subcategory_key, "lead_image")
+            )
+            if len(image_url) == 0:
+                image_url = None
 
         (
             text,
@@ -902,6 +937,9 @@ class ResultOut(BaseModel):
             "url": url,
             "context": explanation_context,
             "content": content,
+            "long_text": long_explanation,
+            "video_url": video_url,
+            "image_url": image_url,
         }
 
         if offsets and len(offsets["chars"]) > end:

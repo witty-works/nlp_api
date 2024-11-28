@@ -10,6 +10,13 @@
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
                 "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },

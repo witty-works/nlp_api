@@ -27,6 +27,7 @@
                 "content": "advanced",
                 "icon": "😮‍💨",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "long_text": "Wenn du Ideen konkret und sachlich präsentierst, wirkst du seriös, greifbar und authentisch.",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
@@ -63,6 +64,7 @@
                 "content": "advanced",
                 "icon": "😮‍💨",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "long_text": "Wenn du Ideen konkret und sachlich präsentierst, wirkst du seriös, greifbar und authentisch.",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
@@ -99,6 +101,7 @@
                 "content": "advanced",
                 "icon": "😮‍💨",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "long_text": "Wenn du Ideen konkret und sachlich präsentierst, wirkst du seriös, greifbar und authentisch.",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
@@ -119,8 +122,16 @@
                 "content": "video",
                 "icon": "✅",
                 "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/hubfs/Communal_DE.mp4"
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",

@@ -21,6 +21,13 @@
                 "content": "advanced",
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Um zu zeigen, dass du alle Geschlechter siehst und wertschätzt, wähle geschlechtsneutrale Ausdrücke.",
                 "text": "Wortteil macht andere Geschlechter unsichtbar",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
             },

@@ -1480,8 +1480,8 @@ def test_rule_debug():
 
         expected = [
             {
-                "text_id": "test",
                 "text": "has special needs",
+                "text_id": "test",
                 "context": "She has special needs",
                 "category": "corporate_rules",
                 "subcategory": "corporate_rules",
@@ -1495,6 +1495,7 @@ def test_rule_debug():
                 "label": "Dictionary",
                 "explanation": {
                     "text": "",
+                    "long_text": "",
                     "icon": "❗",
                     "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 },
@@ -1530,8 +1531,8 @@ def test_rule_patterns():
 
         expected = [
             {
-                "text_id": "test",
                 "text": "langsam",
+                "text_id": "test",
                 "context": "Du arbeitest sehr sehr langsam",
                 "category": "corporate_rules",
                 "subcategory": "corporate_rules",
@@ -1541,6 +1542,7 @@ def test_rule_patterns():
                 "label": "Wörterbuch",
                 "explanation": {
                     "text": "",
+                    "long_text": "",
                     "icon": "❗",
                     "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",
@@ -1570,8 +1572,8 @@ def test_rule_patterns():
 
         expected = [
             {
-                "text_id": "test",
                 "text": "super schnelle Entwickler unter 30",
+                "text_id": "test",
                 "context": "Wir suchen super schnelle Entwickler unter <NUMBER>",
                 "category": "corporate_rules",
                 "subcategory": "corporate_rules",
@@ -1581,6 +1583,7 @@ def test_rule_patterns():
                 "label": "Wörterbuch",
                 "explanation": {
                     "text": "",
+                    "long_text": "",
                     "icon": "❗",
                     "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",

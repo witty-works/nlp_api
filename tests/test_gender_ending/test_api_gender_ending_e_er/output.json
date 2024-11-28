@@ -24,6 +24,13 @@
                 "content": "advanced",
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
                 "text": "Pronomen, das nichtbinäre Menschen ausschließt",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
             },
@@ -54,6 +61,13 @@
                 "content": "advanced",
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
                 "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
