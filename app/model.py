@@ -126,6 +126,12 @@ class Model:
             and token.lemma_ in self.db.word_type_lemmas[lang][word_type]
         ):
             token.lemma_ = self.db.word_type_lemmas[lang][word_type][token.lemma_]
+        elif (
+            lang == LangType.FR
+            and word_type == WordType.ADJECTIVE
+            and token.lemma_.endswith("er")
+        ):
+            token.lemma_ = token.lemma_[0:-2] + "é"
 
         return word_type
 
