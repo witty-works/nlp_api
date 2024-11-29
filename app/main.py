@@ -892,7 +892,7 @@ async def post_debug_rule(
             if token.text.lower() == lemmatization.text.lower() and (
                 word_type == lemmatization.word_type or lemmatization.word_type == ""
             ):
-                token.lemma_ = rule_data.lemmatizations[token.text]
+                token.lemma_ = lemmatization.text
                 break
 
     offsets = utf16_offsets(rule_data.text)
