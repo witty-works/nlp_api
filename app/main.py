@@ -429,7 +429,7 @@ async def debug_prompt(
     username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
     configs = debug_configs(check_request_in)
-    return await prompt(request, response, check_request_in, configs)
+    return await prompt(response, check_request_in, configs)
 
 
 @app.post(
@@ -450,11 +450,10 @@ async def post_prompt(
         return Result.factory("User config missing")
 
     context.redis.store_metrics(request, configs, "1.0", "prompt")
-    return await prompt(request, response, check_request_in, configs)
+    return await prompt(response, check_request_in, configs)
 
 
 async def prompt(
-    request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
     configs: dict,
