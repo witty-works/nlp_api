@@ -1566,6 +1566,8 @@ def debug_configs(
             "disabled_categories", ["plain_language_advanced"]
         )
 
+    request_in.config.llm_alternatives = True
+
     configs = {"categories": {}}
     apply_configs(request_in, configs, "witty_teams")
 
