@@ -892,7 +892,9 @@ class ResultOut(BaseModel):
                 long_explanation = explanation
 
             video_url = (
-                video_url if video_url else language._(subcategory_key, "lead_video_url")
+                video_url
+                if video_url
+                else language._(subcategory_key, "lead_video_url")
             )
             if video_url == "":
                 video_url = None
@@ -900,7 +902,7 @@ class ResultOut(BaseModel):
             image_url = (
                 image_url if image_url else language._(subcategory_key, "lead_image")
             )
-            if len(image_url) == 0:
+            if not isinstance(image_url, dict):
                 image_url = None
 
         (
