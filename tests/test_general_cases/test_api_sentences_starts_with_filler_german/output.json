@@ -15,8 +15,16 @@
                 "content": "video",
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
+                "image_url": {
+                    "alt": "Illustration einer vielfältigen Gruppe von lächelnden Menschen, die einer Person zuhören. Ihre Sprechblase ist eine Mischung aus Wörtern und Wolken.",
+                    "height": 500,
+                    "src": "https://www.witty.works/hubfs/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": 921
+                },
+                "long_text": "Wenn du deine Botschaft effektiv und leicht verständlich rüberbringen willst, solltest du Füllwörter sparsam einsetzen.",
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true",
+                "video_url": "https://www.witty.works/hubfs/Fillers_DE.mp4"
             },
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",

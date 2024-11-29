@@ -215,6 +215,7 @@
             "explanation": {
                 "icon": "❗",
                 "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                "long_text": "better ding",
                 "text": "better ding"
             },
             "gravity": 0.9,
@@ -235,6 +236,7 @@
             "end": 77,
             "explanation": {
                 "icon": "🥰",
+                "long_text": "better globus",
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
@@ -256,6 +258,7 @@
             "end": 88,
             "explanation": {
                 "icon": "🥰",
+                "long_text": "better globus",
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
@@ -277,6 +280,7 @@
             "end": 99,
             "explanation": {
                 "icon": "🥰",
+                "long_text": "better globus",
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
@@ -299,6 +303,7 @@
             "explanation": {
                 "icon": "❗",
                 "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                "long_text": "capitalization",
                 "text": "capitalization"
             },
             "gravity": 0.9,

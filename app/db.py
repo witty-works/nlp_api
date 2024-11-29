@@ -34,6 +34,7 @@ class Db:
     person_words: dict = {}
     misc_words: dict = {}
     french_feminine_nouns: dict = {}
+    word_type_lemmas: dict = {}
 
     def __init__(
         self,
@@ -88,6 +89,11 @@ class Db:
             lang = model_name[0:2]
 
             self.substring_rules[lang] = {}
+            self.word_type_lemmas[lang] = {
+                BasicWordType.NOUN: {},
+                BasicWordType.VERB: {},
+                BasicWordType.ADJECTIVE: {},
+            }
             self.person_words[lang] = []
             self.misc_words[lang] = []
 
@@ -135,6 +141,12 @@ class Db:
 
                     for row in rows:
                         self.male_to_female_normativ[row[0]] = row[1]
+
+            query = "SELECT text, lemma, word_type FROM rules_lemmatization WHERE language = ?"
+            parameters = [lang]
+            rows = await self.fetch_rows(query, parameters)
+            for row in rows:
+                self.word_type_lemmas[lang][row[2]][row[0]] = row[1]
 
     async def close(self):
         await self.sqlite_db.close()

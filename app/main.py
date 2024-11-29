@@ -429,7 +429,7 @@ async def debug_prompt(
     username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
     configs = debug_configs(check_request_in)
-    return await prompt(request, response, check_request_in, configs)
+    return await prompt(response, check_request_in, configs)
 
 
 @app.post(
@@ -450,11 +450,10 @@ async def post_prompt(
         return Result.factory("User config missing")
 
     context.redis.store_metrics(request, configs, "1.0", "prompt")
-    return await prompt(request, response, check_request_in, configs)
+    return await prompt(response, check_request_in, configs)
 
 
 async def prompt(
-    request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
     configs: dict,
@@ -887,8 +886,13 @@ async def post_debug_rule(
 
     tokens = context.model.fetch_tokens(language.lang, rule_data.text)
     for token in tokens:
-        if token.text in rule_data.lemmatizations:
-            token.lemma_ = rule_data.lemmatizations[token.text]
+        word_type = await context.model.fetch_word_type(language.lang, token)
+        for lemmatization in rule_data.lemmatizations:
+            if token.text.lower() == lemmatization.text.lower() and (
+                word_type == lemmatization.word_type or lemmatization.word_type == ""
+            ):
+                token.lemma_ = lemmatization.text
+                break
 
     offsets = utf16_offsets(rule_data.text)
     false_positive_matcher = context.model.fetch_false_positive_matchers(
@@ -1560,6 +1564,8 @@ def debug_configs(
         request_in.config.__setattr__(
             "disabled_categories", ["plain_language_advanced"]
         )
+
+    request_in.config.llm_alternatives = True
 
     configs = {"categories": {}}
     apply_configs(request_in, configs, "witty_teams")
