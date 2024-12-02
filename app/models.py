@@ -872,7 +872,7 @@ class ResultOut(BaseModel):
             if (
                 url is not None
                 and client.name == "web-ext"
-                and client.version < VersionString("1.40.0")
+                and client.version < VersionString("1.34.0")
             ):
                 url += "?reducedView=true"
 
