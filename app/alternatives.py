@@ -719,6 +719,21 @@ class Alternatives:
 
         return article + " " + text
 
+    def add_article_to_alternative(
+        self, lang: LangType, alternative: Alternative, article
+    ):
+        alternative.lemma = self.add_article(lang, alternative.lemma, article)
+        if isinstance(alternative.male_form, str):
+            alternative.male_form = self.add_article(
+                lang, alternative.male_form, article
+            )
+        if isinstance(alternative.female_form, str):
+            alternative.female_form = self.add_article(
+                lang, alternative.female_form, article
+            )
+
+        return alternative
+
     async def noun_alternatives(
         self,
         lang: LangType,
@@ -731,7 +746,7 @@ class Alternatives:
         sentence_male_tokens = self.model.fetch_tokens(lang, male_form)
         sentence_female_tokens = self.model.fetch_tokens(lang, female_form)
         if len(sentence_male_tokens) != len(sentence_female_tokens):
-            return {}
+            return None, None, {}
 
         singular_conjunction = self.get_noun_conjunction(lang, True)
         plural_conjunction = self.get_noun_conjunction(lang, False)
@@ -865,10 +880,14 @@ class Alternatives:
                 self.static_rules[lang]["articles_inclusive_map"][article],
             )
 
-        return {
-            GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
-            GenderedRolesFormatType.BINARY_GENDER: binary_form,
-        }
+        return (
+            male_form_sub_sentence,
+            female_form_sub_sentence,
+            {
+                GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
+                GenderedRolesFormatType.BINARY_GENDER: binary_form,
+            },
+        )
 
     def inclusive_alternative(
         self,
@@ -997,9 +1016,9 @@ class Alternatives:
 
             alternative.lemma = result["plural"]
             if article:
-                alternative.lemma = self.add_article(
+                alternative = self.add_article_to_alternative(
                     lang,
-                    alternative.lemma,
+                    alternative,
                     article,
                 )
             alternatives.append(alternative)
@@ -1062,10 +1081,12 @@ class Alternatives:
                             self.get_noun_conjunction(lang, not is_plural)
                             + forms["feminine"]
                         )
+                        alternative.male_form = forms["masculine"]
+                        alternative.female_form = forms["feminine"]
         elif article and result["gender_1"]:
-            alternative.lemma = self.add_article(
+            alternative = self.add_article_to_alternative(
                 lang,
-                alternative.lemma,
+                alternative,
                 self.get_article_by_index(
                     lang,
                     result["gender_1"] + "_articles",

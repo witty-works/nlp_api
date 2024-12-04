@@ -8,9 +8,11 @@
                     "remove": true
                 },
                 {
+                    "collective_noun": true,
                     "text": "tout le monde"
                 },
                 {
+                    "collective_noun": true,
                     "text": "l’équipe"
                 },
                 {
@@ -177,9 +179,13 @@
                     "text": "efficace"
                 },
                 {
+                    "female_form": "compétentes",
+                    "male_form": "compétents",
                     "text": "compétent·es"
                 },
                 {
+                    "female_form": "compétentes",
+                    "male_form": "compétents",
                     "text": "compétents et compétentes"
                 },
                 {
@@ -188,6 +194,8 @@
                     "text": "atteignant des résultats"
                 },
                 {
+                    "female_form": "engagées",
+                    "male_form": "engagés",
                     "text": "engagé·es"
                 }
             ],
@@ -220,6 +228,7 @@
         {
             "alternatives": [
                 {
+                    "collective_noun": true,
                     "text": "direction"
                 },
                 {
@@ -229,9 +238,13 @@
                     "text": "membre de la direction"
                 },
                 {
+                    "female_form": "directrice",
+                    "male_form": "directeur",
                     "text": "directeur·rice"
                 },
                 {
+                    "female_form": "directrice",
+                    "male_form": "directeur",
                     "text": "directeur ou directrice"
                 }
             ],

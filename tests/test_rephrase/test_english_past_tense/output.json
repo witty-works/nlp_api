@@ -1,8 +1,6 @@
 {
-    "results": [
-        {
-            "alternative": "closely examine",
-            "rephrasing": "We closely examined if this works"
-        }
-    ]
+    "results": {
+        "closely examine": "We closely examined if this works"
+    },
+    "sentence": "We analyzed if this works"
 }

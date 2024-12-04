@@ -5,10 +5,14 @@
   "start": 45,
   "alternatives": [
     {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
+      "lemma": "jede*jeder Mitarbeiter*in",
+      "type": "inclusive_gender",
+      "male_form": "jeder Mitarbeiter",
+      "female_form": "jede Mitarbeiterin"
+    },
+    {
+      "lemma": "jede/jeder Mitarbeiterin/Mitarbeiter",
+      "type": "binary_gender",
       "male_form": "jeder Mitarbeiter",
       "female_form": "jede Mitarbeiterin"
     },

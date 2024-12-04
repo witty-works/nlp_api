@@ -8,9 +8,13 @@
                     "text": "ayant l'expérience requise"
                 },
                 {
+                    "female_form": "expérimentée",
+                    "male_form": "expérimenté",
                     "text": "expérimenté·e"
                 },
                 {
+                    "female_form": "expérimentée",
+                    "male_form": "expérimenté",
                     "text": "expérimenté ou expérimentée"
                 },
                 {
@@ -41,15 +45,20 @@
         {
             "alternatives": [
                 {
+                    "collective_noun": true,
                     "text": "La candidature"
                 },
                 {
                     "text": "La personne candidate"
                 },
                 {
+                    "female_form": "La candidate",
+                    "male_form": "Le candidat",
                     "text": "La∙le candidat·e"
                 },
                 {
+                    "female_form": "La candidate",
+                    "male_form": "Le candidat",
                     "text": "Le candidat ou la candidate"
                 }
             ],
@@ -87,9 +96,13 @@
                     "text": "ayant l'expérience requise"
                 },
                 {
+                    "female_form": "expérimentées",
+                    "male_form": "expérimentés",
                     "text": "expérimenté·es"
                 },
                 {
+                    "female_form": "expérimentées",
+                    "male_form": "expérimentés",
                     "text": "expérimentés et expérimentées"
                 },
                 {

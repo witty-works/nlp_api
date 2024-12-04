@@ -1,30 +1,42 @@
 {
   "sentence": "Les experts rapides sont intelligents.",
-  "text": "experts",
-  "start": 4,
+  "text": "Les experts",
+  "start": 0,
   "alternatives": [
     {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
-      "male_form": "expert",
-      "female_form": "experte"
-    },
-    {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
-      "male_form": "professionnel",
-      "female_form": "professionnelle"
-    },
-    {
-      "lemma": "pro",
+      "lemma": "Les spécialistes",
       "collective_noun": true
     },
     {
-      "lemma": "scientifique",
+      "lemma": "Les expert·es",
+      "type": "inclusive_gender",
+      "male_form": "Les experts",
+      "female_form": "Les expertes"
+    },
+    {
+      "lemma": "Les experts et les expertes",
+      "type": "binary_gender",
+      "male_form": "Les experts",
+      "female_form": "Les expertes"
+    },
+    {
+      "lemma": "Les professionnel·les",
+      "type": "inclusive_gender",
+      "male_form": "Les professionnels",
+      "female_form": "Les professionnelles"
+    },
+    {
+      "lemma": "Les professionnels et les professionnelles",
+      "type": "binary_gender",
+      "male_form": "Les professionnels",
+      "female_form": "Les professionnelles"
+    },
+    {
+      "lemma": "Les pros",
+      "collective_noun": true
+    },
+    {
+      "lemma": "Les scientifiques",
       "collective_noun": true
     }
   ],
