@@ -391,6 +391,10 @@ class Rule(Lemma):
         rule.type = row["type"]
         rule.pluralization = row["pluralization"]
         rule.entity_type = row["entity_type"]
+        rule.explanation = row["explanation"]
+        rule.icon = row["emoji"]
+        rule.url = row["url"]
+
         try:
             rule.source = source_map[row["source_id"]]
         except KeyError:
