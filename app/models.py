@@ -391,6 +391,10 @@ class Rule(Lemma):
         rule.type = row["type"]
         rule.pluralization = row["pluralization"]
         rule.entity_type = row["entity_type"]
+        rule.explanation = row["explanation"]
+        rule.icon = row["emoji"]
+        rule.url = row["url"]
+
         try:
             rule.source = source_map[row["source_id"]]
         except KeyError:
@@ -796,10 +800,10 @@ class ResultOut(BaseModel):
         offsets: dict,
         subcategory: str,
         start: int,
-        end: int | None,
-        alternatives: list[Alternative] | None,
-        label: str | None,
-        explanation: str | None,
+        end: int | None = None,
+        alternatives: list[Alternative] | None = None,
+        label: str | None = None,
+        explanation: str | None = None,
         url: str | None = None,
         icon: str | None = None,
         explanation_context: str | None = None,
@@ -872,7 +876,7 @@ class ResultOut(BaseModel):
             if (
                 url is not None
                 and client.name == "web-ext"
-                and client.version < VersionString("1.40.0")
+                and client.version < VersionString("1.34.0")
             ):
                 url += "?reducedView=true"
 
@@ -892,7 +896,9 @@ class ResultOut(BaseModel):
                 long_explanation = explanation
 
             video_url = (
-                video_url if video_url else language._(subcategory_key, "lead_video_url")
+                video_url
+                if video_url
+                else language._(subcategory_key, "lead_video_url")
             )
             if video_url == "":
                 video_url = None
@@ -900,7 +906,7 @@ class ResultOut(BaseModel):
             image_url = (
                 image_url if image_url else language._(subcategory_key, "lead_image")
             )
-            if len(image_url) == 0:
+            if not isinstance(image_url, dict):
                 image_url = None
 
         (
@@ -976,7 +982,7 @@ class ResultOut(BaseModel):
         alternatives_max_count: int,
     ):
         if alternatives is None:
-            return []
+            return text, start, []
 
         prefix = False
         if text.startswith("zu "):

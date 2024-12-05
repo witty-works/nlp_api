@@ -2240,9 +2240,7 @@ async def witty_rules(
         ):
             continue
 
-        token_text = tokens[token_index].text
-
-        if token_text.startswith("#"):
+        if token.text.startswith("#"):
             new_token_index = await context.regex_check.handle(
                 config,
                 client,
@@ -2260,7 +2258,7 @@ async def witty_rules(
             ):
                 continue
 
-        valid_text = is_valid_text(language.lang, token_text)
+        valid_text = is_valid_text(language.lang, token.text)
         if valid_text:
             new_token_index = await context.rule_check.handle(
                 config,
@@ -2317,7 +2315,62 @@ async def witty_rules(
             ):
                 continue
 
+        if len(token.text) > 18 and is_sub_category_enabled(
+            config.disabled_categories, "plain_language"
+        ):
+            subwords = (
+                token.text.replace("/", "-")
+                .replace("@", "-")
+                .replace(":", "-")
+                .replace(".", "-")
+                .replace("_", "-")
+                .split("-")
+            )
+            highlight = len(subwords) == 1
+            for subword in subwords:
+                if len(subword) > 12:
+                    highlight = True
+                    break
+
+            if highlight:
+                list_full.append(
+                    ResultOut.factory(
+                        config,
+                        client,
+                        language,
+                        token.text,
+                        token.text,
+                        text,
+                        offsets,
+                        "plain_language",
+                        token.idx,
+                        explanation=language.translate("TOO_LONG_WORD"),
+                        explanation_context=language.translate("TOO_LONG_WORD_CONTEXT"),
+                    )
+                )
+
         new_token_index += 1
+
+    if is_sub_category_enabled(config.disabled_categories, "plain_language"):
+        for sent in tokens.sents:
+            if len(sent) > 35:
+                list_full.append(
+                    ResultOut.factory(
+                        config,
+                        client,
+                        language,
+                        sent.text,
+                        sent.text,
+                        text,
+                        offsets,
+                        "plain_language",
+                        sent[0].idx,
+                        explanation=language.translate("TOO_LONG_SENTENCE"),
+                        explanation_context=language.translate(
+                            "TOO_LONG_SENTENCE_CONTEXT"
+                        ),
+                    )
+                )
 
     return list_full
 

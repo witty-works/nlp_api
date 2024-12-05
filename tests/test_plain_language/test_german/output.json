@@ -57,32 +57,6 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "t ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glüc",
-            "end": 145,
-            "explanation": {
-                "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
-                "image_url": {
-                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie.",
-                    "height": 525,
-                    "src": "https://www.witty.works/hubfs/plain%20language.png",
-                    "width": 900
-                },
-                "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
-                "text": "Dieses Wort hat mehr als dreizehn Buchstaben. Benutzen Sie kurze Wörter.",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Kulturelle Diversität: Leichte Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 124,
-            "subcategory": "plain_language_advanced",
-            "text": "Donaudampfschifffahrt",
-            "text_id": "Donaudampfschifffahrt"
-        },
-        {
-            "alternatives": [],
-            "category": "cultural-diversity",
             "context": "Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden",
             "end": 159,
             "explanation": {
@@ -521,6 +495,33 @@
             "subcategory": "filler_advanced",
             "text": "nur",
             "text_id": "nur"
+        },
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "t ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glüc",
+            "end": 145,
+            "explanation": {
+                "context": "verwende kürzere Wörter oder Bindestriche",
+                "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
+                "text": "Lange Wörter sind schwer zu lesen und zu verstehen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Leichte Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 124,
+            "subcategory": "plain_language",
+            "text": "Donaudampfschifffahrt",
+            "text_id": "Donaudampfschifffahrt"
         },
         {
             "alternatives": [
@@ -1009,6 +1010,33 @@
             "subcategory": "filler_advanced",
             "text": "wieder",
             "text_id": "wieder"
+        },
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "spilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
+            "end": 574,
+            "explanation": {
+                "context": "Nebensätze in separate Sätze aufteilen",
+                "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
+                "text": "Lange Sätze sind schwer zu lesen und zu verstehen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Leichte Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 346,
+            "subcategory": "plain_language",
+            "text": "Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
+            "text_id": "Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen."
         }
     ]
 }

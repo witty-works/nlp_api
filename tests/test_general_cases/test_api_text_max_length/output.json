@@ -582,6 +582,62 @@
             "subcategory": "filler",
             "text": "generally",
             "text_id": "generally"
+        },
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately <NUMBER> metres to a point approximately <NUMBER> metres east-south-east of the most south-easterly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, and approximately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER>",
+            "end": 621,
+            "explanation": {
+                "content": "advanced",
+                "context": "break up subclauses into separate sentences",
+                "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration of a two people with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble shows a neatly rolled up line.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "To ensure everyone understands, keep language clear, short, and direct.",
+                "text": "Long sentences are hard to read and comprehend",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/plain-english?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Cultural Diversity: Plain English",
+            "proficiency_level": "unconscious_bias",
+            "start": 64,
+            "subcategory": "plain_language",
+            "text": "A path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-south-east of the most south-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close.  ",
+            "text_id": "A path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-south-east of the most south-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close.  "
+        },
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "erly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
+            "end": 999,
+            "explanation": {
+                "content": "advanced",
+                "context": "break up subclauses into separate sentences",
+                "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
+                "image_url": {
+                    "alt": "Illustration of a two people with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble shows a neatly rolled up line.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "width": 900
+                },
+                "long_text": "To ensure everyone understands, keep language clear, short, and direct.",
+                "text": "Long sentences are hard to read and comprehend",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/plain-english?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Cultural Diversity: Plain English",
+            "proficiency_level": "unconscious_bias",
+            "start": 685,
+            "subcategory": "plain_language",
+            "text": "A path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
+            "text_id": "A path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately"
         }
     ]
 }
