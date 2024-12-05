@@ -107,4 +107,24 @@ translations = {
         LangType.DE: "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
         LangType.FR: "Mettez en avant les groupes sous-représentés et reliez-les à votre politique d'égalité des chances.",
     },
+    "TOO_LONG_SENTENCE": {
+        LangType.EN: "Long sentences are hard to read and comprehend",
+        LangType.DE: "Lange Sätze sind schwer zu lesen und zu verstehen",
+        LangType.FR: "Les phrases longues sont difficiles à lire et à comprendre",
+    },
+    "TOO_LONG_SENTENCE_CONTEXT": {
+        LangType.EN: "break up subclauses into separate sentences",
+        LangType.DE: "Nebensätze in separate Sätze aufteilen",
+        LangType.FR: "séparer les sous-clauses en phrases distinctes",
+    },
+    "TOO_LONG_WORD": {
+        LangType.EN: "Long words are hard to read and comprehend",
+        LangType.DE: "Lange Wörter sind schwer zu lesen und zu verstehen",
+        LangType.FR: "Les mots longs sont difficiles à lire et à comprendre",
+    },
+    "TOO_LONG_WORD_CONTEXT": {
+        LangType.EN: "use a shorter word or use hyphens",
+        LangType.DE: "verwende kürzere Wörter oder Bindestriche",
+        LangType.FR: "utiliser un mot plus court ou des tirets",
+    },
 }

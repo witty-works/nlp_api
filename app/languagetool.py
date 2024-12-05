@@ -301,6 +301,11 @@ class LanguageTool:
                 "UNPAIRED_BRACKETS",
                 # People prever to keep using Twitter
                 "TWITTER_X",
+                # long sentences
+                "TOO_LONG_SENTENCE_DE",
+                "TOO_LONG_SENTENCE",
+                # long words
+                "LANGES_WORT"
             ],
         }
 
