@@ -978,7 +978,7 @@ class ResultOut(BaseModel):
         alternatives_max_count: int,
     ):
         if alternatives is None:
-            return []
+            return text, start, []
 
         prefix = False
         if text.startswith("zu "):
