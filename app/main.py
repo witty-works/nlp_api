@@ -2240,9 +2240,7 @@ async def witty_rules(
         ):
             continue
 
-        token_text = tokens[token_index].text
-
-        if token_text.startswith("#"):
+        if token.text.startswith("#"):
             new_token_index = await context.regex_check.handle(
                 config,
                 client,
@@ -2260,7 +2258,7 @@ async def witty_rules(
             ):
                 continue
 
-        valid_text = is_valid_text(language.lang, token_text)
+        valid_text = is_valid_text(language.lang, token.text)
         if valid_text:
             new_token_index = await context.rule_check.handle(
                 config,
