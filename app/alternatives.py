@@ -1025,7 +1025,6 @@ class Alternatives:
 
             return alternatives
 
-
         if result["female_form"] or self.nouns.is_gender_neutral(result):
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
                 new_alternative = deepcopy(alternative)
@@ -1103,7 +1102,6 @@ class Alternatives:
     ):
         return list(self.static_rules[lang][articles_list].keys())[article_index]
 
-
     def get_adjective_alternatives_french(self, male_form, female_form):
         lemma = male_form + "~" + female_form
         return [
@@ -1124,4 +1122,4 @@ class Alternatives:
                 False,
                 True,
             )
-        ]        
+        ]
