@@ -75,6 +75,13 @@ class RuleCheck:
             or token.dep_.startswith("obl")
         )
 
+    def is_previous_token_article(self, token_index: int, tokens: Doc, lang: LangType):
+        return (
+            token_index > 0
+            and tokens[token_index - 1].text.lower()
+            in self.static_rules[lang]["articles"]
+        )
+
     async def handle(
         self,
         config: Config,
@@ -114,19 +121,53 @@ class RuleCheck:
             if (
                 len(rules) == 0
                 and language.lang == LangType.FR
-                and self.model.is_token_plural(LangType.FR, token)
                 and await self.model.check_word_type(
                     language.lang, token, WordType.ADJECTIVE, True, True
                 )
             ):
-                male_form = pluralize(token.lemma_)
-                female_form = pluralize(
-                    self.adjectives.get_feminine_form_french(token.lemma_)
-                )
+                if self.model.is_token_plural(LangType.FR, token):
+                    male_form = pluralize(token.lemma_)
+                    female_form = pluralize(
+                        self.adjectives.get_feminine_form_french(token.lemma_)
+                    )
 
-                if male_form != female_form:
-                    adjective_rule = Rule(
-                        "fr_adjective_rule",
+                    if male_form != female_form:
+                        rule = Rule(
+                            "fr_adjective_rule",
+                            LangType.FR,
+                            token.lemma_,
+                            [token.lemma_],
+                            [{"word_type": "a", "lower_case": True, "lemmatize": True}],
+                            ["hidden_image"],
+                            self.alternatives.get_adjective_alternatives_french(
+                                male_form, female_form
+                            ),
+                        )
+                        rule.false_positives = [
+                            male_form + " et " + female_form,
+                            female_form + " et " + male_form,
+                        ]
+
+                        rules.append(rule)
+                elif (
+                    self.is_previous_token_article(token_index, tokens, language.lang)
+                    and (
+                        token_index + 1 >= len(tokens)
+                        or not await self.model.check_word_type(
+                            language.lang,
+                            tokens[token_index],
+                            WordType.NOUN,
+                            True,
+                            True,
+                        )
+                    )
+                    and not self.is_gender_false_positive(token)
+                ):
+                    male_form = token.lemma_
+                    female_form = self.adjectives.get_feminine_form_french(token.lemma_)
+
+                    rule = Rule(
+                        "fr_noun_adjective_rule",
                         LangType.FR,
                         token.lemma_,
                         [token.lemma_],
@@ -136,23 +177,13 @@ class RuleCheck:
                             male_form, female_form
                         ),
                     )
-                    adjective_rule.false_positives = [
+
+                    rule.false_positives = [
                         male_form + " et " + female_form,
                         female_form + " et " + male_form,
                     ]
-                    return await self.handle(
-                        config,
-                        client,
-                        language,
-                        full_text,
-                        token_index,
-                        tokens,
-                        offsets,
-                        list_full,
-                        [adjective_rule],
-                        false_positive_matcher,
-                        suffix_check,
-                    )
+
+                    rules.append(rule)
 
         for rule in rules:
             subcategory = is_sub_category_enabled(
@@ -408,8 +439,10 @@ class RuleCheck:
                                     source_noun = tokens[source_index]
                                     break
 
+                        if rule.id == "fr_noun_adjective_rule":
+                            pass
                         # Nous cherchons des stagiaires *curieux*
-                        if (
+                        elif (
                             get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
                             and self.model.is_token_plural(language.lang, source_noun)
@@ -605,11 +638,8 @@ class RuleCheck:
 
                 article = article_index = None
                 # when using pattern matching, the rule should explicitly state if the article should be included
-                if (
-                    not rule.pattern
-                    and token_index > 0
-                    and tokens[token_index - 1].text.lower()
-                    in self.static_rules[language.lang]["articles"]
+                if not rule.pattern and self.is_previous_token_article(
+                    token_index, tokens, language.lang
                 ):
                     # Check if the article has not yet been included (f.e. via a pattern)
                     if start != tokens[token_index - 1].idx:
