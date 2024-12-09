@@ -89,9 +89,13 @@
         {
             "alternatives": [
                 {
+                    "female_form": "curieuses",
+                    "male_form": "curieux",
                     "text": "curieux·ses"
                 },
                 {
+                    "female_form": "curieuses",
+                    "male_form": "curieux",
                     "text": "curieux et curieuses"
                 }
             ],
@@ -116,9 +120,13 @@
         {
             "alternatives": [
                 {
+                    "female_form": "curieuses",
+                    "male_form": "curieux",
                     "text": "curieux·ses"
                 },
                 {
+                    "female_form": "curieuses",
+                    "male_form": "curieux",
                     "text": "curieux et curieuses"
                 }
             ],

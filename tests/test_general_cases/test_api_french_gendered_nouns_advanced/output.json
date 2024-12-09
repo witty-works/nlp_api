@@ -5,9 +5,13 @@
         {
             "alternatives": [
                 {
+                    "female_form": "peintresse",
+                    "male_form": "peintre",
                     "text": "un∙e peintre"
                 },
                 {
+                    "female_form": "une peintre",
+                    "male_form": "un peintre",
                     "text": "un peintre ou une peintre"
                 }
             ],
@@ -41,15 +45,23 @@
                     "text": "efficace"
                 },
                 {
+                    "female_form": "compétentes",
+                    "male_form": "compétents",
                     "text": "compétent·es"
                 },
                 {
+                    "female_form": "compétentes",
+                    "male_form": "compétents",
                     "text": "compétents et compétentes"
                 },
                 {
+                    "female_form": "engagées",
+                    "male_form": "engagés",
                     "text": "engagé·es"
                 },
                 {
+                    "female_form": "engagées",
+                    "male_form": "engagés",
                     "text": "engagés et engagées"
                 }
             ],

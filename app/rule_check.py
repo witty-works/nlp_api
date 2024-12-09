@@ -636,12 +636,14 @@ class RuleCheck:
 
                     result = None
                     if alternative.is_gendered_noun:
-                        male_form, female_form = alternative.lemma.split("~")
+                        alternative.male_form, alternative.female_form = (
+                            alternative.lemma.split("~")
+                        )
                         result = (
                             await self.nouns.french_noun_lookup(
                                 config.disabled_categories,
                                 subcategory,
-                                male_form,
+                                alternative.male_form,
                                 token,
                                 alternative,
                             )
@@ -652,7 +654,7 @@ class RuleCheck:
                         if result is not None and result["female_form"] is None:
                             alternative.is_gendered_noun = False
                             if article:
-                                alternative.lemma = male_form
+                                alternative.lemma = alternative.male_form
                                 new_alternatives = (
                                     self.alternatives.nouns_with_articles(
                                         config,
@@ -677,22 +679,24 @@ class RuleCheck:
                                 collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
-                            male_form = (
-                                pluralize(male_form)
+                            alternative.male_form = (
+                                pluralize(alternative.male_form)
                                 if result is None or result["plural"] is None
                                 else result["plural"]
                             )
-                            female_form = pluralize(female_form)
+                            alternative.female_form = pluralize(alternative.female_form)
 
-                        gendered_alternatives = (
-                            await self.alternatives.noun_alternatives(
-                                language.lang,
-                                "·",
-                                "·",
-                                male_form,
-                                female_form,
-                                article,
-                            )
+                        (
+                            alternative.male_form,
+                            alternative.female_form,
+                            gendered_alternatives,
+                        ) = await self.alternatives.noun_alternatives(
+                            language.lang,
+                            "·",
+                            "·",
+                            alternative.male_form,
+                            alternative.female_form,
+                            article,
                         )
 
                         for gendered_alternative in gendered_alternatives:
@@ -709,9 +713,9 @@ class RuleCheck:
 
                         # add gender neutral option on top of the male/female variation
                         if self.nouns.is_gender_neutral(result) and (
-                            not is_plural or male_form != token.text.lower()
+                            not is_plural or alternative.male_form != token.text.lower()
                         ):
-                            alternative.lemma = male_form
+                            alternative.lemma = alternative.male_form
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
                                 language.lang,
@@ -726,6 +730,8 @@ class RuleCheck:
                         for collective_noun in collective_nouns:
                             new_alternative = deepcopy(alternative)
                             new_alternative.is_gendered_noun = False
+                            new_alternative.male_form = None
+                            new_alternative.female_form = None
                             new_alternative.is_collective_noun = True
                             if article:
                                 result = await self.nouns.french_noun_lookup(

@@ -1,16 +1,8 @@
 {
-    "results": [
-        {
-            "alternative": "inclusive_gender:jeder Mitarbeiter/jede Mitarbeiterin",
-            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht jede*jeder Mitarbeiter*in alleine machen muss"
-        },
-        {
-            "alternative": "binary_gender:jeder Mitarbeiter/jede Mitarbeiterin",
-            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht jede/jeder Mitarbeiterin/Mitarbeiter alleine machen muss"
-        },
-        {
-            "alternative": "alle Mitarbeitende",
-            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht alle Mitarbeitende alleine machen muss"
-        }
-    ]
+    "results": {
+        "alle Mitarbeitende": "Mitarbeiter*innen helfen uns, damit es nicht alle Mitarbeitende alleine machen muss",
+        "jede*jeder Mitarbeiter*in": "Mitarbeiter*innen helfen uns, damit es nicht jede*jeder Mitarbeiter*in alleine machen muss",
+        "jede/jeder Mitarbeiterin/Mitarbeiter": "Mitarbeiter*innen helfen uns, damit es nicht jede/jeder Mitarbeiterin/Mitarbeiter alleine machen muss"
+    },
+    "sentence": "Mitarbeiter*innen helfen uns, damit es nicht jeder Mitarbeiter alleine machen muss"
 }

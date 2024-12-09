@@ -1,28 +1,12 @@
 {
-    "results": [
-        {
-            "alternative": "inclusive_gender:expert/experte",
-            "rephrasing": "Les expert∙es rapides sont intelligent∙es."
-        },
-        {
-            "alternative": "binary_gender:expert/experte",
-            "rephrasing": "Les experts et expertes rapides sont intelligentes."
-        },
-        {
-            "alternative": "inclusive_gender:professionnel/professionnelle",
-            "rephrasing": "Les professionnel∙les rapides sont intelligent∙es."
-        },
-        {
-            "alternative": "binary_gender:professionnel/professionnelle",
-            "rephrasing": "Les professionnels et professionnelles rapides sont intelligentes."
-        },
-        {
-            "alternative": "pro",
-            "rephrasing": "Les pros rapides sont intelligents."
-        },
-        {
-            "alternative": "scientifique",
-            "rephrasing": "Les scientifiques rapides sont intelligents."
-        }
-    ]
+    "results": {
+        "Les spécialistes": "Les spécialistes rapides sont intelligents.",
+        "Les expert·es": "Les expert∙es rapides sont intelligent∙es.",
+        "Les experts et les expertes": "Les experts et expertes rapides sont intelligentes.",
+        "Les professionnel·les": "Les professionnel∙les rapides sont intelligent∙es.",
+        "Les professionnels et les professionnelles": "Les professionnels et professionnelles rapides sont intelligentes.",
+        "Les pros": "Les pros rapides sont intelligents.",
+        "Les scientifiques": "Les scientifiques rapides sont intelligents."
+    },
+    "sentence": "Les experts rapides sont intelligents."
 }

@@ -8,15 +8,22 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "male_form": "Les professeurs",
                     "text": "Les professeurs et les professeuses"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Le professorat"
                 },
                 {
+                    "female_form": "Les enseignantes",
+                    "male_form": "Les enseignants",
                     "text": "Les enseignant·es"
                 }
             ],
@@ -53,12 +60,18 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "La prof",
+                    "male_form": "Le prof",
                     "text": "Le prof ou la prof"
                 },
                 {
+                    "female_form": "La professeuse",
+                    "male_form": "Le professeur",
                     "text": "La∙le professeur·se"
                 },
                 {
+                    "female_form": "La professeuse",
+                    "male_form": "Le professeur",
                     "text": "Le professeur ou la professeuse"
                 }
             ],
@@ -89,15 +102,23 @@
         {
             "alternatives": [
                 {
+                    "female_form": "une peintresse",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre·sse"
                 },
                 {
+                    "female_form": "une peintresse",
+                    "male_form": "un peintre",
                     "text": "un peintre ou une peintresse"
                 },
                 {
+                    "female_form": "une peintresse",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre"
                 },
                 {
+                    "female_form": "une peintre",
+                    "male_form": "un peintre",
                     "text": "un peintre ou une peintre"
                 }
             ],
