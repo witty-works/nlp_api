@@ -180,11 +180,13 @@
                 },
                 {
                     "female_form": "compétentes",
+                    "gender_role": "inclusive_gender",
                     "male_form": "compétents",
                     "text": "compétent·es"
                 },
                 {
                     "female_form": "compétentes",
+                    "gender_role": "binary_gender",
                     "male_form": "compétents",
                     "text": "compétents et compétentes"
                 },
@@ -195,6 +197,7 @@
                 },
                 {
                     "female_form": "engagées",
+                    "gender_role": "inclusive_gender",
                     "male_form": "engagés",
                     "text": "engagé·es"
                 }
@@ -239,11 +242,13 @@
                 },
                 {
                     "female_form": "directrice",
+                    "gender_role": "inclusive_gender",
                     "male_form": "directeur",
                     "text": "directeur·rice"
                 },
                 {
                     "female_form": "directrice",
+                    "gender_role": "binary_gender",
                     "male_form": "directeur",
                     "text": "directeur ou directrice"
                 }
@@ -276,11 +281,13 @@
             "alternatives": [
                 {
                     "female_form": "la meilleure",
+                    "gender_role": "inclusive_gender",
                     "male_form": "le meilleur",
                     "text": "la∙le meilleur·e"
                 },
                 {
                     "female_form": "la meilleure",
+                    "gender_role": "binary_gender",
                     "male_form": "le meilleur",
                     "text": "le meilleur ou la meilleure"
                 }

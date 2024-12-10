@@ -4,26 +4,26 @@
   "start": 23,
   "alternatives": [
     {
-      "lemma": "iel être désavantagé·e",
-      "type": "inclusive_gender",
+      "text": "iel être désavantagé·e",
+      "gender_role": "inclusive_gender",
       "male_form": "il être désavantagé",
       "female_form": "elle être désavantagée"
     },
     {
-      "lemma": "être il désavantagé ou elle désavantagée",
-      "type": "binary_gender",
+      "text": "être il désavantagé ou elle désavantagée",
+      "gender_role": "binary_gender",
       "male_form": "il être désavantagé",
       "female_form": "elle être désavantagée"
     },
     {
-      "lemma": "iel être pénalisé·e",
-      "type": "inclusive_gender",
+      "text": "iel être pénalisé·e",
+      "gender_role": "inclusive_gender",
       "male_form": "il être pénalisé",
       "female_form": "elle être pénalisée"
     },
     {
-      "lemma": "être il pénalisé ou elle pénalisée",
-      "type": "binary_gender",
+      "text": "être il pénalisé ou elle pénalisée",
+      "gender_role": "binary_gender",
       "male_form": "il être pénalisé",
       "female_form": "elle être pénalisée"
     }

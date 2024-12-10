@@ -12,11 +12,13 @@
                 },
                 {
                     "female_form": "Les visiteuses",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Les visiteurs",
                     "text": "Les visiteur·ses"
                 },
                 {
                     "female_form": "Les visiteuses",
+                    "gender_role": "binary_gender",
                     "male_form": "Les visiteurs",
                     "text": "Les visiteurs et les visiteuses"
                 },

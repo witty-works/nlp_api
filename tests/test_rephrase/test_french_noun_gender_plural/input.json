@@ -4,39 +4,39 @@
   "start": 0,
   "alternatives": [
     {
-      "lemma": "Les spécialistes",
+      "text": "Les spécialistes",
       "collective_noun": true
     },
     {
-      "lemma": "Les expert·es",
-      "type": "inclusive_gender",
+      "text": "Les expert·es",
+      "gender_role": "inclusive_gender",
       "male_form": "Les experts",
       "female_form": "Les expertes"
     },
     {
-      "lemma": "Les experts et les expertes",
-      "type": "binary_gender",
+      "text": "Les experts et les expertes",
+      "gender_role": "binary_gender",
       "male_form": "Les experts",
       "female_form": "Les expertes"
     },
     {
-      "lemma": "Les professionnel·les",
-      "type": "inclusive_gender",
+      "text": "Les professionnel·les",
+      "gender_role": "inclusive_gender",
       "male_form": "Les professionnels",
       "female_form": "Les professionnelles"
     },
     {
-      "lemma": "Les professionnels et les professionnelles",
-      "type": "binary_gender",
+      "text": "Les professionnels et les professionnelles",
+      "gender_role": "binary_gender",
       "male_form": "Les professionnels",
       "female_form": "Les professionnelles"
     },
     {
-      "lemma": "Les pros",
+      "text": "Les pros",
       "collective_noun": true
     },
     {
-      "lemma": "Les scientifiques",
+      "text": "Les scientifiques",
       "collective_noun": true
     }
   ],

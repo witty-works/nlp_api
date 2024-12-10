@@ -6,11 +6,13 @@
             "alternatives": [
                 {
                     "female_form": "Elle",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Il",
                     "text": "Iel"
                 },
                 {
                     "female_form": "Elle",
+                    "gender_role": "binary_gender",
                     "male_form": "Il",
                     "text": "Il ou elle"
                 },
@@ -42,12 +44,14 @@
         {
             "alternatives": [
                 {
-                    "female_form": "peintresse",
-                    "male_form": "peintre",
+                    "female_form": "une peintre",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre"
                 },
                 {
                     "female_form": "une peintre",
+                    "gender_role": "binary_gender",
                     "male_form": "un peintre",
                     "text": "un peintre ou une peintre"
                 }
@@ -83,21 +87,25 @@
                 },
                 {
                     "female_form": "compétentes",
+                    "gender_role": "inclusive_gender",
                     "male_form": "compétents",
                     "text": "compétent·es"
                 },
                 {
                     "female_form": "compétentes",
+                    "gender_role": "binary_gender",
                     "male_form": "compétents",
                     "text": "compétents et compétentes"
                 },
                 {
                     "female_form": "engagées",
+                    "gender_role": "inclusive_gender",
                     "male_form": "engagés",
                     "text": "engagé·es"
                 },
                 {
                     "female_form": "engagées",
+                    "gender_role": "binary_gender",
                     "male_form": "engagés",
                     "text": "engagés et engagées"
                 }

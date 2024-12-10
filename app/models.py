@@ -218,6 +218,11 @@ class GermanGenderEndingType(str, Enum):
     CAPITAL_LETTER = "In"
 
 
+class GenderedRolesFormatBasicType(str, Enum):
+    INCLUSIVE_GENDER = "inclusive_gender"
+    BINARY_GENDER = "binary_gender"
+
+
 class GenderedRolesFormatType(str, Enum):
     NONE = "none"
     BOTH = "both"
@@ -272,6 +277,7 @@ class Alternative(Lemma):
     url: Optional[str] = None
     male_form: Optional[str] = None
     female_form: Optional[str] = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
 
     def __init__(
         self,
@@ -737,9 +743,9 @@ class BaseRequestIn(BaseModel):
 
 
 class RephraseAlternative(BaseModel):
-    lemma: str
+    text: str
     collective_noun: Optional[bool] = None
-    type: Optional[GenderedRolesFormatType] | None = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
     male_form: Optional[str] = None
     female_form: Optional[str] = None
 
@@ -772,6 +778,7 @@ class ResultAlternative(BaseModel):
     context: Optional[str] = None
     male_form: Optional[str] = None
     female_form: Optional[str] = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
 
 
 class ResultExplanation(Explanation):
@@ -1062,6 +1069,7 @@ class ResultOut(BaseModel):
                     ),
                     male_form=alternative.male_form,
                     female_form=alternative.female_form,
+                    gender_role=alternative.gender_role,
                 )
 
                 if alternative.type != AlternativeType.DEFAULT:

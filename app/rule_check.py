@@ -669,6 +669,7 @@ class RuleCheck:
                         alternative.male_form, alternative.female_form = (
                             alternative.lemma.split("~")
                         )
+
                         result = (
                             await self.nouns.french_noun_lookup(
                                 config.disabled_categories,
@@ -683,6 +684,7 @@ class RuleCheck:
                         # should only happen for non "official" female nouns when advanced is not enabled
                         if result is not None and result["female_form"] is None:
                             alternative.is_gendered_noun = False
+                            alternative.gender_role = None
                             if article:
                                 alternative.lemma = alternative.male_form
                                 new_alternatives = (
@@ -739,6 +741,7 @@ class RuleCheck:
                                 new_alternative.lemma = gendered_alternatives[
                                     gendered_alternative
                                 ]
+                                new_alternative.gender_role = gendered_alternative
                                 new_alternatives.append(new_alternative)
 
                         # add gender neutral option on top of the male/female variation
@@ -746,6 +749,8 @@ class RuleCheck:
                             not is_plural or alternative.male_form != token.text.lower()
                         ):
                             alternative.lemma = alternative.male_form
+                            alternative.gender_role = None
+
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
                                 language.lang,
@@ -762,7 +767,9 @@ class RuleCheck:
                             new_alternative.is_gendered_noun = False
                             new_alternative.male_form = None
                             new_alternative.female_form = None
+                            new_alternative.gender_role = None
                             new_alternative.is_collective_noun = True
+
                             if article:
                                 result = await self.nouns.french_noun_lookup(
                                     config.disabled_categories,
@@ -802,6 +809,8 @@ class RuleCheck:
                             alternative,
                             alternative.words[1:],
                         )
+
+                        alternative.gender_role = None
                         if result is not None:
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
@@ -842,6 +851,9 @@ class RuleCheck:
                                 ):
                                     new_alternative = deepcopy(alternative)
                                     new_alternatives.append(new_alternative)
+                                    new_alternative.gender_role = (
+                                        GenderedRolesFormatType.INCLUSIVE_GENDER
+                                    )
 
                             if Config.gendered_roles_format_binary(
                                 config.gendered_roles_format
@@ -870,6 +882,9 @@ class RuleCheck:
                                     + female_article
                                     + " "
                                     + gender_neutral_noun
+                                )
+                                alternative.gender_role = (
+                                    GenderedRolesFormatType.BINARY_GENDER
                                 )
 
                                 false_positives.append(

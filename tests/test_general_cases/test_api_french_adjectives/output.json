@@ -90,11 +90,13 @@
             "alternatives": [
                 {
                     "female_form": "curieuses",
+                    "gender_role": "inclusive_gender",
                     "male_form": "curieux",
                     "text": "curieux·ses"
                 },
                 {
                     "female_form": "curieuses",
+                    "gender_role": "binary_gender",
                     "male_form": "curieux",
                     "text": "curieux et curieuses"
                 }
@@ -121,11 +123,13 @@
             "alternatives": [
                 {
                     "female_form": "curieuses",
+                    "gender_role": "inclusive_gender",
                     "male_form": "curieux",
                     "text": "curieux·ses"
                 },
                 {
                     "female_form": "curieuses",
+                    "gender_role": "binary_gender",
                     "male_form": "curieux",
                     "text": "curieux et curieuses"
                 }

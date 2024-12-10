@@ -5,19 +5,19 @@
   "start": 45,
   "alternatives": [
     {
-      "lemma": "jede*jeder Mitarbeiter*in",
-      "type": "inclusive_gender",
+      "text": "jede*jeder Mitarbeiter*in",
+      "gender_role": "inclusive_gender",
       "male_form": "jeder Mitarbeiter",
       "female_form": "jede Mitarbeiterin"
     },
     {
-      "lemma": "jede/jeder Mitarbeiterin/Mitarbeiter",
-      "type": "binary_gender",
+      "text": "jede/jeder Mitarbeiterin/Mitarbeiter",
+      "gender_role": "binary_gender",
       "male_form": "jeder Mitarbeiter",
       "female_form": "jede Mitarbeiterin"
     },
     {
-      "lemma": "alle Mitarbeitende",
+      "text": "alle Mitarbeitende",
       "collective_noun": true
     }
   ],

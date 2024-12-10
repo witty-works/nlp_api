@@ -720,16 +720,28 @@ class Alternatives:
         return article + " " + text
 
     def add_article_to_alternative(
-        self, lang: LangType, alternative: Alternative, article
+        self, lang: LangType, alternative: Alternative, article_index: int, article: str
     ):
         alternative.lemma = self.add_article(lang, alternative.lemma, article)
         if isinstance(alternative.male_form, str):
             alternative.male_form = self.add_article(
-                lang, alternative.male_form, article
+                lang,
+                alternative.male_form,
+                self.get_article_by_index(
+                    lang,
+                    "masculine_articles",
+                    article_index,
+                ),
             )
         if isinstance(alternative.female_form, str):
             alternative.female_form = self.add_article(
-                lang, alternative.female_form, article
+                lang,
+                alternative.female_form,
+                self.get_article_by_index(
+                    lang,
+                    "feminine_articles",
+                    article_index,
+                ),
             )
 
         return alternative
@@ -1019,20 +1031,30 @@ class Alternatives:
                 alternative = self.add_article_to_alternative(
                     lang,
                     alternative,
+                    article_index,
                     article,
                 )
             alternatives.append(alternative)
 
             return alternatives
 
-        if result["female_form"] or self.nouns.is_gender_neutral(result):
+        is_gender_neutral = self.nouns.is_gender_neutral(result)
+        if result["female_form"] or is_gender_neutral:
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
                 new_alternative = deepcopy(alternative)
-                new_alternative.is_gendered_noun = True
+                if result["female_form"] or (article and is_gender_neutral):
+                    new_alternative.male_form = result["base_form"]
+                    new_alternative.female_form = result["base_form"]
+                    new_alternative.is_gendered_noun = True
+                    new_alternative.gender_role = (
+                        GenderedRolesFormatType.INCLUSIVE_GENDER
+                    )
+
                 if article:
-                    new_alternative.lemma = self.add_article(
+                    new_alternative = self.add_article_to_alternative(
                         lang,
-                        new_alternative.lemma,
+                        new_alternative,
+                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
@@ -1046,7 +1068,10 @@ class Alternatives:
                 and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
             ):
                 new_alternative = deepcopy(alternative)
-                new_alternative.is_gendered_noun = True
+                new_alternative.is_gendered_noun = False
+                new_alternative.gender_role = None
+                new_alternative.male_form = None
+                new_alternative.female_form = None
                 new_alternative.lemma = "les " + result["plural"]
                 alternatives.append(new_alternative)
 
@@ -1055,13 +1080,19 @@ class Alternatives:
                     config.gendered_roles_format
                     == GenderedRolesFormatType.INCLUSIVE_GENDER
                 ):
-                    alternative.lemma = self.add_article(
+                    alternative.male_form = alternative.lemma
+                    alternative.female_form = alternative.lemma
+
+                    alternative = self.add_article_to_alternative(
                         lang,
-                        alternative.lemma,
+                        alternative,
+                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
                     )
+                    alternative.is_gendered_noun = True
+                    alternative.gender_role = GenderedRolesFormatType.INCLUSIVE_GENDER
                 else:
                     forms = {}
                     for form in ["masculine", "feminine"]:
@@ -1082,10 +1113,13 @@ class Alternatives:
                         )
                         alternative.male_form = forms["masculine"]
                         alternative.female_form = forms["feminine"]
+
+                    alternative.gender_role = GenderedRolesFormatType.BINARY_GENDER
         elif article and result["gender_1"]:
             alternative = self.add_article_to_alternative(
                 lang,
                 alternative,
+                article_index,
                 self.get_article_by_index(
                     lang,
                     result["gender_1"] + "_articles",

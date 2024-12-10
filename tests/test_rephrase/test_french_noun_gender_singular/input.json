@@ -4,27 +4,27 @@
   "start": 24,
   "alternatives": [
     {
-      "lemma": "personnel de service",
+      "text": "personnel de service",
       "collective_noun": true
     },
     {
-      "lemma": "serveur·se",
-      "type": "inclusive_gender",
+      "text": "serveur·se",
+      "gender_role": "inclusive_gender",
       "male_form": "serveur",
       "female_form": "serveurse"
     },
     {
-      "lemma": "serveur ou serveuse",
-      "type": "binary_gender",
+      "text": "serveur ou serveuse",
+      "gender_role": "binary_gender",
       "male_form": "serveur",
       "female_form": "serveurse"
     },
     {
-      "lemma": "personnel de restaurant",
+      "text": "personnel de restaurant",
       "collective_noun": true
     },
     {
-      "lemma": "personnel de café",
+      "text": "personnel de café",
       "collective_noun": true
     }
   ],

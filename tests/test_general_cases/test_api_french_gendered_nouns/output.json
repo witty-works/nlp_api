@@ -9,11 +9,13 @@
                 },
                 {
                     "female_form": "Les professeuses",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
                 },
                 {
                     "female_form": "Les professeuses",
+                    "gender_role": "binary_gender",
                     "male_form": "Les professeurs",
                     "text": "Les professeurs et les professeuses"
                 },
@@ -23,6 +25,7 @@
                 },
                 {
                     "female_form": "Les enseignantes",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Les enseignants",
                     "text": "Les enseignant·es"
                 }
@@ -54,6 +57,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "La prof",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le prof",
                     "text": "La∙le prof"
                 },
                 {
@@ -61,16 +67,19 @@
                 },
                 {
                     "female_form": "La prof",
+                    "gender_role": "binary_gender",
                     "male_form": "Le prof",
                     "text": "Le prof ou la prof"
                 },
                 {
                     "female_form": "La professeuse",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Le professeur",
                     "text": "La∙le professeur·se"
                 },
                 {
                     "female_form": "La professeuse",
+                    "gender_role": "binary_gender",
                     "male_form": "Le professeur",
                     "text": "Le professeur ou la professeuse"
                 }
@@ -103,11 +112,13 @@
             "alternatives": [
                 {
                     "female_form": "Elle",
+                    "gender_role": "inclusive_gender",
                     "male_form": "Il",
                     "text": "Iel"
                 },
                 {
                     "female_form": "Elle",
+                    "gender_role": "binary_gender",
                     "male_form": "Il",
                     "text": "Il ou elle"
                 },
@@ -140,21 +151,25 @@
             "alternatives": [
                 {
                     "female_form": "une peintresse",
+                    "gender_role": "inclusive_gender",
                     "male_form": "un peintre",
                     "text": "un∙e peintre·sse"
                 },
                 {
                     "female_form": "une peintresse",
+                    "gender_role": "binary_gender",
                     "male_form": "un peintre",
                     "text": "un peintre ou une peintresse"
                 },
                 {
-                    "female_form": "une peintresse",
+                    "female_form": "une peintre",
+                    "gender_role": "inclusive_gender",
                     "male_form": "un peintre",
                     "text": "un∙e peintre"
                 },
                 {
                     "female_form": "une peintre",
+                    "gender_role": "binary_gender",
                     "male_form": "un peintre",
                     "text": "un peintre ou une peintre"
                 }

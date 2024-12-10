@@ -43,13 +43,13 @@ class LlmAlternatives:
         genderstar = {}
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
-            if alternative.type is None:
-                alternatives.append(alternative.lemma)
+            if alternative.gender_role is None:
+                alternatives.append(alternative.text)
                 if alternative.collective_noun == True:
-                    collective_nouns.append(alternative.lemma)
+                    collective_nouns.append(alternative.text)
 
             else:
-                genderstar[alternative_index] = alternative.type
+                genderstar[alternative_index] = alternative.gender_role
                 alternatives.append(alternative.male_form)
                 alternatives.append(alternative.female_form)
 
@@ -262,11 +262,11 @@ class LlmAlternatives:
 
                     gendered_role_format = genderstar[alternative_index]
                     if genderstar[alternative_index] in rephrasings:
-                        results[alternative.lemma] = rephrasings[gendered_role_format]
+                        results[alternative.text] = rephrasings[gendered_role_format]
             elif (
-                alternative.lemma in result
-                and placeholder not in result[alternative.lemma]
+                alternative.text in result
+                and placeholder not in result[alternative.text]
             ):
-                results[alternative.lemma] = result[alternative.lemma]
+                results[alternative.text] = result[alternative.text]
 
         return results
