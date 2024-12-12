@@ -79,7 +79,6 @@
             "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee.",
             "end": 65,
             "explanation": {
-                "context": "verwende kürzere Wörter oder Bindestriche",
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
                 "image_url": {
@@ -89,7 +88,7 @@
                     "width": 900
                 },
                 "long_text": "Um sicherzugehen, dass dich alle verstehen, drück dich klar, kurz und direkt.",
-                "text": "Lange Wörter sind schwer zu lesen und zu verstehen",
+                "text": "Lange Wörter sind schwer zu lesen und zu verstehen. Verwende kürzere Wörter oder Bindestriche.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
             "gravity": 2.0,

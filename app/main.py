@@ -2350,7 +2350,6 @@ async def witty_rules(
                         "plain_language",
                         token.idx,
                         explanation=language.translate("TOO_LONG_WORD"),
-                        explanation_context=language.translate("TOO_LONG_WORD_CONTEXT"),
                     )
                 )
 
@@ -2371,9 +2370,6 @@ async def witty_rules(
                         "plain_language",
                         sent[0].idx,
                         explanation=language.translate("TOO_LONG_SENTENCE"),
-                        explanation_context=language.translate(
-                            "TOO_LONG_SENTENCE_CONTEXT"
-                        ),
                     )
                 )
 
