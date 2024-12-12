@@ -15060,7 +15060,7 @@ INSERT INTO "rules_alternative" VALUES(19535,0,'prof',NULL,0,1,NULL,7,5455,NULL,
 INSERT INTO "rules_alternative" VALUES(19536,3,'corps enseignant',NULL,0,1,NULL,7,5455,NULL,'["corps", "enseignant"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(19537,2,'enseignant~enseignante',NULL,0,1,NULL,7,5455,NULL,'["enseignant~enseignante"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19538,5,'universitaire',NULL,0,1,NULL,7,5455,NULL,'["universitaire"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19539,4,'corps professoral',NULL,0,1,NULL,7,5455,NULL,'["corps", "professoral"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19539,4,'corps professoral',NULL,0,1,NULL,7,5455,NULL,'["corps", "professoral"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(19540,0,'personne détenue',NULL,0,1,NULL,7,5453,NULL,'["personne", "d\u00e9tenue"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19542,2,'population carcérale',NULL,0,1,NULL,7,5453,NULL,'["population", "carc\u00e9rale"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(19543,5,'camarade de prison',NULL,0,1,NULL,7,5453,NULL,'["camarade", "de", "prison"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -19261,7 +19261,7 @@ INSERT INTO "rules_alternative" VALUES(31041,3,'direction des ventes',NULL,0,1,N
 INSERT INTO "rules_alternative" VALUES(31042,0,'propriétaire',NULL,0,1,NULL,2,8260,NULL,'["propri\u00e9taire"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(31043,0,'il~elle',NULL,0,1,NULL,2,8261,NULL,'["il~elle"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(31044,1,'la personne',NULL,0,1,NULL,2,8261,NULL,'["la", "personne"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(31045,2,'((nom de la personne))',NULL,0,1,'spécifier ''nom'' de la personne',2,8261,NULL,'["(", "(", "nom", "de", "la", "personne", ")", ")"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',1,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(31045,2,'((nom de la personne))',NULL,0,1,'spécifier le ''nom de la personne''',2,8261,NULL,'["(", "(", "nom", "de", "la", "personne", ")", ")"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',1,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(31046,3,'vous',NULL,0,1,NULL,7,8261,NULL,'["vous"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(31048,0,'innovative','a',0,1,NULL,2,8263,NULL,'["innovative"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(31049,1,'pioneering','a',0,1,NULL,2,8263,NULL,'["pioneering"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
@@ -19274,6 +19274,10 @@ INSERT INTO "rules_alternative" VALUES(31057,2,'interprète',NULL,0,1,NULL,2,826
 INSERT INTO "rules_alternative" VALUES(31058,0,'journaliste',NULL,0,1,NULL,2,8266,NULL,'["journaliste"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(31059,0,'responsable','n',0,1,NULL,2,6609,NULL,'["responsable"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(31060,1,'personne responsable',NULL,0,1,NULL,2,6609,NULL,'["personne", "responsable"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(31061,0,'architecte',NULL,0,1,NULL,2,5475,NULL,'["architecte"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(31062,0,'standardiste',NULL,0,1,NULL,2,8267,NULL,'["standardiste"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(31063,0,'cordialement',NULL,0,1,NULL,2,8268,NULL,'["cordialement"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(31064,0,'prestataire',NULL,0,1,NULL,2,8269,NULL,'["prestataire"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
 CREATE TABLE "rules_englishadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "comparative" varchar(255) NULL, "superlative" varchar(255) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_absolute" bool NOT NULL);
 INSERT INTO "rules_englishadjective" VALUES(1,'abnormal','more abnormal','most abnormal',NULL,0);
 INSERT INTO "rules_englishadjective" VALUES(2,'atypical','more atypical','most atypical',NULL,0);
@@ -23218,6 +23222,8 @@ INSERT INTO "rules_falsepositive" VALUES(1410,7,6483,'Institut des Métiers d’
 INSERT INTO "rules_falsepositive" VALUES(1411,2,6558,'d''engagement');
 INSERT INTO "rules_falsepositive" VALUES(1412,2,6558,'des engagements');
 INSERT INTO "rules_falsepositive" VALUES(1413,2,6558,'l''engagement');
+INSERT INTO "rules_falsepositive" VALUES(1414,2,5415,'ans d''expérience');
+INSERT INTO "rules_falsepositive" VALUES(1415,2,7320,'en français');
 CREATE TABLE "rules_frenchnoun" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "female_form" varchar(255) NULL, "male_form" varchar(255) NULL, "gender_1" varchar(9) NULL, "gender_2" varchar(9) NULL, "singular_only" bool NOT NULL, "plural_only" bool NOT NULL, "plural" varchar(255) NULL, "collective_noun" varchar(255) NULL, "collective_noun_2" varchar(255) NULL, "ner" varchar(12) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, CONSTRAINT "rules_FrenchNoun_gender_1_GenderTypeEnum" CHECK (("gender_1" IN ('', 'neuter', 'feminine', 'masculine') OR "gender_1" IS NULL)), CONSTRAINT "rules_FrenchNoun_gender_2_GenderTypeEnum" CHECK (("gender_2" IN ('', 'neuter', 'feminine', 'masculine') OR "gender_2" IS NULL)), CONSTRAINT "rules_FrenchNoun_ner_NerTypeEnum" CHECK (("ner" IN ('', 'person', 'group', 'organization', 'location', 'thing', 'misc', 'animal') OR "ner" IS NULL)));
 INSERT INTO "rules_frenchnoun" VALUES(1,'utilisateur','utilisatrice',NULL,'masculine',NULL,0,0,'utilisateurs',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(2,'utilisatrice',NULL,'utilisateur','feminine',NULL,0,0,'utilisatrices',NULL,NULL,'person',NULL);
@@ -23817,8 +23823,6 @@ INSERT INTO "rules_frenchnoun" VALUES(595,'adhérent','adhérente',NULL,'masculi
 INSERT INTO "rules_frenchnoun" VALUES(596,'adhérente',NULL,'adhérent','feminine',NULL,0,0,'adhérentes',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(597,'aîné','aînée',NULL,'masculine',NULL,0,0,'aînés',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(598,'aînée',NULL,'aîné','feminine',NULL,0,0,'aînées',NULL,NULL,'person',NULL);
-INSERT INTO "rules_frenchnoun" VALUES(599,'chacun','chacune des',NULL,'masculine',NULL,0,0,'chacuns',NULL,NULL,'person',NULL);
-INSERT INTO "rules_frenchnoun" VALUES(600,'chacune',NULL,'chacun','feminine',NULL,0,0,'chacunes',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(601,'Français','Française',NULL,'masculine',NULL,0,0,'Français',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(602,'Française',NULL,'Français','feminine',NULL,0,0,'Françaises',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(603,'collégien','collégienne',NULL,'masculine',NULL,0,0,'collégiens',NULL,NULL,'person',NULL);
@@ -24162,7 +24166,7 @@ INSERT INTO "rules_frenchnoun" VALUES(960,'ambition',NULL,NULL,'feminine',NULL,0
 INSERT INTO "rules_frenchnoun" VALUES(961,'analyse',NULL,NULL,'feminine',NULL,0,0,'analyses',NULL,NULL,'misc',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(962,'analyste',NULL,NULL,'masculine','feminine',0,0,'analystes',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(963,'apparence',NULL,NULL,'feminine',NULL,0,0,'apparences',NULL,NULL,'misc',NULL);
-INSERT INTO "rules_frenchnoun" VALUES(964,'architecte',NULL,'architect','feminine','',0,0,'architectes',NULL,NULL,'person',NULL);
+INSERT INTO "rules_frenchnoun" VALUES(964,'architecte',NULL,NULL,'masculine','feminine',0,0,'architectes',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(965,'asile',NULL,NULL,'masculine','',0,0,'asiles',NULL,NULL,'location',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(966,'assertivité',NULL,NULL,'feminine',NULL,0,0,'assertivités',NULL,NULL,'misc',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(967,'assurance',NULL,NULL,'feminine',NULL,0,0,'assurances',NULL,NULL,'misc',NULL);
@@ -24703,7 +24707,6 @@ INSERT INTO "rules_frenchnoun" VALUES(1515,'testeuse',NULL,'testeur','feminine',
 INSERT INTO "rules_frenchnoun" VALUES(1516,'testeur','testeuse',NULL,'masculine','',0,0,'testeurs',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1517,'administration',NULL,NULL,'feminine','',0,0,'administrations',NULL,NULL,'organization',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1518,'architecture',NULL,NULL,'feminine','',0,0,'architectures',NULL,NULL,'thing',NULL);
-INSERT INTO "rules_frenchnoun" VALUES(1519,'architect','architecte',NULL,'masculine','',0,0,'architects',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1520,'mixologue',NULL,NULL,'masculine','feminine',0,0,'mixologues',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1521,'décisionnaire',NULL,NULL,'masculine','feminine',0,0,'décisionnaires',NULL,NULL,'person',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1522,'individu',NULL,NULL,'masculine','',0,0,'individus',NULL,NULL,'person',NULL);
@@ -25131,6 +25134,7 @@ INSERT INTO "rules_frenchnoun" VALUES(1944,'champ',NULL,NULL,'masculine','',0,0,
 INSERT INTO "rules_frenchnoun" VALUES(1945,'terrassement',NULL,NULL,'masculine','',0,0,'terrassements',NULL,NULL,'misc',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1946,'trans-exclusionary',NULL,NULL,'masculine','',1,0,'trans-exclusionaries',NULL,NULL,'misc',NULL);
 INSERT INTO "rules_frenchnoun" VALUES(1947,'toilettage',NULL,NULL,'masculine','',0,0,'toilettages',NULL,NULL,'misc',NULL);
+INSERT INTO "rules_frenchnoun" VALUES(1948,'standardiste',NULL,NULL,'masculine','feminine',0,0,'standardistes',NULL,NULL,'person',NULL);
 CREATE TABLE "rules_germanadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "comparative" varchar(255) NULL, "is_absolute" bool NOT NULL, "superlative" varchar(255) NULL);
 INSERT INTO "rules_germanadjective" VALUES(1,'abhängig',NULL,'abhängiger',0,'abhängigsten');
 INSERT INTO "rules_germanadjective" VALUES(2,'absolut',NULL,'absolut',1,'absolut');
@@ -29232,6 +29236,7 @@ INSERT INTO "rules_germanverb" VALUES(283,'kosten',NULL,'kostete','haben','koste
 INSERT INTO "rules_germanverb" VALUES(284,'vertreiben',NULL,'vertriebe','haben','vertreibt','vertreibe','zu vertreiben
 ','vertrieben','vertrieb','vertreibst','vertreibe','vertreibt');
 CREATE TABLE "rules_lemmatization" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "text" varchar(255) NOT NULL, "lemma" varchar(255) NOT NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "language" varchar(2) NOT NULL, "is_plural" bool NOT NULL, "word_type" varchar(1) NOT NULL, CONSTRAINT "rules_Lemmatization_language_LanguageEnum" CHECK ("language" IN ('en', 'de', 'fr')), CONSTRAINT "rules_Lemmatization_word_type_WordTypeEnum" CHECK ("word_type" IN ('', 'n', 'v', 'a')));
+INSERT INTO "rules_lemmatization" VALUES(1148,'WMS','WMS',NULL,'fr',0,'n');
 CREATE TABLE "rules_rule" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "language" varchar(2) NOT NULL, "lemma" varchar(255) NOT NULL, "word_types" varchar(255) NULL, "label" varchar(255) NULL, "is_context_aware" bool NOT NULL, "is_active" bool NOT NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "ownedby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "source_id" integer NULL REFERENCES "rules_source" ("id") DEFERRABLE INITIALLY DEFERRED, "lemma_json" text NOT NULL CHECK ((JSON_VALID("lemma_json") OR "lemma_json" IS NULL)), "word_types_json" text NOT NULL CHECK ((JSON_VALID("word_types_json") OR "word_types_json" IS NULL)), "is_marked_for_review" bool NOT NULL, "emoji" varchar(5) NULL, "explanation" varchar(255) NULL, "url" varchar(255) NULL, "text_id" varchar(255) NOT NULL, "type" varchar(9) NOT NULL, "label_type" varchar(40) NOT NULL, "first_is_word_type_lemmatize" bool NULL, "first_is_word_type_lower_case" bool NULL, "first_token" varchar(255) NULL, "diversity_dimension_json" text NOT NULL CHECK ((JSON_VALID("diversity_dimension_json") OR "diversity_dimension_json" IS NULL)), "has_training_sentences" bool NULL, "lemma_length" integer unsigned NULL CHECK ("lemma_length" >= 0), "pattern" varchar(255) NULL, "entity_type" varchar(10) NOT NULL, "pluralization" varchar(13) NOT NULL, "is_pattern_match" bool NOT NULL, "first_word_type" varchar(255) NULL, "has_failing_training_sentence" bool NOT NULL, "is_hr_rule" bool NOT NULL, "actual_word_types" varchar(255) NULL, "generated_at" datetime NULL, "is_auto_generated" bool NULL, "source_rule" varchar(2000) NOT NULL, "is_translatable" varchar(7) NOT NULL, "parent_id" integer NULL REFERENCES "rules_rule" ("id") DEFERRABLE INITIALLY DEFERRED, "rule_translation_source_id" integer NULL REFERENCES "rules_rule" ("id") DEFERRABLE INITIALLY DEFERRED, CONSTRAINT "rules_Rule_language_LanguageEnum" CHECK ("language" IN ('en', 'de', 'fr')), CONSTRAINT "rules_Rule_type_RuleTypeEnum" CHECK ("type" IN ('default', 'prefix', 'suffix', 'substring')), CONSTRAINT "rules_Rule_entity_type_EntityTypeEnum" CHECK ("entity_type" IN ('default', 'name', 'non_name', 'person', 'non_person', 'number', 'datetime')), CONSTRAINT "rules_Rule_label_type_RuleLabelEnum" CHECK ("label_type" IN ('default', 'not_for_people', 'be_specific', 'name_disability', 'only_if_gender_identity_relevant', 'not_for_non_combat', 'ask_for_preference', 'ask_about_traditions', 'only_when_referencing_religious_practice', 'dont_use_for_substance_use', 'dont_use_to_describe_quality', 'use_in_tech_only')), CONSTRAINT "rules_Rule_pluralization_PluralizationEnum" CHECK ("pluralization" IN ('default', 'singular_only', 'plural_only')), CONSTRAINT "rules_Rule_is_translatable_TranslatableEnum" CHECK ("is_translatable" IN ('yes', 'no', 'unclear')));
 INSERT INTO "rules_rule" VALUES(1,'en','freak','n',NULL,0,1,NULL,NULL,NULL,'["freak"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'freak','default','default',1,1,'freak','["ableism"]',1,5,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(2,'en','fucktard','n',NULL,0,1,NULL,NULL,NULL,'["fucktard"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fucktard','default','default',1,1,'fucktard','["ableism"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -37727,6 +37732,18 @@ INSERT INTO "rules_rule" VALUES(5473,'fr','présentateur','n',NULL,0,1,1,NULL,NU
     "true_positive_sentence_2": "He always dreamed of being an anchorman for a major news network."
   }
 }','yes',NULL,2186);
+INSERT INTO "rules_rule" VALUES(5475,'fr','architecte','n',NULL,0,1,2,NULL,NULL,'["architecte"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'architecte','default','default',1,1,'architecte','["titles", "gender_identity_advanced"]',1,10,'article|l','default','default',1,'n',1,0,NULL,'2024-07-07 13:47:31.437283',1,'{
+  "rule_category": "titles",
+  "rule_type": "unconscious_bias",
+  "rule_specification": {
+    "rule_trigger": "architect",
+    "lemma": "architect"
+  },
+  "true_positive_examples": {
+    "true_positive_sentence_1": "She is an accomplished architect who has designed several iconic buildings.",
+    "true_positive_sentence_2": "The architect was awarded for his innovative approach to sustainable design."
+  }
+}','no',NULL,2171);
 INSERT INTO "rules_rule" VALUES(5477,'fr','auditeur','n',NULL,0,1,1,NULL,NULL,'["auditeur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'auditeur','default','default',1,1,'auditeur','["titles", "gender_identity_advanced"]',1,8,NULL,'default','default',0,'n',0,1,NULL,'2024-07-07 13:48:31.056812',1,'{
   "rule_category": "titles",
   "rule_type": "unconscious_bias",
@@ -43892,7 +43909,7 @@ INSERT INTO "rules_rule" VALUES(6608,'fr','responsabilité','n',NULL,0,1,7,NULL,
     "true_positive_sentence_2": "Taking responsibility for one''s actions is a sign of maturity."
   }
 }','yes',NULL,1098);
-INSERT INTO "rules_rule" VALUES(6609,'fr','responsable','n',NULL,0,1,2,NULL,NULL,'["responsable"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'responsable','default','default',1,1,'responsable','["titles", "gender_identity_advanced"]',1,11,'article|l','default','default',1,'n',1,0,NULL,'2024-08-02 19:24:50.634564',1,'{
+INSERT INTO "rules_rule" VALUES(6609,'fr','responsable','n',NULL,0,1,2,NULL,NULL,'["responsable"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'responsable','default','default',1,1,'responsable','["titles", "gender_identity_advanced"]',1,11,'article|l','default','default',1,'n',0,0,NULL,'2024-08-02 19:24:50.634564',1,'{
   "rule_category": "communal",
   "rule_type": "inclusive",
   "rule_specification": {
@@ -44072,7 +44089,7 @@ INSERT INTO "rules_rule" VALUES(6625,'fr','attentionné',NULL,NULL,0,1,2,NULL,NU
     "true_positive_sentence_2": "She was always thoughtful, considering others'' feelings before speaking."
   }
 }','yes',NULL,1009);
-INSERT INTO "rules_rule" VALUES(6626,'fr','ensemble','adv',NULL,0,1,2,NULL,NULL,'["ensemble"]','[{"word_type": "adv", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ensemble','default','default',1,1,'ensemble','["communal"]',1,8,NULL,'default','default',0,'adv',1,0,NULL,'2024-08-02 19:33:28.899865',1,'{
+INSERT INTO "rules_rule" VALUES(6626,'fr','ensemble',NULL,NULL,0,1,2,NULL,NULL,'["ensemble"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ensemble','default','default',1,1,'ensemble','["communal"]',1,8,NULL,'default','default',0,'',1,0,NULL,'2024-08-02 19:33:28.899865',1,'{
   "rule_category": "communal",
   "rule_type": "inclusive",
   "rule_specification": {
@@ -45416,7 +45433,7 @@ INSERT INTO "rules_rule" VALUES(7076,'fr','TT','=',NULL,0,1,1,NULL,NULL,'["TT"]'
     "true_positive_sentence_2": "Our company has implemented a WFH policy to ensure everyone''s safety."
   }
 }','yes',NULL,161);
-INSERT INTO "rules_rule" VALUES(7078,'fr','WMS',NULL,NULL,0,1,7,NULL,NULL,'["WMS"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'WMS','default','default',1,1,'wms','["abbreviation"]',1,3,NULL,'default','default',0,'',1,0,NULL,'2024-08-04 11:01:47.063181',1,'{
+INSERT INTO "rules_rule" VALUES(7078,'fr','WMS',NULL,NULL,0,1,2,NULL,NULL,'["WMS"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'WMS','default','default',1,1,'wms','["abbreviation"]',1,3,NULL,'default','default',0,'',1,0,NULL,'2024-08-04 11:01:47.063181',1,'{
   "rule_category": "abbreviation",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -46141,7 +46158,7 @@ INSERT INTO "rules_rule" VALUES(7320,'fr','français','~',NULL,0,1,2,NULL,16,'["
 INSERT INTO "rules_rule" VALUES(7321,'fr','Français','n',NULL,0,1,1,NULL,16,'["Fran\u00e7ais"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Français','default','default',1,1,'français','["titles", "gender_identity_advanced"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7322,'fr','candidat','n',NULL,0,1,1,NULL,16,'["candidat"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'candidat','default','default',1,1,'candidat','["titles", "gender_identity_advanced"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7323,'fr','candidat politique','n|a',NULL,0,1,1,NULL,16,'["candidat", "politique"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'candidat politique','default','default',1,1,'candidat','["titles", "gender_identity_advanced"]',1,18,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7325,'fr','chacun','pron',NULL,0,1,2,NULL,16,'["chacun"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'chacun','default','default',1,1,'chacun','["function"]',1,6,NULL,'person','default',0,'pron',1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7325,'fr','chacun','pron',NULL,0,1,2,NULL,16,'["chacun"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'chacun','default','default',1,1,'chacun','["function"]',1,6,NULL,'default','default',0,'pron',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7326,'fr','chargé','n',NULL,0,1,1,NULL,16,'["charg\u00e9"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'chargé','default','default',1,1,'chargé','["titles", "gender_identity_advanced"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7327,'fr','charmant','~',NULL,0,1,1,NULL,16,'["charmant"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'charmant','default','default',0,1,'charmant','["function"]',1,8,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7328,'fr','charpentier','n',NULL,0,1,1,NULL,16,'["charpentier"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'charpentier','default','default',1,1,'charpentier','["titles", "gender_identity_advanced"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -47018,6 +47035,9 @@ INSERT INTO "rules_rule" VALUES(8263,'en','groundbreaking','a',NULL,0,1,2,NULL,N
 INSERT INTO "rules_rule" VALUES(8264,'fr','membre','n',NULL,0,1,2,NULL,NULL,'["membre"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'membre','default','default',1,1,'membre','["titles", "gender_identity_advanced"]',1,6,'article|l','default','singular_only',1,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(8265,'fr','interprète','n',NULL,0,1,2,NULL,NULL,'["interpr\u00e8te"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'interprète','default','default',1,1,'interprète','["titles", "gender_identity_advanced"]',1,10,'article|l','default','singular_only',1,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(8266,'fr','journaliste','n',NULL,0,1,2,NULL,NULL,'["journaliste"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'journaliste','default','default',1,1,'journaliste','["titles", "gender_identity_advanced"]',1,11,'article|l','default','singular_only',1,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(8267,'fr','standardiste','n',NULL,0,1,2,NULL,NULL,'["standardiste"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'standardiste','default','default',1,1,'standardiste','["titles", "gender_identity_advanced"]',1,12,'article|l','default','singular_only',1,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(8268,'fr','crdt',NULL,NULL,0,1,2,NULL,NULL,'["crdt"]','[{"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'crdt','default','default',1,1,'crdt','["abbreviation"]',1,4,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(8269,'fr','prestataire','n',NULL,0,1,2,NULL,NULL,'["prestataire"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'prestataire','default','default',1,1,'prestataire','["titles", "gender_identity_advanced"]',1,11,'article|l','default','singular_only',1,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 CREATE TABLE "rules_source" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(255) NOT NULL UNIQUE, "url" varchar(255) NULL, "reference" text NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_citation_shown" bool NOT NULL, "citation" text NULL);
 INSERT INTO "rules_source" VALUES(1,'National Library of Medicine','https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1117148/','',1,0,NULL);
 INSERT INTO "rules_source" VALUES(2,'DCC',NULL,NULL,NULL,0,NULL);
@@ -47064,16 +47084,16 @@ CREATE INDEX "rules_frenchnoun_createdby_id_80f019b1" ON "rules_frenchnoun" ("cr
 CREATE UNIQUE INDEX "rules_lemmatization_language_text_word_type_3964aef3_uniq" ON "rules_lemmatization" ("language", "text", "word_type");
 CREATE INDEX "rules_lemmatization_createdby_id_d0e57d1c" ON "rules_lemmatization" ("createdby_id");
 DELETE FROM "sqlite_sequence";
-INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1413);
+INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1415);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',751);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',869);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',345);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',284);
 INSERT INTO "sqlite_sequence" VALUES('rules_source',18);
-INSERT INTO "sqlite_sequence" VALUES('rules_alternative',31060);
+INSERT INTO "sqlite_sequence" VALUES('rules_alternative',31064);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1535);
 INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',3071);
-INSERT INTO "sqlite_sequence" VALUES('rules_rule',8266);
-INSERT INTO "sqlite_sequence" VALUES('rules_frenchnoun',1947);
-INSERT INTO "sqlite_sequence" VALUES('rules_lemmatization',1145);
+INSERT INTO "sqlite_sequence" VALUES('rules_rule',8269);
+INSERT INTO "sqlite_sequence" VALUES('rules_frenchnoun',1948);
+INSERT INTO "sqlite_sequence" VALUES('rules_lemmatization',1148);
 COMMIT;

@@ -6256,7 +6256,8 @@
     "arboriculteur": "arboricultrice",
     "arboriculteurs": "arboricultrice",
     "arboricultrices": "arboricultrice",
-    "architecte": "architect",
+    "architecte": "architecte",
+    "architectes": "architecte",
     "armer": "armer",
     "armuri\u00e8re": "armurier",
     "armuri\u00e8res": "armurier",
@@ -6357,7 +6358,6 @@
     "carrossi\u00e8re": "carrossier",
     "carrossi\u00e8res": "carrossier",
     "cascadeuse": "cascadeur",
-    "chacune": "chacun",
     "championne": "champion",
     "chanceli\u00e8re": "chancelier",
     "chanceli\u00e8res": "chancelier",
@@ -7435,9 +7435,6 @@
     "adh\u00e9rentes": "adh\u00e9rent",
     "a\u00een\u00e9s": "a\u00een\u00e9",
     "a\u00een\u00e9es": "a\u00een\u00e9",
-    "chacuns": "chacun",
-    "chacune des": "chacun",
-    "chacunes": "chacun",
     "Fran\u00e7aises": "Fran\u00e7ais",
     "coll\u00e9giens": "coll\u00e9gien",
     "coll\u00e9giennes": "coll\u00e9gien",
@@ -7765,7 +7762,6 @@
     "analyses": "analyse",
     "analystes": "analyste",
     "apparences": "apparence",
-    "architectes": "architect",
     "asiles": "asile",
     "assertivit\u00e9s": "assertivit\u00e9",
     "assurances": "assurance",
@@ -8284,7 +8280,6 @@
     "testeurs": "testeur",
     "administrations": "administration",
     "architectures": "architecture",
-    "architects": "architect",
     "mixologues": "mixologue",
     "d\u00e9cisionnaires": "d\u00e9cisionnaire",
     "individus": "individu",
@@ -8706,6 +8701,7 @@
     "champs": "champ",
     "terrassements": "terrassement",
     "trans-exclusionaries": "trans-exclusionary",
-    "toilettages": "toilettage"
+    "toilettages": "toilettage",
+    "standardistes": "standardiste"
   }
 }
