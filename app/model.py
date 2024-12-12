@@ -200,16 +200,14 @@ class Model:
             return word_type
 
         if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
+            if lang == LangType.FR and token.text.lower().endswith("ez"):
+                # Vous l’incarnez et l’**animez** auprès de notre clientèle.
+                return WordType.VERB
+
             return WordType.ADJECTIVE
 
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
             if token.pos_ == "NOUN" or token.tag_ == "NN":
-                return WordType.NOUN
-
-            result = await self.db.fetch_declensions(
-                lang, WordType.NOUN, token.text, token
-            )
-            if result is not None:
                 return WordType.NOUN
 
         if token.pos_ == "VERB":
