@@ -769,6 +769,9 @@ class Alternatives:
         female_form_sub_sentence = ""
         sub_sentence_contains_noun = False
 
+        if article:
+            article = article.lower()
+
         for token_index in range(len(sentence_male_tokens)):
             if (
                 sentence_male_tokens[token_index].text
@@ -1021,6 +1024,9 @@ class Alternatives:
         alternative: Alternative,
         alternatives: list[Alternative],
     ):
+        if article:
+            article = article.lower()
+
         alternative.lemma = result["base_form"]
         if is_plural:
             if result["plural"] is None:

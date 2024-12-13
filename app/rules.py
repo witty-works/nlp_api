@@ -483,6 +483,8 @@ def fetch_static_rules(langs: list[str]):
             "ceux": "celleux",
             "les": "les",
             "leur": "leur",
+            "du": "de la∙du",
+            "au": "à la·au",
         }
         static_rules[LangType.FR]["feminine_articles"] = {
             "la": "la∙le",
@@ -494,6 +496,8 @@ def fetch_static_rules(langs: list[str]):
             "celles": "celleux",
             "les": "les",
             "leur": "leur",
+            "de la": "de la∙du",
+            "à la": "à la·au",
         }
         static_rules[LangType.FR]["inclusive_articles"] = {
             "la∙le": "la∙le",
@@ -506,6 +510,8 @@ def fetch_static_rules(langs: list[str]):
             "les": "les",
             "leur": "leur",
             "lels": "lels",
+            "de la∙du": "de la∙du",
+            "à la·au": "à la·au",
         }
         static_rules[LangType.FR]["articles_map"] = dict(
             zip(
@@ -537,7 +543,7 @@ def fetch_static_rules(langs: list[str]):
         )
         static_rules[LangType.FR]["articles_inclusive_map"] = static_rules[LangType.FR][
             "masculine_articles"
-        ]
+        ].copy()
         static_rules[LangType.FR]["articles_inclusive_map"].update(
             static_rules[LangType.FR]["feminine_articles"]
         )

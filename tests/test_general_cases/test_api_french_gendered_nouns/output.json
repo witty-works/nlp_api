@@ -31,7 +31,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile",
             "end": 15,
             "explanation": {
                 "icon": "💡",
@@ -85,7 +85,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagia",
             "end": 40,
             "explanation": {
                 "icon": "💡",
@@ -130,7 +130,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
             "end": 95,
             "explanation": {
                 "icon": "😟",
@@ -175,7 +175,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
             "end": 110,
             "explanation": {
                 "icon": "😟",
@@ -197,6 +197,44 @@
             "subcategory": "titles",
             "text": "un peintre",
             "text_id": "peintre"
+        },
+        {
+            "alternatives": [
+                {
+                    "gender_role": "inclusive_gender",
+                    "text": "à la·au stagiaire"
+                },
+                {
+                    "gender_role": "binary_gender",
+                    "text": "au stagiaire ou à la stagiaire"
+                },
+                {
+                    "text": "personne en stage"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
+            "end": 143,
+            "explanation": {
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration d'un groupe diversifié de personnes d'identités de genre, d'âges, d'origines ethniques et de morphologies différentes qui sont toutes LGBTQUIA+.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity-1.png",
+                    "width": 900
+                },
+                "long_text": "Pour inclure les personnes de tous les genres, ne limitez pas les personnes à des rôles, des identités et des expressions de genre traditionnels.",
+                "text": "Entretient la vision traditionnelle binaire du genre",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
+            "proficiency_level": "unconscious_bias",
+            "start": 129,
+            "subcategory": "gender_identity_advanced",
+            "text": "à la stagiaire",
+            "text_id": "stagiaire"
         }
     ]
 }
