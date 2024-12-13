@@ -83,6 +83,9 @@ class Prompt:
         return result
 
     def parseJson(self, result: str):
+        if "\\u00" in result:
+            result = result.encode().decode('unicode-escape')
+
         if "{" in result and "}" in result:
             result = result[result.find("{") : result.rfind("}") + 1]
         elif result == "" or result[0] != '"' or result[-1] != '"':
