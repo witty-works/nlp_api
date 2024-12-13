@@ -1,24 +1,10 @@
 {
-    "results": [
-        {
-            "alternative": "growth-minded",
-            "rephrasing": "I am, veeery growth-minded"
-        },
-        {
-            "alternative": "inspired",
-            "rephrasing": "I am, veeery inspired"
-        },
-        {
-            "alternative": "keen and enthusiastic",
-            "rephrasing": "I am, veeery keen and enthusiastic"
-        },
-        {
-            "alternative": "resourceful",
-            "rephrasing": "I am, veeery resourceful"
-        },
-        {
-            "alternative": "interested in taking on new responsibilities",
-            "rephrasing": "I am, veeery interested in taking on new responsibilities"
-        }
-    ]
+    "results": {
+        "growth-minded": "I am, veeery growth-minded",
+        "inspired": "I am, veeery inspired",
+        "interested in taking on new responsibilities": "I am, veeery interested in taking on new responsibilities",
+        "keen and enthusiastic": "I am, veeery keen and enthusiastic",
+        "resourceful": "I am, veeery resourceful"
+    },
+    "sentence": "I am, veeery ambitious"
 }

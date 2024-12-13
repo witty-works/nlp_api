@@ -1,16 +1,8 @@
 {
-    "results": [
-        {
-            "alternative": "people",
-            "rephrasing": "When I am with the people, I feel like one of the guys"
-        },
-        {
-            "alternative": "all",
-            "rephrasing": "When I am with the all, I feel like one of the guys"
-        },
-        {
-            "alternative": "everyone",
-            "rephrasing": "When I am with the everyone, I feel like one of the guys"
-        }
-    ]
+    "results": {
+        "all": "When I am with the all, I feel like one of the guys",
+        "everyone": "When I am with the everyone, I feel like one of the guys",
+        "people": "When I am with the people, I feel like one of the guys"
+    },
+    "sentence": "When I am with the guys, I feel like one of the guys"
 }

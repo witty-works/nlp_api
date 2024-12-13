@@ -8,20 +8,30 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "gender_role": "binary_gender",
+                    "male_form": "Les professeurs",
                     "text": "Les professeurs et les professeuses"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Le professorat"
                 },
                 {
+                    "female_form": "Les enseignantes",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les enseignants",
                     "text": "Les enseignant·es"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile",
             "end": 15,
             "explanation": {
                 "icon": "💡",
@@ -47,23 +57,35 @@
         {
             "alternatives": [
                 {
+                    "female_form": "La prof",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le prof",
                     "text": "La∙le prof"
                 },
                 {
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "La prof",
+                    "gender_role": "binary_gender",
+                    "male_form": "Le prof",
                     "text": "Le prof ou la prof"
                 },
                 {
+                    "female_form": "La professeuse",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le professeur",
                     "text": "La∙le professeur·se"
                 },
                 {
+                    "female_form": "La professeuse",
+                    "gender_role": "binary_gender",
+                    "male_form": "Le professeur",
                     "text": "Le professeur ou la professeuse"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagia",
             "end": 40,
             "explanation": {
                 "icon": "💡",
@@ -89,20 +111,71 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Elle",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Il",
+                    "text": "Iel"
+                },
+                {
+                    "female_form": "Elle",
+                    "gender_role": "binary_gender",
+                    "male_form": "Il",
+                    "text": "Il ou elle"
+                },
+                {
+                    "text": "La personne"
+                },
+                {
+                    "text": "Vous"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
+            "end": 95,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "long_text": "Pour inclure des personnes de tous les genres, adressez-vous directement à elles ou utilisez des mots non genrés.",
+                "text": "Excluez-vous les personnes non binaires ?",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/pronoms-binaires?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Pronoms binaires",
+            "proficiency_level": "unconscious_bias",
+            "start": 93,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Il",
+            "text_id": "il"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "une peintresse",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre·sse"
                 },
                 {
+                    "female_form": "une peintresse",
+                    "gender_role": "binary_gender",
+                    "male_form": "un peintre",
                     "text": "un peintre ou une peintresse"
                 },
                 {
+                    "female_form": "une peintre",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre"
                 },
                 {
+                    "female_form": "une peintre",
+                    "gender_role": "binary_gender",
+                    "male_form": "un peintre",
                     "text": "un peintre ou une peintre"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
             "end": 110,
             "explanation": {
                 "icon": "😟",
@@ -124,6 +197,44 @@
             "subcategory": "titles",
             "text": "un peintre",
             "text_id": "peintre"
+        },
+        {
+            "alternatives": [
+                {
+                    "gender_role": "inclusive_gender",
+                    "text": "à la·au stagiaire"
+                },
+                {
+                    "gender_role": "binary_gender",
+                    "text": "au stagiaire ou à la stagiaire"
+                },
+                {
+                    "text": "personne en stage"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
+            "end": 143,
+            "explanation": {
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration d'un groupe diversifié de personnes d'identités de genre, d'âges, d'origines ethniques et de morphologies différentes qui sont toutes LGBTQUIA+.",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/gender%20identity-1.png",
+                    "width": 900
+                },
+                "long_text": "Pour inclure les personnes de tous les genres, ne limitez pas les personnes à des rôles, des identités et des expressions de genre traditionnels.",
+                "text": "Entretient la vision traditionnelle binaire du genre",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
+            "proficiency_level": "unconscious_bias",
+            "start": 129,
+            "subcategory": "gender_identity_advanced",
+            "text": "à la stagiaire",
+            "text_id": "stagiaire"
         }
     ]
 }

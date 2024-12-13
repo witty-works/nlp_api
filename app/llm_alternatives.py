@@ -2,7 +2,6 @@ from app.settings import Settings
 from app.models import (
     RephraseRequestIn,
     LangType,
-    RephraseOut,
     Config,
 )
 from app.alternatives import Alternatives
@@ -44,13 +43,13 @@ class LlmAlternatives:
         genderstar = {}
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
-            if alternative.types is None:
-                alternatives.append(alternative.lemma)
+            if alternative.gender_role is None:
+                alternatives.append(alternative.text)
                 if alternative.collective_noun == True:
-                    collective_nouns.append(alternative.lemma)
+                    collective_nouns.append(alternative.text)
 
             else:
-                genderstar[alternative_index] = alternative.types
+                genderstar[alternative_index] = alternative.gender_role
                 alternatives.append(alternative.male_form)
                 alternatives.append(alternative.female_form)
 
@@ -241,7 +240,7 @@ class LlmAlternatives:
                 rephrase_request_in.gender_separator
             )
 
-        results = []
+        results = {}
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
             if alternative_index in genderstar:
@@ -251,34 +250,23 @@ class LlmAlternatives:
                     and alternative.female_form in result
                     and placeholder not in result[alternative.female_form]
                 ):
-                    rephrasings = await self.alternatives.noun_alternatives(
-                        rephrase_request_in.lang,
-                        separator,
-                        noun_separator,
-                        result[alternative.male_form],
-                        result[alternative.female_form],
+                    alternative.male_form, alternative.female_form, rephrasings = (
+                        await self.alternatives.noun_alternatives(
+                            rephrase_request_in.lang,
+                            separator,
+                            noun_separator,
+                            result[alternative.male_form],
+                            result[alternative.female_form],
+                        )
                     )
 
-                    result_label = alternative.male_form + "/" + alternative.female_form
-                    for gendered_role_format in genderstar[alternative_index]:
-                        if gendered_role_format in rephrasings:
-                            results.append(
-                                RephraseOut(
-                                    alternative=gendered_role_format
-                                    + ":"
-                                    + result_label,
-                                    rephrasing=rephrasings[gendered_role_format],
-                                )
-                            )
+                    gendered_role_format = genderstar[alternative_index]
+                    if genderstar[alternative_index] in rephrasings:
+                        results[alternative.text] = rephrasings[gendered_role_format]
             elif (
-                alternative.lemma in result
-                and placeholder not in result[alternative.lemma]
+                alternative.text in result
+                and placeholder not in result[alternative.text]
             ):
-                results.append(
-                    RephraseOut(
-                        alternative=alternative.lemma,
-                        rephrasing=result[alternative.lemma],
-                    )
-                )
+                results[alternative.text] = result[alternative.text]
 
         return results

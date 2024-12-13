@@ -375,14 +375,19 @@ async def rephrase_sentence(
     context.redis.store_metrics(request, configs, version, "rephrase")
 
     try:
-        results = RephrasesOut.factory(
-            await context.llm_alternatives.handle(rephrase_request_in)
+        result = RephrasesOut.factory(
+            rephrase_request_in.sentence,
+            await context.llm_alternatives.handle(rephrase_request_in),
         )
     except Exception as e:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("An error occurred: " + str(e))
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        message = "An error occurred"
+        if version is None:
+            message += ": " + str(e)
 
-    return results
+        return Result.factory(message)
+
+    return result
 
 
 @app.post(
@@ -2345,7 +2350,6 @@ async def witty_rules(
                         "plain_language",
                         token.idx,
                         explanation=language.translate("TOO_LONG_WORD"),
-                        explanation_context=language.translate("TOO_LONG_WORD_CONTEXT"),
                     )
                 )
 
@@ -2366,9 +2370,6 @@ async def witty_rules(
                         "plain_language",
                         sent[0].idx,
                         explanation=language.translate("TOO_LONG_SENTENCE"),
-                        explanation_context=language.translate(
-                            "TOO_LONG_SENTENCE_CONTEXT"
-                        ),
                     )
                 )
 

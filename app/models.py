@@ -218,6 +218,11 @@ class GermanGenderEndingType(str, Enum):
     CAPITAL_LETTER = "In"
 
 
+class GenderedRolesFormatBasicType(str, Enum):
+    INCLUSIVE_GENDER = "inclusive_gender"
+    BINARY_GENDER = "binary_gender"
+
+
 class GenderedRolesFormatType(str, Enum):
     NONE = "none"
     BOTH = "both"
@@ -270,6 +275,9 @@ class Alternative(Lemma):
     is_gendered_noun: Optional[bool] = False
     is_placeholder: Optional[bool] = False
     url: Optional[str] = None
+    male_form: Optional[str] = None
+    female_form: Optional[str] = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
 
     def __init__(
         self,
@@ -735,9 +743,9 @@ class BaseRequestIn(BaseModel):
 
 
 class RephraseAlternative(BaseModel):
-    types: list[Optional[GenderedRolesFormatType]] | None = None
-    lemma: Optional[str] = None
+    text: str
     collective_noun: Optional[bool] = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
     male_form: Optional[str] = None
     female_form: Optional[str] = None
 
@@ -748,7 +756,7 @@ class RephraseRequestIn(BaseRequestIn):
     sentence: Annotated[str, Len(min_length=1, max_length=300)]
     text: str
     start: int
-    alternatives: Annotated[list[RephraseAlternative], Len(min_length=1, max_length=5)]
+    alternatives: list[RephraseAlternative]
     gender_separator: Optional[GermanGenderEndingType] = None
     lang: LangType
 
@@ -764,9 +772,13 @@ class ResultAlternative(BaseModel):
     text: Optional[str] = None
     remove: Optional[bool] = None
     inspiration: Optional[bool] = None
+    collective_noun: Optional[bool] = None
     type: Optional[AlternativeType] = None
     url: Optional[str] = None
     context: Optional[str] = None
+    male_form: Optional[str] = None
+    female_form: Optional[str] = None
+    gender_role: Optional[GenderedRolesFormatBasicType] = None
 
 
 class ResultExplanation(Explanation):
@@ -972,6 +984,13 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
+    def uppper_first(text):
+        if not text:
+            return text
+
+        return text[0].upper() + text[1:]
+
+    @staticmethod
     def clean_alternatives(
         language: Language,
         text: str,
@@ -1014,9 +1033,13 @@ class ResultOut(BaseModel):
                     prefix = False
 
                 if category != "orthography":
-                    if is_upper and alternative.lemma:
-                        alternative.lemma = (
-                            alternative.lemma[0].upper() + alternative.lemma[1:]
+                    if is_upper:
+                        alternative.lemma = ResultOut.uppper_first(alternative.lemma)
+                        alternative.male_form = ResultOut.uppper_first(
+                            alternative.male_form
+                        )
+                        alternative.female_form = ResultOut.uppper_first(
+                            alternative.female_form
                         )
                 elif alternative.lemma is not None:
                     alternative.lemma = language.convert_sharp_ss(alternative.lemma)
@@ -1038,6 +1061,15 @@ class ResultOut(BaseModel):
                     text=alternative.lemma,
                     inspiration=(True if alternative.is_inspiration else None),
                     context=alternative.label,
+                    collective_noun=(
+                        True
+                        if alternative.is_collective_noun
+                        and language.lang == LangType.FR
+                        else None
+                    ),
+                    male_form=alternative.male_form,
+                    female_form=alternative.female_form,
+                    gender_role=alternative.gender_role,
                 )
 
                 if alternative.type != AlternativeType.DEFAULT:
@@ -1138,17 +1170,13 @@ class ResultConf(BaseModel):
     organization_config_hash: Optional[str] = None
 
 
-class RephraseOut(BaseModel):
-    alternative: str
-    rephrasing: str
-
-
 class RephrasesOut(BaseModel):
-    results: list[RephraseOut]
+    sentence: str
+    results: dict[str, str]
 
     @staticmethod
-    def factory(results: list):
-        return RephrasesOut(results=results)
+    def factory(sentence: str, results: dict[str, str]):
+        return RephrasesOut(sentence=sentence, results=results)
 
 
 class PromptOut(BaseModel):

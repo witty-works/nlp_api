@@ -1,23 +1,31 @@
 {
   "sentence": "Face à la concurrence, il était handicapé par son jeune âge.",
-  "text": "était handicapé",
-  "start": 32,
+  "text": "il était handicapé",
+  "start": 23,
   "alternatives": [
     {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
-      "male_form": "être désavantagé",
-      "female_form": "être désavantagée"
+      "text": "iel être désavantagé·e",
+      "gender_role": "inclusive_gender",
+      "male_form": "il être désavantagé",
+      "female_form": "elle être désavantagée"
     },
     {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
-      "male_form": "être pénalisé",
-      "female_form": "être pénalisée"
+      "text": "être il désavantagé ou elle désavantagée",
+      "gender_role": "binary_gender",
+      "male_form": "il être désavantagé",
+      "female_form": "elle être désavantagée"
+    },
+    {
+      "text": "iel être pénalisé·e",
+      "gender_role": "inclusive_gender",
+      "male_form": "il être pénalisé",
+      "female_form": "elle être pénalisée"
+    },
+    {
+      "text": "être il pénalisé ou elle pénalisée",
+      "gender_role": "binary_gender",
+      "male_form": "il être pénalisé",
+      "female_form": "elle être pénalisée"
     }
   ],
   "lang": "fr"

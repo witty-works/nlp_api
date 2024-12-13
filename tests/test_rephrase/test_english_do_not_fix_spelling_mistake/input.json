@@ -2,19 +2,19 @@
   "sentence": "I am, veeery ambitious",
   "alternatives": [
     {
-      "lemma": "growth-minded"
+      "text": "growth-minded"
     },
     {
-      "lemma": "inspired"
+      "text": "inspired"
     },
     {
-      "lemma": "keen and enthusiastic"
+      "text": "keen and enthusiastic"
     },
     {
-      "lemma": "resourceful"
+      "text": "resourceful"
     },
     {
-      "lemma": "interested in taking on new responsibilities"
+      "text": "interested in taking on new responsibilities"
     }
   ],
   "text": "ambitious",

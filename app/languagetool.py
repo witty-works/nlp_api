@@ -14,7 +14,7 @@ from app.http import Http
 from app.settings import Settings
 from app.db import Db
 from logging import Logger
-
+from app.helper import upperfirst
 
 class LanguageTool:
     # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
@@ -240,7 +240,7 @@ class LanguageTool:
                     if language.lang == LangType.FR and label == "style rules":
                         label = "Règles de style"
                     else:
-                        label = label[0].upper() + label[1:]
+                        label = upperfirst(label)
                 except KeyError:
                     pass
 
@@ -305,7 +305,7 @@ class LanguageTool:
                 "TOO_LONG_SENTENCE_DE",
                 "TOO_LONG_SENTENCE",
                 # long words
-                "LANGES_WORT"
+                "LANGES_WORT",
             ],
         }
 

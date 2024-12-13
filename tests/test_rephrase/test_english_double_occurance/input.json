@@ -2,13 +2,13 @@
   "sentence": "When I am with the guys, I feel like one of the guys",
   "alternatives": [
     {
-      "lemma": "people"
+      "text": "people"
     },
     {
-      "lemma": "all"
+      "text": "all"
     },
     {
-      "lemma": "everyone"
+      "text": "everyone"
     }
   ],
   "text": "guys",

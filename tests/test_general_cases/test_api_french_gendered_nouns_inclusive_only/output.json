@@ -8,15 +8,23 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Le professorat"
                 },
                 {
+                    "female_form": "Les enseignantes",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les enseignants",
                     "text": "Les enseignant·es"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Les corps enseignant"
                 }
             ],
@@ -50,15 +58,24 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "La prof",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le prof",
                     "text": "La∙le prof"
                 },
                 {
+                    "female_form": "La professeuse",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le professeur",
                     "text": "La∙le professeur·se"
                 },
                 {
                     "text": "Les professeurs"
                 },
                 {
+                    "female_form": "La professeur",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Le professeur",
                     "text": "La∙le professeur"
                 }
             ],
@@ -92,15 +109,23 @@
                     "text": "Les profs"
                 },
                 {
+                    "female_form": "Les professeuses",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Le professorat"
                 },
                 {
+                    "female_form": "Les enseignantes",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Les enseignants",
                     "text": "Les enseignant·es"
                 },
                 {
+                    "collective_noun": true,
                     "text": "Les corps enseignant"
                 }
             ],
@@ -131,9 +156,48 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Elle",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Il",
+                    "text": "Iel"
+                },
+                {
+                    "text": "La personne"
+                },
+                {
+                    "text": "Vous"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
+            "end": 95,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "long_text": "Pour inclure des personnes de tous les genres, adressez-vous directement à elles ou utilisez des mots non genrés.",
+                "text": "Excluez-vous les personnes non binaires ?",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/pronoms-binaires?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Pronoms binaires",
+            "proficiency_level": "unconscious_bias",
+            "start": 93,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Il",
+            "text_id": "il"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "une peintresse",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre·sse"
                 },
                 {
+                    "female_form": "une peintre",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "un peintre",
                     "text": "un∙e peintre"
                 }
             ],

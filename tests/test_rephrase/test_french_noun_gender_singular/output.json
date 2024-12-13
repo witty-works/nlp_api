@@ -1,24 +1,10 @@
 {
-    "results": [
-        {
-            "alternative": "inclusive_gender:sportif professionnel/sportive professionnelle",
-            "rephrasing": "La∙le sportif∙ve professionnel∙le rapide est intelligent∙e"
-        },
-        {
-            "alternative": "binary_gender:sportif professionnel/sportive professionnelle",
-            "rephrasing": "Le sportif professionnel ou la sportive professionnelle rapide est intelligent ou intelligente"
-        },
-        {
-            "alternative": "membre d'une équipe de sport",
-            "rephrasing": "Les membres d'une équipe de sport rapides sont intelligents"
-        },
-        {
-            "alternative": "équipe",
-            "rephrasing": "L'équipe rapide est intelligente"
-        },
-        {
-            "alternative": "personne dynamique",
-            "rephrasing": "La personne dynamique rapide est intelligente"
-        }
-    ]
+    "results": {
+        "personnel de café": "Nous attendons de notre personnel de café qu'il est très attentif aux clients.",
+        "personnel de restaurant": "Nous attendons de notre personnel de restaurant qu'il est très attentif aux clients.",
+        "personnel de service": "Nous attendons de notre personnel de service qu'il est très attentif aux clients.",
+        "serveur ou serveuse": "Nous attendons de notre serveur ou serveurse qu'il ou elle est très attentive aux clients.",
+        "serveur·se": "Nous attendons de notre serveur∙se qu'iel est très attentif∙ve aux clients."
+    },
+    "sentence": "Nous attendons de notre serveur qu'il est très attentif aux clients."
 }

@@ -75,6 +75,50 @@ class RuleCheck:
             or token.dep_.startswith("obl")
         )
 
+    def is_previous_token_article(self, token_index: int, tokens: Doc, lang: LangType):
+        return (
+            token_index > 0
+            and tokens[token_index - 1].text.lower()
+            in self.static_rules[lang]["articles"]
+        )
+
+    def get_previous_article(
+        self,
+        token_index: int,
+        tokens: Doc,
+        lang: LangType,
+        text: str | None = None,
+        start: int | None = None,
+    ):
+        if not self.is_previous_token_article(token_index, tokens, lang):
+            return None, text, start
+
+        article_index = token_index - 1
+        gendered_article = tokens[article_index].text
+        if text is not None:
+            text = gendered_article + tokens[article_index].whitespace_ + text
+            start = tokens[article_index].idx
+
+        if lang != LangType.FR:
+            return gendered_article, text, start
+
+        article_index = article_index - 1
+
+        # handle à la / de la
+        if (
+            article_index >= 0
+            and gendered_article.lower() == "la"
+            and tokens[article_index].lemma_ in ["de", "à"]
+        ):
+            prefix = tokens[article_index].text + tokens[article_index].whitespace_
+
+            gendered_article = prefix + gendered_article
+            if text is not None:
+                text = prefix + text
+                start = tokens[article_index].idx
+
+        return gendered_article, text, start
+
     async def handle(
         self,
         config: Config,
@@ -114,19 +158,53 @@ class RuleCheck:
             if (
                 len(rules) == 0
                 and language.lang == LangType.FR
-                and self.model.is_token_plural(LangType.FR, token)
                 and await self.model.check_word_type(
                     language.lang, token, WordType.ADJECTIVE, True, True
                 )
             ):
-                male_form = pluralize(token.lemma_)
-                female_form = pluralize(
-                    self.adjectives.get_feminine_form_french(token.lemma_)
-                )
+                if self.model.is_token_plural(LangType.FR, token):
+                    male_form = pluralize(token.lemma_)
+                    female_form = pluralize(
+                        self.adjectives.get_feminine_form_french(token.lemma_)
+                    )
 
-                if male_form != female_form:
-                    adjective_rule = Rule(
-                        "fr_adjective_rule",
+                    if male_form != female_form:
+                        rule = Rule(
+                            "fr_adjective_rule",
+                            LangType.FR,
+                            token.lemma_,
+                            [token.lemma_],
+                            [{"word_type": "a", "lower_case": True, "lemmatize": True}],
+                            ["hidden_image"],
+                            self.alternatives.get_adjective_alternatives_french(
+                                male_form, female_form
+                            ),
+                        )
+                        rule.false_positives = [
+                            male_form + " et " + female_form,
+                            female_form + " et " + male_form,
+                        ]
+
+                        rules.append(rule)
+                elif (
+                    self.is_previous_token_article(token_index, tokens, language.lang)
+                    and (
+                        token_index + 1 >= len(tokens)
+                        or not await self.model.check_word_type(
+                            language.lang,
+                            tokens[token_index],
+                            WordType.NOUN,
+                            True,
+                            True,
+                        )
+                    )
+                    and not self.is_gender_false_positive(token)
+                ):
+                    male_form = token.lemma_
+                    female_form = self.adjectives.get_feminine_form_french(token.lemma_)
+
+                    rule = Rule(
+                        "fr_noun_adjective_rule",
                         LangType.FR,
                         token.lemma_,
                         [token.lemma_],
@@ -136,23 +214,13 @@ class RuleCheck:
                             male_form, female_form
                         ),
                     )
-                    adjective_rule.false_positives = [
+
+                    rule.false_positives = [
                         male_form + " et " + female_form,
                         female_form + " et " + male_form,
                     ]
-                    return await self.handle(
-                        config,
-                        client,
-                        language,
-                        full_text,
-                        token_index,
-                        tokens,
-                        offsets,
-                        list_full,
-                        [adjective_rule],
-                        false_positive_matcher,
-                        suffix_check,
-                    )
+
+                    rules.append(rule)
 
         for rule in rules:
             subcategory = is_sub_category_enabled(
@@ -408,8 +476,10 @@ class RuleCheck:
                                     source_noun = tokens[source_index]
                                     break
 
+                        if rule.id == "fr_noun_adjective_rule":
+                            pass
                         # Nous cherchons des stagiaires *curieux*
-                        if (
+                        elif (
                             get_proficiency_level(subcategory) == "inclusive"
                             and source_noun is not None
                             and self.model.is_token_plural(language.lang, source_noun)
@@ -605,26 +675,19 @@ class RuleCheck:
 
                 article = article_index = None
                 # when using pattern matching, the rule should explicitly state if the article should be included
-                if (
-                    not rule.pattern
-                    and token_index > 0
-                    and tokens[token_index - 1].text.lower()
-                    in self.static_rules[language.lang]["articles"]
+                if not rule.pattern and self.is_previous_token_article(
+                    token_index, tokens, language.lang
                 ):
                     # Check if the article has not yet been included (f.e. via a pattern)
-                    if start != tokens[token_index - 1].idx:
-                        start = tokens[token_index - 1].idx
-                        text = (
-                            tokens[token_index - 1].text
-                            + tokens[token_index - 1].whitespace_
-                            + text
-                        )
-                    article = tokens[token_index - 1].text.lower()
+                    article, text, start = self.get_previous_article(
+                        token_index, tokens, language.lang, text, start
+                    )
+
                     article_index = list(
                         self.static_rules[LangType.FR]["inclusive_articles"].keys()
                     ).index(
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
-                            article
+                            article.lower()
                         ]
                     )
 
@@ -636,12 +699,15 @@ class RuleCheck:
 
                     result = None
                     if alternative.is_gendered_noun:
-                        male_form, female_form = alternative.lemma.split("~")
+                        alternative.male_form, alternative.female_form = (
+                            alternative.lemma.split("~")
+                        )
+
                         result = (
                             await self.nouns.french_noun_lookup(
                                 config.disabled_categories,
                                 subcategory,
-                                male_form,
+                                alternative.male_form,
                                 token,
                                 alternative,
                             )
@@ -651,8 +717,9 @@ class RuleCheck:
                         # should only happen for non "official" female nouns when advanced is not enabled
                         if result is not None and result["female_form"] is None:
                             alternative.is_gendered_noun = False
+                            alternative.gender_role = None
                             if article:
-                                alternative.lemma = male_form
+                                alternative.lemma = alternative.male_form
                                 new_alternatives = (
                                     self.alternatives.nouns_with_articles(
                                         config,
@@ -677,22 +744,24 @@ class RuleCheck:
                                 collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
-                            male_form = (
-                                pluralize(male_form)
+                            alternative.male_form = (
+                                pluralize(alternative.male_form)
                                 if result is None or result["plural"] is None
                                 else result["plural"]
                             )
-                            female_form = pluralize(female_form)
+                            alternative.female_form = pluralize(alternative.female_form)
 
-                        gendered_alternatives = (
-                            await self.alternatives.noun_alternatives(
-                                language.lang,
-                                "·",
-                                "·",
-                                male_form,
-                                female_form,
-                                article,
-                            )
+                        (
+                            alternative.male_form,
+                            alternative.female_form,
+                            gendered_alternatives,
+                        ) = await self.alternatives.noun_alternatives(
+                            language.lang,
+                            "·",
+                            "·",
+                            alternative.male_form,
+                            alternative.female_form,
+                            article,
                         )
 
                         for gendered_alternative in gendered_alternatives:
@@ -705,13 +774,16 @@ class RuleCheck:
                                 new_alternative.lemma = gendered_alternatives[
                                     gendered_alternative
                                 ]
+                                new_alternative.gender_role = gendered_alternative
                                 new_alternatives.append(new_alternative)
 
                         # add gender neutral option on top of the male/female variation
                         if self.nouns.is_gender_neutral(result) and (
-                            not is_plural or male_form != token.text.lower()
+                            not is_plural or alternative.male_form != token.text.lower()
                         ):
-                            alternative.lemma = male_form
+                            alternative.lemma = alternative.male_form
+                            alternative.gender_role = None
+
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
                                 language.lang,
@@ -726,7 +798,11 @@ class RuleCheck:
                         for collective_noun in collective_nouns:
                             new_alternative = deepcopy(alternative)
                             new_alternative.is_gendered_noun = False
+                            new_alternative.male_form = None
+                            new_alternative.female_form = None
+                            new_alternative.gender_role = None
                             new_alternative.is_collective_noun = True
+
                             if article:
                                 result = await self.nouns.french_noun_lookup(
                                     config.disabled_categories,
@@ -743,7 +819,7 @@ class RuleCheck:
                                     )
 
                                     collective_article_index = (
-                                        0 if article == "les" else article_index
+                                        0 if article.lower() == "les" else article_index
                                     )
 
                                     collective_noun = self.alternatives.add_article(
@@ -766,6 +842,8 @@ class RuleCheck:
                             alternative,
                             alternative.words[1:],
                         )
+
+                        alternative.gender_role = None
                         if result is not None:
                             new_alternatives = self.alternatives.nouns_with_articles(
                                 config,
@@ -787,14 +865,18 @@ class RuleCheck:
                             and rule.pattern.startswith("article|l")
                             and not is_plural
                         ):
-                            gendered_article = tokens[token_index - 1].lemma_
+                            gendered_article, _, _ = self.get_previous_article(
+                                token_index, tokens, language.lang
+                            )
+                            gendered_article = gendered_article.lower()
+
                             gender_neutral_noun = alternative.lemma
                             if Config.gendered_roles_format_inclusive(
                                 config.gendered_roles_format
                             ):
                                 alternative.lemma = (
                                     self.static_rules[LangType.FR][
-                                        "masculine_articles"
+                                        "articles_inclusive_map"
                                     ][gendered_article]
                                     + " "
                                     + gender_neutral_noun
@@ -806,24 +888,28 @@ class RuleCheck:
                                 ):
                                     new_alternative = deepcopy(alternative)
                                     new_alternatives.append(new_alternative)
+                                    new_alternative.gender_role = (
+                                        GenderedRolesFormatType.INCLUSIVE_GENDER
+                                    )
 
                             if Config.gendered_roles_format_binary(
                                 config.gendered_roles_format
                             ):
+                                gendered_article_lower = gendered_article.lower()
                                 if (
                                     gendered_article
                                     in self.static_rules[LangType.FR][
                                         "masculine_articles"
-                                    ][gendered_article]
+                                    ]
                                 ):
                                     male_article = gendered_article
                                     female_article = self.static_rules[LangType.FR][
                                         "articles_map"
-                                    ][gendered_article]
+                                    ][gendered_article_lower]
                                 else:
                                     male_article = self.static_rules[LangType.FR][
                                         "articles_map"
-                                    ][gendered_article]
+                                    ][gendered_article_lower]
                                     female_article = gendered_article
 
                                 alternative.lemma = (
@@ -834,6 +920,9 @@ class RuleCheck:
                                     + female_article
                                     + " "
                                     + gender_neutral_noun
+                                )
+                                alternative.gender_role = (
+                                    GenderedRolesFormatType.BINARY_GENDER
                                 )
 
                                 false_positives.append(
@@ -1364,9 +1453,26 @@ class RuleCheck:
                 ):
                     i_pattern_start -= 1
                     count += 1
+                    if (
+                        lang == LangType.FR
+                        and i_pattern_start >= 0
+                        and tokens[i_pattern_start + 1].lemma_ == "la"
+                        and tokens[i_pattern_start].lemma_ in ["à", "de"]
+                    ):
+                        i_pattern_start -= 1
+                        count += 1
             elif await self.model.check_word_type(
                 lang, tokens[i_pattern_start], word_type, True
             ):
+                if (
+                    lang == LangType.FR
+                    and i_pattern_start >= 1
+                    and tokens[i_pattern_start].lemma_ == "la"
+                    and tokens[i_pattern_start - 1].lemma_ in ["à", "de"]
+                ):
+                    i_pattern_start += 1
+                    count += 1
+
                 i_pattern_start += offset
                 count += 1
             else:

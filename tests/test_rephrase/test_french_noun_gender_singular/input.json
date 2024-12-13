@@ -1,25 +1,30 @@
 {
-  "sentence": "L'athlète rapide est intelligent",
-  "text": "athlètes",
-  "start": 2,
+  "sentence": "Nous attendons de notre serveur qu'il est très attentif aux clients.",
+  "text": "serveur",
+  "start": 24,
   "alternatives": [
     {
-      "types": [
-        "inclusive_gender",
-        "binary_gender"
-      ],
-      "male_form": "sportif professionnel",
-      "female_form": "sportive professionnelle"
-    },
-    {
-      "lemma": "membre d'une équipe de sport"
-    },
-    {
-      "lemma": "équipe",
+      "text": "personnel de service",
       "collective_noun": true
     },
     {
-      "lemma": "personne dynamique",
+      "text": "serveur·se",
+      "gender_role": "inclusive_gender",
+      "male_form": "serveur",
+      "female_form": "serveurse"
+    },
+    {
+      "text": "serveur ou serveuse",
+      "gender_role": "binary_gender",
+      "male_form": "serveur",
+      "female_form": "serveurse"
+    },
+    {
+      "text": "personnel de restaurant",
+      "collective_noun": true
+    },
+    {
+      "text": "personnel de café",
       "collective_noun": true
     }
   ],

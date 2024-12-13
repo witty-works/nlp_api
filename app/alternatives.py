@@ -719,6 +719,33 @@ class Alternatives:
 
         return article + " " + text
 
+    def add_article_to_alternative(
+        self, lang: LangType, alternative: Alternative, article_index: int, article: str
+    ):
+        alternative.lemma = self.add_article(lang, alternative.lemma, article)
+        if isinstance(alternative.male_form, str):
+            alternative.male_form = self.add_article(
+                lang,
+                alternative.male_form,
+                self.get_article_by_index(
+                    lang,
+                    "masculine_articles",
+                    article_index,
+                ),
+            )
+        if isinstance(alternative.female_form, str):
+            alternative.female_form = self.add_article(
+                lang,
+                alternative.female_form,
+                self.get_article_by_index(
+                    lang,
+                    "feminine_articles",
+                    article_index,
+                ),
+            )
+
+        return alternative
+
     async def noun_alternatives(
         self,
         lang: LangType,
@@ -731,7 +758,7 @@ class Alternatives:
         sentence_male_tokens = self.model.fetch_tokens(lang, male_form)
         sentence_female_tokens = self.model.fetch_tokens(lang, female_form)
         if len(sentence_male_tokens) != len(sentence_female_tokens):
-            return {}
+            return None, None, {}
 
         singular_conjunction = self.get_noun_conjunction(lang, True)
         plural_conjunction = self.get_noun_conjunction(lang, False)
@@ -741,6 +768,9 @@ class Alternatives:
         male_form_sub_sentence = ""
         female_form_sub_sentence = ""
         sub_sentence_contains_noun = False
+
+        if article:
+            article = article.lower()
 
         for token_index in range(len(sentence_male_tokens)):
             if (
@@ -865,10 +895,14 @@ class Alternatives:
                 self.static_rules[lang]["articles_inclusive_map"][article],
             )
 
-        return {
-            GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
-            GenderedRolesFormatType.BINARY_GENDER: binary_form,
-        }
+        return (
+            male_form_sub_sentence,
+            female_form_sub_sentence,
+            {
+                GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
+                GenderedRolesFormatType.BINARY_GENDER: binary_form,
+            },
+        )
 
     def inclusive_alternative(
         self,
@@ -990,6 +1024,9 @@ class Alternatives:
         alternative: Alternative,
         alternatives: list[Alternative],
     ):
+        if article:
+            article = article.lower()
+
         alternative.lemma = result["base_form"]
         if is_plural:
             if result["plural"] is None:
@@ -997,24 +1034,33 @@ class Alternatives:
 
             alternative.lemma = result["plural"]
             if article:
-                alternative.lemma = self.add_article(
+                alternative = self.add_article_to_alternative(
                     lang,
-                    alternative.lemma,
+                    alternative,
+                    article_index,
                     article,
                 )
             alternatives.append(alternative)
 
             return alternatives
 
-
-        if result["female_form"] or self.nouns.is_gender_neutral(result):
+        is_gender_neutral = self.nouns.is_gender_neutral(result)
+        if result["female_form"] or is_gender_neutral:
             if config.gendered_roles_format == GenderedRolesFormatType.BOTH:
                 new_alternative = deepcopy(alternative)
-                new_alternative.is_gendered_noun = True
+                if result["female_form"] or (article and is_gender_neutral):
+                    new_alternative.male_form = result["base_form"]
+                    new_alternative.female_form = result["base_form"]
+                    new_alternative.is_gendered_noun = True
+                    new_alternative.gender_role = (
+                        GenderedRolesFormatType.INCLUSIVE_GENDER
+                    )
+
                 if article:
-                    new_alternative.lemma = self.add_article(
+                    new_alternative = self.add_article_to_alternative(
                         lang,
-                        new_alternative.lemma,
+                        new_alternative,
+                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
@@ -1028,7 +1074,10 @@ class Alternatives:
                 and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
             ):
                 new_alternative = deepcopy(alternative)
-                new_alternative.is_gendered_noun = True
+                new_alternative.is_gendered_noun = False
+                new_alternative.gender_role = None
+                new_alternative.male_form = None
+                new_alternative.female_form = None
                 new_alternative.lemma = "les " + result["plural"]
                 alternatives.append(new_alternative)
 
@@ -1037,13 +1086,19 @@ class Alternatives:
                     config.gendered_roles_format
                     == GenderedRolesFormatType.INCLUSIVE_GENDER
                 ):
-                    alternative.lemma = self.add_article(
+                    alternative.male_form = alternative.lemma
+                    alternative.female_form = alternative.lemma
+
+                    alternative = self.add_article_to_alternative(
                         lang,
-                        alternative.lemma,
+                        alternative,
+                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
                     )
+                    alternative.is_gendered_noun = True
+                    alternative.gender_role = GenderedRolesFormatType.INCLUSIVE_GENDER
                 else:
                     forms = {}
                     for form in ["masculine", "feminine"]:
@@ -1062,10 +1117,15 @@ class Alternatives:
                             self.get_noun_conjunction(lang, not is_plural)
                             + forms["feminine"]
                         )
+                        alternative.male_form = forms["masculine"]
+                        alternative.female_form = forms["feminine"]
+
+                    alternative.gender_role = GenderedRolesFormatType.BINARY_GENDER
         elif article and result["gender_1"]:
-            alternative.lemma = self.add_article(
+            alternative = self.add_article_to_alternative(
                 lang,
-                alternative.lemma,
+                alternative,
+                article_index,
                 self.get_article_by_index(
                     lang,
                     result["gender_1"] + "_articles",
@@ -1081,7 +1141,6 @@ class Alternatives:
         self, lang: LangType, articles_list: str, article_index: int
     ):
         return list(self.static_rules[lang][articles_list].keys())[article_index]
-
 
     def get_adjective_alternatives_french(self, male_form, female_form):
         lemma = male_form + "~" + female_form
@@ -1103,4 +1162,4 @@ class Alternatives:
                 False,
                 True,
             )
-        ]        
+        ]
