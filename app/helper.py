@@ -28,7 +28,10 @@ def remove_gender_ending(text: str) -> str:
 
 
 def upperfirst(x: str):
-    return x[0].upper() + x[1:]
+    if len(x):
+        return x[0].upper() + x[1:]
+
+    return x.capitalize()
 
 
 def find_common_prefix(
