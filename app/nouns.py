@@ -64,7 +64,12 @@ class Nouns:
             return forms
 
         if word.endswith("-"):
-            postfix = "s-" if word.endswith("s-") else "-"
+            if word.endswith("s-"):
+                postfix = "s-"
+            else:
+                # Handle cases like: Kunde---
+                postfix = "-" * (len(word) - len(word.rstrip("-")))
+
             word = word[0 : -1 * len(postfix)]
             forms = await self.db.fetch_declensions(
                 LangType.DE, WordType.NOUN, word, token
@@ -86,12 +91,13 @@ class Nouns:
 
             if forms is None:
                 if "-" in word:
-                    words = word.split("-")
+                    words = word.rstrip("-").split("-")
                     word = words[-1]
                     forms = await self.db.fetch_declensions(
                         LangType.DE, WordType.NOUN, word, token
                     )
-                    prefix = "-".join(words[0:-1]) + "-"
+                    if len(words) > 1:
+                        prefix = "-".join(words[0:-1]) + "-"
                 else:
                     lower = True
                     prefix = ""
