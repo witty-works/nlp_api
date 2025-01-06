@@ -5,7 +5,7 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampf",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaud",
             "end": 34,
             "explanation": {
                 "icon": "🙄",
@@ -31,8 +31,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "ie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre s",
-            "end": 118,
+            "context": "hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es",
+            "end": 120,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -49,7 +49,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 107,
+            "start": 109,
             "subcategory": "plain_language_advanced",
             "text": "geschrieben",
             "text_id": "geschrieben"
@@ -57,8 +57,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden",
-            "end": 159,
+            "context": "t als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze fi",
+            "end": 163,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -75,7 +75,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 154,
+            "start": 158,
             "subcategory": "plain_language_advanced",
             "text": "nicht",
             "text_id": "nicht"
@@ -83,8 +83,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "eser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI g",
-            "end": 183,
+            "context": "Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere K",
+            "end": 189,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -101,7 +101,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 176,
+            "start": 182,
             "subcategory": "plain_language_advanced",
             "text": "Nutzung",
             "text_id": "Nutzung"
@@ -109,8 +109,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "t wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das b",
-            "end": 196,
+            "context": "rde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n*",
+            "end": 202,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -127,7 +127,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 184,
+            "start": 190,
             "subcategory": "plain_language_advanced",
             "text": "des Genitivs",
             "text_id": "des Genitivs"
@@ -135,8 +135,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "rieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing",
-            "end": 216,
+            "context": ".\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Brief",
+            "end": 224,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -153,7 +153,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 212,
+            "start": 220,
             "subcategory": "plain_language_advanced",
             "text": "wäre",
             "text_id": "wäre"
@@ -161,8 +161,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "pfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Per",
-            "end": 236,
+            "context": "hifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere",
+            "end": 244,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -179,7 +179,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 232,
+            "start": 240,
             "subcategory": "plain_language_advanced",
             "text": "dass",
             "text_id": "dass"
@@ -187,8 +187,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "ahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell",
-            "end": 252,
+            "context": "darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n*",
+            "end": 260,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -205,7 +205,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 241,
+            "start": 249,
             "subcategory": "plain_language_advanced",
             "text": "Glückspilze",
             "text_id": "Glückspilze"
@@ -213,8 +213,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": ". Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer L",
-            "end": 315,
+            "context": "wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer",
+            "end": 327,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png",
@@ -225,7 +225,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 307,
+            "start": 319,
             "subcategory": "anglicism_advanced",
             "text": "Briefing",
             "text_id": "Briefing"
@@ -233,8 +233,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "ass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen",
-            "end": 344,
+            "context": "Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suche",
+            "end": 356,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png",
@@ -245,7 +245,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 333,
+            "start": 345,
             "subcategory": "anglicism_advanced",
             "text": "Performance",
             "text_id": "Performance"
@@ -253,8 +253,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie",
-            "end": 364,
+            "context": "n sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie",
+            "end": 378,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -271,7 +271,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 361,
+            "start": 375,
             "subcategory": "plain_language_advanced",
             "text": "wie",
             "text_id": "wie"
@@ -279,8 +279,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "g und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze,",
-            "end": 420,
+            "context": "und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze,",
+            "end": 434,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -297,7 +297,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 414,
+            "start": 428,
             "subcategory": "plain_language_advanced",
             "text": "Lösung",
             "text_id": "Lösung"
@@ -305,8 +305,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
-            "end": 436,
+            "context": "e Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
+            "end": 450,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png",
@@ -317,7 +317,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 429,
+            "start": 443,
             "subcategory": "anglicism_advanced",
             "text": "Problem",
             "text_id": "Problem"
@@ -325,8 +325,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": ". Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal",
-            "end": 447,
+            "context": "* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal",
+            "end": 461,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -343,7 +343,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 444,
+            "start": 458,
             "subcategory": "plain_language_advanced",
             "text": "und",
             "text_id": "und"
@@ -352,7 +352,7 @@
             "alternatives": [],
             "category": "cultural-diversity",
             "context": "*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 573,
+            "end": 587,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -369,7 +369,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 476,
+            "start": 490,
             "subcategory": "plain_language_advanced",
             "text": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen",
             "text_id": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen"
@@ -387,7 +387,7 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen ge",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen",
             "end": 9,
             "explanation": {
                 "icon": "🧊",
@@ -417,7 +417,7 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben.",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben",
             "end": 20,
             "explanation": {
                 "icon": "🧊",
@@ -447,7 +447,7 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt d",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffah",
             "end": 47,
             "explanation": {
                 "icon": "🧊",
@@ -471,8 +471,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitiv",
-            "end": 95,
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Gen",
+            "end": 97,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -491,7 +491,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
-            "start": 92,
+            "start": 94,
             "subcategory": "filler_advanced",
             "text": "nur",
             "text_id": "nur"
@@ -499,8 +499,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "t ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glüc",
-            "end": 145,
+            "context": "n oder benutzen Sie diesen Text als Beispiel:\n* Dieser Text wurde nur zum Testen geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie",
+            "end": 149,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -517,7 +517,7 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 124,
+            "start": 128,
             "subcategory": "plain_language",
             "text": "Donaudampfschifffahrt",
             "text_id": "Donaudampfschifffahrt"
@@ -529,8 +529,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "um Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das brauch",
-            "end": 201,
+            "context": "esten geschrieben.\n* Die Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das",
+            "end": 207,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -549,7 +549,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
-            "start": 197,
+            "start": 203,
             "subcategory": "filler_advanced",
             "text": "auch",
             "text_id": "auch"
@@ -561,8 +561,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "n. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und ei",
-            "end": 222,
+            "context": "ie Donaudampfschifffahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing un",
+            "end": 230,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -581,7 +581,7 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
-            "start": 217,
+            "start": 225,
             "subcategory": "filler",
             "text": "sogar",
             "text_id": "sogar"
@@ -602,8 +602,8 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "ifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Perform",
-            "end": 240,
+            "context": "ahrt darf da nicht fehlen.\n* Und die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Per",
+            "end": 248,
             "explanation": {
                 "icon": "🧊",
                 "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
@@ -614,7 +614,7 @@
             "gravity": 3.0,
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
-            "start": 237,
+            "start": 245,
             "subcategory": "formality_advanced",
             "text": "Sie",
             "text_id": "Sie"
@@ -633,8 +633,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine",
-            "end": 270,
+            "context": "die Nutzung des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie d",
+            "end": 280,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -652,7 +652,7 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäre Pronomen",
             "proficiency_level": "unconscious_bias",
-            "start": 267,
+            "start": 277,
             "subcategory": "binary_pronouns_advanced",
             "text": "sie",
             "text_id": "sie"
@@ -670,8 +670,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "tzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*inne",
-            "end": 281,
+            "context": "g des Genitivs auch nicht.\n* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*",
+            "end": 291,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking%20face%20emoji.png",
@@ -682,7 +682,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Abkürzung",
             "proficiency_level": "unconscious_bias",
-            "start": 278,
+            "start": 288,
             "subcategory": "abbreviation_advanced",
             "text": "KPI",
             "text_id": "KPI"
@@ -700,8 +700,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": ". Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer L",
-            "end": 315,
+            "context": "wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer",
+            "end": 327,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png",
@@ -712,7 +712,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 307,
+            "start": 319,
             "subcategory": "anglicism_advanced",
             "text": "Briefing",
             "text_id": "Briefing"
@@ -733,8 +733,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "ass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen",
-            "end": 344,
+            "context": "Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suche",
+            "end": 356,
             "explanation": {
                 "icon": "😉",
                 "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png",
@@ -745,7 +745,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 333,
+            "start": 345,
             "subcategory": "anglicism_advanced",
             "text": "Performance",
             "text_id": "Performance"
@@ -753,8 +753,8 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "e KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
-            "end": 382,
+            "context": "I gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
+            "end": 396,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
@@ -771,7 +771,7 @@
             },
             "label": "Soziale Motivation: DEIB",
             "proficiency_level": "inclusive",
-            "start": 376,
+            "start": 390,
             "subcategory": "d_and_i",
             "text": "*innen",
             "text_id": "*in"
@@ -796,8 +796,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus den",
-            "end": 428,
+            "context": "ssere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus den",
+            "end": 442,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -815,7 +815,7 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäre Pronomen",
             "proficiency_level": "unconscious_bias",
-            "start": 425,
+            "start": 439,
             "subcategory": "binary_pronouns_advanced",
             "text": "ihr",
             "text_id": "ihr"
@@ -839,8 +839,8 @@
                 }
             ],
             "category": "social-motive",
-            "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
-            "end": 436,
+            "context": "e Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
+            "end": 450,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -859,7 +859,7 @@
             "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 429,
+            "start": 443,
             "subcategory": "agentic_advanced",
             "text": "Problem",
             "text_id": "Problem"
@@ -879,7 +879,7 @@
             ],
             "category": "gender-orientation",
             "context": "wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfin",
-            "end": 463,
+            "end": 477,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -897,7 +897,7 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäre Pronomen",
             "proficiency_level": "unconscious_bias",
-            "start": 460,
+            "start": 474,
             "subcategory": "binary_pronouns_advanced",
             "text": "sie",
             "text_id": "sie"
@@ -923,7 +923,7 @@
             ],
             "category": "gender-orientation",
             "context": "oblem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 534,
+            "end": 548,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -941,7 +941,7 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäre Pronomen",
             "proficiency_level": "unconscious_bias",
-            "start": 531,
+            "start": 545,
             "subcategory": "binary_pronouns_advanced",
             "text": "sie",
             "text_id": "sie"
@@ -954,7 +954,7 @@
             ],
             "category": "cultural-diversity",
             "context": "hen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 546,
+            "end": 560,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -973,7 +973,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
-            "start": 540,
+            "start": 554,
             "subcategory": "filler_advanced",
             "text": "einmal",
             "text_id": "einmal"
@@ -986,7 +986,7 @@
             ],
             "category": "cultural-diversity",
             "context": "dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 553,
+            "end": 567,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -1005,7 +1005,7 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
-            "start": 547,
+            "start": 561,
             "subcategory": "filler_advanced",
             "text": "wieder",
             "text_id": "wieder"
@@ -1013,8 +1013,8 @@
         {
             "alternatives": [],
             "category": "cultural-diversity",
-            "context": "spilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 574,
+            "context": "e finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
+            "end": 589,
             "explanation": {
                 "icon": "🙄",
                 "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
@@ -1031,10 +1031,10 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 346,
+            "start": 359,
             "subcategory": "plain_language",
-            "text": "Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "text_id": "Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen."
+            "text": "* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
+            "text_id": "* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen."
         }
     ]
 }

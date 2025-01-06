@@ -2356,24 +2356,62 @@ async def witty_rules(
         new_token_index += 1
 
     if is_sub_category_enabled(config.disabled_categories, "plain_language"):
+        sentence_word_limit = 30
+
         for sent in tokens.sents:
-            if len(sent) > 35:
+            if len(sent) <= sentence_word_limit:
+                continue
+
+            sentences = {}
+            sentence = ""
+            start = sent[0].idx
+
+            lines = sent.text.split("\n")
+            for line in lines:
+                if is_bullet_point(line):
+                    if sentence != "" and sentence.count(" ") > sentence_word_limit:
+                        sentences[start] = sentence
+
+                    start += len(sentence) + 1
+                    sentence = line
+                else:
+                    if sentence != "":
+                        sentence += "\n"
+
+                    sentence += line
+
+            if sentence != "" and sentence.count(" ") >= sentence_word_limit:
+                sentences[start] = sentence
+
+            for start in sentences:
                 list_full.append(
                     ResultOut.factory(
                         config,
                         client,
                         language,
-                        sent.text,
-                        sent.text,
+                        sentences[start],
+                        sentences[start],
                         text,
                         offsets,
                         "plain_language",
-                        sent[0].idx,
+                        start,
                         explanation=language.translate("TOO_LONG_SENTENCE"),
                     )
                 )
 
     return list_full
+
+
+def is_bullet_point(line: str):
+    line = line.strip()
+    if line == "":
+        return False
+
+    if line[0] in ["-", "*", "•", "‣", "⁃", "⁌", "⁍", "⁍", "◘", "◦", "⦾", "⦿"]:
+        return True
+
+    regexp = re.compile(r"^\d+[).:]")
+    return bool(regexp.search(line))
 
 
 def parse_word_type(word_type: str, lower_case: bool = True) -> tuple[str, bool, bool]:
