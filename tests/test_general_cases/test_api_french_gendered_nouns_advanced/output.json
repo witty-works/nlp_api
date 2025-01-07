@@ -1,4 +1,5 @@
 {
+    "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
     "results": [
@@ -47,7 +48,7 @@
                     "female_form": "une peintre",
                     "gender_role": "inclusive_gender",
                     "male_form": "un peintre",
-                    "text": "un∙e peintre"
+                    "text": "un·e peintre"
                 },
                 {
                     "female_form": "une peintre",

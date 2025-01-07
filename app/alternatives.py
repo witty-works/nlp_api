@@ -319,8 +319,8 @@ class Alternatives:
         binary_case = False
         inclusive = Config.gendered_roles_format_inclusive(config.gendered_roles_format)
         binary = Config.gendered_roles_format_binary(config.gendered_roles_format)
-        separator, noun_separator = Config.get_german_noun_separator(
-            config.german_gender_ending
+        separator, noun_separator, separate_gender_plural = (
+            config.get_gender_separators_from_config(language.lang)
         )
         additional_words = []
         is_singular = True if is_singular is None else is_singular
@@ -428,6 +428,7 @@ class Alternatives:
                 binary,
                 separator,
                 noun_separator,
+                separate_gender_plural,
                 additional_words,
                 is_singular,
                 target_form,
@@ -510,6 +511,7 @@ class Alternatives:
         binary: bool,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
         additional_words: list = [],
         is_singular: bool = True,
         target_form: str = "base_form",
@@ -585,6 +587,7 @@ class Alternatives:
                     prefix,
                     separator,
                     noun_separator,
+                    separate_gender_plural,
                 )
 
                 if self.model.is_false_positive(
@@ -606,6 +609,7 @@ class Alternatives:
                             "",
                             separator,
                             noun_separator,
+                            separate_gender_plural,
                         )
                         + "-"
                     )
@@ -751,6 +755,7 @@ class Alternatives:
         lang: LangType,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
         male_form: str,
         female_form: str,
         article: str | None = None,
@@ -784,6 +789,7 @@ class Alternatives:
                     "",
                     separator,
                     noun_separator,
+                    separate_gender_plural,
                 )
                 conjunction = (
                     singular_conjunction
@@ -912,6 +918,7 @@ class Alternatives:
         prefix_words: str,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
     ):
         if lang == LangType.DE:
             if male_form.lower() in self.static_rules[lang]["masculine_articles"]:
@@ -971,6 +978,9 @@ class Alternatives:
             # expérimentés / expérimentées => expérimenté·es
             if prefix.endswith("s"):
                 prefix = prefix[0:-1]
+
+            if separate_gender_plural and suffix.endswith("s"):
+                suffix = suffix[0:-1] + separator + "s"
 
             return prefix_words + prefix + separator + suffix
 
@@ -1068,7 +1078,7 @@ class Alternatives:
                 alternatives.append(new_alternative)
 
             if (
-                # "la", "le", "la∙le"
+                # "la", "le", "la·le"
                 article_index == 0
                 and result["base_form"][0] not in ["a", "e", "i", "o", "u", "h"]
                 and Config.gendered_roles_format_inclusive(config.gendered_roles_format)

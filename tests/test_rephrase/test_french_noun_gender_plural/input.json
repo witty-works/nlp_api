@@ -2,6 +2,7 @@
   "sentence": "Les experts rapides sont intelligents.",
   "text": "Les experts",
   "start": 0,
+  "gender_separator": "·",
   "alternatives": [
     {
       "text": "Les spécialistes",

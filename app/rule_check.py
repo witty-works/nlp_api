@@ -751,14 +751,19 @@ class RuleCheck:
                             )
                             alternative.female_form = pluralize(alternative.female_form)
 
+                        separator, noun_separator, separate_gender_plural = (
+                            config.get_gender_separators_from_config(language.lang)
+                        )
+
                         (
                             alternative.male_form,
                             alternative.female_form,
                             gendered_alternatives,
                         ) = await self.alternatives.noun_alternatives(
                             language.lang,
-                            "·",
-                            "·",
+                            separator,
+                            noun_separator,
+                            separate_gender_plural,
                             alternative.male_form,
                             alternative.female_form,
                             article,
@@ -1324,7 +1329,7 @@ class RuleCheck:
         if match_alternative is None:
             return None
 
-        separator, _ = Config.get_german_noun_separator(config.german_gender_ending)
+        separator, _, _ = Config.get_gender_separators(config.german_gender_ending)
 
         alternatives_with_article = []
         for alternative in alternatives:

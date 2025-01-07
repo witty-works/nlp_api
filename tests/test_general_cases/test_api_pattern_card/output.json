@@ -1,4 +1,5 @@
 {
+    "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
     "results": [
@@ -57,7 +58,7 @@
                     "female_form": "La candidate",
                     "gender_role": "inclusive_gender",
                     "male_form": "Le candidat",
-                    "text": "La∙le candidat·e"
+                    "text": "La·le candidat·e"
                 },
                 {
                     "female_form": "La candidate",

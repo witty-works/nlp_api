@@ -1,4 +1,5 @@
 {
+    "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
     "results": [
@@ -61,13 +62,13 @@
                     "female_form": "La prof",
                     "gender_role": "inclusive_gender",
                     "male_form": "Le prof",
-                    "text": "La∙le prof"
+                    "text": "La·le prof"
                 },
                 {
                     "female_form": "La professeuse",
                     "gender_role": "inclusive_gender",
                     "male_form": "Le professeur",
-                    "text": "La∙le professeur·se"
+                    "text": "La·le professeur·se"
                 },
                 {
                     "text": "Les professeurs"
@@ -76,7 +77,7 @@
                     "female_form": "La professeur",
                     "gender_role": "inclusive_gender",
                     "male_form": "Le professeur",
-                    "text": "La∙le professeur"
+                    "text": "La·le professeur"
                 }
             ],
             "category": "gender-orientation",
@@ -192,13 +193,13 @@
                     "female_form": "une peintresse",
                     "gender_role": "inclusive_gender",
                     "male_form": "un peintre",
-                    "text": "un∙e peintre·sse"
+                    "text": "un·e peintre·sse"
                 },
                 {
                     "female_form": "une peintre",
                     "gender_role": "inclusive_gender",
                     "male_form": "un peintre",
-                    "text": "un∙e peintre"
+                    "text": "un·e peintre"
                 }
             ],
             "category": "gender-orientation",

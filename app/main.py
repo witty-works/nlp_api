@@ -679,6 +679,7 @@ async def get_german_gender_ending(
         binary,
         GermanGenderEndingType.STAR[0],
         GermanGenderEndingType.STAR[0],
+        False,
     )
 
     return alternatives
@@ -1649,6 +1650,7 @@ async def check(
             config_changed=fetch_config_change(configs, check_request_in),
             notifications=notifications,
             has_consented_to_mailing=has_consented_to_mailing,
+            gender_separator=check_request_in.config.get_gender_separator(lang),
         )
 
     context.redis.store_response_log(
