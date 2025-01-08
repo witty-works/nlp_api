@@ -662,6 +662,11 @@ class GermanGenderEndingConfigType(BaseModel):
     status: StatusType
 
 
+class FrenchGenderSeparatorConfigType(BaseModel):
+    value: FrenchGenderSeparatorType
+    status: StatusType
+
+
 class GenderedRolesFormatConfigType(BaseModel):
     value: GenderedRolesFormatType
     status: StatusType
@@ -672,7 +677,7 @@ class RuleConfig(BaseModel):
     llm_alternatives: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
-    french_gender_separator: Optional[FrenchGenderSeparatorType] = None
+    french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: Optional[dict[str, BooleanConfigType]] = {}
     force_categories: Optional[list[str]] = []
