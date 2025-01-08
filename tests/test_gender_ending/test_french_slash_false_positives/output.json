@@ -1,0 +1,40 @@
+{
+    "gender_separator": ".",
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "sons"
+                },
+                {
+                    "text": "Sony"
+                },
+                {
+                    "text": "Mont"
+                },
+                {
+                    "text": "Pont"
+                },
+                {
+                    "text": "Son"
+                }
+            ],
+            "category": "orthography",
+            "context": "Les <URL> sont bons. La/le <URL> est bon. Les professeurs et professeuses sont bons. Iel est un.e peintre.",
+            "end": 23,
+            "explanation": {
+                "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
+                "text": "Le mot « sont » ne peut pas être un verbe après « ses »."
+            },
+            "gravity": 1.0,
+            "label": "Grammaire",
+            "start": 19,
+            "subcategory": "orthography",
+            "text": "sont",
+            "text_id": "sont"
+        }
+    ]
+}

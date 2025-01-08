@@ -14,6 +14,7 @@ from app.models import (
     Rule,
     RuleType,
     BasicWordType,
+    FrenchGenderSeparatorType,
 )
 from app.settings import Settings
 from app.db import Db
@@ -713,7 +714,7 @@ class Alternatives:
 
         return " und " if lang == LangType.DE else " et "
 
-    def add_article(self, lang: LangType, text, article):
+    def add_article(self, lang: LangType, text: str, article: str, separator: str):
         if (
             lang == LangType.FR
             and (article.endswith("le") or article == "la")
@@ -721,12 +722,23 @@ class Alternatives:
         ):
             return "l'" + text
 
+        if separator != FrenchGenderSeparatorType.POINT_MEDIAN:
+            article = article.replace(FrenchGenderSeparatorType.POINT_MEDIAN, separator)
+
         return article + " " + text
 
     def add_article_to_alternative(
-        self, lang: LangType, alternative: Alternative, article_index: int, article: str
+        self,
+        lang: LangType,
+        alternative: Alternative,
+        article_index: int,
+        article: str,
+        separator: str,
     ):
-        alternative.lemma = self.add_article(lang, alternative.lemma, article)
+        alternative.lemma = self.add_article(
+            lang, alternative.lemma, article, separator
+        )
+
         if isinstance(alternative.male_form, str):
             alternative.male_form = self.add_article(
                 lang,
@@ -736,7 +748,9 @@ class Alternatives:
                     "masculine_articles",
                     article_index,
                 ),
+                separator,
             )
+
         if isinstance(alternative.female_form, str):
             alternative.female_form = self.add_article(
                 lang,
@@ -746,6 +760,7 @@ class Alternatives:
                     "feminine_articles",
                     article_index,
                 ),
+                separator,
             )
 
         return alternative
@@ -884,10 +899,10 @@ class Alternatives:
                     female_article = article
 
                 male_form_sub_sentence = self.add_article(
-                    lang, male_form_sub_sentence, male_article
+                    lang, male_form_sub_sentence, male_article, separator
                 )
                 female_form_sub_sentence = self.add_article(
-                    lang, female_form_sub_sentence, female_article
+                    lang, female_form_sub_sentence, female_article, separator
                 )
 
             binary_form += (
@@ -899,6 +914,7 @@ class Alternatives:
                 lang,
                 inclusive_form,
                 self.static_rules[lang]["articles_inclusive_map"][article],
+                separator,
             )
 
         return (
@@ -1033,6 +1049,7 @@ class Alternatives:
         is_plural: bool,
         alternative: Alternative,
         alternatives: list[Alternative],
+        separator: str,
     ):
         if article:
             article = article.lower()
@@ -1049,6 +1066,7 @@ class Alternatives:
                     alternative,
                     article_index,
                     article,
+                    separator,
                 )
             alternatives.append(alternative)
 
@@ -1074,6 +1092,7 @@ class Alternatives:
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
+                        separator,
                     )
                 alternatives.append(new_alternative)
 
@@ -1106,6 +1125,7 @@ class Alternatives:
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
+                        separator,
                     )
                     alternative.is_gendered_noun = True
                     alternative.gender_role = GenderedRolesFormatType.INCLUSIVE_GENDER
@@ -1120,6 +1140,7 @@ class Alternatives:
                                 form + "_articles",
                                 article_index,
                             ),
+                            separator,
                         )
                     alternative.lemma = forms["masculine"]
                     if forms["masculine"] != forms["feminine"]:
@@ -1141,6 +1162,7 @@ class Alternatives:
                     result["gender_1"] + "_articles",
                     article_index,
                 ),
+                separator,
             )
 
         alternatives.append(alternative)

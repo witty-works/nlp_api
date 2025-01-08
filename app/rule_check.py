@@ -691,6 +691,10 @@ class RuleCheck:
                         ]
                     )
 
+                separator, noun_separator, separate_gender_plural = (
+                    config.get_gender_separators_from_config(language.lang)
+                )
+
                 new_alternatives = []
                 for alternative in alternatives:
                     if alternative.is_remove:
@@ -730,6 +734,7 @@ class RuleCheck:
                                         is_plural,
                                         alternative,
                                         new_alternatives,
+                                        separator,
                                     )
                                 )
 
@@ -750,10 +755,6 @@ class RuleCheck:
                                 else result["plural"]
                             )
                             alternative.female_form = pluralize(alternative.female_form)
-
-                        separator, noun_separator, separate_gender_plural = (
-                            config.get_gender_separators_from_config(language.lang)
-                        )
 
                         (
                             alternative.male_form,
@@ -798,6 +799,7 @@ class RuleCheck:
                                 is_plural,
                                 alternative,
                                 new_alternatives,
+                                separator,
                             )
 
                         for collective_noun in collective_nouns:
@@ -835,6 +837,7 @@ class RuleCheck:
                                             articles_list,
                                             collective_article_index,
                                         ),
+                                        separator,
                                     )
                             new_alternative.lemma = collective_noun
                             new_alternatives.append(new_alternative)
@@ -859,6 +862,7 @@ class RuleCheck:
                                 is_plural,
                                 alternative,
                                 new_alternatives,
+                                separator,
                             )
                         else:
                             new_alternatives.append(alternative)
