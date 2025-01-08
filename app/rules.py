@@ -474,8 +474,8 @@ def fetch_static_rules(langs: list[str]):
 
         static_rules[LangType.FR]["hashtags"] = [rule]
         static_rules[LangType.FR]["masculine_articles"] = {
-            "le": "la∙le",
-            "un": "un∙e",
+            "le": "la·le",
+            "un": "un·e",
             "il": "iel",
             "ils": "lels",
             "lui": "ellui",
@@ -483,12 +483,12 @@ def fetch_static_rules(langs: list[str]):
             "ceux": "celleux",
             "les": "les",
             "leur": "leur",
-            "du": "de la∙du",
+            "du": "de la·du",
             "au": "à la·au",
         }
         static_rules[LangType.FR]["feminine_articles"] = {
-            "la": "la∙le",
-            "une": "un∙e",
+            "la": "la·le",
+            "une": "un·e",
             "elle": "iel",
             "elles": "lels",
             "lui": "ellui",
@@ -496,12 +496,12 @@ def fetch_static_rules(langs: list[str]):
             "celles": "celleux",
             "les": "les",
             "leur": "leur",
-            "de la": "de la∙du",
+            "de la": "de la·du",
             "à la": "à la·au",
         }
         static_rules[LangType.FR]["inclusive_articles"] = {
-            "la∙le": "la∙le",
-            "un∙e": "un∙e",
+            "la·le": "la·le",
+            "un·e": "un·e",
             "iel": "iel",
             "lels": "lels",
             "ellui": "ellui",
@@ -510,7 +510,7 @@ def fetch_static_rules(langs: list[str]):
             "les": "les",
             "leur": "leur",
             "lels": "lels",
-            "de la∙du": "de la∙du",
+            "de la·du": "de la·du",
             "à la·au": "à la·au",
         }
         static_rules[LangType.FR]["articles_map"] = dict(
