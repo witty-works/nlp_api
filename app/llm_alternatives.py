@@ -233,12 +233,9 @@ class LlmAlternatives:
         result = await self.prompt.handle(user_prompt, system_prompt, aws_model_id)
         result = self.prompt.parseJson(result)
 
-        if rephrase_request_in.gender_separator is None:
-            separator = noun_separator = "∙"
-        else:
-            separator, noun_separator = Config.get_german_noun_separator(
-                rephrase_request_in.gender_separator
-            )
+        separator, noun_separator, separate_gender_plural = Config.get_gender_separators(
+            rephrase_request_in.gender_separator
+        )
 
         results = {}
         for alternative_index in range(len(rephrase_request_in.alternatives)):
@@ -255,6 +252,7 @@ class LlmAlternatives:
                             rephrase_request_in.lang,
                             separator,
                             noun_separator,
+                            separate_gender_plural,
                             result[alternative.male_form],
                             result[alternative.female_form],
                         )

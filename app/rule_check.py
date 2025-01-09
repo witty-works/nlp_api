@@ -691,6 +691,10 @@ class RuleCheck:
                         ]
                     )
 
+                separator, noun_separator, separate_gender_plural = (
+                    config.get_gender_separators_from_config(language.lang)
+                )
+
                 new_alternatives = []
                 for alternative in alternatives:
                     if alternative.is_remove:
@@ -730,6 +734,7 @@ class RuleCheck:
                                         is_plural,
                                         alternative,
                                         new_alternatives,
+                                        separator,
                                     )
                                 )
 
@@ -757,8 +762,9 @@ class RuleCheck:
                             gendered_alternatives,
                         ) = await self.alternatives.noun_alternatives(
                             language.lang,
-                            "·",
-                            "·",
+                            separator,
+                            noun_separator,
+                            separate_gender_plural,
                             alternative.male_form,
                             alternative.female_form,
                             article,
@@ -793,6 +799,7 @@ class RuleCheck:
                                 is_plural,
                                 alternative,
                                 new_alternatives,
+                                separator,
                             )
 
                         for collective_noun in collective_nouns:
@@ -830,6 +837,7 @@ class RuleCheck:
                                             articles_list,
                                             collective_article_index,
                                         ),
+                                        separator,
                                     )
                             new_alternative.lemma = collective_noun
                             new_alternatives.append(new_alternative)
@@ -854,6 +862,7 @@ class RuleCheck:
                                 is_plural,
                                 alternative,
                                 new_alternatives,
+                                separator,
                             )
                         else:
                             new_alternatives.append(alternative)
@@ -1324,7 +1333,7 @@ class RuleCheck:
         if match_alternative is None:
             return None
 
-        separator, _ = Config.get_german_noun_separator(config.german_gender_ending)
+        separator, _, _ = Config.get_gender_separators(config.german_gender_ending)
 
         alternatives_with_article = []
         for alternative in alternatives:

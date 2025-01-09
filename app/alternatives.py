@@ -14,6 +14,7 @@ from app.models import (
     Rule,
     RuleType,
     BasicWordType,
+    FrenchGenderSeparatorType,
 )
 from app.settings import Settings
 from app.db import Db
@@ -319,8 +320,8 @@ class Alternatives:
         binary_case = False
         inclusive = Config.gendered_roles_format_inclusive(config.gendered_roles_format)
         binary = Config.gendered_roles_format_binary(config.gendered_roles_format)
-        separator, noun_separator = Config.get_german_noun_separator(
-            config.german_gender_ending
+        separator, noun_separator, separate_gender_plural = (
+            config.get_gender_separators_from_config(language.lang)
         )
         additional_words = []
         is_singular = True if is_singular is None else is_singular
@@ -428,6 +429,7 @@ class Alternatives:
                 binary,
                 separator,
                 noun_separator,
+                separate_gender_plural,
                 additional_words,
                 is_singular,
                 target_form,
@@ -510,6 +512,7 @@ class Alternatives:
         binary: bool,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
         additional_words: list = [],
         is_singular: bool = True,
         target_form: str = "base_form",
@@ -585,6 +588,7 @@ class Alternatives:
                     prefix,
                     separator,
                     noun_separator,
+                    separate_gender_plural,
                 )
 
                 if self.model.is_false_positive(
@@ -606,6 +610,7 @@ class Alternatives:
                             "",
                             separator,
                             noun_separator,
+                            separate_gender_plural,
                         )
                         + "-"
                     )
@@ -709,7 +714,7 @@ class Alternatives:
 
         return " und " if lang == LangType.DE else " et "
 
-    def add_article(self, lang: LangType, text, article):
+    def add_article(self, lang: LangType, text: str, article: str, separator: str):
         if (
             lang == LangType.FR
             and (article.endswith("le") or article == "la")
@@ -717,12 +722,23 @@ class Alternatives:
         ):
             return "l'" + text
 
+        if separator != FrenchGenderSeparatorType.POINT_MEDIAN:
+            article = article.replace(FrenchGenderSeparatorType.POINT_MEDIAN, separator)
+
         return article + " " + text
 
     def add_article_to_alternative(
-        self, lang: LangType, alternative: Alternative, article_index: int, article: str
+        self,
+        lang: LangType,
+        alternative: Alternative,
+        article_index: int,
+        article: str,
+        separator: str,
     ):
-        alternative.lemma = self.add_article(lang, alternative.lemma, article)
+        alternative.lemma = self.add_article(
+            lang, alternative.lemma, article, separator
+        )
+
         if isinstance(alternative.male_form, str):
             alternative.male_form = self.add_article(
                 lang,
@@ -732,7 +748,9 @@ class Alternatives:
                     "masculine_articles",
                     article_index,
                 ),
+                separator,
             )
+
         if isinstance(alternative.female_form, str):
             alternative.female_form = self.add_article(
                 lang,
@@ -742,6 +760,7 @@ class Alternatives:
                     "feminine_articles",
                     article_index,
                 ),
+                separator,
             )
 
         return alternative
@@ -751,6 +770,7 @@ class Alternatives:
         lang: LangType,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
         male_form: str,
         female_form: str,
         article: str | None = None,
@@ -784,6 +804,7 @@ class Alternatives:
                     "",
                     separator,
                     noun_separator,
+                    separate_gender_plural,
                 )
                 conjunction = (
                     singular_conjunction
@@ -878,10 +899,10 @@ class Alternatives:
                     female_article = article
 
                 male_form_sub_sentence = self.add_article(
-                    lang, male_form_sub_sentence, male_article
+                    lang, male_form_sub_sentence, male_article, separator
                 )
                 female_form_sub_sentence = self.add_article(
-                    lang, female_form_sub_sentence, female_article
+                    lang, female_form_sub_sentence, female_article, separator
                 )
 
             binary_form += (
@@ -893,6 +914,7 @@ class Alternatives:
                 lang,
                 inclusive_form,
                 self.static_rules[lang]["articles_inclusive_map"][article],
+                separator,
             )
 
         return (
@@ -912,6 +934,7 @@ class Alternatives:
         prefix_words: str,
         separator: str,
         noun_separator: str,
+        separate_gender_plural: bool,
     ):
         if lang == LangType.DE:
             if male_form.lower() in self.static_rules[lang]["masculine_articles"]:
@@ -972,6 +995,9 @@ class Alternatives:
             if prefix.endswith("s"):
                 prefix = prefix[0:-1]
 
+            if separate_gender_plural and suffix.endswith("s"):
+                suffix = suffix[0:-1] + separator + "s"
+
             return prefix_words + prefix + separator + suffix
 
     def handle_single_tilde(
@@ -1023,6 +1049,7 @@ class Alternatives:
         is_plural: bool,
         alternative: Alternative,
         alternatives: list[Alternative],
+        separator: str,
     ):
         if article:
             article = article.lower()
@@ -1039,6 +1066,7 @@ class Alternatives:
                     alternative,
                     article_index,
                     article,
+                    separator,
                 )
             alternatives.append(alternative)
 
@@ -1064,11 +1092,12 @@ class Alternatives:
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
+                        separator,
                     )
                 alternatives.append(new_alternative)
 
             if (
-                # "la", "le", "la∙le"
+                # "la", "le", "la·le"
                 article_index == 0
                 and result["base_form"][0] not in ["a", "e", "i", "o", "u", "h"]
                 and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
@@ -1096,6 +1125,7 @@ class Alternatives:
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
+                        separator,
                     )
                     alternative.is_gendered_noun = True
                     alternative.gender_role = GenderedRolesFormatType.INCLUSIVE_GENDER
@@ -1110,6 +1140,7 @@ class Alternatives:
                                 form + "_articles",
                                 article_index,
                             ),
+                            separator,
                         )
                     alternative.lemma = forms["masculine"]
                     if forms["masculine"] != forms["feminine"]:
@@ -1131,6 +1162,7 @@ class Alternatives:
                     result["gender_1"] + "_articles",
                     article_index,
                 ),
+                separator,
             )
 
         alternatives.append(alternative)

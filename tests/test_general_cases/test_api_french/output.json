@@ -1,4 +1,5 @@
 {
+    "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
     "results": [
@@ -283,7 +284,7 @@
                     "female_form": "la meilleure",
                     "gender_role": "inclusive_gender",
                     "male_form": "le meilleur",
-                    "text": "la∙le meilleur·e"
+                    "text": "la·le meilleur·e"
                 },
                 {
                     "female_form": "la meilleure",

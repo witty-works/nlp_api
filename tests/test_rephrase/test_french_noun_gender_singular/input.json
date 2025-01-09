@@ -2,6 +2,7 @@
   "sentence": "Nous attendons de notre serveur qu'il est très attentif aux clients.",
   "text": "serveur",
   "start": 24,
+  "gender_separator": "·",
   "alternatives": [
     {
       "text": "personnel de service",

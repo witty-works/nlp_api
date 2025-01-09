@@ -1,5 +1,5 @@
 from pydantic import field_validator, BaseModel
-from typing import Optional, Annotated, Any
+from typing import Union, Optional, Annotated, Any
 from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
@@ -216,6 +216,15 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
+
+
+class FrenchGenderSeparatorType(str, Enum):
+    POINT_MEDIAN = "·"
+    POINT_MEDIAN_S = "·s"
+    POINT = "."
+    POINT_S = ".s"
+    SLASH = "/"
+    SLASH_S = "/s"
 
 
 class GenderedRolesFormatBasicType(str, Enum):
@@ -525,10 +534,27 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS: (-1, 4, "("),
         GermanGenderEndingType.CAPITAL_LETTER: (0, 0, "I"),
     }
+    french_gender_separator: FrenchGenderSeparatorType = (
+        FrenchGenderSeparatorType.POINT_MEDIAN
+    )
+
     disabled_categories: list = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
+
+    def get_gender_separators_from_config(self, lang: LangType):
+        return Config.get_gender_separators(self.get_gender_separator(lang))
+
+    def get_gender_separator(self, lang: LangType):
+        if lang == LangType.EN:
+            return None
+
+        return (
+            self.german_gender_ending
+            if lang == LangType.DE
+            else self.french_gender_separator
+        )
 
     @staticmethod
     def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
@@ -545,14 +571,34 @@ class Config(BaseModel):
         ]
 
     @staticmethod
-    def get_german_noun_separator(german_gender_ending: GermanGenderEndingType):
-        if german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
-            separator = "/"
-            noun_separator = ""
-        else:
-            separator = noun_separator = german_gender_ending[0:-2]
+    def get_gender_separators(
+        gender_separator: Union[
+            GermanGenderEndingType | FrenchGenderSeparatorType | None
+        ],
+    ):
+        if gender_separator is None:
+            return "", "", False
 
-        return separator, noun_separator
+        if gender_separator in GermanGenderEndingType._member_map_.values():
+            if gender_separator == GermanGenderEndingType.CAPITAL_LETTER:
+                separator = "/"
+                noun_separator = ""
+            else:
+                separator = noun_separator = gender_separator[0:-2]
+            separate_gender_plural = False
+        else:
+            separator = noun_separator = gender_separator[0]
+            separate_gender_plural = gender_separator.endswith("s")
+
+        return separator, noun_separator, separate_gender_plural
+
+    @staticmethod
+    def get_french_noun_separator(french_gender_separator: FrenchGenderSeparatorType):
+        return (
+            french_gender_separator[0],
+            french_gender_separator[0],
+            french_gender_separator.endswith("s"),
+        )
 
     @field_validator("preferred_languages", mode="before")
     @classmethod
@@ -616,6 +662,11 @@ class GermanGenderEndingConfigType(BaseModel):
     status: StatusType
 
 
+class FrenchGenderSeparatorConfigType(BaseModel):
+    value: FrenchGenderSeparatorType
+    status: StatusType
+
+
 class GenderedRolesFormatConfigType(BaseModel):
     value: GenderedRolesFormatType
     status: StatusType
@@ -626,6 +677,7 @@ class RuleConfig(BaseModel):
     llm_alternatives: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
+    french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: Optional[dict[str, BooleanConfigType]] = {}
     force_categories: Optional[list[str]] = []
@@ -757,7 +809,9 @@ class RephraseRequestIn(BaseRequestIn):
     text: str
     start: int
     alternatives: list[RephraseAlternative]
-    gender_separator: Optional[GermanGenderEndingType] = None
+    gender_separator: Union[
+        GermanGenderEndingType | FrenchGenderSeparatorType | None
+    ] = None
     lang: LangType
 
 
@@ -1193,6 +1247,9 @@ class ResultsOut(BaseModel):
     config_changed: Optional[bool] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
+    gender_separator: Union[
+        GermanGenderEndingType | FrenchGenderSeparatorType | None
+    ] = None
 
 
 class PrettyJSONResponse(Response):

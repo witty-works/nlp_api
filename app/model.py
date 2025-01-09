@@ -281,7 +281,7 @@ class Model:
         return False
 
     def fetch_tokens(self, lang: LangType, text: str) -> Doc:
-        return self.models[lang](text.rstrip().replace("\n", " "))
+        return self.models[lang](text.rstrip())
 
     # create false positives patterns based on false positives column
     def fetch_false_positive_matcher(

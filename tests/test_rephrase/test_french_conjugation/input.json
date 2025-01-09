@@ -2,6 +2,7 @@
   "sentence": "Face à la concurrence, il était handicapé par son jeune âge.",
   "text": "il était handicapé",
   "start": 23,
+  "gender_separator": "·",
   "alternatives": [
     {
       "text": "iel être désavantagé·e",

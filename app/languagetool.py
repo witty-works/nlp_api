@@ -8,6 +8,8 @@ from app.models import (
     EntityType,
     Alternative,
     ResultOut,
+    GermanGenderEndingType,
+    FrenchGenderSeparatorType,
 )
 from app.categories import is_sub_category_enabled
 from app.http import Http
@@ -15,6 +17,7 @@ from app.settings import Settings
 from app.db import Db
 from logging import Logger
 from app.helper import upperfirst
+
 
 class LanguageTool:
     # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
@@ -139,16 +142,32 @@ class LanguageTool:
                 ):
                     continue
 
+            if language.lang == LangType.FR:
                 # Ignore typos in French female noun forms
+                if text in self.db.french_feminine_nouns:
+                    continue
+
+                # Skip words that look like french gender separator followed up the ending
+                if start > 5 and (
+                    full_text[start - 1 : start] == config.french_gender_separator[0]
+                    or full_text[start : start + 1] == config.french_gender_separator[0]
+                ):
+                    continue
+
+                # Skip words that look like a word followed by french gender separator
                 if (
                     language.lang == LangType.FR
-                    and text in self.db.french_feminine_nouns
+                    and config.french_gender_separator[0]
+                    == FrenchGenderSeparatorType.SLASH
+                    and len(full_text) >= end
+                    and full_text[end : end + 1] == FrenchGenderSeparatorType.SLASH
+                    and match["rule"]["id"] == "D_N"
                 ):
                     continue
 
             if (
                 language.lang == LangType.DE
-                and config.german_gender_ending == ":in"
+                and config.german_gender_ending == GermanGenderEndingType.COLON
                 and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
                 and full_text[start + 1 : end]
                 in self.static_rules[LangType.DE]["masculine_articles"]
