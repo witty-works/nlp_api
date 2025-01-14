@@ -1313,6 +1313,8 @@ def fetch_static_rules(langs: list[str]):
 
         static_rules[LangType.EN]["hashtags"] = [rule]
 
+        static_rules[LangType.EN]["articles"] = ["the", "a", "an"]
+
         static_rules[LangType.EN]["a_not_startswith"] = (
             "a ",
             "an ",
