@@ -287,6 +287,7 @@ class Alternative(Lemma):
     male_form: Optional[str] = None
     female_form: Optional[str] = None
     gender_role: Optional[GenderedRolesFormatBasicType] = None
+    is_plural: Optional[bool] = None
 
     def __init__(
         self,
@@ -1057,14 +1058,6 @@ class ResultOut(BaseModel):
         if alternatives is None:
             return text, start, []
 
-        prefix = False
-        if text.startswith("zu "):
-            prefix = "zu "
-        elif text.startswith("a "):
-            prefix = "a "
-        elif text.startswith("an "):
-            prefix = "an "
-
         cleaned_alternatives = {}
 
         for alternative in alternatives:
@@ -1078,13 +1071,6 @@ class ResultOut(BaseModel):
             else:
                 if alternative != " ":
                     alternative.lemma = alternative.lemma.strip()
-
-                if (
-                    prefix
-                    and not alternative.is_inspiration
-                    and not alternative.lemma.startswith(prefix)
-                ):
-                    prefix = False
 
                 if category != "orthography":
                     if is_upper:
@@ -1144,20 +1130,6 @@ class ResultOut(BaseModel):
             and len(cleaned_alternatives) >= alternatives_max_count
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
-
-        if prefix:
-            prefix_length = len(prefix)
-            start += prefix_length
-            text = text[prefix_length:]
-            for cleaned_alternative in cleaned_alternatives:
-                if (
-                    cleaned_alternative.text is None
-                    or cleaned_alternative.remove
-                    or cleaned_alternative.inspiration
-                ):
-                    continue
-
-                cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
 
         return text, start, cleaned_alternatives
 

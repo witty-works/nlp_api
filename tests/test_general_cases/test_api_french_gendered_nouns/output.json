@@ -202,15 +202,19 @@
         {
             "alternatives": [
                 {
+                    "female_form": "à la stagiaire",
                     "gender_role": "inclusive_gender",
+                    "male_form": "au stagiaire",
                     "text": "à la·au stagiaire"
                 },
                 {
+                    "female_form": "à la stagiaire",
                     "gender_role": "binary_gender",
+                    "male_form": "au stagiaire",
                     "text": "au stagiaire ou à la stagiaire"
                 },
                 {
-                    "text": "personne en stage"
+                    "text": "à la personne en stage"
                 }
             ],
             "category": "gender-orientation",

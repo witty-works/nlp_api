@@ -162,14 +162,11 @@ class Model:
 
         if expected_word_type is None:
             expected_word_type = ""
-        elif expected_word_type == WordType.ARTICLE:
-            match lang:
-                case LangType.EN:
-                    if token.text.lower() in ["the", "a", "an"]:
-                        return WordType.ARTICLE
-                case _:
-                    if token.text.lower() in self.static_rules[lang]["articles"]:
-                        return WordType.ARTICLE
+        elif (
+            expected_word_type == WordType.ARTICLE
+            and token.text.lower() in self.static_rules[lang]["articles"]
+        ):
+            return WordType.ARTICLE
 
         if token.pos_ == "ADV":
             if WordType.ADVERB == expected_word_type:

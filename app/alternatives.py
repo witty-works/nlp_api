@@ -62,30 +62,125 @@ class Alternatives:
         self.verbs = verbs
         self.adjectives = adjectives
 
-    def alternative_a_english(
+    def is_previous_token_article(self, token_index: int, tokens: Doc, lang: LangType):
+        return (
+            token_index > 0
+            and tokens[token_index - 1].text.lower()
+            in self.static_rules[lang]["articles"]
+        )
+
+    def get_previous_article(
         self,
-        alternative: str,
-        prepend_word: bool,
-        is_plural_alternative: bool,
-    ) -> str:
-        if alternative == "they":
-            return alternative
+        token_index: int,
+        tokens: Doc,
+        lang: LangType,
+        text: str | None = None,
+        start: int | None = None,
+    ):
+        if not self.is_previous_token_article(token_index, tokens, lang):
+            return None, text, start
 
+        article_index = token_index - 1
+        gendered_article = tokens[article_index].text
+        if text is not None:
+            text = gendered_article + tokens[article_index].whitespace_ + text
+            start = tokens[article_index].idx
+
+        if lang != LangType.FR:
+            return gendered_article, text, start
+
+        article_index = article_index - 1
+
+        # handle à la / de la
         if (
-            prepend_word
-            and is_plural_alternative is False
-            and not alternative.startswith(
-                self.static_rules[LangType.EN]["a_not_startswith"]
-            )
-            and not alternative.endswith(self.static_rules[LangType.EN]["uncountables"])
+            article_index >= 0
+            and gendered_article.lower() == "la"
+            and tokens[article_index].lemma_ in ["de", "à"]
         ):
-            alternative = (
-                "an " + alternative
-                if alternative[0].lower() in ["a", "e", "i", "o", "u"]
-                else "a " + alternative
+            prefix = tokens[article_index].text + tokens[article_index].whitespace_
+
+            gendered_article = prefix + gendered_article
+            if text is not None:
+                text = prefix + text
+                start = tokens[article_index].idx
+
+        return gendered_article, text, start
+
+    def fetch_article(
+        self,
+        lang: LangType,
+        token_index: int,
+        tokens: Doc,
+        text: str,
+        start: int,
+    ):
+        article = article_index = None
+
+        if self.is_previous_token_article(token_index, tokens, lang):
+            # Check if the article has not yet been included (f.e. via a pattern)
+            article, text_, start_ = self.get_previous_article(
+                token_index, tokens, lang, text, start
             )
 
-        return alternative
+            # If start == start_, the text was already expanded to include the article, f.e. via a pattern
+            if start != start_:
+                text = text_
+                start = start_
+
+            if "inclusive_articles" in self.static_rules[lang]:
+                article_index = list(
+                    self.static_rules[lang]["inclusive_articles"].keys()
+                ).index(
+                    self.static_rules[lang]["articles_inclusive_map"][article.lower()]
+                )
+
+        return text, start, article, article_index
+
+    def alternatives_a_english(
+        self,
+        subcategory: str,
+        token_index: int,
+        tokens: Doc,
+        alternatives: list[Alternative],
+        text: str,
+        start: int,
+    ) -> tuple[str, int, list[Alternative]]:
+        if subcategory.startswith("filler"):
+            return text, start, alternatives
+
+        text_, start_, article, _ = self.fetch_article(
+            LangType.EN,
+            token_index,
+            tokens,
+            text,
+            start,
+        )
+
+        if article not in ["a", "an"]:
+            return text, start, alternatives
+
+        for alternative in alternatives:
+            if (
+                alternative.is_plural
+                or alternative.is_remove
+                or alternative.is_inspiration
+                or alternative.lemma == "they"
+                or alternative.lemma.startswith(
+                    self.static_rules[LangType.EN]["a_not_startswith"]
+                )
+                or alternative.lemma.endswith(
+                    self.static_rules[LangType.EN]["uncountables"]
+                )
+            ):
+                continue
+
+            alternative.lemma = (
+                "an " + alternative.lemma
+                if alternative.lemma[0].lower() in ["a", "e", "i", "o", "u"]
+                else "a " + alternative.lemma
+            )
+
+        return text_, start_, alternatives
 
     async def alternative_declension(
         self,
@@ -94,7 +189,6 @@ class Alternatives:
         source_text: str,
         source_lemma: str,
         word_type: str,
-        prepend_word: bool,
         rule: Rule,
         alternative: Alternative,
         is_singular: bool,
@@ -112,8 +206,6 @@ class Alternatives:
             return alternative
 
         word_count = len(rule.words)
-        if prepend_word:
-            word_count -= 1
 
         alternative_tokens = self.model.fetch_tokens(lang, alternative.lemma)
         if word_count > 1:
@@ -205,25 +297,24 @@ class Alternatives:
                 )
 
         new_alternative = deepcopy(alternative)
-        if lang == LangType.EN and prepend_word:
-            new_alternative.lemma = self.alternative_a_english(
-                new_alternative_lemma, prepend_word, is_plural_alternative
-            )
-        else:
-            new_alternative.lemma = new_alternative_lemma
-            if (
-                is_singular != False
-                and is_plural_alternative
-                and new_alternative.is_collective_noun
-            ):
-                new_alternative.is_inspiration = True
+        new_alternative.lemma = new_alternative_lemma
+        new_alternative.is_plural = is_plural_alternative
+
+        if (
+            is_singular != False
+            and is_plural_alternative
+            and new_alternative.is_collective_noun
+        ):
+            new_alternative.is_inspiration = True
 
         return new_alternative
 
     async def alternatives_declension(
         self,
         lang: LangType,
+        subcategory: str,
         text: str,
+        start: int,
         token_index: int,
         tokens: Doc,
         target_form: str,
@@ -234,6 +325,7 @@ class Alternatives:
         if (
             len(rule.words) > 1
             or rule.is_pattern_match
+            or subcategory.startswith("abbreviation")
             or alternatives == None
             or len(alternatives) == 0
             or (len(alternatives) == 1 and alternatives[0].is_remove)
@@ -247,26 +339,10 @@ class Alternatives:
             else await self.model.fetch_word_type(lang, tokens[token_index])
         )
 
-        prepend_word = False
-        if (
-            lang == LangType.EN
-            and token_index > 0
-            and (
-                tokens[token_index - 1].text.lower() == "a"
-                or tokens[token_index - 1].text.lower() == "an"
-            )
-        ):
-            text = tokens[token_index - 1].text + " " + text
-            start = tokens[token_index - 1].idx
-            prepend_word = tokens[token_index - 1].text
-        else:
-            start = (
-                tokens[token_index]._.start
-                if tokens[token_index]._.start is not None
-                else tokens[token_index].idx
-            )
-            if tokens[token_index]._.text is not None:
-                text = tokens[token_index]._.text
+        if tokens[token_index]._.start is not None:
+            start = tokens[token_index]._.start
+        if tokens[token_index]._.text is not None:
+            text = tokens[token_index]._.text
 
         return (
             text,
@@ -278,7 +354,6 @@ class Alternatives:
                     text,
                     tokens[token_index].lemma_,
                     word_type,
-                    prepend_word,
                     rule,
                     alternative,
                     is_singular,
@@ -301,6 +376,15 @@ class Alternatives:
         full_text: str,
         target_form: str,
     ) -> tuple[str | None, str | None, list[Alternative], None]:
+        gendered_noun = False
+        for alternative in alternatives:
+            if alternative.lemma is not None and "~" in alternative.lemma:
+                gendered_noun = True
+                break
+
+        if not gendered_noun:
+            return text, subcategory, alternatives
+
         if (
             rule.type == RuleType.SUFFIX
             and not tokens[token_index].lemma_.endswith("frau")
@@ -406,7 +490,6 @@ class Alternatives:
                     text,
                     tokens[token_index].lemma_,
                     WordType.NOUN,
-                    False,
                     rule,
                     alternative,
                     is_singular,
