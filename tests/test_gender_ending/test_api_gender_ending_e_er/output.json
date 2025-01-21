@@ -46,6 +46,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "die Beauftragte",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "der Beauftragte",
+                    "text": "die*der Beauftragte"
+                },
+                {
+                    "female_form": "die Beauftragte",
+                    "gender_role": "binary_gender",
+                    "male_form": "der Beauftragte",
                     "text": "die/der Beauftragte"
                 },
                 {

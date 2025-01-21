@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Investorinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Investoren",
                     "text": "Investor*innen"
                 },
                 {
+                    "female_form": "Investorinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Investoren",
                     "text": "Investorinnen und Investoren"
                 },
                 {

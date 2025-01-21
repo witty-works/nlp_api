@@ -342,6 +342,16 @@ class Rule(Lemma):
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     source: Optional[ResultSource] = None
+    articles: Optional[
+        dict[
+            "masculine":str,
+            "feminine":str,
+            "neuter":str,
+            "inclusive":str,
+            "fallback":str,
+        ]
+    ] = None
+    adapt_alternatives: bool = False
 
     def __init__(
         self,

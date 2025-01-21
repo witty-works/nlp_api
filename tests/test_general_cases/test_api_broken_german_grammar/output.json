@@ -6,15 +6,27 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Romnija",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Roma",
                     "text": "Rom*nija"
                 },
                 {
+                    "female_form": "Romnija",
+                    "gender_role": "binary_gender",
+                    "male_form": "Roma",
                     "text": "Romnija und Roma"
                 },
                 {
+                    "female_form": "Sintezas",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Sinti",
                     "text": "Sint*ezas"
                 },
                 {
+                    "female_form": "Sintezas",
+                    "gender_role": "binary_gender",
+                    "male_form": "Sinti",
                     "text": "Sintezas und Sinti"
                 }
             ],

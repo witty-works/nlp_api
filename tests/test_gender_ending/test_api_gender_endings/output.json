@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunde",
                     "text": "Kund*in"
                 },
                 {
+                    "female_form": "Kundin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunde",
                     "text": "Kundin/Kunde"
                 },
                 {
@@ -48,9 +54,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunden",
                     "text": "Kund*innen"
                 },
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunden",
                     "text": "Kundinnen und Kunden"
                 },
                 {
@@ -91,9 +103,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Ausbildnerinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Ausbildner",
                     "text": "Ausbildner*innen"
                 },
                 {
+                    "female_form": "Ausbildnerinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Ausbildner",
                     "text": "Ausbildnerinnen und Ausbildner"
                 },
                 {

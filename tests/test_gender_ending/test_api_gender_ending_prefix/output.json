@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Technikingenieurin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Technikingenieur",
                     "text": "Technikingenieur*in"
                 },
                 {
+                    "female_form": "Technikingenieurin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Technikingenieur",
                     "text": "Technikingenieurin/Technikingenieur"
                 },
                 {
@@ -49,9 +55,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Technikexpertinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Technikexperten",
                     "text": "Technikexpert*innen"
                 },
                 {
+                    "female_form": "Technikexpertinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Technikexperten",
                     "text": "Technikexpertinnen und Technikexperten"
                 },
                 {
@@ -61,7 +73,7 @@
                     "text": "Technikfachpersonen"
                 },
                 {
-                    "text": "Techniksachverständigen"
+                    "text": "Techniksachverständige"
                 }
             ],
             "category": "gender-orientation",

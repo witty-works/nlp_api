@@ -33,9 +33,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "meine Fachärztin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "meinen Facharzt",
                     "text": "meine*n Fachärztin*Facharzt"
                 },
                 {
+                    "female_form": "meine Fachärztin",
+                    "gender_role": "binary_gender",
+                    "male_form": "meinen Facharzt",
                     "text": "meine/n Fachärztin/Facharzt"
                 },
                 {
@@ -76,9 +82,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Bundesrätin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Bundesrat",
                     "text": "Bundesrätin*Bundesrat"
                 },
                 {
+                    "female_form": "Bundesrätin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Bundesrat",
                     "text": "Bundesrätin/Bundesrat"
                 },
                 {

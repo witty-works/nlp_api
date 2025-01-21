@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "die Managerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "der Manager",
                     "text": "die*der Manager*in"
                 },
                 {
+                    "female_form": "die Managerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "der Manager",
                     "text": "die/der Managerin/Manager"
                 },
                 {

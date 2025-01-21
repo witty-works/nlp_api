@@ -1,0 +1,75 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "an impartial"
+                },
+                {
+                    "text": "a freelance"
+                }
+            ],
+            "category": "social-motive",
+            "context": "As an independent project manager.",
+            "end": 17,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language.",
+                    "height": 507,
+                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "width": 900
+                },
+                "long_text": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
+                "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true",
+                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+            },
+            "gravity": 3.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 3,
+            "subcategory": "agentic_advanced",
+            "text": "an independent",
+            "text_id": "independent"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "project management"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "As an independent project manager.",
+            "end": 33,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "image_url": {
+                    "alt": "Illustration of pairs of men and women as astronauts, artists, care workers, professors, construction workers",
+                    "height": 525,
+                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "To reach out to all genders, use gender-inclusive options to describe how someone contributes to a company’s mission.",
+                "text": "Generally provokes a mental image of men",
+                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Gender + Orientation: Job Titles",
+            "proficiency_level": "unconscious_bias",
+            "start": 18,
+            "subcategory": "titles",
+            "text": "project manager",
+            "text_id": "project manager"
+        }
+    ]
+}

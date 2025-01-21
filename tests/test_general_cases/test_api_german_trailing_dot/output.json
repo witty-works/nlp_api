@@ -90,9 +90,9 @@
             "gravity": 2.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
-            "start": 31,
+            "start": 27,
             "subcategory": "exaggerating",
-            "text": "Nummer 1",
+            "text": "die Nummer 1",
             "text_id": "Nummer 1"
         }
     ]

@@ -9,6 +9,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Mitarbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
@@ -22,6 +25,9 @@
                     "text": "Mitarbeitende"
                 },
                 {
+                    "female_form": "Arbeitnehmerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Arbeitnehmer",
                     "text": "Arbeitnehmerin/Arbeitnehmer"
                 },
                 {

@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau*Fachmann"
                 },
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "binary_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau/Fachmann"
                 },
                 {
@@ -49,9 +55,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau*Fachmann"
                 },
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "binary_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau/Fachmann"
                 },
                 {

@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Meisterinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Meister",
                     "text": "Meister*innen-"
                 },
                 {
+                    "female_form": "Meisterinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Meister",
                     "text": "Meisterinnen und Meister-"
                 },
                 {
@@ -49,9 +55,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Leserinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Leser",
                     "text": "Leser*innen-"
                 },
                 {
+                    "female_form": "Leserinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Leser",
                     "text": "Leserinnen und Leser-"
                 },
                 {

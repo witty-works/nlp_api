@@ -176,9 +176,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Mitarbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiter*in"
                 },
                 {
+                    "female_form": "Mitarbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
@@ -297,6 +303,9 @@
                     "text": "des Management"
                 },
                 {
+                    "female_form": "der Sicherheitschefin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "des Sicherheitschefs",
                     "text": "der*des Sicherheitschef*in"
                 }
             ],

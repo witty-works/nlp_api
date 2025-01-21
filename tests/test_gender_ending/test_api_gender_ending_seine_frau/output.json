@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Partnerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Partner",
                     "text": "sein/e PartnerIn"
                 },
                 {
+                    "female_form": "Partnerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Partner",
                     "text": "sein/e Partnerin/Partner"
                 },
                 {

@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Erwachsene",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Erwachsener",
                     "text": "Erwachsene*r"
                 },
                 {
+                    "female_form": "Erwachsene",
+                    "gender_role": "binary_gender",
+                    "male_form": "Erwachsener",
                     "text": "Erwachsene/Erwachsener"
                 },
                 {
@@ -92,9 +98,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Erwachsene",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Erwachsener",
                     "text": "Erwachsene*r"
                 },
                 {
+                    "female_form": "Erwachsene",
+                    "gender_role": "binary_gender",
+                    "male_form": "Erwachsener",
                     "text": "Erwachsene/Erwachsener"
                 },
                 {

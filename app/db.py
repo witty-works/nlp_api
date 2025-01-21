@@ -347,6 +347,7 @@ class Db:
                     client, language, rule, None, True
                 )
 
+        rule.adapt_alternatives = False
         for row in rows:
             lemma = row[alternative_columns["lemma"]]
             # remove until we can properly handle this in the UI
@@ -395,6 +396,8 @@ class Db:
                 alternative.url = language.translate("IDENTITYVSPERSONURL")
 
             alternatives.append(alternative)
+            if not alternative.is_remove or not alternative.is_inspiration:
+                rule.adapt_alternatives = True
 
         return alternatives
 

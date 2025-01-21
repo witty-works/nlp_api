@@ -43,11 +43,13 @@ class LlmAlternatives:
         genderstar = {}
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
-            if alternative.gender_role is None:
+            if (
+                alternative.gender_role is None
+                or rephrase_request_in.lang == LangType.EN
+            ):
                 alternatives.append(alternative.text)
                 if alternative.collective_noun == True:
                     collective_nouns.append(alternative.text)
-
             else:
                 genderstar[alternative_index] = alternative.gender_role
                 alternatives.append(alternative.male_form)

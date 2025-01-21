@@ -63,9 +63,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
                     "text": "Kolleg*innen"
                 },
                 {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
                     "text": "Kolleginnen und Kollegen"
                 },
                 {
