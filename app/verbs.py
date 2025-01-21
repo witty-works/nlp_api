@@ -1,5 +1,6 @@
 from inflex import Verb
 from spacy.tokens import Token, Doc
+import json
 
 from app.db import Db
 from app.models import WordType, LangType
