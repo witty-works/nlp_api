@@ -79,9 +79,9 @@ class Verbs:
             if word.startswith(prefix):
                 return prefix
 
-        for prefix in static_rules[LangType.DE]["splittable_words"]:
+        for prefix in self.static_rules[LangType.DE]["splittable_words"]:
             if word.startswith(prefix):
-                if word in static_rules[LangType.DE]["splittable_words"][prefix]:
+                if word in self.static_rules[LangType.DE]["splittable_words"][prefix]:
                     return prefix
 
                 return None
