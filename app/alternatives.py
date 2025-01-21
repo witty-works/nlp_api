@@ -658,7 +658,11 @@ class Alternatives:
         male_form = male_forms[target_form]
 
         if male_form == female_form:
-            alternative = alternative_prefix + male_form + alternative_suffix
+            alternative = (
+                alternative_prefix
+                + self.add_german_prefix(male_form, prefix)
+                + alternative_suffix
+            )
             alternatives[alternative] = False
             return alternatives, binary_case
 

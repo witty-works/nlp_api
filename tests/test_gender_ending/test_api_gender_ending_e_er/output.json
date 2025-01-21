@@ -46,10 +46,7 @@
         {
             "alternatives": [
                 {
-                    "text": "die*der Beauftragte*r"
-                },
-                {
-                    "text": "die/der Beauftragte/Beauftragter"
+                    "text": "die/der Beauftragte"
                 },
                 {
                     "text": "das Management"
