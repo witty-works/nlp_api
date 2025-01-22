@@ -161,6 +161,9 @@ class Db:
     async def fetch_false_positives(
         self, rule: Rule, rewrite_to: str | None = None
     ) -> list[str]:
+        if len(rule.dynamic.false_positives):
+            return rule.dynamic.false_positives
+
         if rule.false_positives is not None:
             return rule.false_positives
 

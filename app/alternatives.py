@@ -3,15 +3,14 @@ from app.models import (
     Rule,
     Alternative,
     WordType,
-    Language,
     Config,
     RuleType,
     GenderedRolesFormatType,
     Alternative,
     Config,
-    Language,
     Rule,
     RuleType,
+    Article,
     FrenchGenderSeparatorType,
     BasicWordType,
 )
@@ -137,14 +136,14 @@ class Alternatives:
 
     def alternatives_a_english(
         self,
-        subcategory: str,
+        rule: Rule,
         token_index: int,
         tokens: Doc,
         alternatives: list[Alternative],
         text: str,
         start: int,
     ) -> tuple[str, int, list[Alternative]]:
-        if subcategory.startswith("filler"):
+        if rule.dynamic.subcategory.startswith("filler"):
             return text, start, alternatives
 
         text_, start_, article, _ = self.fetch_article(
@@ -311,7 +310,6 @@ class Alternatives:
     async def alternatives_declension(
         self,
         lang: LangType,
-        subcategory: str,
         text: str,
         start: int,
         token_index: int,
@@ -324,7 +322,7 @@ class Alternatives:
         if (
             len(rule.words) > 1
             or rule.is_pattern_match
-            or subcategory.startswith("abbreviation")
+            or rule.dynamic.subcategory.startswith("abbreviation")
         ):
             return text, start, alternatives
 
@@ -361,14 +359,14 @@ class Alternatives:
         alternative: Alternative,
         separator: str,
     ) -> tuple[str, int, list[Alternative]]:
-        if rule.articles is None:
+        if rule.dynamic.article is None:
             return alternative
 
         if alternative.is_gendered_noun:
             article = (
-                rule.articles["inclusive"]
-                if rule.articles["inclusive"]
-                else rule.articles["fallback"]
+                rule.dynamic.article.inclusive
+                if rule.dynamic.article.inclusive
+                else rule.dynamic.article.fallback
             )
             article = (
                 article.replace("~", separator)
@@ -380,23 +378,23 @@ class Alternatives:
                 LangType.DE, alternative.words[-1]
             )
             if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
-                article = rule.articles["feminine"]
+                article = rule.dynamic.article.feminine
             else:
                 gender = await self.nouns.german_noun_gender_lookup(
                     alternative.words[-1]
                 )
                 match gender:
                     case "masculine":
-                        article = rule.articles["masculine"]
+                        article = rule.dynamic.article.masculine
                     case "neuter":
-                        article = rule.articles["neuter"]
+                        article = rule.dynamic.article.neuter
                     case "feminine":
-                        article = rule.articles["feminine"]
+                        article = rule.dynamic.article.feminine
                     case None:
                         article = tokens[token_index - 1].text
                     case _:
                         if alternative.lemma.endswith("in"):
-                            article = rule.articles["feminine"]
+                            article = rule.dynamic.article.feminine
 
         if article != "":
             alternative.lemma = (
@@ -430,12 +428,12 @@ class Alternatives:
 
             if alternative.is_gendered_noun:
                 alternative.male_form = (
-                    rule.articles["masculine"]
+                    rule.dynamic.article.masculine
                     + tokens[token_index - 1].whitespace_
                     + alternative.male_form
                 )
                 alternative.female_form = (
-                    rule.articles["feminine"]
+                    rule.dynamic.article.feminine
                     + tokens[token_index - 1].whitespace_
                     + alternative.female_form
                 )
@@ -444,16 +442,7 @@ class Alternatives:
 
     def fetch_german_article_for_flexion(
         self, flexion: str | None, gender: str, article: str
-    ) -> (
-        dict[
-            "masculine":str,
-            "feminine":str,
-            "neuter":str,
-            "inclusive":str,
-            "fallback":str,
-        ]
-        | None
-    ):
+    ) -> Article | None:
         if flexion is None:
             return None
 
@@ -464,17 +453,11 @@ class Alternatives:
         ):
             return None
 
-        article_forms = self.static_rules[LangType.DE][gender + "_articles"][article][
-            form
-        ]
+        article = self.static_rules[LangType.DE][gender + "_articles"][article][form]
+        if isinstance(article, Article):
+            article.fallback = article
 
-        return {
-            "masculine": article_forms[1],
-            "feminine": article_forms[2],
-            "neuter": article_forms[3],
-            "inclusive": article_forms[5],
-            "fallback": article,
-        }
+        return article
 
     async def find_form(
         self,
@@ -664,7 +647,6 @@ class Alternatives:
         tokens: Doc,
         token_index: int,
         alternatives: list[Alternative],
-        subcategory: str,
         is_singular: bool | None,
         rule: Rule,
         full_text: str,
@@ -702,7 +684,7 @@ class Alternatives:
                     prefix if alternative.lemma.startswith(prefix) else None,
                 )
 
-                if rule.articles:
+                if rule.dynamic.article:
                     alternative = await self.add_german_article_to_alternative(
                         tokens, token_index, rule, alternative, separator
                     )
@@ -740,27 +722,33 @@ class Alternatives:
 
             # false positive
             if alternative_variations is None:
-                return None, None, None, []
+                return None, None, []
 
-            if not is_sub_category_enabled(config.disabled_categories, subcategory):
+            if not is_sub_category_enabled(
+                config.disabled_categories, rule.dynamic.subcategory
+            ):
                 continue
 
             new_alternatives.extend(alternative_variations)
 
         if binary_case:
             if binary:
-                subcategory = "gendered_denominations_ending_advanced"
+                rule.dynamic.subcategory = "gendered_denominations_ending_advanced"
             else:
-                subcategory = (
+                rule.dynamic.subcategory = (
                     "function"
                     if "mann" in text.lower()
                     else "gendered_denominations_ending"
                 )
                 if rule.is_advanced:
-                    subcategory = make_category_advanced(subcategory)
+                    rule.dynamic.subcategory = make_category_advanced(
+                        rule.dynamic.subcategory
+                    )
 
-            if not is_sub_category_enabled(config.disabled_categories, subcategory):
-                return None, None, None, []
+            if not is_sub_category_enabled(
+                config.disabled_categories, rule.dynamic.subcategory
+            ):
+                return None, None, []
 
             text += (
                 tokens[token_index].whitespace_
@@ -768,13 +756,13 @@ class Alternatives:
                 + tokens[token_index + 1].whitespace_
                 + tokens[token_index + 2].text
             )
-        elif subcategory == "function":
+        elif rule.dynamic.subcategory == "function":
             forms = await self.nouns.german_noun_lookup(tokens[token_index].text)
             if forms is not None and forms["male_form"] is not None:
-                subcategory = "gender_identity"
+                rule.dynamic.subcategory = "gender_identity"
                 rule.text_id = forms["base_form"]
 
-        return text, start, subcategory, new_alternatives
+        return text, start, new_alternatives
 
     async def clone_alternative(
         self,
@@ -818,7 +806,7 @@ class Alternatives:
                     }
                 )
 
-        if rule.articles:
+        if rule.dynamic.article:
             new_alternative = await self.add_german_article_to_alternative(
                 tokens, token_index, rule, new_alternative, separator
             )
@@ -898,7 +886,9 @@ class Alternatives:
         female_form = female_forms[target_form]
         female_form_with_prefix = self.add_german_prefix(female_form, prefix)
 
-        if (rule.articles is None or not is_singular) and male_form == female_form:
+        if (
+            rule.dynamic.article is None or not is_singular
+        ) and male_form == female_form:
             alternatives.append(
                 await self.clone_alternative(
                     tokens,
@@ -928,7 +918,7 @@ class Alternatives:
                         separate_gender_plural,
                     )
 
-                    rule.false_positives.append(lemma)
+                    rule.dynamic.false_positives.append(lemma)
 
                 additional_prefix = ""
                 for additional_word in additional_words:
@@ -999,7 +989,7 @@ class Alternatives:
 
                     binary_case = True
                 else:
-                    rule.false_positives.extend(false_positive_check)
+                    rule.dynamic.false_positives.extend(false_positive_check)
 
             if binary:
                 additional_prefix = ""
