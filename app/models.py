@@ -5,6 +5,7 @@ from enum import Enum
 from collections import namedtuple
 import json
 from cmp_version import VersionString
+from functools import lru_cache
 
 from starlette.responses import Response
 
@@ -572,6 +573,7 @@ class Config(BaseModel):
         ]
 
     @staticmethod
+    @lru_cache()
     def get_gender_separators(
         gender_separator: Union[
             GermanGenderEndingType | FrenchGenderSeparatorType | None
