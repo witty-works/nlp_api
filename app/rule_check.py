@@ -240,7 +240,6 @@ class RuleCheck:
         token_index: int,
         tokens: Doc,
         rule: Rule,
-        alternatives: list[Alternative],
         text: str,
         skip_token: int,
     ):
@@ -275,7 +274,7 @@ class RuleCheck:
                     break
 
         if rule.id == "fr_noun_adjective_rule":
-            return False, alternatives, text, skip_token
+            return False, text, skip_token
 
         # Nous cherchons des stagiaires *curieux*
         if (
@@ -308,17 +307,17 @@ class RuleCheck:
 
                 if false_positive_check is None:
                     rule.dynamic.subcategory = "hidden_image"
-                    alternatives = self.alternatives.get_adjective_alternatives_french(
+                    rule.alternatives = self.alternatives.get_adjective_alternatives_french(
                         male_form, female_form
                     )
                     rule.adapt_alternatives = True
                 else:
                     if is_prev:
-                        return True, None, None, None
+                        return True, None, None
 
                     if false_positive_check == token.text.lower():
                         rule.dynamic.subcategory = "hidden_image"
-                        alternatives = [
+                        rule.alternatives = [
                             Alternative(
                                 male_form
                                 if false_positive_check == female_form
@@ -342,9 +341,9 @@ class RuleCheck:
             or source_noun.text.lower()
             not in self.static_rules[LangType.FR]["gender_neutral_nouns"]
         ):
-            return True, None, None, None
+            return True, None, None
 
-        return False, alternatives, text, skip_token
+        return False, text, skip_token
 
     async def is_french_noun_false_positive(
         self,
@@ -380,7 +379,7 @@ class RuleCheck:
 
             # false positive check
             if self.is_gender_false_positive(token):
-                return True, None
+                return True
 
             # TODO if BINARY_GENDER not enabled but inclusive is, then propose to switch the entire phrase to inclusive
             if (
@@ -470,56 +469,52 @@ class RuleCheck:
         rule: Rule,
         config: Config,
         is_singular: bool,
-        alternatives: list[Alternative],
         text: str,
         start: int,
         full_text: str,
     ):
         match lang:
             case LangType.FR:
-                text, start, alternatives = await self.generate_french_alternatives(
+                text, start = await self.generate_french_alternatives(
                     token_index,
                     tokens,
                     rule,
                     config,
                     full_text,
-                    alternatives,
                     text,
                     start,
                 )
             case LangType.EN:
-                text, start, alternatives = await self.generate_english_alternatives(
+                text, start = await self.generate_english_alternatives(
                     token_index,
                     tokens,
                     rule,
                     config,
                     is_singular,
-                    alternatives,
                     text,
                     start,
                 )
             case LangType.DE:
-                text, start, alternatives = await self.generate_german_alternatives(
+                text, start = await self.generate_german_alternatives(
                     token_index,
                     tokens,
                     rule,
                     config,
                     is_singular,
-                    alternatives,
                     text,
                     start,
                     full_text,
                 )
 
-        if len(alternatives) and rule.dynamic.subcategory.startswith("filler"):
-            text, alternatives = self.detect_filler_words_at_sentence_start(
-                alternatives,
+        if rule.dynamic.subcategory.startswith("filler"):
+            text = self.detect_filler_words_at_sentence_start(
+                rule,
                 text,
                 full_text,
                 start + len(text),
             )
 
-        return text, start, alternatives
+        return text, start
 
     async def generate_german_alternatives(
         self,
@@ -528,14 +523,13 @@ class RuleCheck:
         rule: Rule,
         config: Config,
         is_singular: bool,
-        alternatives: list[Alternative],
         text: str,
         start: int,
         full_text: str,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> tuple[str, int]:
         token = tokens[token_index]
         gendered_noun = False
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.lemma is not None and "~" in alternative.lemma:
                 gendered_noun = True
                 break
@@ -597,14 +591,12 @@ class RuleCheck:
         (
             text,
             start,
-            alternatives,
         ) = await self.alternatives.german_gendered_nouns(
             config,
             text,
             start,
             tokens,
             token_index,
-            alternatives,
             is_singular,
             rule,
             full_text,
@@ -616,19 +608,19 @@ class RuleCheck:
         if not text or await self.is_rule_false_positive(
             full_text, token_index, tokens, rule
         ):
-            return None, None, []
+            return None, None
 
         if text.endswith("-"):
             ending = "s-" if text.endswith("s-") else "-"
 
-            for alternative in alternatives:
+            for alternative in rule.alternatives:
                 if (
                     alternative.lemma is not None
                     and alternative.lemma.endswith(ending) != ending
                 ):
                     alternative.lemma += ending
 
-        return text, start, alternatives
+        return text, start
 
     async def generate_english_alternatives(
         self,
@@ -637,15 +629,14 @@ class RuleCheck:
         rule: Rule,
         config: Config,
         is_singular: bool,
-        alternatives: list[Alternative],
         text: str,
         start: int,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> tuple[str, int]:
         # TODO make it possible to handle cases with multiple alternatives
-        if len(alternatives) == 1 and alternatives[0].lemma == "they":
+        if len(rule.alternatives) == 1 and rule.alternatives[0].lemma == "they":
             if not config.llm_alternatives:
                 text, alternative = await self.pluralize_they(text, tokens, token_index)
-                alternatives = [Alternative(alternative)]
+                rule.alternatives = [Alternative(alternative)]
         else:
             target_form = await self.alternatives.fetch_target_form(
                 rule,
@@ -655,7 +646,7 @@ class RuleCheck:
                 is_singular,
             )
 
-            text, start, alternatives = await self.alternatives.alternatives_declension(
+            text, start = await self.alternatives.alternatives_declension(
                 LangType.EN,
                 text,
                 start,
@@ -663,21 +654,19 @@ class RuleCheck:
                 tokens,
                 target_form,
                 rule,
-                alternatives,
                 is_singular,
             )
 
             if not config.llm_alternatives:
-                text, start, alternatives = self.alternatives.alternatives_a_english(
+                text, start = self.alternatives.alternatives_a_english(
                     rule,
                     token_index,
                     tokens,
-                    alternatives,
                     text,
                     start,
                 )
 
-        return text, start, alternatives
+        return text, start
 
     async def generate_french_alternatives(
         self,
@@ -686,7 +675,6 @@ class RuleCheck:
         rule: Rule,
         config: Config,
         full_text: str,
-        alternatives: list[Alternative],
         text: str,
         start: int,
     ) -> tuple[str, int, list[Alternative]]:
@@ -703,7 +691,7 @@ class RuleCheck:
 
         new_alternatives = []
         false_positives = []
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.is_remove:
                 new_alternatives.append(alternative)
                 continue
@@ -728,9 +716,8 @@ class RuleCheck:
                     alternative.gender_role = None
                     if article:
                         alternative.lemma = alternative.male_form
-                        new_alternatives = self.alternatives.nouns_with_articles(
+                        new_alternatives = self.alternatives.french_nouns_with_articles(
                             config,
-                            LangType.FR,
                             article,
                             article_index,
                             result,
@@ -791,9 +778,8 @@ class RuleCheck:
                     alternative.lemma = alternative.male_form
                     alternative.gender_role = None
 
-                    new_alternatives = self.alternatives.nouns_with_articles(
+                    new_alternatives = self.alternatives.french_nouns_with_articles(
                         config,
-                        LangType.FR,
                         article,
                         article_index,
                         result,
@@ -854,9 +840,8 @@ class RuleCheck:
 
                 alternative.gender_role = None
                 if result is not None:
-                    new_alternatives = self.alternatives.nouns_with_articles(
+                    new_alternatives = self.alternatives.french_nouns_with_articles(
                         config,
-                        LangType.FR,
                         article,
                         article_index,
                         result,
@@ -945,7 +930,7 @@ class RuleCheck:
 
                 new_alternatives.append(alternative)
 
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.is_remove or alternative.lemma.lower() == text.lower():
                 continue
 
@@ -954,9 +939,11 @@ class RuleCheck:
         if self.model.is_false_positive(
             full_text, token_index, tokens, false_positives
         ):
-            return None, None, []
+            return None, None
 
-        return text, start, new_alternatives
+        rule.alternatives = new_alternatives
+
+        return text, start
 
     async def handle(
         self,
@@ -1072,7 +1059,7 @@ class RuleCheck:
             ):
                 continue
 
-            alternatives = await self.db.fetch_rule_alternatives(
+            rule.alternatives = await self.db.fetch_rule_alternatives(
                 client,
                 language,
                 rule,
@@ -1089,14 +1076,12 @@ class RuleCheck:
                         case WordType.ADJECTIVE:
                             (
                                 is_false_positive,
-                                alternatives,
                                 text,
                                 skip_token,
                             ) = self.is_french_adjective_false_positive(
                                 token_index,
                                 tokens,
                                 rule,
-                                alternatives,
                                 text,
                                 skip_token,
                             )
@@ -1116,20 +1101,19 @@ class RuleCheck:
 
             # Adapt alternatives if necessary
             if rule.adapt_alternatives:
-                text, start, alternatives = await self.generate_alternatives(
+                text, start = await self.generate_alternatives(
                     language.lang,
                     token_index,
                     tokens,
                     rule,
                     config,
                     is_singular,
-                    alternatives,
                     text,
                     start,
                     full_text,
                 )
 
-                if len(alternatives) == 0:
+                if text is None:
                     continue
 
             label = token._.label if token._.label is not None else rule.label
@@ -1146,7 +1130,7 @@ class RuleCheck:
                     rule.dynamic.subcategory,
                     start,
                     None,
-                    alternatives,
+                    rule.alternatives,
                     None,
                     rule.explanation,
                     rule.url,
@@ -1169,7 +1153,7 @@ class RuleCheck:
                         rule.dynamic.subcategory,
                         token._.child_token.idx,
                         None,
-                        alternatives,
+                        rule.alternatives,
                         None,
                         rule.explanation,
                         rule.url,
@@ -1236,15 +1220,15 @@ class RuleCheck:
         return text, alternative
 
     def detect_filler_words_at_sentence_start(
-        self, alternatives: list[Alternative], text: str, full_text: str, end: int
+        self, rule: Rule, text: str, full_text: str, end: int
     ) -> tuple[str, list[Alternative]]:
-        if alternatives[0].is_remove and text[0].isupper():
+        if len(rule.alternatives) and rule.alternatives[0].is_remove and text[0].isupper():
             match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
             if isinstance(match, re.Match):
                 text += match.group(0)
-                alternatives = [Alternative(upperfirst(match.group(2)))]
+                rule.alternatives = [Alternative(upperfirst(match.group(2)))]
 
-        return text, alternatives
+        return text
 
     def is_german_pronoun_check_required(self, lang: LangType, token: Token):
         return (

@@ -139,12 +139,11 @@ class Alternatives:
         rule: Rule,
         token_index: int,
         tokens: Doc,
-        alternatives: list[Alternative],
         text: str,
         start: int,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> tuple[str, int]:
         if rule.dynamic.subcategory.startswith("filler"):
-            return text, start, alternatives
+            return text, start
 
         text_, start_, article, _ = self.fetch_article(
             LangType.EN,
@@ -155,9 +154,9 @@ class Alternatives:
         )
 
         if article not in ["a", "an"]:
-            return text, start, alternatives
+            return text, start
 
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if (
                 alternative.is_plural
                 or alternative.is_remove
@@ -178,7 +177,7 @@ class Alternatives:
                 else "a " + alternative.lemma
             )
 
-        return text_, start_, alternatives
+        return text_, start_
 
     async def alternative_declension(
         self,
@@ -316,15 +315,14 @@ class Alternatives:
         tokens: Doc,
         target_form: str,
         rule: Rule,
-        alternatives: list[Alternative],
         is_singular: bool,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> tuple[str, int]:
         if (
             len(rule.words) > 1
             or rule.is_pattern_match
             or rule.dynamic.subcategory.startswith("abbreviation")
         ):
-            return text, start, alternatives
+            return text, start
 
         word_types = rule.get_word_types()
         word_type = (
@@ -333,23 +331,21 @@ class Alternatives:
             else await self.model.fetch_word_type(lang, tokens[token_index])
         )
 
-        return (
-            text,
-            start,
-            [
-                await self.alternative_declension(
-                    lang,
-                    target_form,
-                    text,
-                    tokens[token_index].lemma_,
-                    word_type,
-                    rule,
-                    alternative,
-                    is_singular,
-                )
-                for alternative in alternatives
-            ],
-        )
+        rule.alternatives = [
+            await self.alternative_declension(
+                lang,
+                target_form,
+                text,
+                tokens[token_index].lemma_,
+                word_type,
+                rule,
+                alternative,
+                is_singular,
+            )
+            for alternative in rule.alternatives
+        ]
+
+        return text, start
 
     async def add_german_article_to_alternative(
         self,
@@ -358,7 +354,7 @@ class Alternatives:
         rule: Rule,
         alternative: Alternative,
         separator: str,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> Alternative:
         if rule.dynamic.article is None:
             return alternative
 
@@ -646,14 +642,13 @@ class Alternatives:
         start: int,
         tokens: Doc,
         token_index: int,
-        alternatives: list[Alternative],
         is_singular: bool | None,
         rule: Rule,
         full_text: str,
         prefix: str,
         additional_words: list,
         target_form: str,
-    ) -> tuple[str | None, str | None, list[Alternative], None]:
+    ) -> tuple[str | None, int | None]:
         separator, noun_separator, separate_gender_plural = (
             config.get_gender_separators_from_config(LangType.DE)
         )
@@ -663,7 +658,7 @@ class Alternatives:
         binary = Config.gendered_roles_format_binary(config.gendered_roles_format)
 
         new_alternatives = []
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.is_remove or alternative.is_inspiration:
                 new_alternatives.append(alternative)
                 continue
@@ -722,7 +717,7 @@ class Alternatives:
 
             # false positive
             if alternative_variations is None:
-                return None, None, []
+                return None, None
 
             if not is_sub_category_enabled(
                 config.disabled_categories, rule.dynamic.subcategory
@@ -748,7 +743,7 @@ class Alternatives:
             if not is_sub_category_enabled(
                 config.disabled_categories, rule.dynamic.subcategory
             ):
-                return None, None, []
+                return None, None
 
             text += (
                 tokens[token_index].whitespace_
@@ -762,7 +757,9 @@ class Alternatives:
                 rule.dynamic.subcategory = "gender_identity"
                 rule.text_id = forms["base_form"]
 
-        return text, start, new_alternatives
+        rule.alternatives = new_alternatives
+
+        return text, start
 
     async def clone_alternative(
         self,
@@ -831,7 +828,7 @@ class Alternatives:
         text: str = "",
         prefix: str = "",
         binary_case: bool = False,
-    ) -> list[Alternative]:
+    ) -> tuple[list[Alternative], bool]:
         alternatives = []
         alternative_prefix = alternative_suffix = ""
         male_forms = None
@@ -958,9 +955,9 @@ class Alternatives:
             lemma = male_form_with_prefix
             if male_form != female_form:
                 conjunction = (
-                    self.static_rules[LangType.FR]["noun_conjunction"]["singular"]
+                    self.static_rules[LangType.DE]["noun_conjunction"]["singular"]
                     if is_singular
-                    else self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                    else self.static_rules[LangType.DE]["noun_conjunction"]["plural"]
                 )
                 lemma = female_form_with_prefix + conjunction + lemma
 
@@ -1378,10 +1375,9 @@ class Alternatives:
         alternative.word_types = word_types
         alternative.lemma = lemma.strip()
 
-    def nouns_with_articles(
+    def french_nouns_with_articles(
         self,
         config: Config,
-        lang: LangType,
         article: str | None,
         article_index: int | None,
         result: dict,
@@ -1389,7 +1385,7 @@ class Alternatives:
         alternative: Alternative,
         alternatives: list[Alternative],
         separator: str,
-    ):
+    ) -> list[Alternative]:
         if article:
             article = article.lower()
 
@@ -1401,7 +1397,7 @@ class Alternatives:
             alternative.lemma = result["plural"]
             if article:
                 alternative = self.add_article_to_alternative(
-                    lang,
+                    LangType.FR,
                     alternative,
                     article_index,
                     article,
@@ -1425,7 +1421,7 @@ class Alternatives:
 
                 if article:
                     new_alternative = self.add_article_to_alternative(
-                        lang,
+                        LangType.FR,
                         new_alternative,
                         article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
@@ -1458,7 +1454,7 @@ class Alternatives:
                     alternative.female_form = alternative.lemma
 
                     alternative = self.add_article_to_alternative(
-                        lang,
+                        LangType.FR,
                         alternative,
                         article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
@@ -1472,10 +1468,10 @@ class Alternatives:
                     forms = {}
                     for form in ["masculine", "feminine"]:
                         forms[form] = self.add_article(
-                            lang,
+                            LangType.FR,
                             alternative.lemma,
                             self.get_article_by_index(
-                                lang,
+                                LangType.FR,
                                 form + "_articles",
                                 article_index,
                             ),
@@ -1496,11 +1492,11 @@ class Alternatives:
                     alternative.gender_role = GenderedRolesFormatType.BINARY_GENDER
         elif article and result["gender_1"]:
             alternative = self.add_article_to_alternative(
-                lang,
+                LangType.FR,
                 alternative,
                 article_index,
                 self.get_article_by_index(
-                    lang,
+                    LangType.FR,
                     result["gender_1"] + "_articles",
                     article_index,
                 ),
