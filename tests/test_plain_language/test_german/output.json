@@ -691,17 +691,17 @@
         {
             "alternatives": [
                 {
-                    "text": "Pressekonferenz"
+                    "text": "eine Pressekonferenz"
                 },
                 {
-                    "text": "Anweisung"
+                    "text": "eine Anweisung"
                 },
                 {
-                    "text": "Einweisung"
+                    "text": "eine Einweisung"
                 }
             ],
             "category": "cultural-diversity",
-            "context": "wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer",
+            "context": "* Es wäre sogar möglich, dass Sie Glückspilze finden.\n* Haben sie unsere KPI gesehen?\n* Das braucht ein Briefing und eine bessere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer",
             "end": 327,
             "explanation": {
                 "icon": "😉",
@@ -713,9 +713,9 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
-            "start": 319,
+            "start": 315,
             "subcategory": "anglicism_advanced",
-            "text": "Briefing",
+            "text": "ein Briefing",
             "text_id": "Briefing"
         },
         {
@@ -824,23 +824,23 @@
         {
             "alternatives": [
                 {
-                    "text": "Kernfrage"
+                    "text": "ihre Kernfrage"
                 },
                 {
-                    "text": "komplexe Aufgabe"
+                    "text": "ihre komplexe Aufgabe"
                 },
                 {
-                    "text": "Schwierigkeit"
+                    "text": "ihre Schwierigkeit"
                 },
                 {
-                    "text": "Hindernis"
+                    "text": "ihr Hindernis"
                 },
                 {
-                    "text": "komplexe Materie"
+                    "text": "ihre komplexe Materie"
                 }
             ],
             "category": "social-motive",
-            "context": "e Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
+            "context": "ssere Performance.\n* Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
             "end": 450,
             "explanation": {
                 "content": "video",
@@ -860,9 +860,9 @@
             "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 443,
+            "start": 439,
             "subcategory": "agentic_advanced",
-            "text": "Problem",
+            "text": "ihr Problem",
             "text_id": "Problem"
         },
         {

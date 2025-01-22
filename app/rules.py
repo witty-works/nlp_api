@@ -742,8 +742,8 @@ def fetch_static_rules(langs: list[str]):
             ] = article
 
             if article[3] not in static_rules[LangType.DE]["neuter_articles"]:
-                static_rules[LangType.DE]["neuter_articles"][article[2]] = {}
-            static_rules[LangType.DE]["neuter_articles"][article[2]][
+                static_rules[LangType.DE]["neuter_articles"][article[3]] = {}
+            static_rules[LangType.DE]["neuter_articles"][article[3]][
                 article[0]
             ] = article
 

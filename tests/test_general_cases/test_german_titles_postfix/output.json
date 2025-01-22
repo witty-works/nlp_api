@@ -169,7 +169,7 @@
                     "remove": true
                 },
                 {
-                    "text": "Taschenuhr"
+                    "text": "eine Taschenuhr"
                 }
             ],
             "category": "religion",
@@ -191,9 +191,9 @@
             "gravity": 1.0,
             "label": "Glauben: Antisemitismus",
             "proficiency_level": "openly_discriminating",
-            "start": 87,
+            "start": 83,
             "subcategory": "antisemitism",
-            "text": "Judenei",
+            "text": "ein Judenei",
             "text_id": "Judenei"
         },
         {
