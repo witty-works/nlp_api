@@ -374,23 +374,13 @@ class Alternatives:
                 LangType.DE, alternative.words[-1]
             )
             if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
-                article = rule.dynamic.article.feminine
+                article = rule.dynamic.article.plural
             else:
                 gender = await self.nouns.german_noun_gender_lookup(
                     alternative.words[-1]
                 )
-                match gender:
-                    case "masculine":
-                        article = rule.dynamic.article.masculine
-                    case "neuter":
-                        article = rule.dynamic.article.neuter
-                    case "feminine":
-                        article = rule.dynamic.article.feminine
-                    case None:
-                        article = tokens[token_index - 1].text
-                    case _:
-                        if alternative.lemma.endswith("in"):
-                            article = rule.dynamic.article.feminine
+
+                article = rule.dynamic.article.get_article(gender, alternative.lemma)
 
         if article != "":
             alternative.lemma = (

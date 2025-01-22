@@ -328,6 +328,21 @@ class Article(BaseModel):
     inclusive: Optional[str] = None
     fallback: Optional[str] = None
 
+    def get_article(self, gender: str, lemma: str) -> str | None:
+        match gender:
+            case "masculine":
+                return self.masculine
+            case "neuter":
+                return self.neuter
+            case "feminine":
+                return self.feminine
+            case None:
+                return self.fallback
+
+        if lemma.endswith("in"):
+            return self.feminine
+
+        return None
 
 class RuleDynamic(BaseModel):
     false_positives: Optional[list[str]] = []
