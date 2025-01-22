@@ -858,9 +858,10 @@ class RuleCheck:
 
             false_positives.append(alternative.lemma)
 
-        rule.false_positives = false_positives
-        if await self.is_rule_false_positive(full_text, token_index, tokens, rule):
-            return text, start, []
+        if self.model.is_false_positive(
+            full_text, token_index, tokens, false_positives
+        ):
+            return None, None, []
 
         return text, start, new_alternatives
 
