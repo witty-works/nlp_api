@@ -6,12 +6,12 @@
         {
             "alternatives": [
                 {
-                    "remove": true
+                    "text": "Mir"
                 }
             ],
             "category": "cultural-diversity",
             "context": "Auch, mir ist nicht klar, wie das alles funktioniert?",
-            "end": 4,
+            "end": 9,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -32,7 +32,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "filler_advanced",
-            "text": "Auch",
+            "text": "Auch, mir",
             "text_id": "auch"
         }
     ]

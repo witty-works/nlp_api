@@ -1214,11 +1214,11 @@ class RuleCheck:
     def detect_filler_words_at_sentence_start(
         self, alternatives: list[Alternative], text: str, full_text: str, end: int
     ) -> tuple[str, list[Alternative]]:
-        if alternatives == ["-"] and text[0].isupper():
+        if alternatives[0].is_remove and text[0].isupper():
             match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
             if isinstance(match, re.Match):
                 text += match.group(0)
-                alternatives = [upperfirst(match.group(2))]
+                alternatives = [Alternative(upperfirst(match.group(2)))]
 
         return text, alternatives
 
