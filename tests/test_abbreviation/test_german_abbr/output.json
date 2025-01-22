@@ -42,9 +42,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Partnerinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Partner",
                     "text": "Partner*innen"
                 },
                 {
+                    "female_form": "Partnerinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Partner",
                     "text": "Partnerinnen und Partner"
                 },
                 {

@@ -71,9 +71,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Mitarbeiterinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiter*innen"
                 },
                 {
+                    "female_form": "Mitarbeiterinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiterinnen und Mitarbeiter"
                 },
                 {

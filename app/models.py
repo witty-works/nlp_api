@@ -319,6 +319,37 @@ class ResultSource(BaseModel):
     url: Optional[str] = None
 
 
+class Article(BaseModel):
+    form: Optional[str] = None
+    masculine: Optional[str] = None
+    feminine: Optional[str] = None
+    neuter: Optional[str] = None
+    plural: Optional[str] = None
+    inclusive: Optional[str] = None
+    fallback: Optional[str] = None
+
+    def get_article(self, gender: str, lemma: str) -> str | None:
+        match gender:
+            case "masculine":
+                return self.masculine
+            case "neuter":
+                return self.neuter
+            case "feminine":
+                return self.feminine
+            case None:
+                return self.fallback
+
+        if lemma.endswith("in"):
+            return self.feminine
+
+        return None
+
+class RuleDynamic(BaseModel):
+    false_positives: Optional[list[str]] = []
+    subcategory: Optional[str] = None
+    article: Optional[Article] = None
+
+
 class Rule(Lemma):
     id: str
     text_id: Optional[str]
@@ -342,6 +373,8 @@ class Rule(Lemma):
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     source: Optional[ResultSource] = None
+    adapt_alternatives: bool = False
+    dynamic: RuleDynamic = RuleDynamic()
 
     def __init__(
         self,
@@ -376,6 +409,11 @@ class Rule(Lemma):
             return self.actual_word_types
 
         return super().get_word_types()
+
+    def reset(self):
+        self.dynamic.false_positives = []
+        self.dynamic.subcategory = None
+        self.dynamic.article = None
 
     @staticmethod
     def factory(

@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "einer Mitarbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "eines Mitarbeiters",
                     "text": "einer*eines Mitarbeiter*in"
                 },
                 {
+                    "female_form": "einer Mitarbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "eines Mitarbeiters",
                     "text": "einer/eines Mitarbeiterin/Mitarbeiters"
                 },
                 {

@@ -39,9 +39,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunden",
                     "text": "Kund*innen"
                 },
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunden",
                     "text": "Kundinnen und Kunden"
                 },
                 {

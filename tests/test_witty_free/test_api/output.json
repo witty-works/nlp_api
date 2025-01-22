@@ -32,9 +32,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "eine Mitarbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Mitarbeiter",
                     "text": "eine*n Mitarbeiter*in"
                 },
                 {
+                    "female_form": "eine Mitarbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Mitarbeiter",
                     "text": "eine/n Mitarbeiterin/Mitarbeiter"
                 },
                 {
@@ -48,6 +54,9 @@
                     "text": "eine Mitarbeitende"
                 },
                 {
+                    "female_form": "eine Arbeitnehmerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Arbeitnehmer",
                     "text": "eine*n Arbeitnehmer*in"
                 }
             ],
@@ -73,9 +82,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunden",
                     "text": "Kund*innen"
                 },
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunden",
                     "text": "Kundinnen und Kunden"
                 },
                 {

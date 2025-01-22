@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunde",
                     "text": "Kund*in"
                 },
                 {
+                    "female_form": "Kundin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunde",
                     "text": "Kundin/Kunde"
                 },
                 {

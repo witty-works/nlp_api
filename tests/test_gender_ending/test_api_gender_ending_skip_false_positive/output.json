@@ -6,6 +6,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Bewerberinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Bewerber",
                     "text": "Bewerber*innen"
                 },
                 {
@@ -36,6 +39,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau*Fachmann"
                 },
                 {
@@ -83,6 +89,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau*Fachmann"
                 },
                 {
@@ -130,6 +139,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachfrau",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachmann",
                     "text": "Fachfrau*Fachmann"
                 },
                 {

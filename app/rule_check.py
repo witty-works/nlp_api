@@ -13,7 +13,7 @@ from app.models import (
     GenderedRolesFormatType,
     ResultOut,
 )
-from app.helper import is_valid_text, check_word_case, is_addon_enabled, upperfirst
+from app.helper import is_valid_text, is_addon_enabled, upperfirst
 from app.categories import (
     is_sub_category_enabled,
     get_category_name,
@@ -151,13 +151,11 @@ class RuleCheck:
                             male_form, female_form
                         ),
                     )
-                    rule.false_positives = [
-                        male_form
-                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
-                        + female_form,
-                        female_form
-                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
-                        + male_form,
+
+                    rule.adapt_alternatives = True
+                    rule.dynamic.false_positives = [
+                        male_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + female_form,
+                        female_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + male_form,
                     ]
 
                     rules.append(rule)
@@ -192,13 +190,10 @@ class RuleCheck:
                     ),
                 )
 
-                rule.false_positives = [
-                    male_form
-                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
-                    + female_form,
-                    female_form
-                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
-                    + male_form,
+                rule.adapt_alternatives = True
+                rule.dynamic.false_positives = [
+                    male_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + female_form,
+                    female_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + male_form,
                 ]
 
                 rules.append(rule)
@@ -240,65 +235,11 @@ class RuleCheck:
         # TODO cache on the token
         return await self.check_person_noun(rule, lang, tokens, chunks, token_chunk)
 
-    async def fetch_rule_alternatives(
-        self,
-        rule: Rule,
-        token_index: int,
-        tokens: Doc,
-        language: Language,
-        client: Client,
-        config: Config,
-        is_singular: bool,
-    ):
-        word_types = rule.get_word_types()
-
-        alternatives = await self.db.fetch_rule_alternatives(
-            client,
-            language,
-            rule,
-            is_singular,
-            config.show_inspiration_alternatives,
-        )
-
-        if len(alternatives):
-            form_token_i = token_index
-            if rule.actual_word_types:
-                word_type = rule.actual_word_types[0]
-            else:
-                expected_word_type = None
-                if LangType.DE == language.lang and len(word_types) > 1:
-                    form_token_offset = 0
-                    for k in range(len(word_types)):
-                        if word_types[k] == WordType.NOUN:
-                            expected_word_type = WordType.NOUN
-                            form_token_offset = k
-
-                    form_token_i += form_token_offset
-
-                if expected_word_type is None:
-                    expected_word_type = word_types[0] if len(word_types) else None
-
-                word_type = await self.model.fetch_word_type(
-                    language.lang,
-                    tokens[form_token_i],
-                    expected_word_type,
-                )
-
-            target_form = await self.find_form(
-                language.lang, word_type, form_token_i, tokens, is_singular
-            )
-        else:
-            target_form = None
-
-        return alternatives, word_types, target_form
-
     def is_french_adjective_false_positive(
         self,
         token_index: int,
         tokens: Doc,
         rule: Rule,
-        subcategory: str,
-        alternatives: list[Alternative],
         text: str,
         skip_token: int,
     ):
@@ -333,10 +274,11 @@ class RuleCheck:
                     break
 
         if rule.id == "fr_noun_adjective_rule":
-            pass
+            return False, text, skip_token
+
         # Nous cherchons des stagiaires *curieux*
-        elif (
-            get_proficiency_level(subcategory) == "inclusive"
+        if (
+            get_proficiency_level(rule.dynamic.subcategory) == "inclusive"
             and source_noun is not None
             and self.model.is_token_plural(LangType.FR, source_noun)
             and source_noun.text.lower()
@@ -364,23 +306,25 @@ class RuleCheck:
                     false_positive_check = tokens[token_index + 2].text.lower()
 
                 if false_positive_check is None:
-                    subcategory = "hidden_image"
-                    alternatives = self.alternatives.get_adjective_alternatives_french(
+                    rule.dynamic.subcategory = "hidden_image"
+                    rule.alternatives = self.alternatives.get_adjective_alternatives_french(
                         male_form, female_form
                     )
+                    rule.adapt_alternatives = True
                 else:
                     if is_prev:
-                        return True, None, None, None, None
+                        return True, None, None
 
                     if false_positive_check == token.text.lower():
-                        subcategory = "hidden_image"
-                        alternatives = [
+                        rule.dynamic.subcategory = "hidden_image"
+                        rule.alternatives = [
                             Alternative(
                                 male_form
                                 if false_positive_check == female_form
                                 else female_form
                             )
                         ]
+                        rule.adapt_alternatives = True
                     else:
                         text += (
                             token.whitespace_
@@ -392,14 +336,14 @@ class RuleCheck:
 
         # Nous cherchons des *stagiaires actifs*.
         # Les *volcans* sont *actifs*.
-        elif get_category_name(subcategory) == "hidden_image" and (
+        elif get_category_name(rule.dynamic.subcategory) == "hidden_image" and (
             source_noun is None
             or source_noun.text.lower()
             not in self.static_rules[LangType.FR]["gender_neutral_nouns"]
         ):
-            return True, None, None, None, None
+            return True, None, None
 
-        return False, subcategory, alternatives, text, skip_token
+        return False, text, skip_token
 
     async def is_french_noun_false_positive(
         self,
@@ -407,10 +351,9 @@ class RuleCheck:
         tokens: Doc,
         rule: Rule,
         config: Config,
-        subcategory: str,
-    ):
+    ) -> bool:
         token = tokens[token_index]
-        category_name = get_category_name(subcategory)
+        category_name = get_category_name(rule.dynamic.subcategory)
         if (
             category_name == "gender_identity"
             or category_name in self.static_rules["male_specific_dimensions"]
@@ -436,7 +379,7 @@ class RuleCheck:
 
             # false positive check
             if self.is_gender_false_positive(token):
-                return True, None
+                return True
 
             # TODO if BINARY_GENDER not enabled but inclusive is, then propose to switch the entire phrase to inclusive
             if (
@@ -494,29 +437,84 @@ class RuleCheck:
                         male_form != female_form
                         and female_form in self.db.french_feminine_nouns
                     ):
-                        return True, None
+                        return True
 
             subcategory_to_find = (
                 self.static_rules["male_specific_dimensions"]
                 if "Masc" in gender
                 else ["gender_identity"]
             )
-            subcategory = None
+            rule.dynamic.subcategory = None
             for search_subcategory in rule.subcategories:
                 if get_category_name(search_subcategory) in subcategory_to_find:
-                    subcategory = search_subcategory
+                    rule.dynamic.subcategory = search_subcategory
                     break
 
-            if subcategory is None:
-                return True, None
+            if rule.dynamic.subcategory is None:
+                return True
 
-            subcategory = is_sub_category_enabled(
-                config.disabled_categories, subcategory
+            rule.dynamic.subcategory = is_sub_category_enabled(
+                config.disabled_categories, rule.dynamic.subcategory
             )
-            if not subcategory:
-                return True, None
+            if not rule.dynamic.subcategory:
+                return True
 
-        return False, subcategory
+        return False
+
+    async def generate_alternatives(
+        self,
+        lang: LangType,
+        token_index: int,
+        tokens: Doc,
+        rule: Rule,
+        config: Config,
+        is_singular: bool,
+        text: str,
+        start: int,
+        full_text: str,
+    ):
+        match lang:
+            case LangType.FR:
+                text, start = await self.generate_french_alternatives(
+                    token_index,
+                    tokens,
+                    rule,
+                    config,
+                    full_text,
+                    text,
+                    start,
+                )
+            case LangType.EN:
+                text, start = await self.generate_english_alternatives(
+                    token_index,
+                    tokens,
+                    rule,
+                    config,
+                    is_singular,
+                    text,
+                    start,
+                )
+            case LangType.DE:
+                text, start = await self.generate_german_alternatives(
+                    token_index,
+                    tokens,
+                    rule,
+                    config,
+                    is_singular,
+                    text,
+                    start,
+                    full_text,
+                )
+
+        if rule.dynamic.subcategory.startswith("filler"):
+            text = self.detect_filler_words_at_sentence_start(
+                rule,
+                text,
+                full_text,
+                start + len(text),
+            )
+
+        return text, start
 
     async def generate_german_alternatives(
         self,
@@ -524,78 +522,151 @@ class RuleCheck:
         tokens: Doc,
         rule: Rule,
         config: Config,
-        subcategory: str,
-        target_form: str,
         is_singular: bool,
-        word_types: list,
-        alternatives: list[Alternative],
         text: str,
         start: int,
-    ) -> tuple[str, int, list[Alternative]]:
-        text, start, alternatives = await self.alternatives.alternatives_declension(
-            LangType.DE,
-            subcategory,
-            text,
-            start,
+        full_text: str,
+    ) -> tuple[str, int]:
+        token = tokens[token_index]
+        gendered_noun = False
+        for alternative in rule.alternatives:
+            if alternative.lemma is not None and "~" in alternative.lemma:
+                gendered_noun = True
+                break
+
+        target_form = await self.alternatives.fetch_target_form(
+            rule,
             token_index,
             tokens,
-            target_form,
-            rule,
-            alternatives,
+            LangType.DE,
             is_singular,
         )
 
-        return await self.fetch_german_alternatives_with_article(
+        if gendered_noun:
+            prefix, additional_words = (
+                await self.alternatives.german_gendered_noun_prefix(
+                    rule, token_index, tokens, text, is_singular
+                )
+            )
+
+            target_form = self.alternatives.german_target_form(
+                target_form,
+                is_singular,
+            )
+        else:
+            prefix = ""
+            additional_words = []
+
+        if is_singular and rule.get_first_word_type() == WordType.NOUN:
+            gender = await self.nouns.german_noun_gender_lookup(token.text)
+
+            if gender:
+                text_, start_, article, _ = self.alternatives.fetch_article(
+                    LangType.DE,
+                    token_index,
+                    tokens,
+                    text,
+                    start,
+                )
+
+                rule.dynamic.article = (
+                    self.alternatives.fetch_german_article_for_flexion(
+                        self.nouns.fetch_german_flexion(token),
+                        gender,
+                        article.lower(),
+                    )
+                    if article
+                    else None
+                )
+
+                if rule.dynamic.article:
+                    text = text_
+                    start = start_
+        else:
+            if tokens[token_index]._.start is not None:
+                start = tokens[token_index]._.start
+            if tokens[token_index]._.text is not None:
+                text = tokens[token_index]._.text
+
+        (
+            text,
+            start,
+        ) = await self.alternatives.german_gendered_nouns(
             config,
+            text,
+            start,
             tokens,
             token_index,
             is_singular,
-            word_types,
-            alternatives,
-            text,
-            start,
+            rule,
+            full_text,
+            prefix,
+            additional_words,
+            target_form,
         )
+
+        if not text or await self.is_rule_false_positive(
+            full_text, token_index, tokens, rule
+        ):
+            return None, None
+
+        if text.endswith("-"):
+            ending = "s-" if text.endswith("s-") else "-"
+
+            for alternative in rule.alternatives:
+                if (
+                    alternative.lemma is not None
+                    and alternative.lemma.endswith(ending) != ending
+                ):
+                    alternative.lemma += ending
+
+        return text, start
 
     async def generate_english_alternatives(
         self,
         token_index: int,
         tokens: Doc,
         rule: Rule,
-        subcategory: str,
-        target_form: str,
+        config: Config,
         is_singular: bool,
-        alternatives: list[Alternative],
         text: str,
         start: int,
-    ) -> tuple[str, int, list[Alternative]]:
+    ) -> tuple[str, int]:
         # TODO make it possible to handle cases with multiple alternatives
-        if len(alternatives) == 1 and alternatives[0].lemma == "they":
-            text, alternative = await self.pluralize_they(text, tokens, token_index)
-            alternatives = [Alternative(alternative)]
+        if len(rule.alternatives) == 1 and rule.alternatives[0].lemma == "they":
+            if not config.llm_alternatives:
+                text, alternative = await self.pluralize_they(text, tokens, token_index)
+                rule.alternatives = [Alternative(alternative)]
         else:
-            text, start, alternatives = await self.alternatives.alternatives_declension(
+            target_form = await self.alternatives.fetch_target_form(
+                rule,
+                token_index,
+                tokens,
                 LangType.EN,
-                subcategory,
+                is_singular,
+            )
+
+            text, start = await self.alternatives.alternatives_declension(
+                LangType.EN,
                 text,
                 start,
                 token_index,
                 tokens,
                 target_form,
                 rule,
-                alternatives,
                 is_singular,
             )
 
-            text, start, alternatives = self.alternatives.alternatives_a_english(
-                subcategory,
-                token_index,
-                tokens,
-                alternatives,
-                text,
-                start,
-            )
+            if not config.llm_alternatives:
+                text, start = self.alternatives.alternatives_a_english(
+                    rule,
+                    token_index,
+                    tokens,
+                    text,
+                    start,
+                )
 
-        return text, start, alternatives
+        return text, start
 
     async def generate_french_alternatives(
         self,
@@ -603,9 +674,7 @@ class RuleCheck:
         tokens: Doc,
         rule: Rule,
         config: Config,
-        subcategory: str,
         full_text: str,
-        alternatives: list[Alternative],
         text: str,
         start: int,
     ) -> tuple[str, int, list[Alternative]]:
@@ -622,7 +691,7 @@ class RuleCheck:
 
         new_alternatives = []
         false_positives = []
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.is_remove:
                 new_alternatives.append(alternative)
                 continue
@@ -635,7 +704,7 @@ class RuleCheck:
 
                 result = await self.nouns.french_noun_lookup(
                     config.disabled_categories,
-                    subcategory,
+                    rule.dynamic.subcategory,
                     alternative.male_form,
                     token,
                     alternative,
@@ -647,9 +716,8 @@ class RuleCheck:
                     alternative.gender_role = None
                     if article:
                         alternative.lemma = alternative.male_form
-                        new_alternatives = self.alternatives.nouns_with_articles(
+                        new_alternatives = self.alternatives.french_nouns_with_articles(
                             config,
-                            LangType.FR,
                             article,
                             article_index,
                             result,
@@ -710,9 +778,8 @@ class RuleCheck:
                     alternative.lemma = alternative.male_form
                     alternative.gender_role = None
 
-                    new_alternatives = self.alternatives.nouns_with_articles(
+                    new_alternatives = self.alternatives.french_nouns_with_articles(
                         config,
-                        LangType.FR,
                         article,
                         article_index,
                         result,
@@ -733,7 +800,7 @@ class RuleCheck:
                     if article:
                         result = await self.nouns.french_noun_lookup(
                             config.disabled_categories,
-                            subcategory,
+                            rule.dynamic.subcategory,
                             collective_noun,
                             token,
                             new_alternative,
@@ -764,7 +831,7 @@ class RuleCheck:
             elif article:
                 result = await self.nouns.french_noun_lookup(
                     config.disabled_categories,
-                    subcategory,
+                    rule.dynamic.subcategory,
                     alternative.words[0],
                     token,
                     alternative,
@@ -773,9 +840,8 @@ class RuleCheck:
 
                 alternative.gender_role = None
                 if result is not None:
-                    new_alternatives = self.alternatives.nouns_with_articles(
+                    new_alternatives = self.alternatives.french_nouns_with_articles(
                         config,
-                        LangType.FR,
                         article,
                         article_index,
                         result,
@@ -864,7 +930,7 @@ class RuleCheck:
 
                 new_alternatives.append(alternative)
 
-        for alternative in alternatives:
+        for alternative in rule.alternatives:
             if alternative.is_remove or alternative.lemma.lower() == text.lower():
                 continue
 
@@ -873,9 +939,11 @@ class RuleCheck:
         if self.model.is_false_positive(
             full_text, token_index, tokens, false_positives
         ):
-            return None, None, []
+            return None, None
 
-        return text, start, new_alternatives
+        rule.alternatives = new_alternatives
+
+        return text, start
 
     async def handle(
         self,
@@ -913,10 +981,11 @@ class RuleCheck:
             )
 
         for rule in rules:
-            subcategory = is_sub_category_enabled(
+            rule.reset()
+            rule.dynamic.subcategory = is_sub_category_enabled(
                 config.disabled_categories, rule.subcategories
             )
-            if not subcategory:
+            if not rule.dynamic.subcategory:
                 continue
 
             if self.is_entity_type_mismatch(rule, token):
@@ -956,8 +1025,10 @@ class RuleCheck:
                 )
 
                 if self.is_german_pronoun_check_required(language.lang, token):
-                    subcategory = self.german_pronoun_check(config, rule, token)
-                    if not subcategory:
+                    rule.dynamic.subcategory = self.german_pronoun_check(
+                        config, rule, token
+                    )
+                    if not rule.dynamic.subcategory:
                         continue
 
                 if not text or await self.is_rule_false_positive(
@@ -988,52 +1059,29 @@ class RuleCheck:
             ):
                 continue
 
-            alternatives, word_types, target_form = await self.fetch_rule_alternatives(
-                rule, token_index, tokens, language, client, config, is_singular
+            rule.alternatives = await self.db.fetch_rule_alternatives(
+                client,
+                language,
+                rule,
+                is_singular,
+                config.show_inspiration_alternatives,
             )
 
             start = tokens[start_token_index].idx
 
-            # Check for false positives
+            # Check for false positives, find correct subcategory
             match language.lang:
-                case LangType.DE:
-                    if len(alternatives):
-                        (
-                            text,
-                            subcategory,
-                            alternatives,
-                        ) = await self.alternatives.gendered_nouns(
-                            config,
-                            language,
-                            text,
-                            tokens,
-                            token_index,
-                            alternatives,
-                            subcategory,
-                            is_singular,
-                            rule,
-                            full_text,
-                            target_form,
-                        )
-
-                        if text is None:
-                            continue
                 case LangType.FR:
-                    first_word_type = rule.get_first_word_type()
-                    match first_word_type:
+                    match rule.get_first_word_type():
                         case WordType.ADJECTIVE:
                             (
                                 is_false_positive,
-                                subcategory,
-                                alternatives,
                                 text,
                                 skip_token,
                             ) = self.is_french_adjective_false_positive(
                                 token_index,
                                 tokens,
                                 rule,
-                                subcategory,
-                                alternatives,
                                 text,
                                 skip_token,
                             )
@@ -1042,9 +1090,9 @@ class RuleCheck:
                                 continue
 
                         case WordType.NOUN:
-                            is_false_positive, subcategory = (
+                            is_false_positive = (
                                 await self.is_french_noun_false_positive(
-                                    token_index, tokens, rule, config, subcategory
+                                    token_index, tokens, rule, config
                                 )
                             )
 
@@ -1052,73 +1100,21 @@ class RuleCheck:
                                 continue
 
             # Adapt alternatives if necessary
-            if len(alternatives):
-                if text.endswith("-"):
-                    ending = "s-" if text.endswith("s-") else "-"
+            if rule.adapt_alternatives:
+                text, start = await self.generate_alternatives(
+                    language.lang,
+                    token_index,
+                    tokens,
+                    rule,
+                    config,
+                    is_singular,
+                    text,
+                    start,
+                    full_text,
+                )
 
-                    for alternative in alternatives:
-                        if (
-                            alternative.lemma is not None
-                            and alternative.lemma.endswith(ending) != ending
-                        ):
-                            alternative.lemma += ending
-
-                match language.lang:
-                    case LangType.FR:
-                        text, start, alternatives = (
-                            await self.generate_french_alternatives(
-                                token_index,
-                                tokens,
-                                rule,
-                                config,
-                                subcategory,
-                                full_text,
-                                alternatives,
-                                text,
-                                start,
-                            )
-                        )
-                    case LangType.EN:
-                        text, start, alternatives = (
-                            await self.generate_english_alternatives(
-                                token_index,
-                                tokens,
-                                rule,
-                                subcategory,
-                                target_form,
-                                is_singular,
-                                alternatives,
-                                text,
-                                start,
-                            )
-                        )
-                    case LangType.DE:
-                        text, start, alternatives = (
-                            await self.generate_german_alternatives(
-                                token_index,
-                                tokens,
-                                rule,
-                                config,
-                                subcategory,
-                                target_form,
-                                is_singular,
-                                word_types,
-                                alternatives,
-                                text,
-                                start,
-                            )
-                        )
-
-                if len(alternatives) == 0:
+                if text is None:
                     continue
-
-                if subcategory.startswith("filler"):
-                    text, alternatives = self.detect_filler_words_at_sentence_start(
-                        alternatives,
-                        text,
-                        full_text,
-                        start + len(text),
-                    )
 
             label = token._.label if token._.label is not None else rule.label
 
@@ -1131,10 +1127,10 @@ class RuleCheck:
                     rule.text_id,
                     full_text,
                     offsets,
-                    subcategory,
+                    rule.dynamic.subcategory,
                     start,
                     None,
-                    alternatives,
+                    rule.alternatives,
                     None,
                     rule.explanation,
                     rule.url,
@@ -1154,10 +1150,10 @@ class RuleCheck:
                         token.lemma_,
                         full_text,
                         offsets,
-                        subcategory,
+                        rule.dynamic.subcategory,
                         token._.child_token.idx,
                         None,
-                        alternatives,
+                        rule.alternatives,
                         None,
                         rule.explanation,
                         rule.url,
@@ -1224,15 +1220,15 @@ class RuleCheck:
         return text, alternative
 
     def detect_filler_words_at_sentence_start(
-        self, alternatives: list[Alternative], text: str, full_text: str, end: int
+        self, rule: Rule, text: str, full_text: str, end: int
     ) -> tuple[str, list[Alternative]]:
-        if alternatives[0].is_remove and text[0].isupper():
+        if len(rule.alternatives) and rule.alternatives[0].is_remove and text[0].isupper():
             match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
             if isinstance(match, re.Match):
                 text += match.group(0)
-                alternatives = [Alternative(upperfirst(match.group(2)))]
+                rule.alternatives = [Alternative(upperfirst(match.group(2)))]
 
-        return text, alternatives
+        return text
 
     def is_german_pronoun_check_required(self, lang: LangType, token: Token):
         return (
@@ -1374,121 +1370,6 @@ class RuleCheck:
                 break
 
         return None
-
-    def fetch_article_for_flexion(
-        self, flexion: str | None, gender: str, article_text: str
-    ) -> tuple[str, str, str, str]:
-        if flexion is None:
-            return None, None, None, None
-
-        form, _ = flexion.split()
-        if (
-            article_text not in self.static_rules[LangType.DE][gender + "_articles"]
-            or form
-            not in self.static_rules[LangType.DE][gender + "_articles"][article_text]
-        ):
-            return None, None, None, None
-
-        article_forms = self.static_rules[LangType.DE][gender + "_articles"][
-            article_text
-        ][form]
-
-        return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
-
-    async def fetch_german_alternatives_with_article(
-        self,
-        config: Config,
-        tokens: Doc,
-        token_index: int,
-        is_singular: bool,
-        word_types: list,
-        alternatives: list[Alternative],
-        text: str,
-        start: int,
-    ) -> tuple[str, int, list[Alternative]]:
-        if (
-            token_index == 0
-            or len(word_types) != 1
-            or word_types[0] != WordType.NOUN
-            or not is_singular
-        ):
-            return text, start, alternatives
-
-        token = tokens[token_index]
-        gender = await self.nouns.german_noun_gender_lookup(token.text)
-        if gender is None:
-            return text, start, alternatives
-
-        text_, start_, article, _ = self.alternatives.fetch_article(
-            LangType.DE, token_index, tokens, text, start
-        )
-
-        if not article:
-            return text, start, alternatives
-
-        article = article.lower()
-
-        (
-            match_masculine,
-            match_feminine,
-            match_neuter,
-            match_alternative,
-        ) = self.fetch_article_for_flexion(
-            self.nouns.fetch_flexion(token), gender, article
-        )
-
-        if match_alternative is None:
-            return text, start, alternatives
-
-        separator, _, _ = Config.get_gender_separators(config.german_gender_ending)
-
-        alternatives_with_article = []
-        for alternative in alternatives:
-            if alternative.is_remove:
-                alternatives_with_article.append(alternative)
-                continue
-
-            if alternative.is_gendered_noun:
-                article_alternative = (
-                    match_alternative if match_alternative else article
-                )
-                if alternative.is_collective_noun or separator in alternative.lemma:
-                    # Mitarbeiter*in, Mitarbeitende
-                    article_alternative = article_alternative.replace("~", separator)
-                else:
-                    # Mitarbeiterin/Mitarbeiter
-                    article_alternative = article_alternative.replace("~", "/")
-            else:
-                alternative_tokens = self.model.fetch_tokens(
-                    LangType.DE, alternative.words[-1]
-                )
-                if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
-                    article_alternative = match_feminine
-                else:
-                    gender = await self.nouns.german_noun_gender_lookup(
-                        alternative.words[-1]
-                    )
-                    if gender is None:
-                        article_alternative = tokens[token_index - 1].text
-                    else:
-                        match gender:
-                            case "masculine":
-                                article_alternative = match_masculine
-                            case "neuter":
-                                article_alternative = match_neuter
-                            case "feminine":
-                                article_alternative = match_feminine
-                            case _:
-                                if alternative.lemma.endswith("in"):
-                                    article_alternative = match_feminine
-
-            if article_alternative != "":
-                article_alternative += tokens[token_index - 1].whitespace_
-                alternative.lemma = article_alternative + alternative.lemma
-
-            alternatives_with_article.append(alternative)
-
-        return text_, start_, alternatives_with_article
 
     def get_token_gender(self, token: Token):
         gender = token.morph.get("Gender")
@@ -1751,56 +1632,3 @@ class RuleCheck:
             )
 
         return skip_token_index, start_token_index, text
-
-    async def find_form(
-        self,
-        lang: LangType,
-        word_type: WordType,
-        token_index: int,
-        tokens: Doc,
-        is_singular: bool | None = None,
-    ):
-        if lang == LangType.FR:
-            return tokens[token_index].text
-
-        token = tokens[token_index]
-        match word_type:
-            case WordType.VERB:
-                if lang == LangType.DE:
-                    return await self.verbs.find_form_verb_german(token_index, tokens)
-
-                return await self.verbs.find_form_verb_english(token_index, tokens)
-            case WordType.ADJECTIVE | WordType.ADVERB:
-                if lang == LangType.DE:
-                    return await self.adjectives.find_form_adjective_german(
-                        token_index, tokens
-                    )
-
-                return await self.adjectives.find_form_adjective_english(
-                    token_index, tokens
-                )
-
-            case WordType.NOUN | WordType.PRONOUN:
-                if lang == LangType.DE:
-                    if token.text.endswith("-") and is_singular:
-                        return "no_change"
-
-                    return await self.nouns.find_form_noun_german(
-                        token_index, tokens, is_singular
-                    )
-
-                return await self.nouns.find_form_noun_english(is_singular)
-
-        if (
-            self.settings.log_missing_declension
-            and len(word_type)
-            and len(token.text) > 3
-            and check_word_case(token.text)
-        ):
-            word_type = await self.model.fetch_word_type(lang, token)
-            if word_type in [WordType.NOUN, WordType.VERB, WordType.ADJECTIVE]:
-                self.logger.error(
-                    f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
-                )
-
-        return None

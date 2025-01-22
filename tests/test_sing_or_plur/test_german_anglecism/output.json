@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Managerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Manager",
                     "text": "Manager*in"
                 },
                 {
+                    "female_form": "Managerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Manager",
                     "text": "Managerin/Manager"
                 },
                 {
@@ -43,9 +49,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Managerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Manager",
                     "text": "Manager*in"
                 },
                 {
+                    "female_form": "Managerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Manager",
                     "text": "Managerin/Manager"
                 },
                 {

@@ -45,6 +45,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Programmiererinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Programmierer",
                     "text": "Programmiererinnen und Programmierer"
                 },
                 {
@@ -82,6 +85,9 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Kundinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunden",
                     "text": "Kundinnen und Kunden"
                 },
                 {

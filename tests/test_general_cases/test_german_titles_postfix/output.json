@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Unsere Fachärztin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Unser Facharzt",
                     "text": "Unser*e Fachärztin*Facharzt"
                 },
                 {
+                    "female_form": "Unsere Fachärztin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Unser Facharzt",
                     "text": "Unser/e Fachärztin/Facharzt"
                 },
                 {
@@ -49,9 +55,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Fachärztinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Fachärzte",
                     "text": "Fachärzt*innen"
                 },
                 {
+                    "female_form": "Fachärztinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Fachärzte",
                     "text": "Fachärztinnen und Fachärzte"
                 },
                 {
@@ -92,9 +104,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Jüdinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Juden",
                     "text": "Jüdinnen*Juden"
                 },
                 {
+                    "female_form": "Jüdinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Juden",
                     "text": "Jüdinnen und Juden"
                 }
             ],
@@ -349,9 +367,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Eine Ingenieurin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Ein Ingenieur",
                     "text": "Ein*e Ingenieur*in"
                 },
                 {
+                    "female_form": "Eine Ingenieurin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Ein Ingenieur",
                     "text": "Ein/e Ingenieurin/Ingenieur"
                 },
                 {
@@ -392,9 +416,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Eine Elektroingenieurin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Ein Elektroingenieur",
                     "text": "Ein*e Elektroingenieur*in"
                 },
                 {
+                    "female_form": "Eine Elektroingenieurin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Ein Elektroingenieur",
                     "text": "Ein/e Elektroingenieurin/Elektroingenieur"
                 },
                 {
