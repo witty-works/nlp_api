@@ -127,8 +127,8 @@ class RuleCheck:
         )
 
         if (
-            len(rules) == 0
-            and language.lang == LangType.FR
+            language.lang == LangType.FR
+            and len(rules) == 0
             and await self.model.check_word_type(
                 language.lang, token, WordType.ADJECTIVE, True, True
             )
