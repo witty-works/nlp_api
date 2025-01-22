@@ -152,8 +152,12 @@ class RuleCheck:
                         ),
                     )
                     rule.false_positives = [
-                        male_form + " et " + female_form,
-                        female_form + " et " + male_form,
+                        male_form
+                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                        + female_form,
+                        female_form
+                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                        + male_form,
                     ]
 
                     rules.append(rule)
@@ -189,8 +193,12 @@ class RuleCheck:
                 )
 
                 rule.false_positives = [
-                    male_form + " et " + female_form,
-                    female_form + " et " + male_form,
+                    male_form
+                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                    + female_form,
+                    female_form
+                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                    + male_form,
                 ]
 
                 rules.append(rule)
@@ -831,7 +839,9 @@ class RuleCheck:
                             male_article
                             + " "
                             + gender_neutral_noun
-                            + " ou "
+                            + self.static_rules[LangType.FR]["noun_conjunction"][
+                                "singular"
+                            ]
                             + female_article
                             + " "
                             + gender_neutral_noun
@@ -843,7 +853,9 @@ class RuleCheck:
                                 female_article
                                 + " "
                                 + gender_neutral_noun
-                                + " ou "
+                                + self.static_rules[LangType.FR]["noun_conjunction"][
+                                    "singular"
+                                ]
                                 + male_article
                                 + " "
                                 + gender_neutral_noun

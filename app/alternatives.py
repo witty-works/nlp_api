@@ -544,7 +544,9 @@ class Alternatives:
 
                 if (
                     "/" in alternative_variation and "/-" not in alternative_variation
-                ) or " und " in alternative_variation:
+                ) or self.static_rules[LangType.DE]["noun_conjunction"][
+                    "plural"
+                ] in alternative_variation:
                     for _ in range(text.count("-") + 1):
                         new_alternative.word_types.append(
                             {"word_type": "", "lower_case": True, "lemmatize": True}
@@ -713,7 +715,11 @@ class Alternatives:
             male_form_without_prefix = male_form
             male_form = self.add_german_prefix(male_form, prefix)
 
-            separator = "/" if is_singular else " und "
+            separator = (
+                self.static_rules[LangType.DE]["noun_conjunction"]["singular"]
+                if is_singular
+                else self.static_rules[LangType.DE]["noun_conjunction"]["plural"]
+            )
             lemma = female_form + separator + male_form
             false_positive_check = [
                 lemma,
@@ -795,12 +801,6 @@ class Alternatives:
 
         return prefix + word
 
-    def get_noun_conjunction(self, lang: LangType, is_singular: bool):
-        if is_singular:
-            return "/" if lang == LangType.DE else " ou "
-
-        return " und " if lang == LangType.DE else " et "
-
     def add_article(self, lang: LangType, text: str, article: str, separator: str):
         if (
             lang == LangType.FR
@@ -867,9 +867,6 @@ class Alternatives:
         if len(sentence_male_tokens) != len(sentence_female_tokens):
             return None, None, {}
 
-        singular_conjunction = self.get_noun_conjunction(lang, True)
-        plural_conjunction = self.get_noun_conjunction(lang, False)
-
         inclusive_form = ""
         binary_form = ""
         male_form_sub_sentence = ""
@@ -894,11 +891,11 @@ class Alternatives:
                     separate_gender_plural,
                 )
                 conjunction = (
-                    singular_conjunction
+                    self.static_rules[lang]["noun_conjunction"]["singular"]
                     if self.model.is_token_singular(
                         lang, sentence_male_tokens[token_index]
                     )
-                    else plural_conjunction
+                    else self.static_rules[lang]["noun_conjunction"]["plural"]
                 )
                 if lang == LangType.FR:
                     if (
@@ -1232,9 +1229,12 @@ class Alternatives:
                     alternative.lemma = forms["masculine"]
                     if forms["masculine"] != forms["feminine"]:
                         alternative.lemma += (
-                            self.get_noun_conjunction(lang, not is_plural)
-                            + forms["feminine"]
-                        )
+                            self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                            if is_plural
+                            else self.static_rules[LangType.FR]["noun_conjunction"][
+                                "singular"
+                            ]
+                        ) + forms["feminine"]
                         alternative.male_form = forms["masculine"]
                         alternative.female_form = forms["feminine"]
 

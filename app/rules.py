@@ -473,6 +473,12 @@ def fetch_static_rules(langs: list[str]):
         rule.explanation = "Lorsque vous mettez des majuscules, tout le monde sait immédiatement ce que vous voulez dire. #ParExemple"
 
         static_rules[LangType.FR]["hashtags"] = [rule]
+
+        static_rules[LangType.FR]["noun_conjunction"] = {
+            "singular": " ou ",
+            "plural": " et ",
+        }
+
         static_rules[LangType.FR]["masculine_articles"] = {
             "le": "la·le",
             "un": "un·e",
@@ -599,6 +605,11 @@ def fetch_static_rules(langs: list[str]):
         )
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+
+        static_rules[LangType.DE]["noun_conjunction"] = {
+            "singular": "/",
+            "plural": " und ",
+        }
 
         static_rules[LangType.DE]["hashtags"] = [rule]
 
