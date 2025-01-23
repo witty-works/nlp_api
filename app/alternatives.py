@@ -382,7 +382,7 @@ class Alternatives:
 
                 article = rule.dynamic.article.get_article(gender, alternative.lemma)
 
-        if article != "":
+        if article:
             alternative.lemma = (
                 article + tokens[token_index - 1].whitespace_ + alternative.lemma
             )
