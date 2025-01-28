@@ -150,19 +150,19 @@
             "alternatives": [
                 {
                     "context": "Identity first",
-                    "text": "mentor at heart",
+                    "text": "a mentor at heart",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
                     "context": "Identity first",
-                    "text": "inspiration to the team",
+                    "text": "an inspiration to the team",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
                     "context": "Identity first",
-                    "text": "entrepreneur at heart",
+                    "text": "an entrepreneur at heart",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
@@ -187,9 +187,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 89,
+            "start": 87,
             "subcategory": "exaggerating",
-            "text": "top performer",
+            "text": "a top performer",
             "text_id": "top performer"
         },
         {

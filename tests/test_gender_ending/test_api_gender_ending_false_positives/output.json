@@ -70,9 +70,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Arbeiterinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Arbeiter",
                     "text": "Arbeiter*innen"
                 },
                 {
+                    "female_form": "Arbeiterinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Arbeiter",
                     "text": "Arbeiterinnen und Arbeiter"
                 },
                 {
@@ -107,9 +113,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Mitarbeiterinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiter*innen"
                 },
                 {
+                    "female_form": "Mitarbeiterinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiterinnen und Mitarbeiter"
                 },
                 {
@@ -150,9 +162,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Lagerarbeiterinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Lagerarbeiter",
                     "text": "Lagerarbeiter*innen"
                 },
                 {
+                    "female_form": "Lagerarbeiterinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Lagerarbeiter",
                     "text": "Lagerarbeiterinnen und Lagerarbeiter"
                 },
                 {
@@ -227,9 +245,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Mitarbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiter*in"
                 },
                 {
+                    "female_form": "Mitarbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Mitarbeiter",
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {

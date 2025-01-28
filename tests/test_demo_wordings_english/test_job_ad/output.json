@@ -269,14 +269,14 @@
         {
             "alternatives": [
                 {
-                    "text": "substantial contribution to business success"
+                    "text": "a substantial contribution to business success"
                 },
                 {
-                    "text": "amazing display of capability"
+                    "text": "an amazing display of capability"
                 }
             ],
             "category": "social-motive",
-            "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "context": "working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 164,
             "explanation": {
                 "content": "advanced",
@@ -295,9 +295,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 149,
+            "start": 147,
             "subcategory": "exaggerating",
-            "text": "top performance",
+            "text": "a top performance",
             "text_id": "top performance"
         }
     ]

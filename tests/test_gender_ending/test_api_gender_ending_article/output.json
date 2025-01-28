@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "die Arbeitgeberin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "der Arbeitgeber",
                     "text": "die*der Arbeitgeber*in"
                 },
                 {
+                    "female_form": "die Arbeitgeberin",
+                    "gender_role": "binary_gender",
+                    "male_form": "der Arbeitgeber",
                     "text": "die/der Arbeitgeberin/Arbeitgeber"
                 },
                 {

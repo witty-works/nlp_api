@@ -5,6 +5,7 @@ from enum import Enum
 from collections import namedtuple
 import json
 from cmp_version import VersionString
+from functools import lru_cache
 
 from starlette.responses import Response
 
@@ -287,6 +288,7 @@ class Alternative(Lemma):
     male_form: Optional[str] = None
     female_form: Optional[str] = None
     gender_role: Optional[GenderedRolesFormatBasicType] = None
+    is_plural: Optional[bool] = None
 
     def __init__(
         self,
@@ -317,6 +319,37 @@ class ResultSource(BaseModel):
     url: Optional[str] = None
 
 
+class Article(BaseModel):
+    form: Optional[str] = None
+    masculine: Optional[str] = None
+    feminine: Optional[str] = None
+    neuter: Optional[str] = None
+    plural: Optional[str] = None
+    inclusive: Optional[str] = None
+    fallback: Optional[str] = None
+
+    def get_article(self, gender: str, lemma: str) -> str | None:
+        match gender:
+            case "masculine":
+                return self.masculine
+            case "neuter":
+                return self.neuter
+            case "feminine":
+                return self.feminine
+            case None:
+                return self.fallback
+
+        if lemma.endswith("in"):
+            return self.feminine
+
+        return None
+
+class RuleDynamic(BaseModel):
+    false_positives: Optional[list[str]] = []
+    subcategory: Optional[str] = None
+    article: Optional[Article] = None
+
+
 class Rule(Lemma):
     id: str
     text_id: Optional[str]
@@ -340,6 +373,8 @@ class Rule(Lemma):
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     source: Optional[ResultSource] = None
+    adapt_alternatives: bool = False
+    dynamic: RuleDynamic = RuleDynamic()
 
     def __init__(
         self,
@@ -374,6 +409,11 @@ class Rule(Lemma):
             return self.actual_word_types
 
         return super().get_word_types()
+
+    def reset(self):
+        self.dynamic.false_positives = []
+        self.dynamic.subcategory = None
+        self.dynamic.article = None
 
     @staticmethod
     def factory(
@@ -571,6 +611,7 @@ class Config(BaseModel):
         ]
 
     @staticmethod
+    @lru_cache()
     def get_gender_separators(
         gender_separator: Union[
             GermanGenderEndingType | FrenchGenderSeparatorType | None
@@ -1057,14 +1098,6 @@ class ResultOut(BaseModel):
         if alternatives is None:
             return text, start, []
 
-        prefix = False
-        if text.startswith("zu "):
-            prefix = "zu "
-        elif text.startswith("a "):
-            prefix = "a "
-        elif text.startswith("an "):
-            prefix = "an "
-
         cleaned_alternatives = {}
 
         for alternative in alternatives:
@@ -1078,13 +1111,6 @@ class ResultOut(BaseModel):
             else:
                 if alternative != " ":
                     alternative.lemma = alternative.lemma.strip()
-
-                if (
-                    prefix
-                    and not alternative.is_inspiration
-                    and not alternative.lemma.startswith(prefix)
-                ):
-                    prefix = False
 
                 if category != "orthography":
                     if is_upper:
@@ -1144,20 +1170,6 @@ class ResultOut(BaseModel):
             and len(cleaned_alternatives) >= alternatives_max_count
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
-
-        if prefix:
-            prefix_length = len(prefix)
-            start += prefix_length
-            text = text[prefix_length:]
-            for cleaned_alternative in cleaned_alternatives:
-                if (
-                    cleaned_alternative.text is None
-                    or cleaned_alternative.remove
-                    or cleaned_alternative.inspiration
-                ):
-                    continue
-
-                cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
 
         return text, start, cleaned_alternatives
 

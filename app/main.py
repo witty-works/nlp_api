@@ -673,8 +673,9 @@ async def get_german_gender_ending(
         inclusive = Config.gendered_roles_format_inclusive(german_gender_ending)
         binary = Config.gendered_roles_format_binary(german_gender_ending)
 
-    alternatives, _ = await context.alternatives.gendered_alternatives(
-        alternative,
+    alternatives, _ = await context.alternatives.german_gendered_alternatives(
+        Rule(""),
+        Alternative(alternative),
         inclusive,
         binary,
         GermanGenderEndingType.STAR[0],
@@ -713,7 +714,7 @@ async def get_align_form_debug(
     source_tokens = context.model.fetch_tokens(lang, source_text)
     target_tokens = context.model.fetch_tokens(lang, target_text)
 
-    target_form = await context.rule_check.find_form(
+    target_form = await context.alternatives.find_form(
         lang, word_type, index, source_tokens
     )
 
@@ -943,6 +944,7 @@ async def post_debug_rule(
     rule.type = rule_data.type
     rule.entity_type = rule_data.entity_type
     rule.pluralization = rule_data.pluralization
+    rule.adapt_alternatives = bool(len(alternative_list))
 
     rules = [rule]
 
@@ -1571,9 +1573,10 @@ def debug_configs(
             "disabled_categories", ["plain_language_advanced"]
         )
 
-    request_in.config.llm_alternatives = True
-
-    configs = {"categories": {}}
+    configs = {
+        "categories": {},
+        "llm_alternatives": {"status": "suggestion", "value": True},
+    }
     apply_configs(request_in, configs, "witty_teams")
 
     return configs
@@ -1762,6 +1765,7 @@ def fetch_term_replacements(
     if "term_replacements" not in configs:
         return []
 
+    word_types = [WordType.VERB, WordType.NOUN, WordType.ADJECTIVE]
     term_replacement_rules = []
     for lemma in configs["term_replacements"]:
         if lemma[-3:] in context.term_replacement_langs:
@@ -1800,6 +1804,10 @@ def fetch_term_replacements(
         else:
             rule.case_sensitive_false_positives = term_replacement["false_positives"]
 
+        # If it is not a lemmatized rule (and for lemmatization we only support single words as term replacements)
+        rule.adapt_alternatives = (
+            term_replacement["word_types"][0]["word_type"] in word_types
+        )
         term_replacement_rules.append(rule)
 
     return term_replacement_rules

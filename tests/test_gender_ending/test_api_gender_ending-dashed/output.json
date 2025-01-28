@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Konditor",
                     "text": "Bäcker*in-Confiseur*in-Konditor*in"
                 },
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Konditor",
                     "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
                 },
                 {
@@ -45,9 +51,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Konditor",
                     "text": "Bäcker*in-Confiseur*in-Konditor*in"
                 },
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Konditor",
                     "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
                 },
                 {
@@ -84,9 +96,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Konditor",
                     "text": "Bäcker*in-Confiseur*in-Konditor*in"
                 },
                 {
+                    "female_form": "Konditorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Konditor",
                     "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
                 },
                 {
@@ -123,9 +141,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Immobilien-Asset-Managerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Immobilien-Asset-Manager",
                     "text": "Immobilien-Asset-Manager*in"
                 },
                 {
+                    "female_form": "Immobilien-Asset-Managerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Immobilien-Asset-Manager",
                     "text": "Immobilien-Asset-Managerin/Immobilien-Asset-Manager"
                 },
                 {

@@ -47,12 +47,12 @@
         {
             "alternatives": [
                 {
-                    "remove": true
+                    "text": "What"
                 }
             ],
             "category": "cultural-diversity",
             "context": "Rather ,  what are you doing?",
-            "end": 6,
+            "end": 14,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
@@ -73,7 +73,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "filler_advanced",
-            "text": "Rather",
+            "text": "Rather ,  what",
             "text_id": "rather"
         }
     ]

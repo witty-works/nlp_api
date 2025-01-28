@@ -77,7 +77,8 @@
                     "text": "an internship"
                 },
                 {
-                    "context": "Identity first",
+                    "context": "💡 Identity first",
+                    "inspiration": true,
                     "text": "interns",
                     "type": "identity_first",
                     "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"

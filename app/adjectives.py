@@ -1,5 +1,6 @@
 from spacy.tokens import Token, Doc
 from inflex import Adjective
+import json
 
 from app.settings import Settings
 from app.models import LangType, WordType

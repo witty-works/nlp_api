@@ -161,12 +161,12 @@ class Nouns:
 
         result = await self.german_noun_lookup(word)
         if result is None:
-            gender = self.determine_gender_from_ending(
+            gender = self.german_determine_gender_from_ending(
                 word, self.static_rules[LangType.DE]["primary_german_gender_endings"]
             )
 
             if gender is None:
-                gender = self.determine_gender_from_ending(
+                gender = self.german_determine_gender_from_ending(
                     word,
                     self.static_rules[LangType.DE]["secondary_german_gender_endings"],
                 )
@@ -175,7 +175,7 @@ class Nouns:
 
         return result["gender_1"]
 
-    def determine_gender_from_ending(
+    def german_determine_gender_from_ending(
         self, word: str, german_gender_endings: list
     ) -> str | None:
         for gender in german_gender_endings:
@@ -197,7 +197,7 @@ class Nouns:
 
         return await self.find_form_noun_german_text(token.text, token, is_singular)
 
-    def fetch_flexion(self, token: Token) -> str | None:
+    def fetch_german_flexion(self, token: Token) -> str | None:
         flexion = self.fetch_case(token)
         if flexion is None:
             return None

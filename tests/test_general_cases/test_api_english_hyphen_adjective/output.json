@@ -134,9 +134,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 75,
+            "start": 73,
             "subcategory": "exaggerating",
-            "text": "top-performing",
+            "text": "a top-performing",
             "text_id": "top-performing"
         },
         {
@@ -187,9 +187,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 108,
+            "start": 106,
             "subcategory": "exaggerating",
-            "text": "top-performer",
+            "text": "a top-performer",
             "text_id": "top-performer"
         },
         {
@@ -255,9 +255,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 132,
+            "start": 130,
             "subcategory": "exaggerating",
-            "text": "top-performing",
+            "text": "a top-performing",
             "text_id": "top-performing"
         },
         {

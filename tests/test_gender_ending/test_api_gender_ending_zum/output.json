@@ -6,9 +6,15 @@
         {
             "alternatives": [
                 {
+                    "female_form": "zur Fachärztin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "zum Facharzt",
                     "text": "zur*zum Fachärztin*Facharzt"
                 },
                 {
+                    "female_form": "zur Fachärztin",
+                    "gender_role": "binary_gender",
+                    "male_form": "zum Facharzt",
                     "text": "zur/zum Fachärztin/Facharzt"
                 },
                 {

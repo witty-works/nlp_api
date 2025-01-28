@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from app.models import LangWithAutoType, Rule, EntityType, LangType
+from app.models import LangWithAutoType, Rule, EntityType, LangType, Article
 
 
 def fetch_static_rules(langs: list[str]):
@@ -473,6 +473,12 @@ def fetch_static_rules(langs: list[str]):
         rule.explanation = "Lorsque vous mettez des majuscules, tout le monde sait immédiatement ce que vous voulez dire. #ParExemple"
 
         static_rules[LangType.FR]["hashtags"] = [rule]
+
+        static_rules[LangType.FR]["noun_conjunction"] = {
+            "singular": " ou ",
+            "plural": " et ",
+        }
+
         static_rules[LangType.FR]["masculine_articles"] = {
             "le": "la·le",
             "un": "un·e",
@@ -600,6 +606,11 @@ def fetch_static_rules(langs: list[str]):
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
 
+        static_rules[LangType.DE]["noun_conjunction"] = {
+            "singular": "/",
+            "plural": " und ",
+        }
+
         static_rules[LangType.DE]["hashtags"] = [rule]
 
         static_rules[LangType.DE]["context_check"] = [
@@ -721,30 +732,45 @@ def fetch_static_rules(langs: list[str]):
         static_rules[LangType.DE]["articles"] = []
 
         for article in articles:
-            static_rules[LangType.DE]["articles"].append(article[1])
-            static_rules[LangType.DE]["articles"].append(article[2])
-            static_rules[LangType.DE]["articles"].append(article[3])
-            static_rules[LangType.DE]["articles"].append(article[4])
-            static_rules[LangType.DE]["articles"].append(article[5].replace("~", "*"))
-            static_rules[LangType.DE]["articles"].append(article[5].replace("~", "_"))
-            static_rules[LangType.DE]["articles"].append(article[5].replace("~", ":"))
+            article = Article(
+                form=article[0],
+                masculine=article[1],
+                feminine=article[2],
+                neuter=article[3],
+                plural=article[4],
+                inclusive=article[5],
+            )
 
-            if article[1] not in static_rules[LangType.DE]["masculine_articles"]:
-                static_rules[LangType.DE]["masculine_articles"][article[1]] = {}
-            static_rules[LangType.DE]["masculine_articles"][article[1]][
-                article[0]
+            static_rules[LangType.DE]["articles"].append(article.masculine)
+            static_rules[LangType.DE]["articles"].append(article.feminine)
+            static_rules[LangType.DE]["articles"].append(article.neuter)
+            static_rules[LangType.DE]["articles"].append(article.plural)
+            static_rules[LangType.DE]["articles"].append(
+                article.inclusive.replace("~", "*")
+            )
+            static_rules[LangType.DE]["articles"].append(
+                article.inclusive.replace("~", "_")
+            )
+            static_rules[LangType.DE]["articles"].append(
+                article.inclusive.replace("~", ":")
+            )
+
+            if article.masculine not in static_rules[LangType.DE]["masculine_articles"]:
+                static_rules[LangType.DE]["masculine_articles"][article.masculine] = {}
+            static_rules[LangType.DE]["masculine_articles"][article.masculine][
+                article.form
             ] = article
 
-            if article[2] not in static_rules[LangType.DE]["feminine_articles"]:
-                static_rules[LangType.DE]["feminine_articles"][article[2]] = {}
-            static_rules[LangType.DE]["feminine_articles"][article[2]][
-                article[0]
+            if article.feminine not in static_rules[LangType.DE]["feminine_articles"]:
+                static_rules[LangType.DE]["feminine_articles"][article.feminine] = {}
+            static_rules[LangType.DE]["feminine_articles"][article.feminine][
+                article.form
             ] = article
 
-            if article[3] not in static_rules[LangType.DE]["neuter_articles"]:
-                static_rules[LangType.DE]["neuter_articles"][article[2]] = {}
-            static_rules[LangType.DE]["neuter_articles"][article[2]][
-                article[0]
+            if article.neuter not in static_rules[LangType.DE]["neuter_articles"]:
+                static_rules[LangType.DE]["neuter_articles"][article.neuter] = {}
+            static_rules[LangType.DE]["neuter_articles"][article.neuter][
+                article.form
             ] = article
 
         static_rules[LangType.DE]["articles"] = set(
@@ -1312,6 +1338,8 @@ def fetch_static_rules(langs: list[str]):
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
 
         static_rules[LangType.EN]["hashtags"] = [rule]
+
+        static_rules[LangType.EN]["articles"] = ["the", "a", "an"]
 
         static_rules[LangType.EN]["a_not_startswith"] = (
             "a ",

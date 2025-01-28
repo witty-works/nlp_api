@@ -6,15 +6,27 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Romnija",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Roma",
                     "text": "RomNija"
                 },
                 {
+                    "female_form": "Romnija",
+                    "gender_role": "binary_gender",
+                    "male_form": "Roma",
                     "text": "Romnija und Roma"
                 },
                 {
+                    "female_form": "Sintezas",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Sinti",
                     "text": "SintEzas"
                 },
                 {
+                    "female_form": "Sintezas",
+                    "gender_role": "binary_gender",
+                    "male_form": "Sinti",
                     "text": "Sintezas und Sinti"
                 }
             ],
@@ -39,15 +51,27 @@
         {
             "alternatives": [
                 {
+                    "female_form": "eine Romni",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "ein Rom",
                     "text": "ein/e RomNi"
                 },
                 {
+                    "female_form": "eine Romni",
+                    "gender_role": "binary_gender",
+                    "male_form": "ein Rom",
                     "text": "ein/e Romni/Rom"
                 },
                 {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "ein Sinto",
                     "text": "ein/e SintEza"
                 },
                 {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "binary_gender",
+                    "male_form": "ein Sinto",
                     "text": "ein/e Sinteza/Sinto"
                 }
             ],
@@ -72,15 +96,27 @@
         {
             "alternatives": [
                 {
+                    "female_form": "eine Romni",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Rom",
                     "text": "eine/n RomNi"
                 },
                 {
+                    "female_form": "eine Romni",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Rom",
                     "text": "eine/n Romni/Rom"
                 },
                 {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Sinto",
                     "text": "eine/n SintEza"
                 },
                 {
+                    "female_form": "eine Sinteza",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Sinto",
                     "text": "eine/n Sinteza/Sinto"
                 }
             ],

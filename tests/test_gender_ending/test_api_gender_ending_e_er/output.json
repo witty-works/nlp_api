@@ -46,10 +46,16 @@
         {
             "alternatives": [
                 {
-                    "text": "die*der Beauftragte*r"
+                    "female_form": "die Beauftragte",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "der Beauftragte",
+                    "text": "die*der Beauftragte"
                 },
                 {
-                    "text": "die/der Beauftragte/Beauftragter"
+                    "female_form": "die Beauftragte",
+                    "gender_role": "binary_gender",
+                    "male_form": "der Beauftragte",
+                    "text": "die/der Beauftragte"
                 },
                 {
                     "text": "das Management"
