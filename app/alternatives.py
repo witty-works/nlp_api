@@ -439,11 +439,11 @@ class Alternatives:
         ):
             return None
 
-        article = self.static_rules[LangType.DE][gender + "_articles"][article][form]
-        if isinstance(article, Article):
-            article.fallback = article
+        article_forms = self.static_rules[LangType.DE][gender + "_articles"][article][form]
+        if isinstance(article_forms, Article):
+            article_forms.fallback = article
 
-        return article
+        return article_forms
 
     async def find_form(
         self,
