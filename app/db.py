@@ -256,7 +256,7 @@ class Db:
             query += " AND is_hr_rule = 0"
 
         filter_list = " OR ".join(filters.keys())
-        query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_word_type DESC, first_is_word_type_lemmatize ASC"
+        query += f" AND ({filter_list})ORDER BY (CASE WHEN json_array_length(lemma_json) > 1 THEN lemma_length ELSE 0 END) DESC, first_word_type DESC, lemma_length DESC, first_is_word_type_lemmatize ASC"
         parameters = [
             language.lang,
             RuleType.SUFFIX if suffix_check else RuleType.DEFAULT,

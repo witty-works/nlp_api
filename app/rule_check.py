@@ -154,8 +154,12 @@ class RuleCheck:
 
                     rule.adapt_alternatives = True
                     rule.dynamic.false_positives = [
-                        male_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + female_form,
-                        female_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + male_form,
+                        male_form
+                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                        + female_form,
+                        female_form
+                        + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                        + male_form,
                     ]
 
                     rules.append(rule)
@@ -192,8 +196,12 @@ class RuleCheck:
 
                 rule.adapt_alternatives = True
                 rule.dynamic.false_positives = [
-                    male_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + female_form,
-                    female_form + self.static_rules[LangType.FR]["noun_conjunction"]["plural"] + male_form,
+                    male_form
+                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                    + female_form,
+                    female_form
+                    + self.static_rules[LangType.FR]["noun_conjunction"]["plural"]
+                    + male_form,
                 ]
 
                 rules.append(rule)
@@ -307,8 +315,10 @@ class RuleCheck:
 
                 if false_positive_check is None:
                     rule.dynamic.subcategory = "hidden_image"
-                    rule.alternatives = self.alternatives.get_adjective_alternatives_french(
-                        male_form, female_form
+                    rule.alternatives = (
+                        self.alternatives.get_adjective_alternatives_french(
+                            male_form, female_form
+                        )
                     )
                     rule.adapt_alternatives = True
                 else:
@@ -1222,7 +1232,11 @@ class RuleCheck:
     def detect_filler_words_at_sentence_start(
         self, rule: Rule, text: str, full_text: str, end: int
     ) -> tuple[str, list[Alternative]]:
-        if len(rule.alternatives) and rule.alternatives[0].is_remove and text[0].isupper():
+        if (
+            len(rule.alternatives)
+            and rule.alternatives[0].is_remove
+            and text[0].isupper()
+        ):
             match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
             if isinstance(match, re.Match):
                 text += match.group(0)
