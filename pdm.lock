@@ -198,21 +198,21 @@ files = [
 
 [[package]]
 name = "blackfire"
-version = "1.20.25"
+version = "1.20.26"
 summary = "Blackfire Python SDK"
 groups = ["default"]
 files = [
-    {file = "blackfire-1.20.25-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:f0fe2903c0a4853cbf54cc7d8266dc29b8e46aa2625652935f4fc18c59cb2d6f"},
-    {file = "blackfire-1.20.25-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:fa3a55879c25ef9ac9ff24ae59681a7689736e7e5ef4f0411d5e25a3c05736dd"},
-    {file = "blackfire-1.20.25-cp312-cp312-manylinux2014_aarch64.whl", hash = "sha256:3699aa435011fa078cf3ea51421959c18f835da85db6f339748ef8dab4cfc904"},
-    {file = "blackfire-1.20.25-cp312-cp312-manylinux2014_x86_64.whl", hash = "sha256:c0e78f8789be441b095a176115a53fd70f1b0f99660de151db1746388e06721a"},
-    {file = "blackfire-1.20.25-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e43e026eb72bfe11e2b1a55e9af62615b9465138c6ff883ddc70302db0f0ca47"},
-    {file = "blackfire-1.20.25-cp312-cp312-win_amd64.whl", hash = "sha256:d1c2cd04dee23b730c85d3f7bf91203b26e436defad903b5f74204a116360a63"},
-    {file = "blackfire-1.20.25-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:b231c208570c46bc65c459fa7f164f3a799e9345b9332b3f3d922e1a73139854"},
-    {file = "blackfire-1.20.25-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:a7438b32655f14d21d449a1594a40704d6e850a4c98798bf89f8ff412d105f76"},
-    {file = "blackfire-1.20.25-cp313-cp313-manylinux2014_aarch64.whl", hash = "sha256:d09cc10859f107d9be0583e6d734721348f319c5f0cec896474766e8750d007d"},
-    {file = "blackfire-1.20.25-cp313-cp313-manylinux2014_x86_64.whl", hash = "sha256:c6d98ff77c4b6ddaee133fd1c18e6158f17af9ece0d411f44c7c160ea061cc53"},
-    {file = "blackfire-1.20.25-cp313-cp313-win_amd64.whl", hash = "sha256:e2073c0727e9d07e621a329199d82be7f690360c0c9cd35e5a8d406f9356d4de"},
+    {file = "blackfire-1.20.26-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:8274b6702590996e92c6d9b3053dc41ffeffa147614762fe0dc92fa6fe65e3e5"},
+    {file = "blackfire-1.20.26-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:d6f07847f33d0a2073627b58d925988d0a8793763d64ab9088b04ca20909e269"},
+    {file = "blackfire-1.20.26-cp312-cp312-manylinux2014_aarch64.whl", hash = "sha256:2037380951c2f757cd11d19120e0a361bc078bc8de834c0994390e30a10d870b"},
+    {file = "blackfire-1.20.26-cp312-cp312-manylinux2014_x86_64.whl", hash = "sha256:f6847327ba6ebbe5c1b483112b23e4a0bd904c468b3878767cd587bd182f9a93"},
+    {file = "blackfire-1.20.26-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:ea0cf283fc925db80b473767d072b861c135165aa7b2deb5b6545843ebcc5109"},
+    {file = "blackfire-1.20.26-cp312-cp312-win_amd64.whl", hash = "sha256:6bbcac52b9b0b4fd6b792aa258267abe6cabe8c832a8c9f2eb0f22dac7f39dff"},
+    {file = "blackfire-1.20.26-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:23d63effe41920e8cae94316eff864fc6c12d6d3f85cff83f42c55598c0c83f4"},
+    {file = "blackfire-1.20.26-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:ea5f5fd0bb32c9b99b776b68da8cbc85b78125bd4ba405cc6a07e586dd1b9189"},
+    {file = "blackfire-1.20.26-cp313-cp313-manylinux2014_aarch64.whl", hash = "sha256:1159486bd8cab04da6f5845654f3be3289f4c8ab01f9bc7a74c816b5b5bb5ec2"},
+    {file = "blackfire-1.20.26-cp313-cp313-manylinux2014_x86_64.whl", hash = "sha256:650911bcb81db39dd6a4ef237e1b824bbe387e4dcd46968e84ed435aff15b375"},
+    {file = "blackfire-1.20.26-cp313-cp313-win_amd64.whl", hash = "sha256:f4f231e8f17c0430ff86a6d7240e7d67cf606c94ef96864d43edff7301d5291a"},
 ]
 
 [[package]]
@@ -247,23 +247,23 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.36.19"
+version = "1.36.22"
 requires_python = ">=3.8"
 summary = "The AWS SDK for Python"
 groups = ["default"]
 dependencies = [
-    "botocore<1.37.0,>=1.36.19",
+    "botocore<1.37.0,>=1.36.22",
     "jmespath<2.0.0,>=0.7.1",
     "s3transfer<0.12.0,>=0.11.0",
 ]
 files = [
-    {file = "boto3-1.36.19-py3-none-any.whl", hash = "sha256:7784590369a9d545bb07b2de56b6ce4d5a5e232883a957f704c3f842caeba155"},
-    {file = "boto3-1.36.19.tar.gz", hash = "sha256:8c2c2a4ccdfe35dd2611ee1b7473dd2383948415c777e42dc4e7f1ebe371fe8c"},
+    {file = "boto3-1.36.22-py3-none-any.whl", hash = "sha256:39957eabdce009353d72d131046489fbbfa15891865d5f069f1e8bfa414e6b81"},
+    {file = "boto3-1.36.22.tar.gz", hash = "sha256:768c8a4d4a6227fe2258105efa086f1424cba5ca915a5eb2305b2cd979306ad1"},
 ]
 
 [[package]]
 name = "botocore"
-version = "1.36.19"
+version = "1.36.22"
 requires_python = ">=3.8"
 summary = "Low-level, data-driven core of boto 3."
 groups = ["default"]
@@ -274,8 +274,8 @@ dependencies = [
     "urllib3<1.27,>=1.25.4; python_version < \"3.10\"",
 ]
 files = [
-    {file = "botocore-1.36.19-py3-none-any.whl", hash = "sha256:98882c106fec4c08678ea028199f7f5119550fab95d682b30846f7aae04b7bec"},
-    {file = "botocore-1.36.19.tar.gz", hash = "sha256:cdf6729f601f82b1acdb9004b1f88b57cfb470f576394cdb3bbf5150f7fafb5b"},
+    {file = "botocore-1.36.22-py3-none-any.whl", hash = "sha256:75d6b34acb0686ee4d54ff6eb285e78ccfe318407428769d1e3e13351714d890"},
+    {file = "botocore-1.36.22.tar.gz", hash = "sha256:59520247d5a479731724f97c995d5a1c2aae3b303b324f39d99efcfad1d3019e"},
 ]
 
 [[package]]
@@ -1032,13 +1032,13 @@ files = [
 
 [[package]]
 name = "json-repair"
-version = "0.36.1"
+version = "0.38.0"
 requires_python = ">=3.9"
 summary = "A package to repair broken json strings"
 groups = ["default"]
 files = [
-    {file = "json_repair-0.36.1-py3-none-any.whl", hash = "sha256:ed7ca0c4cf813cc9a75843297507dd8bb21394fef58dc9fde81f542aaaa43457"},
-    {file = "json_repair-0.36.1.tar.gz", hash = "sha256:f01688157d610b0b1f22d86bf54d45c7fc0729965c66726c1ec1ad64f98d6572"},
+    {file = "json_repair-0.38.0-py3-none-any.whl", hash = "sha256:e615ab1bd69c986cdb21d4a2378308ce6f91e0168c036cde7188f69abc6e9459"},
+    {file = "json_repair-0.38.0.tar.gz", hash = "sha256:df9fbe6ba8d02f2eb17010508c9838b9c708557f67b1429829874eed559e7ca3"},
 ]
 
 [[package]]
@@ -1889,7 +1889,7 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.21.0"
+version = "2.22.0"
 requires_python = ">=3.6"
 summary = "Python client for Sentry (https://sentry.io)"
 groups = ["default"]
@@ -1898,8 +1898,8 @@ dependencies = [
     "urllib3>=1.26.11",
 ]
 files = [
-    {file = "sentry_sdk-2.21.0-py2.py3-none-any.whl", hash = "sha256:7623cfa9e2c8150948a81ca253b8e2bfe4ce0b96ab12f8cd78e3ac9c490fd92f"},
-    {file = "sentry_sdk-2.21.0.tar.gz", hash = "sha256:a6d38e0fb35edda191acf80b188ec713c863aaa5ad8d5798decb8671d02077b6"},
+    {file = "sentry_sdk-2.22.0-py2.py3-none-any.whl", hash = "sha256:3d791d631a6c97aad4da7074081a57073126c69487560c6f8bffcf586461de66"},
+    {file = "sentry_sdk-2.22.0.tar.gz", hash = "sha256:b4bf43bb38f547c84b2eadcefbe389b36ef75f3f38253d7a74d6b928c07ae944"},
 ]
 
 [[package]]
@@ -2351,35 +2351,35 @@ files = [
 
 [[package]]
 name = "websockets"
-version = "14.2"
+version = "15.0"
 requires_python = ">=3.9"
 summary = "An implementation of the WebSocket Protocol (RFC 6455 & 7692)"
 groups = ["default"]
 files = [
-    {file = "websockets-14.2-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:1f20522e624d7ffbdbe259c6b6a65d73c895045f76a93719aa10cd93b3de100c"},
-    {file = "websockets-14.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:647b573f7d3ada919fd60e64d533409a79dcf1ea21daeb4542d1d996519ca967"},
-    {file = "websockets-14.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:6af99a38e49f66be5a64b1e890208ad026cda49355661549c507152113049990"},
-    {file = "websockets-14.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:091ab63dfc8cea748cc22c1db2814eadb77ccbf82829bac6b2fbe3401d548eda"},
-    {file = "websockets-14.2-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b374e8953ad477d17e4851cdc66d83fdc2db88d9e73abf755c94510ebddceb95"},
-    {file = "websockets-14.2-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a39d7eceeea35db85b85e1169011bb4321c32e673920ae9c1b6e0978590012a3"},
-    {file = "websockets-14.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:0a6f3efd47ffd0d12080594f434faf1cd2549b31e54870b8470b28cc1d3817d9"},
-    {file = "websockets-14.2-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:065ce275e7c4ffb42cb738dd6b20726ac26ac9ad0a2a48e33ca632351a737267"},
-    {file = "websockets-14.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e9d0e53530ba7b8b5e389c02282f9d2aa47581514bd6049d3a7cffe1385cf5fe"},
-    {file = "websockets-14.2-cp312-cp312-win32.whl", hash = "sha256:20e6dd0984d7ca3037afcb4494e48c74ffb51e8013cac71cf607fffe11df7205"},
-    {file = "websockets-14.2-cp312-cp312-win_amd64.whl", hash = "sha256:44bba1a956c2c9d268bdcdf234d5e5ff4c9b6dc3e300545cbe99af59dda9dcce"},
-    {file = "websockets-14.2-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:6f1372e511c7409a542291bce92d6c83320e02c9cf392223272287ce55bc224e"},
-    {file = "websockets-14.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:4da98b72009836179bb596a92297b1a61bb5a830c0e483a7d0766d45070a08ad"},
-    {file = "websockets-14.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:f8a86a269759026d2bde227652b87be79f8a734e582debf64c9d302faa1e9f03"},
-    {file = "websockets-14.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:86cf1aaeca909bf6815ea714d5c5736c8d6dd3a13770e885aafe062ecbd04f1f"},
-    {file = "websockets-14.2-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a9b0f6c3ba3b1240f602ebb3971d45b02cc12bd1845466dd783496b3b05783a5"},
-    {file = "websockets-14.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:669c3e101c246aa85bc8534e495952e2ca208bd87994650b90a23d745902db9a"},
-    {file = "websockets-14.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:eabdb28b972f3729348e632ab08f2a7b616c7e53d5414c12108c29972e655b20"},
-    {file = "websockets-14.2-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:2066dc4cbcc19f32c12a5a0e8cc1b7ac734e5b64ac0a325ff8353451c4b15ef2"},
-    {file = "websockets-14.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:ab95d357cd471df61873dadf66dd05dd4709cae001dd6342edafc8dc6382f307"},
-    {file = "websockets-14.2-cp313-cp313-win32.whl", hash = "sha256:a9e72fb63e5f3feacdcf5b4ff53199ec8c18d66e325c34ee4c551ca748623bbc"},
-    {file = "websockets-14.2-cp313-cp313-win_amd64.whl", hash = "sha256:b439ea828c4ba99bb3176dc8d9b933392a2413c0f6b149fdcba48393f573377f"},
-    {file = "websockets-14.2-py3-none-any.whl", hash = "sha256:7a6ceec4ea84469f15cf15807a747e9efe57e369c384fa86e022b3bea679b79b"},
-    {file = "websockets-14.2.tar.gz", hash = "sha256:5059ed9c54945efb321f097084b4c7e52c246f2c869815876a69d1efc4ad6eb5"},
+    {file = "websockets-15.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:cccc18077acd34c8072578394ec79563664b1c205f7a86a62e94fafc7b59001f"},
+    {file = "websockets-15.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:d4c22992e24f12de340ca5f824121a5b3e1a37ad4360b4e1aaf15e9d1c42582d"},
+    {file = "websockets-15.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:1206432cc6c644f6fc03374b264c5ff805d980311563202ed7fef91a38906276"},
+    {file = "websockets-15.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5d3cc75ef3e17490042c47e0523aee1bcc4eacd2482796107fd59dd1100a44bc"},
+    {file = "websockets-15.0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b89504227a5311610e4be16071465885a0a3d6b0e82e305ef46d9b064ce5fb72"},
+    {file = "websockets-15.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:56e3efe356416bc67a8e093607315951d76910f03d2b3ad49c4ade9207bf710d"},
+    {file = "websockets-15.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:0f2205cdb444a42a7919690238fb5979a05439b9dbb73dd47c863d39640d85ab"},
+    {file = "websockets-15.0-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:aea01f40995fa0945c020228ab919b8dfc93fc8a9f2d3d705ab5b793f32d9e99"},
+    {file = "websockets-15.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:a9f8e33747b1332db11cf7fcf4a9512bef9748cb5eb4d3f7fbc8c30d75dc6ffc"},
+    {file = "websockets-15.0-cp312-cp312-win32.whl", hash = "sha256:32e02a2d83f4954aa8c17e03fe8ec6962432c39aca4be7e8ee346b05a3476904"},
+    {file = "websockets-15.0-cp312-cp312-win_amd64.whl", hash = "sha256:ffc02b159b65c05f2ed9ec176b715b66918a674bd4daed48a9a7a590dd4be1aa"},
+    {file = "websockets-15.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:d2244d8ab24374bed366f9ff206e2619345f9cd7fe79aad5225f53faac28b6b1"},
+    {file = "websockets-15.0-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:3a302241fbe825a3e4fe07666a2ab513edfdc6d43ce24b79691b45115273b5e7"},
+    {file = "websockets-15.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:10552fed076757a70ba2c18edcbc601c7637b30cdfe8c24b65171e824c7d6081"},
+    {file = "websockets-15.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c53f97032b87a406044a1c33d1e9290cc38b117a8062e8a8b285175d7e2f99c9"},
+    {file = "websockets-15.0-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1caf951110ca757b8ad9c4974f5cac7b8413004d2f29707e4d03a65d54cedf2b"},
+    {file = "websockets-15.0-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8bf1ab71f9f23b0a1d52ec1682a3907e0c208c12fef9c3e99d2b80166b17905f"},
+    {file = "websockets-15.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:bfcd3acc1a81f106abac6afd42327d2cf1e77ec905ae11dc1d9142a006a496b6"},
+    {file = "websockets-15.0-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:c8c5c8e1bac05ef3c23722e591ef4f688f528235e2480f157a9cfe0a19081375"},
+    {file = "websockets-15.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:86bfb52a9cfbcc09aba2b71388b0a20ea5c52b6517c0b2e316222435a8cdab72"},
+    {file = "websockets-15.0-cp313-cp313-win32.whl", hash = "sha256:26ba70fed190708551c19a360f9d7eca8e8c0f615d19a574292b7229e0ae324c"},
+    {file = "websockets-15.0-cp313-cp313-win_amd64.whl", hash = "sha256:ae721bcc8e69846af00b7a77a220614d9b2ec57d25017a6bbde3a99473e41ce8"},
+    {file = "websockets-15.0-py3-none-any.whl", hash = "sha256:51ffd53c53c4442415b613497a34ba0aa7b99ac07f1e4a62db5dcd640ae6c3c3"},
+    {file = "websockets-15.0.tar.gz", hash = "sha256:ca36151289a15b39d8d683fd8b7abbe26fc50be311066c5f8dcf3cb8cee107ab"},
 ]
 
 [[package]]
