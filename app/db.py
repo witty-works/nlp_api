@@ -23,6 +23,7 @@ from app.settings import Settings
 import aiosqlite
 import json
 from spacy.tokens import Token
+from copy import deepcopy
 
 
 class Db:
@@ -319,7 +320,9 @@ class Db:
         show_inspiration_alternatives: bool,
     ) -> list[Alternative]:
         if isinstance(rule.id, str):
-            return rule.alternatives
+            if rule.dynamic.alternatives is None:
+                return rule.alternatives
+            return deepcopy(rule.dynamic.alternatives)
 
         query = (
             f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"

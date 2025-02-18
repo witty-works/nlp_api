@@ -50,7 +50,14 @@
             "text_id": "participant"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "ayant envie d'apprendre"
+                },
+                {
+                    "text": "ayant l'esprit curieux"
+                }
+            ],
             "category": "social-motive",
             "context": "ez absent de votre domicile. Les participantes absentes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous ch",
             "end": 158,
@@ -69,7 +76,14 @@
             "text_id": "curieux"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "ayant envie d'apprendre"
+                },
+                {
+                    "text": "ayant l'esprit curieux"
+                }
+            ],
             "category": "social-motive",
             "context": "entes sont malades. Nous cherchons des stagiaires curieux et curieuses. Nous cherchons un stagiaire curieux. Nous cherchons un stagiaire ou une stagiaire curieux. Nous cherchons des stagiaires curieux. Nous",
             "end": 195,
@@ -178,7 +192,14 @@
             "text_id": "curieux"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "ayant envie d'apprendre"
+                },
+                {
+                    "text": "ayant l'esprit curieux"
+                }
+            ],
             "category": "social-motive",
             "context": "s stagiaires curieux. Nous cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagiaire curieux.",
             "end": 375,
@@ -197,7 +218,14 @@
             "text_id": "curieux"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "ayant envie d'apprendre"
+                },
+                {
+                    "text": "ayant l'esprit curieux"
+                }
+            ],
             "category": "social-motive",
             "context": "s cherchons des stagiaires curieux et curieux. Nous cherchons un stagiaire curieux ou une stagiaire curieux.",
             "end": 400,

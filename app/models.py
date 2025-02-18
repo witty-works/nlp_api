@@ -345,6 +345,7 @@ class Article(BaseModel):
         return None
 
 class RuleDynamic(BaseModel):
+    alternatives: Optional[list] = None
     false_positives: Optional[list[str]] = []
     subcategory: Optional[str] = None
     article: Optional[Article] = None
