@@ -463,11 +463,12 @@ class RuleCheck:
             if rule.dynamic.subcategory is None:
                 return True
 
-            rule.dynamic.subcategory = is_sub_category_enabled(
+            subcategory = is_sub_category_enabled(
                 config.disabled_categories, rule.dynamic.subcategory
             )
-            if not rule.dynamic.subcategory:
+            if not subcategory:
                 return True
+            rule.dynamic.subcategory = subcategory
 
         return False
 
@@ -992,11 +993,12 @@ class RuleCheck:
 
         for rule in rules:
             rule.reset()
-            rule.dynamic.subcategory = is_sub_category_enabled(
+            subcategory = is_sub_category_enabled(
                 config.disabled_categories, rule.subcategories
             )
-            if not rule.dynamic.subcategory:
+            if not subcategory:
                 continue
+            rule.dynamic.subcategory = subcategory
 
             if self.is_entity_type_mismatch(rule, token):
                 continue
@@ -1035,11 +1037,12 @@ class RuleCheck:
                 )
 
                 if self.is_german_pronoun_check_required(language.lang, token):
-                    rule.dynamic.subcategory = self.german_pronoun_check(
+                    subcategory = self.german_pronoun_check(
                         config, rule, token
                     )
-                    if not rule.dynamic.subcategory:
+                    if not subcategory:
                         continue
+                    rule.dynamic.subcategory = subcategory
 
                 if not text or await self.is_rule_false_positive(
                     full_text, token_index, tokens, rule
