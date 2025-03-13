@@ -933,10 +933,11 @@ async def post_debug_rule(
         context.model.tokenize(rule_data.lemma, rule_data.lang),
         rule_data.word_types,
         rule_data.subcategories,
-        alternative_list,
+        None,
         rule_data.actual_word_types,
     )
 
+    rule.dynamic.alternatives = alternative_list
     rule.pattern = rule_data.pattern
     rule.is_pattern_match = rule_data.is_pattern_match
     rule.false_positives = rule_data.false_positives
