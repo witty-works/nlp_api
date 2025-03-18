@@ -454,17 +454,17 @@ class RuleCheck:
                 if "Masc" in gender
                 else ["gender_identity"]
             )
-            rule.dynamic.subcategory = None
+            subcategory = None
             for search_subcategory in rule.subcategories:
                 if get_category_name(search_subcategory) in subcategory_to_find:
-                    rule.dynamic.subcategory = search_subcategory
+                    subcategory = search_subcategory
                     break
 
-            if rule.dynamic.subcategory is None:
+            if subcategory is None:
                 return True
 
             subcategory = is_sub_category_enabled(
-                config.disabled_categories, rule.dynamic.subcategory
+                config.disabled_categories, subcategory
             )
             if not subcategory:
                 return True
