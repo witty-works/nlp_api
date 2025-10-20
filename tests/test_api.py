@@ -1002,6 +1002,47 @@ def test_auth_token_validation():
         )
         assert response.status_code == 403
 
+
+def test_api_key_validation(set_redis):
+    with TestClient(app) as client:
+        # Invalid API key on auth should be forbidden
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"x-key": "invalid"},
+        )
+        assert response.status_code == 403
+
+        # Create a valid API key mapping via management endpoint
+        api_key = "valid-api-key-123"
+        email = "test@gmail.com"
+        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        assert resp.status_code == 204
+
+        # Valid API key on auth should pass
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+
+        # Invalid API key for check endpoint: unauthenticated is allowed -> 200
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Hallo Kunde"},
+            headers={"x-key": "invalid"},
+        )
+        assert response.status_code == 200
+
+        # Valid API key for check endpoint should also return 200
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Hallo Kunde"},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+
         response = client.post(
             "/v2.0/auth",
             json={},
@@ -1452,6 +1493,46 @@ def test_store_get_delete_rules():
         # check deleted organization reverts to user rules
         response = client.get("/user/configs?email=" + user_request_data["email"])
         assert response.content == b'{"detail":"Organization configs not found"}'
+
+
+def test_api_key_get_missing():
+    """GET /api_key should return 404 for unknown keys."""
+    with TestClient(app) as client:
+        response = client.get("/api_key", params={"api_key": "missing-key-123"})
+        # Endpoint is defined with 404 response on missing key
+        assert response.status_code == 404
+
+
+def test_api_key_create_fetch_delete(set_redis):
+    """POST/GET/DELETE flow for /api_key endpoints."""
+    api_key = "test-api-key-123"
+    email = "test@gmail.com"
+
+    with TestClient(app) as client:
+        # Ensure it's not there first
+        resp = client.get("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 404
+
+        # Create mapping
+        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        assert resp.status_code == 204
+
+        # Fetch mapping
+        resp = client.get("/api_key", params={"api_key": api_key})
+        # The operation is defined with 204 status; presence is asserted via Redis state
+        assert resp.status_code == 204
+
+        # Verify Redis contains the mapping
+        stored = context.redis.db.get("api_key:" + api_key)
+        assert stored == email
+
+        # Delete mapping
+        resp = client.delete("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 204
+
+        # Ensure it's gone
+        resp = client.get("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 404
 
 
 def test_rule_debug():

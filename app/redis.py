@@ -35,6 +35,10 @@ class Redis:
             )
         else:
             redis_db = FakeStrictRedis(decode_responses=True)
+            if settings.testing_api_key:
+                redis_db.set(
+                    settings.testing_api_key, "api_key:" + settings.testing_email
+                )
 
         return Redis(settings, redis_db)
 
@@ -114,15 +118,14 @@ class Redis:
         self,
         user_email: str | None,
     ):
-        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
-        if data is None:
-            return data
-
-        data.reverse()
         results = []
-        for result in data:
-            result = json.loads(result)
-            results.append(result)
+
+        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
+        if data is not None:
+            data.reverse()
+            for result in data:
+                result = json.loads(result)
+                results.append(result)
 
         return results
 

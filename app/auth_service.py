@@ -247,6 +247,10 @@ def fetch_email_from_claims(claims: dict) -> str:
     )
 
 
+def fetch_email_from_api_key(redis: Redis, api_key: str) -> str | None:
+    return redis.db.get("api_key:" + api_key)
+
+
 async def fetch_user(
     request: Request, settings: Settings, redis: Redis, http: Http
 ) -> str | None:
@@ -295,10 +299,13 @@ async def fetch_user(
             detail="Token provided did not map to a valid client ID",
         )
 
+    elif "x-key" in request.headers:
+        return fetch_email_from_api_key(redis, request.headers["x-key"])
+
     if settings.testing:
         if "x-testing-auth" in request.headers:
             return request.headers["x-testing-auth"]
-        if settings.redis_default_user:  # pragma: no cover
-            return settings.redis_default_user
+        if settings.testing_email:  # pragma: no cover
+            return settings.testing_email
 
     return None

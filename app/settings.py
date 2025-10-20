@@ -1,5 +1,4 @@
 from typing import Optional
-from functools import lru_cache
 import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -46,11 +45,12 @@ class Settings(BaseSettings):
     redis_port: Optional[str] = ""
     redis_username: Optional[str] = ""
     redis_password: Optional[str] = ""
-    redis_default_user: Optional[str] = ""
-    redis_default_rules: Optional[str] = ""
-    redis_default_organization_rules: Optional[str] = ""
-    redis_default_log_emails: Optional[str] = ""
+    redis_log_emails: Optional[str] = ""
     redis_verify_ssl: bool = True
+    testing_api_key: Optional[str] = ""
+    testing_email: Optional[str] = ""
+    testing_rules: Optional[str] = ""
+    testing_organization_rules: Optional[str] = ""
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
     slack_organization_id: Optional[str] = ""

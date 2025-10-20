@@ -28,6 +28,7 @@ from fastapi.security import (
     HTTPBasic,
     HTTPBasicCredentials,
     HTTPBearer,
+    APIKeyHeader,
 )
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -127,24 +128,22 @@ async def lifespan(app: FastAPI):
     context.db = await Db.factory(context.settings, context.languages)
     context.model.db = context.db
 
-    if context.settings.redis_default_rules:
-        rules = json.loads(context.settings.redis_default_rules)
+    if context.settings.testing_rules:
+        rules = json.loads(context.settings.testing_rules)
         rules["term_replacements"] = parse_term_replacements(rules["term_replacements"])
         email = rules["email"]
         context.redis.db.set(context.redis.get_user_id(email), json.dumps(rules))
 
-    if context.settings.redis_default_organization_rules:
-        organization_rules = json.loads(
-            context.settings.redis_default_organization_rules
-        )
+    if context.settings.testing_organization_rules:
+        organization_rules = json.loads(context.settings.testing_organization_rules)
         organization_rules["term_replacements"] = parse_term_replacements(
             organization_rules["term_replacements"]
         )
         key = organization_rules["id"]
         context.redis.db.set(key, json.dumps(organization_rules))
 
-    if context.settings.redis_default_log_emails:
-        log_emails = json.loads(context.settings.redis_default_log_emails)
+    if context.settings.redis_log_emails:
+        log_emails = json.loads(context.settings.redis_log_emails)
         for email in log_emails:
             context.redis.db.lpush("debug_emails", email)
 
@@ -308,7 +307,10 @@ def fetch_current_username(
     "/debug/rephrase",
     response_model=Union[RephrasesOut, Result],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
     include_in_schema=not context.settings.is_prod,
 )
 async def post_debug_rephrase(
@@ -324,7 +326,10 @@ async def post_debug_rephrase(
     "/v1.0/rephrase",
     response_model=Union[RephrasesOut, Result],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def post_rephrase_v1_0(
     request: Request,
@@ -394,7 +399,10 @@ async def rephrase_sentence(
     "/debug/review_prompt",
     response_model=Union[str, Result],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
     include_in_schema=not context.settings.is_prod,
 )
 async def debug_review_prompt(
@@ -747,7 +755,10 @@ async def get_align_form_debug(
 @app.get(
     "/debug/configs",
     include_in_schema=not context.settings.is_prod,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def get_config_debug(
     user_email: str,
@@ -779,7 +790,10 @@ async def get_config_debug(
 @app.post(
     "/debug/auth",
     include_in_schema=not context.settings.is_prod,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def post_auth_debug(
     request: Request, check_request_in: CheckRequestIn
@@ -808,7 +822,10 @@ async def post_auth_debug(
 
 @app.get(
     "/debug/metrics",
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def get_user_configs(
     key: MetricsType,
@@ -844,7 +861,10 @@ async def get_user_configs(
     "/v2.0/auth",
     response_model=Union[ResultConf, dict, None],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def post_auth_2_0(
     request: Request, check_request_in: BaseRequestIn | None = None
@@ -1088,7 +1108,10 @@ async def get_debug_german_noun(
     "/debug/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
     include_in_schema=not context.settings.is_prod,
 )
 async def post_debug_check(
@@ -1104,7 +1127,10 @@ async def post_debug_check(
     "/v2.4/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
 )
 async def post_check_v2_3(
     request: Request,
@@ -1269,6 +1295,45 @@ async def get_user_configs(
     username: str = Depends(fetch_current_username),
 ):
     return context.redis.get_user_logs(email)
+
+
+@app.get(
+    "/api_key",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": ErrorMessage}},
+)
+async def get_api_key(
+    api_key: str,
+    username: str = Depends(fetch_current_username),
+):
+    email = context.redis.db.get("api_key:" + api_key)
+    if email is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
+        )
+
+    return email
+
+
+@app.post(
+    "/api_key",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def post_api_key(
+    api_key: str, email: str, username: str = Depends(fetch_current_username)
+):
+    context.redis.db.set("api_key:" + api_key, email)
+
+
+@app.delete(
+    "/api_key",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_api_key(
+    api_key: str,
+    username: str = Depends(fetch_current_username),
+):
+    context.redis.db.delete("api_key:" + api_key)
 
 
 def fetch_text(
