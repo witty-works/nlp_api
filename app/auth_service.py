@@ -1,5 +1,5 @@
 # https://github.com/425show/fastapi_microsoft_identity/blob/e98f1ff4a86e436b2d6d874738ff655fe1a63e54/LICENSE
-""" The MIT License (MIT)
+"""The MIT License (MIT)
 
 Copyright (c) 2021 Christos Matskas
 
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- """
+"""
 
 from fastapi import Request
 import jwt
@@ -296,8 +296,8 @@ async def fetch_user(
         )
 
     if settings.testing:
-        if "x-auth" in request.headers:
-            return request.headers["x-auth"]
+        if "x-testing-auth" in request.headers:
+            return request.headers["x-testing-auth"]
         if settings.redis_default_user:  # pragma: no cover
             return settings.redis_default_user
 

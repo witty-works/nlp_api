@@ -62,7 +62,7 @@ def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
         response = client.post(
             "/debug/review_prompt",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -86,7 +86,7 @@ def test_highlight_position(highlight_position_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -110,7 +110,7 @@ def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -134,7 +134,7 @@ def test_spacy_model(spacy_model_dir, snapshot):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -158,7 +158,7 @@ def test_chunking_issues_dir(chunking_issues_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -182,7 +182,7 @@ def test_demo_wordings_english(demo_wordings_english_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -206,7 +206,7 @@ def test_demo_wordings_german(demo_wordings_german_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -230,7 +230,7 @@ def test_general_cases(general_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -254,7 +254,7 @@ def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "free@gmail.com"},
+            headers={"X-TESTING-AUTH": "free@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -278,7 +278,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -302,7 +302,7 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -332,7 +332,7 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -356,7 +356,7 @@ def test_fails(fails_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 422
 
@@ -382,7 +382,7 @@ def test_rephrase(rephrase_dir, snapshot, set_redis):
             response = client.post(
                 "/v1.0/rephrase",
                 json=json.loads(input_json),
-                headers={"X-Auth": "test@gmail.com"},
+                headers={"X-TESTING-AUTH": "test@gmail.com"},
             )
             assert response.status_code == 200
 
@@ -482,7 +482,7 @@ def test_config_not_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -497,7 +497,7 @@ def test_config_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -512,7 +512,7 @@ def test_config_organization_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -836,7 +836,7 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -859,7 +859,7 @@ def test_witty_addons(test_witty_addons_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -901,7 +901,7 @@ def test_logged_in_missing_org(test_logged_in_missing_org_dir, snapshot, set_red
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test-missing-org@gmail.com"},
+            headers={"X-TESTING-AUTH": "test-missing-org@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -924,7 +924,7 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -945,17 +945,23 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
         response = client.post("/v2.0/auth")
         assert response.status_code == 403
 
-        response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "missing@gmail.com"}
+        )
         assert response.status_code == 403
 
-        response = client.post("/v2.0/auth", headers={"X-Auth": "2_2@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "2_2@gmail.com"}
+        )
         assert response.status_code == 200
 
         response = response.json()
         assert "organization_trial_ends_at" in response
         assert response["organization_trial_ends_at"] is not None
 
-        response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
         assert response.status_code == 200
         # output must be string
         output = json.dumps(
@@ -974,7 +980,9 @@ def test_auth_2_0_team_analytics_opt_out(
     test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis
 ):
     with TestClient(app) as client:
-        response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "default@gmail.com"}
+        )
         assert response.status_code == 200
         # output must be string
         output = json.dumps(
@@ -1020,7 +1028,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -1957,7 +1965,7 @@ def test_lemmatizer(lemma_case_dir, snapshot):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -1985,7 +1993,7 @@ def test_grammatically_correct_alternatives(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2009,7 +2017,7 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2033,7 +2041,7 @@ def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2057,7 +2065,7 @@ def test_not_for_people(test_not_for_people_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2081,7 +2089,7 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2109,7 +2117,7 @@ def test_english_false_positive_pattern(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2137,7 +2145,7 @@ def test_english_upper_case_multiterms(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2161,7 +2169,7 @@ def test_plain_language(plain_language_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "free@gmail.com"},
+            headers={"X-TESTING-AUTH": "free@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
