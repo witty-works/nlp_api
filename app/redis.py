@@ -31,9 +31,10 @@ class Redis:
                 password=settings.redis_password,
                 ssl=settings.redis_verify_ssl,
                 ssl_cert_reqs="none",
+                decode_responses=True,
             )
         else:
-            redis_db = FakeStrictRedis()
+            redis_db = FakeStrictRedis(decode_responses=True)
 
         return Redis(settings, redis_db)
 
