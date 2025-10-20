@@ -53,11 +53,6 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
-      - if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
-        name: Use LT "dev" via .env file for anything but "main"
-        run: |
-          echo "LANGUAGETOOL_API=\"https://lt.dev-54ta5gq-jyeciedibdzvq.fr-4.platformsh.site/v2\"" >> .env
-
       - name: Run test suite
         run: |
           export testing=True
