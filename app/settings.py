@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     logging_config_level: str = "ERROR"
     platform_environment_type: str = "development"
     platform_environment: str = "local"
-    languagetool_api: Optional[str] = None
+    languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""

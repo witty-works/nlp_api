@@ -5,5 +5,30 @@
     "language": "de",
     "limit_reached": false,
     "notifications": 5,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Herr Fabien"
+                },
+                {
+                    "text": "Frau Fabien"
+                }
+            ],
+            "category": "orthography",
+            "context": "Sehr geehrter Fabien Müller und andere ElitePartner",
+            "end": 20,
+            "explanation": {
+                "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
+                "text": "Fehlt evtl. eine Anrede wie „Herr Fabien“ oder „Frau Fabien“?"
+            },
+            "gravity": 1.0,
+            "label": "Grammatik",
+            "start": 14,
+            "subcategory": "grammar",
+            "text": "Fabien",
+            "text_id": "Fabien"
+        }
+    ]
 }
