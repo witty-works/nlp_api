@@ -1288,9 +1288,8 @@ async def get_user_configs(
 @app.get(
     "/user/logs",
     response_class=PrettyJSONResponse,
-    responses={404: {"model": ErrorMessage}},
 )
-async def get_user_configs(
+async def get_user_logs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
