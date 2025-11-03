@@ -3,14 +3,21 @@ from functools import lru_cache
 
 
 class PrivacyFilter:
-    """PrivacyFilter https://github.com/lmeulen/PrivacyFilter"""
+    """Filter URLs, emails, and numbers from text for privacy purposes.
+
+    References:
+    - https://github.com/lmeulen/PrivacyFilter
+    """
 
     def __init__(self):
         self.url_re = self.compile_url_regex()
 
     @staticmethod
     def compile_url_regex():
-        """https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python"""
+        """Compile a permissive URL-matching regular expression.
+
+        Reference: https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python
+        """
         ul = "\u00a1-\uffff"  # Unicode letters range (must not be a raw string).
 
         # IP patterns
@@ -55,10 +62,12 @@ class PrivacyFilter:
             re.IGNORECASE,
         )
 
-    def remove_numbers(self, text):
+    def remove_numbers(self, text: str) -> str:
+        """Replace all numeric sequences with <NUMBER> placeholder."""
         return re.sub(r"\d+", "<NUMBER>", text)
 
-    def remove_email(self, text):
+    def remove_email(self, text: str) -> str:
+        """Replace email addresses with <EMAIL> placeholder."""
         return re.sub(
             r"(([a-zA-Z0-9_+]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?))"
             "(?![^<]*>)",
@@ -66,24 +75,29 @@ class PrivacyFilter:
             text,
         )
 
-    def remove_url(self, text):
+    def remove_url(self, text: str) -> str:
+        """Replace URLs with <URL> placeholder."""
         return re.sub(self.url_re, "<URL>", text)
 
-    def filter_regular_expressions(self, text):
+    def filter_regular_expressions(self, text: str) -> str:
+        """Apply all privacy filters to text."""
         text = self.remove_email(text)
         text = self.remove_url(text)
         text = self.remove_numbers(text)
         return text.strip()
 
-    def clean(self, text):
+    def clean(self, text: str) -> str:
+        """Clean text by applying all privacy filters."""
         return self.filter_regular_expressions(text)
 
-    def clean_dict(self, dict):
-        for dict_key in dict.keys():
-            dict[dict_key] = self.clean_var(dict[dict_key])
-        return dict
+    def clean_dict(self, data: dict) -> dict:
+        """Clean all string values in a dictionary recursively."""
+        for dict_key in data.keys():
+            data[dict_key] = self.clean_var(data[dict_key])
+        return data
 
     def clean_var(self, var):
+        """Recursively clean strings in any data structure (str, dict, list)."""
         if isinstance(var, str):
             var = self.clean(var)
         elif isinstance(var, dict):
@@ -95,4 +109,8 @@ class PrivacyFilter:
 
 @lru_cache()
 def get_privacy_filter():
+    """Return a cached PrivacyFilter instance.
+
+    Uses LRU caching to reuse a single instance across calls.
+    """
     return PrivacyFilter()

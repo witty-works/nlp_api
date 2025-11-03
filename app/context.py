@@ -1,39 +1,39 @@
 import os
 import json
-import fasttext
 import logging
+
+import fasttext
+
+from app.adjectives import Adjectives
+from app.alternatives import Alternatives
+from app.categories import get_categories
+from app.db import Db
+from app.emoji_check import EmojiCheck
+from app.http import Http
+from app.lang_detection import LangDetection
+from app.languagetool import LanguageTool
+from app.llm_alternatives import LlmAlternatives
+from app.logger import Logger
+from app.model import Model
 from app.models import (
     LangWithAutoType,
     Language,
     WordType,
 )
-from app.db import Db
-from app.emoji_check import EmojiCheck
-from app.rule_check import RuleCheck
-from app.regex_check import RegexCheck
 from app.nouns import Nouns
-from app.verbs import Verbs
-from app.adjectives import Adjectives
-from app.model import Model
-from app.translations import translations
-from app.llm_alternatives import LlmAlternatives
-from app.lang_detection import LangDetection
-from app.categories import get_categories
-from app.alternatives import Alternatives
-from app.llm_alternatives import LlmAlternatives
 from app.prompt import Prompt
-from app.languagetool import LanguageTool
-from app.db import Db
-from app.settings import Settings
-from app.logger import Logger
-from app.redis import Redis
-from app.rules import fetch_static_rules
-from app.sentry import set_up_sentry_sdk
 from app.query_definitions import (
     declensions_config,
     verb_form_map,
 )
-from app.http import Http
+from app.redis import Redis
+from app.regex_check import RegexCheck
+from app.rules import fetch_static_rules
+from app.rule_check import RuleCheck
+from app.sentry import set_up_sentry_sdk
+from app.settings import Settings
+from app.translations import translations
+from app.verbs import Verbs
 
 
 class AppContext:

@@ -975,10 +975,10 @@ class RuleCheck:
             return token_index
 
         if token.lemma_ == "aber" and language.lang == LangType.DE:
-            preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
+            preceding_text = full_text[max(0, token.idx - 5) : token.idx]
             if (
-                re.search(r"^ *$", preceeding_text) is not None
-                or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
+                re.search(r"^ *$", preceding_text) is not None
+                or re.search(r"[.!?:,]\s*$", preceding_text, re.MULTILINE) is not None
             ):
                 return token_index
 

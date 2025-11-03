@@ -92,7 +92,6 @@ from app.categories import (
     make_category_advanced,
 )
 from app.alternatives import Alternatives
-from app.llm_alternatives import LlmAlternatives
 from app.languagetool import LanguageTool
 from app.db import Db
 from app.http import Http
@@ -223,7 +222,7 @@ app = FastAPI(
 
 security = HTTPBasic(auto_error=False)
 
-csp = secure.ContentSecurityPolicy().set("default-scr 'self' cdn.jsdelivr.net")
+csp = secure.ContentSecurityPolicy().set("default-src 'self' cdn.jsdelivr.net")
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_cache()
@@ -267,9 +266,20 @@ bolt_handler = AsyncSlackRequestHandler(bolt)
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
-):  # pragma: no cover
+) -> str:  # pragma: no cover
+    """Verify HTTP Basic Auth credentials for API docs access.
+
+    Args:
+        credentials: HTTP Basic Auth credentials from request
+
+    Returns:
+        Username string ("anon" if auth disabled, or verified username)
+
+    Raises:
+        HTTPException: If credentials invalid or auth misconfigured
+    """
     # Credentials are missing
-    if credentials is None:
+    if not credentials:
         # Auth is disabled, just proceed
         if not context.settings.api_docs_auth_enabled:
             return "anon"
@@ -387,8 +397,8 @@ async def rephrase_sentence(
     except Exception as e:
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         message = "An error occurred"
-        if version is None:
-            message += ": " + str(e)
+        if not version:
+            message = f"{message}: {e}"
 
         return Result.factory(message)
 
@@ -485,7 +495,7 @@ async def prompt(
     check_request_in.text = await context.prompt.handle(
         check_request_in.text, None, None, 0.4
     )
-    check_request_in.text = context.prompt.parseJson(check_request_in.text)
+    check_request_in.text = context.prompt.parse_json(check_request_in.text)
 
     for category in disabled_categories_api:
         if category in check_request_in.config.disabled_categories:
@@ -511,10 +521,10 @@ async def prompt(
         )
 
         reviewed_response = await context.prompt.handle(review_prompt)
-        reviewed_response = context.prompt.parseJson(reviewed_response)
+        reviewed_response = context.prompt.parse_json(reviewed_response)
 
     return PromptOut(
-        inititial_response=check_request_in.text,
+        initial_response=check_request_in.text,
         reviewed_response=reviewed_response,
         check_results=check_result,
         limit_reached=limit_reached,
@@ -618,7 +628,7 @@ def get_lt(username: str = Depends(fetch_current_username)):
 
 
 @app.get("/settings", include_in_schema=not context.settings.is_prod)
-def get_lt(username: str = Depends(fetch_current_username)):
+def get_settings(username: str = Depends(fetch_current_username)):
     return context.settings
 
 
@@ -674,7 +684,17 @@ async def get_german_gender_ending(
     german_gender_ending: GermanGenderEndingType | None = None,
     username: str = Depends(fetch_current_username),
 ):
-    if german_gender_ending is None:
+    """Debug endpoint to test German gender ending alternatives.
+
+    Args:
+        alternative: German word to generate alternatives for
+        german_gender_ending: Gender ending type (defaults to inclusive + binary)
+        username: Authenticated username
+
+    Returns:
+        List of gendered alternatives
+    """
+    if not german_gender_ending:
         inclusive = True
         binary = True
     else:
@@ -1011,20 +1031,19 @@ async def get_debug_spacy(
     results = []
     tokens = context.model.fetch_tokens(lang, text)
 
-    word_type_rule = None
+    word_type_parts = []
     for token_index in range(len(tokens)):
         token = tokens[token_index]
-        if word_type_rule is None:
-            word_type_rule = ""
-        else:
-            word_type_rule += "|"
 
         if lang == LangType.DE:
             token.lemma_ = await german_lemmatization(tokens, token_index)
         word_type = await context.model.fetch_word_type(lang, token)
+
+        # Get string value for word_type, prefix with '~' if text != lemma
+        word_type_str = getattr(word_type, "value", word_type)
         if token.text != token.lemma_:
-            word_type_rule += "~"
-        word_type_rule += word_type
+            word_type_str = f"~{word_type_str}"
+        word_type_parts.append(word_type_str)
 
         token_info = {
             "text": token.text,
@@ -1073,6 +1092,8 @@ async def get_debug_spacy(
 
         results = [{"noun chunks": noun_chunks}] + results
 
+    # Build the word type rule string
+    word_type_rule = "|".join(word_type_parts)
     return [{"auto-detected word type": word_type_rule}] + results
 
 
@@ -1080,7 +1101,7 @@ async def get_debug_spacy(
     "/debug/displacy",
     include_in_schema=not context.settings.is_prod,
 )
-async def get_debug_spacy(
+async def get_debug_displacy(
     text: str,
     lang: LangType,
     username: str = Depends(fetch_current_username),
@@ -1132,7 +1153,7 @@ async def post_debug_check(
         Depends(APIKeyHeader(name="x-key", auto_error=False)),
     ],
 )
-async def post_check_v2_3(
+async def post_check_v2_4(
     request: Request,
     response: Response,
     check_request_in: CheckRequestIn,
@@ -1225,7 +1246,7 @@ async def post_organization_configs(
     "/organization/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_organiztion_configs(
+async def delete_organization_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
 ):
@@ -1305,8 +1326,20 @@ async def get_api_key(
     api_key: str,
     username: str = Depends(fetch_current_username),
 ):
-    email = context.redis.db.get("api_key:" + api_key)
-    if email is None:
+    """Get email associated with an API key.
+
+    Args:
+        api_key: API key to lookup
+        username: Authenticated username
+
+    Returns:
+        Email address associated with the key
+
+    Raises:
+        HTTPException: If API key not found
+    """
+    email = context.redis.db.get(f"api_key:{api_key}")
+    if not email:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
@@ -1321,7 +1354,14 @@ async def get_api_key(
 async def post_api_key(
     api_key: str, email: str, username: str = Depends(fetch_current_username)
 ):
-    context.redis.db.set("api_key:" + api_key, email)
+    """Associate an email with an API key.
+
+    Args:
+        api_key: API key to store
+        email: Email address to associate
+        username: Authenticated username
+    """
+    context.redis.db.set(f"api_key:{api_key}", email)
 
 
 @app.delete(
@@ -1428,7 +1468,7 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
             )
         )
 
-        if "plan" not in configs or configs["plan"] is None:
+        if not configs.get("plan"):
             configs["plan"] = organization_configs["plan"]
 
         if "trial_ends_at" in organization_configs:
@@ -1438,15 +1478,9 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
 
         configs["organization_name"] = organization_configs["name"]
 
-        configs["organization_config_hash"] = (
-            organization_configs["config_hash"]
-            if "config_hash" in organization_configs
-            else None
-        )
+        configs["organization_config_hash"] = organization_configs.get("config_hash")
 
-        configs["organization_domains"] = (
-            organization_configs["domains"] if "domains" in organization_configs else {}
-        )
+        configs["organization_domains"] = organization_configs.get("domains", {})
 
         configs["organization_config"] = organization_configs["config"]
 
@@ -2438,24 +2472,23 @@ async def witty_rules(
                 continue
 
             sentences = {}
-            sentence = ""
+            sentence_parts = []
             start = sent[0].idx
 
             lines = sent.text.split("\n")
             for line in lines:
                 if is_bullet_point(line):
-                    if sentence != "" and sentence.count(" ") > sentence_word_limit:
+                    sentence = "\n".join(sentence_parts)
+                    if sentence and sentence.count(" ") > sentence_word_limit:
                         sentences[start] = sentence
 
                     start += len(sentence) + 1
-                    sentence = line
+                    sentence_parts = [line]
                 else:
-                    if sentence != "":
-                        sentence += "\n"
+                    sentence_parts.append(line)
 
-                    sentence += line
-
-            if sentence != "" and sentence.count(" ") >= sentence_word_limit:
+            sentence = "\n".join(sentence_parts)
+            if sentence and sentence.count(" ") >= sentence_word_limit:
                 sentences[start] = sentence
 
             for start in sentences:
@@ -2477,22 +2510,41 @@ async def witty_rules(
     return list_full
 
 
-def is_bullet_point(line: str):
+def is_bullet_point(line: str) -> bool:
+    """Check if a line is a bullet point or numbered list item.
+
+    Args:
+        line: Text line to check
+
+    Returns:
+        True if line starts with bullet or number, False otherwise
+    """
     line = line.strip()
-    if line == "":
+    if not line:
         return False
 
-    if line[0] in ["-", "*", "•", "‣", "⁃", "⁌", "⁍", "⁍", "◘", "◦", "⦾", "⦿"]:
+    # Check for bullet characters
+    bullet_chars = {"-", "*", "•", "‣", "⁃", "⁌", "⁍", "◘", "◦", "⦾", "⦿"}
+    if line[0] in bullet_chars:
         return True
 
-    regexp = re.compile(r"^\d+[).:]")
-    return bool(regexp.search(line))
+    # Check for numbered list (e.g., "1.", "2)", "3:")
+    return bool(re.match(r"^\d+[).:]", line))
 
 
 def parse_word_type(word_type: str, lower_case: bool = True) -> tuple[str, bool, bool]:
+    """Parse word type string with modifiers.
+
+    Args:
+        word_type: Word type string (may be prefixed with ~ or =)
+        lower_case: Default case sensitivity flag
+
+    Returns:
+        Tuple of (word_type, lower_case, lemmatize) flags
+    """
     lemmatize = True
 
-    if word_type is None or word_type == "":
+    if not word_type:
         return "", lower_case, lemmatize
 
     match word_type[0]:

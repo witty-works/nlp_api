@@ -9,10 +9,13 @@ from app.settings import Settings
 from app.models import MetricsType, CheckRequestIn
 
 
-"""Class to handle Redis setup and provide Redis connection."""
-
-
 class Redis:
+    """Redis helper that manages connections, metrics, and request logs.
+
+    Provides a thin wrapper around a Redis client with helpers for
+    fetching/storing configs, metrics, and per-user request/response logs.
+    """
+
     settings: Settings
     db: RedisCache
 
@@ -22,7 +25,12 @@ class Redis:
 
     @staticmethod
     def factory(settings: Settings):
-        """Set up and return a Redis connection."""
+        """Create and return a Redis client based on settings.
+
+        Uses a real Redis connection when redis_host is configured; otherwise
+        falls back to an in-memory FakeStrictRedis. When testing_api_key is
+        present, a test key is preloaded for convenience during local tests.
+        """
         if settings.redis_host:
             redis_db = RedisCache(
                 host=settings.redis_host,
@@ -42,13 +50,16 @@ class Redis:
 
         return Redis(settings, redis_db)
 
-    def get_user_id(self, email: str):
+    def get_user_id(self, email: str) -> str:
+        """Generate a Redis key for a user by email."""
         return "dashboard-user-email:" + email.lower()
 
-    def get_log_id(self, user_email: str | None):
+    def get_log_id(self, user_email: str | None) -> str:
+        """Generate a Redis key for user logs."""
         return "log-" + self.get_user_id(user_email if user_email else "none")
 
-    def get_log_key(self, user_email: str | None):
+    def get_log_key(self, user_email: str | None) -> str | None:
+        """Get the log key for a user if they are in the debug list."""
         key = self.get_log_id(user_email)
         if user_email is None:
             user_email = "none"
@@ -60,6 +71,7 @@ class Redis:
         self,
         organization_id: str,
     ) -> dict:
+        """Fetch organization configurations from Redis by organization ID."""
         configs = self.db.get(organization_id)
         if not configs:
             raise HTTPException(
@@ -72,6 +84,7 @@ class Redis:
         self,
         email: str,
     ) -> dict:
+        """Fetch user configurations from Redis by email."""
         configs = self.db.get(self.get_user_id(email))
         if not configs:
             raise HTTPException(status_code=404, detail="User configs not found")
@@ -80,7 +93,8 @@ class Redis:
 
     def store_metrics(
         self, request: Request, configs: dict, version: str | None, endpoint: str
-    ):
+    ) -> None:
+        """Store API usage metrics in Redis by user, plan, and host."""
         if not self.settings.log_metrics:
             return
 
@@ -117,7 +131,8 @@ class Redis:
     def get_user_logs(
         self,
         user_email: str | None,
-    ):
+    ) -> list:
+        """Retrieve all logged requests/responses for a user."""
         results = []
 
         data = self.db.lrange(self.get_log_id(user_email), 0, -1)
@@ -137,7 +152,8 @@ class Redis:
         configs: dict,
         version: str | None,
         endpoint: str,
-    ):
+    ) -> None:
+        """Log a request to Redis for debugging purposes."""
         key = self.get_log_key(user_email)
         if key is None:
             return
@@ -159,7 +175,8 @@ class Redis:
         self,
         user_email: str | None,
         results: BaseModel,
-    ):
+    ) -> None:
+        """Log a response to Redis for debugging purposes."""
         key = self.get_log_key(user_email)
         if key is None:
             return

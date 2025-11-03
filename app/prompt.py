@@ -17,16 +17,24 @@ class Prompt:
         user_prompt: str,
         system_prompt: str | None = None,
         aws_model_id: str | None = None,
-        temperature: int | None = None,
+        temperature: float | None = None,
     ):
-        if aws_model_id is None:
-            aws_model_id = self.settings.aws_model_id
+        """Handle LLM prompt generation and streaming response.
 
-        if temperature is None:
-            temperature = 0.1
+        Args:
+            user_prompt: The user's prompt text
+            system_prompt: Optional system prompt (defaults to inclusive language guidelines)
+            aws_model_id: AWS Bedrock model ID (defaults to settings)
+            temperature: LLM temperature parameter (defaults to 0.1)
+
+        Returns:
+            The complete LLM response as a string
+        """
+        aws_model_id = aws_model_id or self.settings.aws_model_id
+        temperature = temperature or 0.1
 
         if system_prompt is None:
-            system_prompt = f"""
+            system_prompt = """
             You are an expert in inclusive language.
             Keep gender equality in mind and avoid language that is needlessly gendered (f.e. use truely gender neutral nouns, avoid pronouns).
             Do not make biased assumptions.
@@ -39,22 +47,20 @@ class Prompt:
             Follow instructions without mentioning them in your response. Specifically do not add phrases like "Greetings", "Here is .." or "Sure .." to the beginning of your response.
             """
 
-        conversation = []
-
+        # Handle model-specific prompt formatting
         if "mistral" in aws_model_id:
-            user_prompt = f"{system_prompt}\n{user_prompt}"
-            system_prompt = []
+            formatted_user_prompt = f"{system_prompt}\n{user_prompt}"
+            formatted_system_prompt = []
         else:
-            system_prompt = [{"text": system_prompt}]
+            formatted_user_prompt = user_prompt
+            formatted_system_prompt = [{"text": system_prompt}]
 
-        user_prompt = {
-            "role": "user",
-            "content": [{"text": user_prompt}],
-        }
-
-        conversation.append(user_prompt)
-
-        result = ""
+        conversation = [
+            {
+                "role": "user",
+                "content": [{"text": formatted_user_prompt}],
+            }
+        ]
 
         # Initialize the Bedrock runtime client
         aws_client = boto3.client(
@@ -65,33 +71,52 @@ class Prompt:
         )
 
         streaming_response = aws_client.converse_stream(
-            system=system_prompt,
+            system=formatted_system_prompt,
             modelId=aws_model_id,
             messages=conversation,
             inferenceConfig={
-                # This is the maximum number of tokens that the LLM generates.
-                "maxTokens": 300,
-                # Temperature is a hyperparameter that controls the randomness of language model output. (lower is more predictable)
-                "temperature": temperature,
-                # Top p, also known as nucleus sampling, is another hyperparameter that controls the randomness of language model output.
-                "topP": 1,
+                "maxTokens": 300,  # Maximum number of tokens the LLM generates
+                "temperature": temperature,  # Controls randomness (lower = more predictable)
+                "topP": 1,  # Nucleus sampling parameter
             },
         )
 
+        # Collect streaming response chunks
+        result_parts = []
         for chunk in streaming_response["stream"]:
             if "contentBlockDelta" in chunk:
                 text = chunk["contentBlockDelta"]["delta"]["text"]
-                result += text
+                result_parts.append(text)
 
-        return result
+        return "".join(result_parts)
 
-    def parseJson(self, result: str):
+    def parse_json(self, result: str):
+        """Parse and repair potentially malformed JSON from LLM responses.
+
+        Handles common issues:
+        - Unicode escape sequences
+        - Extra text before/after JSON
+        - Malformed JSON structure
+
+        Args:
+            result: Raw string output from LLM
+
+        Returns:
+            Parsed JSON object or original string if not valid JSON
+        """
+        if not result:
+            return result
+
+        # Handle unicode escape sequences
         if "\\u00" in result:
-            result = result.encode().decode('unicode-escape')
+            result = result.encode().decode("unicode-escape")
 
+        # Extract JSON from text if present
         if "{" in result and "}" in result:
-            result = result[result.find("{") : result.rfind("}") + 1]
-        elif result == "" or result[0] != '"' or result[-1] != '"':
+            start = result.find("{")
+            end = result.rfind("}") + 1
+            result = result[start:end]
+        elif not result.startswith('"') or not result.endswith('"'):
             return result
 
         return json_repair.loads(result)

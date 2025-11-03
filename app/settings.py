@@ -7,7 +7,7 @@ from platformshconfig import Config
 
 
 class Settings(BaseSettings):
-    """Load environment variables to python objects using pydantic."""
+    """Load environment variables into Python objects using Pydantic."""
 
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
@@ -81,6 +81,12 @@ class Settings(BaseSettings):
 
     @staticmethod
     def factory():
+        """Construct a fully initialized Settings instance.
+
+        Populates derived fields (is_prod, minimum_versions, context_checker,
+        platform relationship overrides, and Redis credentials) based on
+        environment variables and Platform.sh configuration.
+        """
         settings = Settings()
         settings.is_prod = settings.platform_environment_type == "production"
 
@@ -132,7 +138,7 @@ class Settings(BaseSettings):
             if "languagetool" in settings.platform_relationships:
                 endpoint = settings.platform_relationships["languagetool"][0]
                 settings.languagetool_api = (
-                    "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+                    f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
                 )
                 settings.languagetool_verify_ssl = False
 

@@ -233,7 +233,7 @@ class LlmAlternatives:
         )
 
         result = await self.prompt.handle(user_prompt, system_prompt, aws_model_id)
-        result = self.prompt.parseJson(result)
+        result = self.prompt.parse_json(result)
 
         separator, noun_separator, separate_gender_plural = (
             Config.get_gender_separators(rephrase_request_in.gender_separator)

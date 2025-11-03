@@ -89,10 +89,10 @@ class LanguageTool:
             # Ignore case issues at the start of sentence due to chunking issues
             # https://github.com/witty-works/browser-extension/pull/880
             if match["rule"]["id"] == "DE_CASE":
-                preceeding_text = full_text[start - 10 : start]
-                preceeding_text = preceeding_text.rstrip(" ")
+                preceding_text = full_text[start - 10 : start]
+                preceding_text = preceding_text.rstrip(" ")
                 # check if before the word there is only spaces and a newline or tab
-                if len(preceeding_text) and preceeding_text[-1] in ["\n", "\t"]:
+                if len(preceding_text) and preceding_text[-1] in ["\n", "\t"]:
                     continue
 
             if match["rule"]["id"] == "WHITESPACE_RULE" and (
@@ -405,11 +405,18 @@ class LanguageTool:
         return False
 
     def fetch_alternatives(self, match: dict) -> list[Alternative]:
+        """Extract alternatives from a LanguageTool match result.
+
+        Args:
+            match: Match dictionary from LanguageTool response
+
+        Returns:
+            List of Alternative objects
+        """
         alternatives = []
         if "replacements" in match:
             for replacement in match["replacements"]:
-                value = replacement["value"]
-                value = value if value != "" else "-"
+                value = replacement["value"] or "-"
                 alternatives.append(Alternative(value))
 
         return alternatives

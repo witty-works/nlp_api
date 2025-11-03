@@ -344,6 +344,7 @@ class Article(BaseModel):
 
         return None
 
+
 class RuleDynamic(BaseModel):
     alternatives: Optional[list] = None
     false_positives: Optional[list[str]] = []
@@ -549,7 +550,7 @@ class Config(BaseModel):
             r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)?|R|Nja|Ze)$"
         ),
         GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
-            r"^^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
+            r"^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
         ),
         GermanGenderEndingType.PARENTHESIS: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
@@ -1080,7 +1081,7 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
-    def uppper_first(text):
+    def upper_first(text):
         if not text:
             return text
 
@@ -1115,11 +1116,11 @@ class ResultOut(BaseModel):
 
                 if category != "orthography":
                     if is_upper:
-                        alternative.lemma = ResultOut.uppper_first(alternative.lemma)
-                        alternative.male_form = ResultOut.uppper_first(
+                        alternative.lemma = ResultOut.upper_first(alternative.lemma)
+                        alternative.male_form = ResultOut.upper_first(
                             alternative.male_form
                         )
-                        alternative.female_form = ResultOut.uppper_first(
+                        alternative.female_form = ResultOut.upper_first(
                             alternative.female_form
                         )
                 elif alternative.lemma is not None:
@@ -1184,11 +1185,11 @@ class ResultOut(BaseModel):
 
             punctuation = "[.!?:]" if lang == LangType.DE else "[.!?]"
 
-            preceeding_text = full_text[max(0, start - 5) : start]
+            preceding_text = full_text[max(0, start - 5) : start]
             if (
-                re.search(r"^ *$", preceeding_text) is not None
-                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) is not None
-                or re.search(punctuation + r"\s*$", preceeding_text, re.MULTILINE)
+                re.search(r"^ *$", preceding_text) is not None
+                or re.search(r"\s{3,}}$", preceding_text, re.MULTILINE) is not None
+                or re.search(punctuation + r"\s*$", preceding_text, re.MULTILINE)
                 is not None
             ):
                 return True
@@ -1248,7 +1249,7 @@ class RephrasesOut(BaseModel):
 
 class PromptOut(BaseModel):
     check_results: list[ResultOut]
-    inititial_response: str
+    initial_response: Optional[str] = None
     limit_reached: bool
     reviewed_response: Optional[str] = None
 
