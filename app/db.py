@@ -21,6 +21,7 @@ from app.query_definitions import (
 )
 from app.settings import Settings
 import aiosqlite
+import aiofiles
 import json
 from spacy.tokens import Token
 from copy import deepcopy
@@ -59,7 +60,9 @@ class Db:
 
         if len(tables_exist) == 0:
             if settings.import_from_dump:
-                await sqlite_db.executescript(open("./database/dump.sql", "r").read())
+                async with aiofiles.open("./database/dump.sql", "r") as f:
+                    sql_script = await f.read()
+                await sqlite_db.executescript(sql_script)
             else:
                 source = await aiosqlite.connect("./database/db.sqlite3")
                 await source.backup(sqlite_db)
