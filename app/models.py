@@ -1,4 +1,4 @@
-from pydantic import field_validator, BaseModel
+from pydantic import field_validator, BaseModel, Field
 from typing import Union, Optional, Annotated, Any
 from annotated_types import Len
 from enum import Enum
@@ -26,6 +26,17 @@ from app.privacy_filter import get_privacy_filter
 class Client(BaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
+
+    @classmethod
+    def parse(cls, version: Optional[str]) -> "Client":
+        if version is None:
+            version = "0.0.0"
+
+        name = "web-ext"
+        if ":" in version:
+            name, version = version.split(":", 2)
+
+        return cls(name=name, version=version)
 
 
 class Language(object):
@@ -347,7 +358,7 @@ class Article(BaseModel):
 
 class RuleDynamic(BaseModel):
     alternatives: Optional[list] = None
-    false_positives: Optional[list[str]] = []
+    false_positives: Optional[list[str]] = Field(default_factory=list)
     subcategory: Optional[str] = None
     article: Optional[Article] = None
 
@@ -358,9 +369,9 @@ class Rule(Lemma):
     parent_id: Optional[int]
     lang: str
     actual_word_types: Optional[str] = None
-    subcategories: Optional[list[str]] = []
+    subcategories: Optional[list[str]] = None
     is_advanced: bool = False
-    alternatives: Optional[list[Alternative]] = []
+    alternatives: Optional[list[Alternative]] = None
     false_positives: Optional[list[str]] = None
     case_sensitive_false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
@@ -489,15 +500,15 @@ class RuleIn(BaseModel):
     word_types: list | dict
     actual_word_types: Optional[str] = None
     subcategories: list[str]
-    alternatives: Optional[list[AlternativeIn]] = []
-    false_positives: Optional[list[str]] = []
+    alternatives: Optional[list[AlternativeIn]] = Field(default_factory=list)
+    false_positives: Optional[list[str]] = Field(default_factory=list)
     label: Optional[str] = None
     pattern: Optional[str] = None
     is_pattern_match: Optional[bool] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
-    lemmatizations: Optional[list[LemmatizationIn]] = []
+    lemmatizations: Optional[list[LemmatizationIn]] = Field(default_factory=list)
 
 
 class Config(BaseModel):
@@ -580,7 +591,7 @@ class Config(BaseModel):
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
 
-    disabled_categories: list = []
+    disabled_categories: list = Field(default_factory=list)
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
@@ -722,8 +733,8 @@ class RuleConfig(BaseModel):
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
-    categories: Optional[dict[str, BooleanConfigType]] = {}
-    force_categories: Optional[list[str]] = []
+    categories: Optional[dict[str, BooleanConfigType]] = Field(default_factory=dict)
+    force_categories: Optional[list[str]] = Field(default_factory=list)
     addons: Optional[list[str]] = None
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
@@ -785,8 +796,8 @@ class ConfRequest(BaseModel):
     name: str
     plan: Optional[str] = None
     config: RuleConfig
-    false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement | dict] = {}
+    false_positives: list[str] = Field(default_factory=list)
+    term_replacements: dict[str, TermReplacement | dict] = Field(default_factory=dict)
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     sync_date: Optional[str] = None
@@ -809,8 +820,8 @@ class ConfResponse(BaseModel):
     name: str
     plan: Optional[str] = None
     config: RuleConfig
-    false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement] = {}
+    false_positives: list[str] = Field(default_factory=list)
+    term_replacements: dict[str, TermReplacement] = Field(default_factory=dict)
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
 
@@ -820,8 +831,10 @@ class UserConfResponse(ConfRequest):
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
-    organization_false_positives: Optional[list[str]] = []
-    organization_term_replacements: Optional[dict[str, TermReplacement]] = {}
+    organization_false_positives: Optional[list[str]] = Field(default_factory=list)
+    organization_term_replacements: Optional[dict[str, TermReplacement]] = Field(
+        default_factory=dict
+    )
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
     organization_trial_ends_at: Optional[str] = None
@@ -832,7 +845,7 @@ class UserConfResponse(ConfRequest):
 
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
-    config: Optional[Config] = Config()
+    config: Optional[Config] = Field(default_factory=Config)
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 

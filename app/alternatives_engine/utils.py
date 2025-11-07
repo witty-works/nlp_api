@@ -1,0 +1,89 @@
+"""Utilities for alternatives generation and formatting."""
+
+from app.models import (
+    LangType,
+    FrenchGenderSeparatorType,
+    Alternative,
+)
+
+
+def article_binary_pair(
+    static_rules: dict, lang: LangType, article: str
+) -> tuple[str, str]:
+    if (
+        "inclusive_articles" in static_rules[lang]
+        and article in static_rules[lang]["inclusive_articles"]
+    ):
+        masculine_base = static_rules[lang]["articles_map"][article]
+        male_article = masculine_base
+        female_article = static_rules[lang]["articles_binary_map"][masculine_base]
+        return male_article, female_article
+
+    if article in static_rules[lang].get("masculine_articles", {}):
+        return article, static_rules[lang]["articles_binary_map"][article]
+
+    # assume feminine
+    return static_rules[lang]["articles_binary_map"][article], article
+
+
+def get_noun_conjunction(static_rules: dict, lang: LangType, is_singular: bool) -> str:
+    return (
+        static_rules[lang]["noun_conjunction"]["singular"]
+        if is_singular
+        else static_rules[lang]["noun_conjunction"]["plural"]
+    )
+
+
+def add_german_prefix(word: str, prefix: str) -> str:
+    if not prefix or word.startswith(prefix):
+        return word
+
+    if not word.startswith("-") and not prefix.endswith("-"):
+        word = word[0].lower() + word[1:]
+
+    return prefix + word
+
+
+def add_article(lang: LangType, text: str, article: str, separator: str) -> str:
+    if (
+        lang == LangType.FR
+        and (article.endswith("le") or article == "la")
+        and text[0] in ["a", "e", "i", "o", "u", "h"]
+    ):
+        return "l'" + text
+
+    if separator != FrenchGenderSeparatorType.POINT_MEDIAN:
+        article = article.replace(FrenchGenderSeparatorType.POINT_MEDIAN, separator)
+
+    return article + " " + text
+
+
+def get_article_by_index(
+    static_rules: dict, lang: LangType, articles_list: str, article_index: int
+):
+    return list(static_rules[lang][articles_list].keys())[article_index]
+
+
+def build_french_adjective_alternatives(
+    male_form: str, female_form: str
+) -> list[Alternative]:
+    lemma = male_form + "~" + female_form
+    return [
+        Alternative(
+            lemma,
+            [lemma],
+            [
+                {
+                    "word_type": "a",
+                    "lower_case": True,
+                    "lemmatize": True,
+                }
+            ],
+            False,
+            False,
+            False,
+            False,
+            False,
+            True,
+        )
+    ]

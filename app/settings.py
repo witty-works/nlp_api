@@ -1,4 +1,5 @@
 from typing import Optional
+from functools import lru_cache
 import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -39,7 +40,7 @@ class Settings(BaseSettings):
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
 
-    sso_configs: dict = {}
+    sso_configs: dict[str, dict[str, Optional[str]]] = {}
 
     redis_host: Optional[str] = ""
     redis_port: Optional[str] = ""
@@ -51,11 +52,12 @@ class Settings(BaseSettings):
     testing_email: Optional[str] = ""
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
+    slack_enabled: bool = False
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
     slack_organization_id: Optional[str] = ""
     alternatives_max_count: int = 5
-    context_checker: dict = {}
+    context_checker: dict[str, dict[str, str]] = {}
     context_checker_url: Optional[str] = ""
     context_checker_api_key: Optional[str] = ""
     context_checker_url_de: Optional[str] = ""
@@ -69,15 +71,15 @@ class Settings(BaseSettings):
     ]
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
-    minimum_versions: dict = {}
+    minimum_versions: dict[str, str] = {}
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     import_from_dump: bool = True
     log_missing_declension: bool = True
+    log_metrics: Optional[bool] = False
     aws_region_name: Optional[str] = ""
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
     aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
-    log_metrics: Optional[bool] = False
 
     @staticmethod
     def factory():
@@ -154,3 +156,16 @@ class Settings(BaseSettings):
             settings.redis_verify_ssl = False
 
         return settings
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    return Settings.factory()
+
+
+def reset_settings_cache() -> None:
+    """Clear the cached settings instance (primarily for tests)."""
+    try:
+        get_settings.cache_clear()  # type: ignore[attr-defined]
+    except Exception:
+        pass

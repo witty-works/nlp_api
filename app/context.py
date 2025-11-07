@@ -31,7 +31,7 @@ from app.regex_check import RegexCheck
 from app.rules import fetch_static_rules
 from app.rule_check import RuleCheck
 from app.sentry import set_up_sentry_sdk
-from app.settings import Settings
+from app.settings import Settings, get_settings
 from app.translations import translations
 from app.verbs import Verbs
 
@@ -65,7 +65,7 @@ class AppContext:
         self.declensions_config = declensions_config
         self.verb_form_map = verb_form_map
         self.categories = get_categories()
-        self.settings = Settings.factory()
+        self.settings = get_settings()
         self.logger = Logger.factory(self.settings)
         self.logger.debug("app started with settings: %s", self.settings)
 
