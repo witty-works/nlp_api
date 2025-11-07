@@ -1,5 +1,6 @@
 from app.settings import Settings
 from app.models import ResultOut, Language
+from app.context import AppContext
 
 from slack_bolt.app.async_app import AsyncApp
 from slack_sdk.models.blocks import (
@@ -10,7 +11,7 @@ from slack_bolt import Respond
 from slack_sdk.web.async_client import AsyncWebClient
 
 
-def get_bolt(settings: Settings):
+def get_bolt(settings: Settings, context: AppContext) -> AsyncApp:
     if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
         bolt = AsyncApp(
             token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
@@ -23,6 +24,12 @@ def get_bolt(settings: Settings):
                 base_url="http://localhost",
             ),
         )
+
+    # Inject AppContext into Slack Bolt's context for all listeners
+    @bolt.middleware
+    async def inject_app_context(context_, next):  # type: ignore[no-redef]
+        context_["app_context"] = context
+        return await next()
 
     return bolt
 
@@ -73,9 +80,10 @@ async def process_command_witty(
                 )
             )
 
-            if len(result.alternatives):
+            alternatives_list = result.alternatives or []
+            if alternatives_list:
                 alternatives = ""
-                for alternative in result.alternatives:
+                for alternative in alternatives_list:
                     if alternative.remove:
                         alternatives += f"\n• ~{alternative.text}~"
                     else:
@@ -92,3 +100,4 @@ async def process_command_witty(
                 )
 
     await respond(blocks=blocks)
+    return None

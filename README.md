@@ -163,13 +163,19 @@ Used for LLM-powered features (e.g., grammatically correct alternatives, rephras
 
 ## Slack
 
-Enable the `/witty` Slack command and event handling.
+Opt-in Slack integration. When enabled, the API registers the `/slack/commands` endpoint and provides the `/witty` command handler.
 
 | Variable              | Default | Description                                                                           |
 | --------------------- | ------- | ------------------------------------------------------------------------------------- |
+| SLACK_ENABLED         | false   | When true, initialize Slack Bolt and include the Slack routes.                        |
 | SLACK_SIGNING_SECRET  | (empty) | Slack app signing secret used to verify requests.                                     |
 | SLACK_BOT_TOKEN       | (empty) | Bot token to call Slack APIs.                                                         |
 | SLACK_ORGANIZATION_ID | (empty) | Optional: fallback organization ID for config lookup when user email isn’t available. |
+
+Notes
+
+- If `SLACK_ENABLED=false` (default), no Slack code is initialized and the Slack routes are not included.
+- With `SLACK_ENABLED=true` but empty Slack credentials, the app uses a local/dev Slack client for testing (no external calls).
 
 ## Authentication
 

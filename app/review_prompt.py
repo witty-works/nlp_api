@@ -9,7 +9,8 @@ class ReviewPrompt:
         review_type: ReviewType,
         previous_prompt: str | None = None,
         max_prompt_length: int | None = None,
-    ):
+        min_changes: int | None = 0,
+    ) -> str | None:
         prompt = (
             'You are an expert in inclusive language. You are tasked with editing the "previous response".'
             + "\n"
@@ -65,5 +66,8 @@ Do not include the "issues list" in your response.
         if max_prompt_length is not None:
             while len(json.dumps(changes)) > max_prompt_length - len(prompt):
                 changes.pop()
+
+        if len(changes) <= min_changes:
+            return None
 
         return prompt + '\nBelow is the "issues list":\n' + json.dumps(changes)
