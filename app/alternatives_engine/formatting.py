@@ -74,6 +74,8 @@ def inclusive_alternative(
 
         return prefix + gender_prefix + separator + suffix
 
+    return None
+
 
 def _add_german_prefix(word: str, prefix: str) -> str:
     if len(prefix) == 0 or word.startswith(prefix):
