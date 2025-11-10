@@ -143,7 +143,7 @@ async def german_lemmatization(
                         token._.form = column_name
 
                     await context.db.fetch_declensions(
-                        LangType.DE, WordType.VERB, rows[0][0]
+                        LangType.DE, WordType.VERB, rows[0][0], token
                     )
                     return rows[0][0]
 
