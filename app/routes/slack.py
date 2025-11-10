@@ -43,7 +43,7 @@ def init_slack(context: AppContext) -> None:
         app_context: AppContext | None = context.get("app_context")
         if app_context is None:
             await respond("Service not ready yet. Please try again shortly.")
-            return
+            return None
 
         check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
         text, language, limit_reached = fetch_text(
@@ -52,7 +52,7 @@ def init_slack(context: AppContext) -> None:
 
         if language is None:
             await respond(f"Witty could not determine a language for '{text}'.")
-            return
+            return None
 
         configs = {}
 
