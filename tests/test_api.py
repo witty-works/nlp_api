@@ -6,6 +6,8 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     context,
+)
+from app.config_manager import (
     fetch_configs_for_request,
     parse_term_replacements,
 )
@@ -538,7 +540,7 @@ def set_redis():
     }
 
     user_object["term_replacements"] = parse_term_replacements(
-        user_object["term_replacements"]
+        user_object["term_replacements"], context
     )
     context.redis.db.set(
         context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
@@ -740,7 +742,7 @@ def set_redis():
     }
 
     user_object["term_replacements"] = parse_term_replacements(
-        user_object["term_replacements"]
+        user_object["term_replacements"], context
     )
     context.redis.db.set(
         context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
@@ -820,7 +822,7 @@ def set_redis():
     }
 
     organization_object["term_replacements"] = parse_term_replacements(
-        organization_object["term_replacements"]
+        organization_object["term_replacements"], context
     )
     context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
@@ -1143,7 +1145,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
     }
     test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com", context)
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
@@ -1170,7 +1172,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     )
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False
@@ -1190,7 +1192,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com", context)
     )
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is True
@@ -1209,7 +1211,7 @@ def test_set_default_rules(event_loop):
     test_request = CheckRequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     )
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False

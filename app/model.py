@@ -143,6 +143,9 @@ class Model:
         single_word: bool = False,
         strict: bool = False,
     ) -> str:
+        """Hacky approach to fix some issues in spaCy POS detection.
+        It was optimized for spaCy large models for the current rule set.
+        Fine tuning the spaCy models is probably the cleaner approach."""
         # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
         # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 

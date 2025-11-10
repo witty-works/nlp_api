@@ -2,6 +2,16 @@ import json
 from functools import lru_cache
 
 
+# Centralized list of inclusive language-related categories used across the API.
+inclusive_categories = [
+    "communal",
+    "d_and_i",
+    "emotional_security",
+    "inclusive",
+    "orthography",
+]
+
+
 @lru_cache()
 def load_json_data(file_name):
     with open(file_name) as file:
