@@ -2,12 +2,11 @@ from app.settings import Settings
 from app.models import ResultOut, Language
 from app.context import AppContext
 
-from slack_bolt.app.async_app import AsyncApp
+from slack_bolt.app.async_app import AsyncApp, AsyncRespond
 from slack_sdk.models.blocks import (
     SectionBlock,
     MarkdownTextObject,
 )
-from slack_bolt import Respond
 from slack_sdk.web.async_client import AsyncWebClient
 
 
@@ -39,7 +38,7 @@ async def process_command_witty(
     language: Language,
     limit_reached: bool,
     results: list[ResultOut],
-    respond: Respond,
+    respond: AsyncRespond,
 ):  # pragma: no cover
     analyzed_text = f"*Analyzed*: {text}"
     if limit_reached:
