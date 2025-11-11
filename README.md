@@ -394,9 +394,247 @@ platform project:clear-build-cache
 see:
 https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
 
-## Example API call
+## Request Configuration
 
+The `/check` endpoint accepts an optional `config` object that allows you to customize the behavior of the inclusive language checker on a per-request basis. This configuration can override stored user/organization settings or provide settings when no stored configuration exists.
+
+### Authentication
+
+The API supports multiple authentication methods for accessing protected endpoints like `/check`, `/rephrase`, and other core features.
+
+#### API Key Authentication
+
+Pass an API key using the `x-key` header. API keys are managed through the `/api_key` endpoints and stored in Redis, mapping to user email addresses.
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'x-key: your-api-key-here' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Your text to check"
+}'
 ```
+
+**Managing API Keys:**
+
+- `POST /api_key` - Create a new API key for a user email
+- `GET /api_key/{email}` - Retrieve API key for an email
+- `DELETE /api_key/{email}` - Delete API key for an email
+
+These management endpoints require HTTP Basic authentication (see [API docs protection](#api-docs-protection)).
+
+#### OAuth2 Bearer Token Authentication
+
+The API supports OAuth2 Bearer token authentication through two providers:
+
+**1. Azure AD B2C (Single-tenant)**
+
+Used for organization-specific authentication. Configure using environment variables:
+
+- `AADB2C_TENANT_ID` - Your B2C tenant ID
+- `AADB2C_CLIENT_ID` - Application client ID
+- `AADB2C_POLICY` - User flow/policy name
+- `AADB2C_DOMAIN` - B2C domain
+- `AADB2C_EXPECTED_SCOPE` - Required scope (e.g., `access_as_user`)
+
+**2. Microsoft Office SSO (Multi-tenant)**
+
+Used for Office 365 / Microsoft 365 integrations. Configure using:
+
+- `OFFICE_SSO_CLIENT_ID` - Application client ID
+- `OFFICE_SSO_EXPECTED_SCOPE` - Required scope
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'Authorization: Bearer your-oauth-token-here' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Your text to check"
+}'
+```
+
+The API validates the token against the configured provider(s) and required scopes.
+
+#### Testing Authentication (Development Only)
+
+When `TESTING=true` is set in environment variables, you can use a special header for testing without real authentication:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'X-TESTING-AUTH: user@example.com' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Your text to check"
+}'
+```
+
+**⚠️ Warning**: This bypass is only active when `TESTING=true` and should NEVER be enabled in production environments.
+
+#### Authentication Priority
+
+When multiple authentication methods are provided, the API checks them in this order:
+
+1. OAuth2 Bearer token (if `Authorization` header is present)
+2. API Key (if `x-key` header is present)
+3. Testing header (if `TESTING=true` and `X-TESTING-AUTH` is present)
+
+#### Unauthenticated Endpoints
+
+Some endpoints do not require authentication:
+
+- Health checks and status endpoints
+- Public documentation (`/docs`, `/redoc`) - unless `API_DOCS_AUTH_ENABLED=true`
+- OpenAPI schema (`/openapi.json`) - unless `API_DOCS_AUTH_ENABLED=true`
+
+### Basic Config Structure
+
+The `config` object in a `/check` request supports the following options.
+
+#### Context and Storage
+
+| Field              | Type    | Default |
+| ------------------ | ------- | ------- |
+| `store_context`    | boolean | `true`  |
+| `llm_alternatives` | boolean | `false` |
+
+**`store_context`**: When true, includes surrounding text context (±100 chars) in results. Context is sanitized for privacy. Clients use this flag to decide whether to persist data with analytics.
+
+**`llm_alternatives`**: Enable LLM-powered grammatically correct alternatives (requires plan with LLM access).
+
+#### Plan and Features
+
+| Field    | Type             | Default |
+| -------- | ---------------- | ------- |
+| `plan`   | string           | `null`  |
+| `addons` | array of strings | `null`  |
+
+**`plan`**: Plan identifier (e.g., "premium", "enterprise").
+
+**`addons`**: List of enabled addon features.
+
+#### Language Settings
+
+| Field                 | Type           | Default                       |
+| --------------------- | -------------- | ----------------------------- |
+| `primary_language`    | enum           | `null`                        |
+| `preferred_languages` | array of enums | `["en", "de", "fr"]`          |
+| `preferred_variants`  | array of enums | `["en-US", "de-DE", "fr-FR"]` |
+
+**`primary_language`**: Primary language variant. Supported values: `"en"`, `"de"`, `"fr"`, `"en-US"`, `"en-GB"`, `"de-DE"`, `"de-CH"`, `"de-AT"`, `"fr-FR"`, or `"auto"` for automatic detection.
+
+**`preferred_languages`**: Languages to check. Supported values: `"en"`, `"de"`, `"fr"`.
+
+**`preferred_variants`**: Language variants for spelling/grammar. Supported values: `"en-US"`, `"en-GB"`, `"de-DE"`, `"de-CH"`, `"de-AT"`, `"fr-FR"`.
+
+#### Gender-Inclusive Formatting
+
+| Field                     | Type | Default  |
+| ------------------------- | ---- | -------- |
+| `german_gender_ending`    | enum | `"*in"`  |
+| `french_gender_separator` | enum | `"·"`    |
+| `gendered_roles_format`   | enum | `"both"` |
+
+**`german_gender_ending`**: German gender-inclusive ending format. Supported values:
+
+- `"*in"` - Star/Asterisk (e.g., `Lehrer*in`)
+- `"_in"` - Underscore (e.g., `Lehrer_in`)
+- `":in"` - Colon (e.g., `Lehrer:in`)
+- `"/in"` - Slash (e.g., `Lehrer/in`)
+- `"/-in"` - Slash-Dash (e.g., `Lehrer/-in`)
+- `"In"` - Capital Letter (e.g., `LehrerIn`)
+- `"()"` - Parenthesis (e.g., `Lehrer(in)`)
+- `"(-)"` - Parenthesis-Dash (e.g., `Lehrer(-in)`)
+
+**`french_gender_separator`**: French gender-inclusive separator format (Point médian). Supported values:
+
+- `"·"` - Point médian (e.g., `auteur·rice`)
+- `"·s"` - Point médian with S (e.g., `auteur·rice·s`)
+- `"."` - Point (e.g., `auteur.rice`)
+- `".s"` - Point with S (e.g., `auteur.rice.s`)
+- `"/"` - Slash (e.g., `auteur/rice`)
+- `"/s"` - Slash with S (e.g., `auteur/rice/s`)
+
+**`gendered_roles_format`**: How to suggest gendered role alternatives. Supported values:
+
+- `"none"` - No gendered role alternatives
+- `"both"` - Show both inclusive and binary gender alternatives
+- `"inclusive_gender"` - Show only gender-inclusive alternatives (e.g., "firefighter" instead of "fireman")
+- `"binary_gender"` - Show only binary gender alternatives (e.g., "fireman/firewoman")
+
+#### Category and Alternative Settings
+
+| Field                           | Type             | Default |
+| ------------------------------- | ---------------- | ------- |
+| `disabled_categories`           | array of strings | `[]`    |
+| `show_inspiration_alternatives` | boolean          | `false` |
+| `alternatives_max_count`        | integer          | `null`  |
+
+**`disabled_categories`**: List of category names to disable (e.g., ["orthography", "gender"]). See [supported categories](#supported-categories) below.
+
+**`show_inspiration_alternatives`**: Include inspirational (💡) suggestions in alternatives.
+
+**`alternatives_max_count`**: Maximum number of alternatives to return per result (defaults to server setting).
+
+### Supported Categories
+
+The API checks text against multiple diversity dimensions and language categories. You can selectively disable categories using the `disabled_categories` configuration option.
+
+#### Finding Available Categories
+
+The complete list of supported categories can be found in multiple locations:
+
+1. **Public Documentation** (with explanations and examples):
+
+   - English: https://www.witty.works/en/categories.html
+   - German: https://www.witty.works/de/kategorien.html
+   - French: https://www.witty.works/fr/categories.html
+
+2. **Source Code** (technical reference):
+
+   - [`training_data/categories.json`](training_data/categories.json) - Main category definitions with translations, proficiency levels, and metadata
+   - [`training_data/diversity_dimension_drivers.json`](training_data/diversity_dimension_drivers.json) - Additional diversity dimension drivers
+   - [`app/categories.py`](app/categories.py) - Category logic, utilities, and helper functions
+
+3. **API Documentation** (interactive):
+   - OpenAPI/Swagger UI at `/docs` (when running locally or in production)
+   - The `/docs` endpoint provides interactive documentation with all available configuration options
+
+#### Common Categories
+
+The API organizes checks using **subcategories** (diversity dimension drivers) defined in `diversity_dimension_drivers.json`. Each subcategory belongs to a top-level category defined in `categories.json`.
+
+**Top-level categories** (from `categories.json`):
+
+- `cultural-diversity` - Biases and stereotypes surrounding ethnicity, nationality, and race; language barriers in multilingual environments
+- `gender-orientation` - Gender-inclusive language, sexual orientation, and representation of marginalized genders
+- `ability-physicality` - Ableist language, disability-related terminology, and physicality biases
+- `religion` - Faith-based expressions, antisemitism, and anti-muslim language
+- `acquired-diversity` - Age, education, socioeconomic status, and other acquired characteristics
+- `social-motive` - Language that promotes collaboration vs. competition, community vs. individualism
+
+**Subcategories** (examples from `diversity_dimension_drivers.json`):
+
+- Under `gender-orientation`: `gender_identity`, `gender_specific_abbreviation`, `gendered_denominations_ending`, `LGBTQIA-hate`, `homophobia`, `sexism`, `transphobia`, `binary_pronouns`, `female_stereotype`, `male_stereotype`, `leadership`, `sexual_orientation`, `titles`, `function`, `hidden_image`
+- Under `cultural-diversity`: `abbreviation`, `anglicism`, `filler`, `hollow`, `plain_language`, `color`, `racist_source`, `culture`, `migration`, `nazi_language`, `yiddish-pejoratives`, `racism`, `xenophobia`
+- Under `ability-physicality`: `ability`, `physicality`, `ableism`, `behavior`, `medical_state`, `mobility`, `cognitive_ability`, `cognitive_perception`, `hearing`, `learning`, `mental_wellbeing`, `speech`, `vision`
+- Under `religion`: `antimuslim`, `antisemitism`, `belief`
+- Under `acquired-diversity`: `age`, `age_old`, `age_young`, `classism`, `formality`
+- Under `social-motive`: `agentic`, `exaggerating`, `military_source`, `sports_terms`, `communal`, `d_and_i`, `emotional_security`, `offensive_language`
+
+To disable specific checks, use subcategory names in the `disabled_categories` configuration field.
+
+**Note on proficiency levels**: Most subcategories have both basic and `_advanced` variations (e.g., `ability` and `ability_advanced`). However, subcategories with proficiency level `inclusive` (such as `communal`, `d_and_i`, `emotional_security`) or `openly_discriminating` (such as `ableism`, `racism`, `sexism`, `transphobia`, `homophobia`, `antisemitism`, `antimuslim`, `xenophobia`) do NOT have `_advanced` variations - they only exist in their base form.
+
+**Note**: Category names may include subcategories and can have an `_advanced` suffix for advanced proficiency level checks. Refer to the categories documentation or source files for the complete and up-to-date list.
+
+### Example API Calls
+
+#### Basic check without configuration
+
+```bash
 curl -X 'POST' \
   'http://127.0.0.1:8000/v2.4/check' \
   -H 'accept: application/json' \
@@ -405,6 +643,185 @@ curl -X 'POST' \
   "text": "Wer sind unsere Kunden?"
 }'
 ```
+
+#### Check with automatic language detection
+
+The API automatically detects the language when no `lang` parameter is provided (or when `lang: "auto"` is explicitly set). The detection uses fastText language identification and respects your `preferred_languages` and `preferred_variants` configuration.
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "The chairman called a meeting with the policeman."
+}'
+```
+
+You can also explicitly specify a language to override detection:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Wer sind unsere Kunden?",
+  "lang": "de-DE"
+}'
+```
+
+Supported language codes:
+
+- `"auto"` - Automatic detection (default)
+- `"en"` - English (uses default variant from config)
+- `"de"` - German (uses default variant from config)
+- `"fr"` - French (uses default variant from config)
+- `"en-US"` - English (US spelling)
+- `"en-GB"` - English (UK spelling)
+- `"de-DE"` - German (Germany)
+- `"de-CH"` - German (Switzerland)
+- `"de-AT"` - German (Austria)
+- `"fr-FR"` - French (France)
+
+**How automatic detection works:**
+
+1. The API uses a fastText model to identify the language(s) in the text
+2. It filters detected languages to only those in `preferred_languages` (defaults to en, de, fr)
+3. If `preferred_variants` is configured, it selects the matching variant (e.g., "en-GB" over "en-US")
+4. Otherwise, it uses the default variant for the detected language
+5. If no supported language is detected, the request fails with an error
+
+#### Check with custom configuration
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "The fireman helped the chairman organize the meeting.",
+  "lang": "en",
+  "config": {
+    "store_context": false,
+    "preferred_variants": ["en-GB"],
+    "gendered_roles_format": "inclusive_gender",
+    "show_inspiration_alternatives": true,
+    "alternatives_max_count": 3
+  }
+}'
+```
+
+#### Check German text with specific gender ending
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Unsere Mitarbeiter sind sehr engagiert.",
+  "lang": "de",
+  "config": {
+    "german_gender_ending": ":in",
+    "preferred_variants": ["de-CH"]
+  }
+}'
+```
+
+#### Check with disabled categories
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "The policeman arrested the suspect.",
+  "config": {
+    "disabled_categories": ["orthography"]
+  }
+}'
+```
+
+### Configuration Precedence
+
+When a `/check` request is made with authentication (via API key or OAuth token):
+
+1. **Request config**: Settings provided in the request `config` object take highest priority
+2. **User config**: User-specific settings stored in Redis
+3. **Organization config**: Organization-level settings (if user belongs to an organization)
+4. **Default config**: Server defaults as documented above
+
+Settings are merged with this precedence, meaning you can override specific fields per request while keeping other settings from stored configurations.
+
+### Stored Configuration via Management API
+
+Instead of passing configuration with each request, you can store user and organization configurations using the configuration management endpoints. See the API documentation at `/docs` for:
+
+- `POST /user` - Store user configuration
+- `GET /user/{email}` - Retrieve user configuration
+- `POST /organization` - Store organization configuration
+- `GET /organization/{id}` - Retrieve organization configuration
+
+These endpoints require HTTP Basic authentication (configured via `API_DOCS_AUTH_ENABLED`, `API_DOCS_USERNAME`, and `API_DOCS_PASSWORD` environment variables).
+
+Stored configurations support additional features beyond the request `config` object:
+
+- **False positives**: List of terms/phrases to ignore globally
+- **Term replacements**: Custom replacement rules with explanations
+- **Domain restrictions**: Allowlist or denylist of domains where the checker should operate
+- **Config versioning**: `config_hash` and `sync_date` for cache invalidation
+
+### Privacy and Context Sanitization
+
+When `store_context` is enabled (the default), the API includes surrounding text context (±100 characters) in the response. This context is automatically sanitized to protect user privacy before being included in results or sent to external services (like Sentry for error reporting).
+
+#### What Gets Sanitized
+
+The privacy filter automatically replaces sensitive information with placeholder tokens:
+
+| Sensitive Data  | Replacement | Example                                  |
+| --------------- | ----------- | ---------------------------------------- |
+| Email addresses | `<EMAIL>`   | `john.doe@example.com` → `<EMAIL>`       |
+| URLs            | `<URL>`     | `https://www.example.com/path` → `<URL>` |
+| Numbers         | `<NUMBER>`  | `Invoice 12345` → `Invoice <NUMBER>`     |
+
+#### Where Sanitization Applies
+
+Privacy filtering is applied to:
+
+1. **Context fields** in check results (when `store_context` is enabled)
+2. **Error reports** sent to Sentry (all request data is sanitized)
+3. **Request/response logs** stored in Redis (when enabled via `REDIS_LOG_EMAILS`)
+
+#### Implementation Details
+
+The privacy filter uses sophisticated regular expressions to identify:
+
+- **Emails**: Standard email formats including subdomains and international TLDs
+- **URLs**: HTTP/HTTPS URLs, IP addresses (IPv4 and IPv6), localhost, and internationalized domain names
+- **Numbers**: Any sequence of digits (to protect account numbers, IDs, phone numbers, etc.)
+
+The original text being checked is **never** sanitized - only metadata like context, error reports, and logs undergo privacy filtering.
+
+#### Disabling Context Storage
+
+To prevent context from being stored entirely (e.g., for maximum privacy), set `store_context: false` in your request configuration:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v2.4/check' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Your text here",
+  "config": {
+    "store_context": false
+  }
+}'
+```
+
+When disabled, the `context` field in results will be `null`, and clients typically won't persist analytics data for that request.
 
 ## Run tests
 
