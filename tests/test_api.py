@@ -2241,6 +2241,46 @@ def test_english_upper_case_multiterms(
 
 
 @pytest.mark.parametrize(
+    "context_checker_dir",
+    get_dirs("tests/test_context_checker"),
+)
+@pytest.mark.skipif(
+    not context.settings.context_checker_local,
+    reason="Skipping context checker tests: local models are not enabled",
+)
+def test_context_checker(context_checker_dir, snapshot, set_redis):
+    """
+    Test that context checker correctly identifies false positives vs genuine matches.
+
+    The context checker uses SetFit models (or remote API) to analyze whether
+    flagged words are used in problematic contexts or are false positives.
+
+    Examples:
+    - "fossil fuel industry" - false positive (scientific/technical context)
+    - "you are such a fossil" - genuine match (ageist insult)
+    - "Die Firma ist unabhängig" - false positive (company independence)
+    - "Sie ist sehr unabhängig" - genuine match (gender stereotype)
+    """
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = context_checker_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.4/check",
+            json=json.loads(input_json),
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = context_checker_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "plain_language_dir",
     get_dirs("tests/test_plain_language"),
 )

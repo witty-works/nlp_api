@@ -32,3 +32,5 @@ subcategories.csv
 .python-version
 .blackfire.ini
 .pdm-python
+
+models/context_aware_model/

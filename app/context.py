@@ -7,6 +7,7 @@ import fasttext
 from app.adjectives import Adjectives
 from app.alternatives import Alternatives
 from app.categories import get_categories
+from app.context_checker import ContextChecker
 from app.db import Db
 from app.emoji_check import EmojiCheck
 from app.http import Http
@@ -57,6 +58,7 @@ class AppContext:
     rule_check: RuleCheck
     regex_check: RegexCheck
     emoji_check: EmojiCheck
+    context_checker: ContextChecker
     prompt: Prompt
     langs: list = []
 
@@ -103,3 +105,6 @@ class AppContext:
 
         self.lang_detection = LangDetection(fasttext_model)
         self.redis = Redis.factory(self.settings)
+
+        # Initialize context checker with SetFit models if enabled
+        self.context_checker = ContextChecker(self.settings, self.logger)

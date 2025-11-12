@@ -57,13 +57,14 @@ class Settings(BaseSettings):
     slack_bot_token: Optional[str] = ""
     slack_organization_id: Optional[str] = ""
     alternatives_max_count: int = 5
+
+    # Context Checker Configuration
+    context_checker_local: bool = False
+    
+    # Remote API configuration per language (used when local models unavailable)
+    # Format: {"en": {"url": "...", "api_key": "..."}, "de": {...}, "fr": {...}}
     context_checker: dict[str, dict[str, str]] = {}
-    context_checker_url: Optional[str] = ""
-    context_checker_api_key: Optional[str] = ""
-    context_checker_url_de: Optional[str] = ""
-    context_checker_api_key_de: Optional[str] = ""
-    context_checker_url_fr: Optional[str] = ""
-    context_checker_api_key_fr: Optional[str] = ""
+
     models: list = [
         "en_core_web_lg",
         "de_core_news_lg",
@@ -85,7 +86,7 @@ class Settings(BaseSettings):
     def factory():
         """Construct a fully initialized Settings instance.
 
-        Populates derived fields (is_prod, minimum_versions, context_checker,
+        Populates derived fields (is_prod, minimum_versions,
         platform relationship overrides, and Redis credentials) based on
         environment variables and Platform.sh configuration.
         """
@@ -113,24 +114,6 @@ class Settings(BaseSettings):
             settings.minimum_versions["word-plugin"] = (
                 settings.minimum_version_word_plugin
             )
-
-        if settings.context_checker_url and settings.context_checker_api_key:
-            settings.context_checker[LangType.EN] = {
-                "url": settings.context_checker_url,
-                "api_key": settings.context_checker_api_key,
-            }
-
-        if settings.context_checker_url_de and settings.context_checker_api_key_de:
-            settings.context_checker[LangType.DE] = {
-                "url": settings.context_checker_url_de,
-                "api_key": settings.context_checker_api_key_de,
-            }
-
-        if settings.context_checker_url_fr and settings.context_checker_api_key_fr:
-            settings.context_checker[LangType.FR] = {
-                "url": settings.context_checker_url_fr,
-                "api_key": settings.context_checker_api_key_fr,
-            }
 
         if settings.platform_relationships:
             settings.platform_relationships = json.loads(
