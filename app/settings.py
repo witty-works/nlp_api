@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     sentry_profiles_sample_rate: float = 0.0
     text_max_length: int = 1000
     is_prod: bool = False
-    terms_of_service: str = "https://www.witty.works/privacy"
-    contact: str = "support@witty.works"
+    terms_of_service: str = ""
+    contact: str = ""
 
     aadb2c_tenant_id: Optional[str] = ""
     aadb2c_client_id: Optional[str] = ""
