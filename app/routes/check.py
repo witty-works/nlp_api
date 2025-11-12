@@ -79,9 +79,8 @@ async def check(
         "check",
     )
 
-    if (
-        check_request_in.config.plan is not None
-        and check_request_in.config.plan.startswith("witty_")
+    if check_request_in.config.plan and check_request_in.config.plan.startswith(
+        "witty_"
     ):
         text, language, limit_reached = fetch_text(
             check_request_in, context.langs, context
