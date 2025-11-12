@@ -122,15 +122,112 @@ Platform.sh integration: If `PLATFORM_RELATIONSHIPS` is present, the app auto-de
 
 ## Context Checker
 
-Reduces false positives by checking rule hits in their sentence context via an external service. Configure per-language endpoints and Bearer API keys. If not provided, context checking is skipped.
+Reduces false positives by checking rule hits in their sentence context. Two modes are supported:
 
-| Variable                                            | Description                       |
-| --------------------------------------------------- | --------------------------------- |
-| CONTEXT_CHECKER_URL / CONTEXT_CHECKER_API_KEY       | Endpoint and API key for English. |
-| CONTEXT_CHECKER_URL_DE / CONTEXT_CHECKER_API_KEY_DE | Endpoint and API key for German.  |
-| CONTEXT_CHECKER_URL_FR / CONTEXT_CHECKER_API_KEY_FR | Endpoint and API key for French.  |
+1. **Local SetFit Models** (recommended): Uses locally-hosted SetFit models for fast, privacy-preserving inference
+2. **Remote API**: External service endpoints
 
-Request format: the service receives `{ "data": ["sentence 1", "sentence 2", ...] }` and must return a list where each item is "1" to keep the match or any other value to discard it for that sentence.
+### Local SetFit Models
+
+| Variable              | Default | Description                                                     |
+| --------------------- | ------- | --------------------------------------------------------------- |
+| CONTEXT_CHECKER_LOCAL | false   | When true, use local SetFit models instead of remote API calls. |
+
+When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use.
+
+#### Setup Local SetFit Models
+
+**Option 1: Download from Hugging Face (Recommended)**
+
+Pre-converted CPU models are available on Hugging Face Hub:
+
+```bash
+# Install huggingface-hub if not already installed
+pdm add huggingface-hub
+
+# Download all models (en, de, fr)
+pdm run python -m bin.download_from_huggingface --lang all
+
+# Or download a specific language
+pdm run python -m bin.download_from_huggingface --lang en
+```
+
+Why CPU format is required: The API launches multiple worker processes for concurrency. It leverages PyTorch shared memory to avoid duplicating model weights in each worker. GPU tensors cannot be shared with this mechanism out of the box, while CPU tensors can. Using CPU models allows `ContextChecker` to call `share_memory()` on the underlying backbone, reducing RAM and speeding up startup.
+
+Test the CPU model:
+
+```bash
+pdm run python -m bin.test_cpu -i models/context_aware_model/en
+```
+
+**Deployment**
+
+For Platform.sh deployment, upload the models:
+
+```bash
+rsync -azP models/ "$(platform ssh -e main --pipe)":models/
+platform environment:redeploy -e main
+```
+
+#### convert_to_cpu.py reference (optional)
+
+If you obtain raw SetFit model dumps from another source and need to ensure they run on CPU, `bin/convert_to_cpu.py` converts a downloaded SetFit model directory to a CPU-only version and writes it to `models/context_aware_model/<lang>`.
+
+Usage:
+
+```bash
+pdm run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
+```
+
+Arguments:
+
+- `-i, --in` Path to source model directory (must contain SetFit artifacts like `config.json`, `model.safetensors` or `pytorch_model.bin`)
+- `-l, --lang` Language code used for the destination folder (`en`, `de`, `fr`)
+
+Notes:
+
+- Output directory is created if missing and may overwrite existing files
+- If the input model is already CPU-only, the script simply writes a copy
+- CPU models enable shared-memory loading for multi-process inference
+
+### Remote API
+
+Configure per-language endpoints and Bearer API keys using the structured `CONTEXT_CHECKER` environment variable. If not provided and `CONTEXT_CHECKER_LOCAL=false`, context checking is skipped.
+
+**Environment Variable Format:**
+
+Use JSON to define remote API configuration for each language:
+
+```bash
+CONTEXT_CHECKER='{"en": {"url": "https://api.example.com/en", "api_key": "key123"}, "de": {"url": "https://api.example.com/de", "api_key": "key456"}}'
+```
+
+**Structure:**
+
+```json
+{
+  "en": {
+    "url": "https://your-api-endpoint.com/context-check",
+    "api_key": "your-bearer-token"
+  },
+  "de": {
+    "url": "https://your-api-endpoint.com/context-check-de",
+    "api_key": "your-bearer-token-de"
+  },
+  "fr": {
+    "url": "https://your-api-endpoint.com/context-check-fr",
+    "api_key": "your-bearer-token-fr"
+  }
+}
+```
+
+**Request format**: The remote service receives `{ "data": ["sentence 1", "sentence 2", ...] }` and must return a list where each item is `"1"` to keep the match or any other value to discard it as a false positive.
+
+**Behavior:**
+
+- Local models (`CONTEXT_CHECKER_LOCAL=true`) are preferred when available
+- If local models are not available for a language, the app falls back to remote API (if configured)
+- If neither local nor remote is available, context checking is skipped for that language
 
 ## Redis
 
@@ -250,36 +347,85 @@ wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/
 ## Using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Pull images from Azure container registry:
+2. Start LanguageTool from Docker Hub (erikvl87/languagetool):
 
 ```
-az login
-az acr login --name wittyworks
-docker pull wittyworks.azurecr.io/nlpapi:main
-docker pull wittyworks.azurecr.io/languagetool:main
+# Create an isolated network so containers can talk by name
+docker network create nlp-net
+
+# Start LanguageTool on port 8010
+docker run -d --name lt --network nlp-net -p 8010:8010 erikvl87/languagetool:latest
 ```
 
-3. Run images:
+LanguageTool API will be available at http://localhost:8010/v2
 
-First run the LanguageTool image:
-
-```
-docker run --rm --name lt -p 8000:8000 wittyworks.azurecr.io/languagetool:main
-```
-
-Open another terminal tab and check LanguageTool container local address:
+3. Build and run the NLP API locally:
 
 ```
-lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' lt`
-```
+# Build the API image from the local Dockerfile
+docker build -t nlpapi .
 
-As a last step run the NLP API image:
-
-```
-docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
+# Run the API and point it to the LanguageTool container
+docker run -d --name nlp_api --network nlp-net -p 8080:8080 \
+  -e LANGUAGETOOL_API=http://lt:8010/v2 \
+  nlpapi
 ```
 
 You should see the application running under http://localhost:8080/docs
+
+### Using docker compose (recommended for local multi-service setup)
+
+A ready-made `compose.yml` is included to start both the NLP API and LanguageTool with one command. It:
+
+- Launches `erikvl87/languagetool` on port `8010`
+- Builds and runs the API on port `8080`
+- Mounts your local `./models` directory read-only into the container (so local SetFit models can be used if present)
+- Sets `LANGUAGETOOL_API` inside the API container to point to the LanguageTool service
+
+Quick start:
+
+```bash
+# Start both services in the background
+docker compose up -d
+
+# Check health
+curl http://localhost:8080/health
+
+# Visit http://localhost:8080/docs in your browser
+```
+
+Enable local context checker models (if you downloaded them):
+
+```bash
+# Option 1: temporarily set env when starting
+CONTEXT_CHECKER_LOCAL=true docker compose up -d
+
+# Option 2: uncomment CONTEXT_CHECKER_LOCAL in compose.yml and re-run
+```
+
+Updating models: any changes you make in `./models` on the host are reflected in the container because of the bind mount. The mount is read-only (`:ro`) to prevent accidental writes from inside the container.
+
+Stop and remove services:
+
+```bash
+docker compose down
+```
+
+Rebuild after code changes (forces image rebuild):
+
+```bash
+docker compose build --no-cache nlpapi
+docker compose up -d
+```
+
+Tail logs:
+
+```bash
+docker compose logs -f nlpapi
+docker compose logs -f languagetool
+```
+
+If you only need the API without LanguageTool, you can still use the single-container commands above or remove the `languagetool` service from the compose file.
 
 ## Update dependencies locally
 

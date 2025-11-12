@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  languagetool:
+    image: erikvl87/languagetool:latest
+    container_name: lt
+    ports:
+      - "8010:8010"
+    # Environment variables for LanguageTool can be added here if needed
+    # environment:
+    #   - Java_Xms=128m
+    #   - Java_Xmx=1024m
+
+  nlpapi:
+    build: .
+    container_name: nlp_api
+    depends_on:
+      - languagetool
+    ports:
+      - "8080:8080"
+    environment:
+      # Point API to LanguageTool service
+      - LANGUAGETOOL_API=http://languagetool:8010/v2
+      # Enable local SetFit models if present in ./models
+      # - CONTEXT_CHECKER_LOCAL=true
+    volumes:
+      # Mount local models folder if you want to use local SetFit models
+      - ./models:/app/models:ro
+    # If you prefer rebuilding on changes in local dev, uncomment next line
+    # develop:
+    #   watch:
+    #     - path: .
+    #       action: sync
+    #       target: /app
+
+networks:
+  default:
+    name: nlp-net

@@ -157,10 +157,22 @@ async def context_false_positives(
     list_results: list[ResultOut],
     context: AppContext,
 ) -> list[ResultOut]:
-    if (
-        lang not in context.settings.context_checker
-        or len(context.static_rules[lang]["context_check"]) == 0
-    ):
+    # Return early if no results to check
+    if len(list_results) == 0:
+        return list_results
+
+    # Return early if no context check rules exist for this language
+    if len(context.static_rules[lang]["context_check"]) == 0:
+        return list_results
+
+    # Check if context checking is enabled for this language
+    use_local = (
+        context.settings.context_checker_local
+        and context.context_checker.is_available(lang)
+    )
+    use_remote = lang in context.settings.context_checker
+
+    if not use_local and not use_remote:
         return list_results
 
     sentences = {}
@@ -186,30 +198,38 @@ async def context_false_positives(
     if sentences_to_check == {}:
         return list_results
 
-    sentences = list(sentences_to_check.keys())
+    sentences_list = list(sentences_to_check.keys())
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": (
-            "Bearer " + context.settings.context_checker[lang]["api_key"]
-        ),
-    }
+    # Use local SetFit model if available, otherwise fall back to remote API
+    if use_local:
+        context_results = context.context_checker.predict(lang, sentences_list)
+    else:
+        # Remote API call
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": (
+                "Bearer " + context.settings.context_checker[lang]["api_key"]
+            ),
+        }
 
-    payload = {
-        "data": sentences,
-    }
+        payload = {
+            "data": sentences_list,
+        }
 
-    context_results = await context.http.fetch_json_post(
-        context.settings.context_checker[lang]["url"],
-        json.dumps(payload),
-        headers,
-        "context checker",
-    )
+        api_results = await context.http.fetch_json_post(
+            context.settings.context_checker[lang]["url"],
+            json.dumps(payload),
+            headers,
+            "context checker",
+        )
+        # Convert API results to boolean (API returns "1" for genuine, "0" for false positive)
+        context_results = [result == "1" for result in api_results]
 
     keys_to_remove = []
-    for sentence_index in range(len(sentences)):
-        sentence = sentences[sentence_index]
-        if context_results[sentence_index] == "1":
+    for sentence_index in range(len(sentences_list)):
+        sentence = sentences_list[sentence_index]
+        # If result is True, it's a genuine issue; if False, it's a false positive
+        if context_results[sentence_index]:
             continue
 
         for result_key in sentences_to_check[sentence]:

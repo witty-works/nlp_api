@@ -1083,7 +1083,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
         snapshot.assert_match(output, "output.json")
 
 
-def test_validate_scope(event_loop, set_redis):
+def test_validate_scope(set_redis):
     try:
         claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
         valid = validate_scope_("access_as_user", claims)
@@ -1101,7 +1101,7 @@ def test_validate_scope(event_loop, set_redis):
     assert valid is False
 
 
-def test_token(event_loop, set_redis):
+def test_token(set_redis):
     try:
         token = get_token_("")
     except AuthError as e:
@@ -1123,14 +1123,15 @@ def test_token(event_loop, set_redis):
     assert token == tokens["azureadbc_valid_expired"]
 
 
-def test_token_claims(event_loop, set_redis):
+def test_token_claims(set_redis):
     claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
 
     assert claims is not False
 
 
 # test overwriting user configuration by organization forced rules
-def test_fetch_configs_for_request(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_fetch_configs_for_request(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -1144,9 +1145,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
         },
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com", context)
-    )
+    await fetch_configs_for_request(test_request, "test@gmail.com", context)
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
     assert hasattr(test_request.config, "llm_alternatives")
@@ -1159,7 +1158,8 @@ def test_fetch_configs_for_request(event_loop, set_redis):
 # test not overwriting user configuration by organization suggestion/default rules
 
 
-def test_fetch_user_rules_suggestion(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_fetch_user_rules_suggestion(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -1171,9 +1171,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
-    )
+    await fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language == "de-DE"
@@ -1186,14 +1184,13 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
 # test user not set any parameters, but organization did
 
 
-def test_set_organization_rules(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_set_organization_rules(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com", context)
-    )
+    await fetch_configs_for_request(test_request, "test@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -1204,15 +1201,14 @@ def test_set_organization_rules(event_loop, set_redis):
 # test user and organization didn't set any rules
 
 
-def test_set_default_rules(event_loop):
+@pytest.mark.asyncio
+async def test_set_default_rules():
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = CheckRequestIn(**request_data)
 
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
-    )
+    await fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language is None
@@ -2237,6 +2233,46 @@ def test_english_upper_case_multiterms(
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = english_upper_case_multiterms_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "context_checker_dir",
+    get_dirs("tests/test_context_checker"),
+)
+@pytest.mark.skipif(
+    not context.settings.context_checker_local,
+    reason="Skipping context checker tests: local models are not enabled",
+)
+def test_context_checker(context_checker_dir, snapshot, set_redis):
+    """
+    Test that context checker correctly identifies false positives vs genuine matches.
+
+    The context checker uses SetFit models (or remote API) to analyze whether
+    flagged words are used in problematic contexts or are false positives.
+
+    Examples:
+    - "fossil fuel industry" - false positive (scientific/technical context)
+    - "you are such a fossil" - genuine match (ageist insult)
+    - "Die Firma ist unabhängig" - false positive (company independence)
+    - "Sie ist sehr unabhängig" - genuine match (gender stereotype)
+    """
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = context_checker_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.4/check",
+            json=json.loads(input_json),
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = context_checker_dir
         snapshot.assert_match(output, "output.json")
 
 

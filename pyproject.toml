@@ -4,6 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[tool.pdm.source]]
+type = "find_links"
+url = "https://download.pytorch.org/whl/cpu/torch_stable.html"
+name = "torch"
+
 [tool.pdm.dev-dependencies]
 dev = [
     "click",
@@ -52,6 +57,7 @@ dependencies = [
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
+    "setfit>=0.7.0",
     "eng>=0.1.1",
     "blackfire",
     "blackfire-conprof>=1.0.0",
