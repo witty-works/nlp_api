@@ -1,7 +1,7 @@
 """FastAPI dependencies for authentication and authorization.
 
 Also provides a DI-friendly accessor for the application context stored on
-FastAPI's app.state during lifespan. No legacy global context fallback.
+FastAPI's app.state during lifespan.
 """
 
 import secrets
