@@ -36,7 +36,7 @@ class Prompt:
         if system_prompt is None:
             system_prompt = """
             You are an expert in inclusive language.
-            Keep gender equality in mind and avoid language that is needlessly gendered (f.e. use truely gender neutral nouns, avoid pronouns).
+            Keep gender equality in mind and avoid language that is needlessly gendered (f.e. use truly gender neutral nouns, avoid pronouns).
             Do not make biased assumptions.
             Do not rely on social stereotypes.
             Do not use derogatory language even as a joke.
