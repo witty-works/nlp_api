@@ -14,15 +14,33 @@
 
 ## Configuration and management endpoints
 
-  - Store user/organization configs to customize behavior; see Management Endpoints and Configuration.
-  - Docs can be protected via HTTP Basic; see API docs protection. Core endpoints use OAuth2 or API Keys; see Authentication.
-  - Relevant code: `app/middleware.py`, `app/auth_service.py`.
+- Store user/organization configs to customize behavior; see Management Endpoints and Configuration.
+- Docs can be protected via HTTP Basic; see API docs protection. Core endpoints use OAuth2 or API Keys; see Authentication.
+- Relevant code: `app/middleware.py`, `app/auth_service.py`.
 
 ## Framework and models
 
 - Built on FastAPI (https://fastapi.tiangolo.com) and spaCy (https://spacy.io).
   - Large spaCy models are recommended. Smaller models work but may increase false positives. Transformer models can help, but not all include NER; those code paths would need disabling or alternative NER solution needs to be integrated.
   - Change models via the `MODELS` setting and align `pyproject.toml`; see Changing spaCy models and Core settings.
+
+## Rule Engine Algorithm
+
+The rule engine operates as follows:
+
+- A shallow but strict check is performed via SQL on the in-memory SQLite database to find potential matching rules. This is handled in `app/db.py` (`fetch_rules`).
+- If no rules match, a less strict check is performed, also via SQL, to broaden the candidate set (see `fetch_rules` with `suffix_check=True` in `app/db.py`).
+- Once candidate rules are found, they are iterated over and evaluated for applicability in `RuleCheck.handle()` and related methods in `app/rule_check.py`.
+- The rule checks are performed by relevant logic in `app/rule_engine/matchers/pattern.py`, which includes pattern (`check_pattern`), phrase (`is_phrase_match`) and word (`is_word_match`) matching.
+- When a rule matches, the involved tokens are skipped for subsequent checks, preventing overlapping rules from triggering multiple times (see `skip_token` returned by the rule checks)
+- Additional rules are applied to ensure alternatives are grammatically correct and to generate appropriate gendered noun variations. This logic is found in `app/alternatives_engine/utils.py` (`build_french_adjective_alternatives`) and related helpers in `app/alternatives.py`.
+- However, it is also possible for the client to do an additional request to use an LLM to make alternatives grammatically correct via the route `POST /v1.0/rephrase` (see `app/routes/rephrase.py`).
+
+## Witty GPT Algorithm
+
+- Prompt is modified through prompt-injection to get a more inclusive initial response from the model (`Prompt.handle()`)
+- Response from the model is analyzed using the standard rule-engine
+- If the number of issues is below a configurable threshold the initial response is returned otherwise a follow up prompt is generated and the response returned (`app/routes/prompt.py`)
 
 ## POS tagging corrections
 
