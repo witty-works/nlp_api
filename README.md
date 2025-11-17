@@ -7,6 +7,10 @@
   - Optional LLM-powered alternatives and rephrasing
   - Reducing bias in LLM output (through prompt injection and automatic follow-ups prompts)
   - Custom, organization-specific rules
+- Integrations:
+  - Use https://github.com/witty-works/dashboard to manage to user/organization configuration
+  - Use https://github.com/witty-works/browser-extension and https://github.com/witty-works/world-plugin UI clients
+  - Use https://github.com/witty-works/rule-editor to manage the rules
 - Quick start links:
   - Install and run: see Installation instructions (with PDM) and Run Locally; containerized setup in Using Docker and Using docker compose
   - Configure the app: see Configuration and Core settings; adjust spaCy models in Changing spaCy models
