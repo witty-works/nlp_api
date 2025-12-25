@@ -45,7 +45,7 @@ class Redis:
             redis_db = FakeStrictRedis(decode_responses=True)
             if settings.testing_api_key:
                 redis_db.set(
-                    settings.testing_api_key, "api_key:" + settings.testing_email
+                    "api_key:" + settings.testing_api_key, settings.testing_email
                 )
 
         return Redis(settings, redis_db)
