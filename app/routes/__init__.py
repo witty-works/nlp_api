@@ -6,6 +6,7 @@ from app.routes import (
     config_routes,
     rephrase,
     prompt,
+    textarea,
     check,
     debug,
 )
@@ -27,6 +28,9 @@ def register_routes(app):
 
     # Register prompt routes
     app.include_router(prompt.router, tags=["prompt"])
+
+    # Register textarea demo route
+    app.include_router(textarea.router, tags=["textarea"])
 
     # Register Slack integration routes if enabled
     if get_settings().slack_enabled:
