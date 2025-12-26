@@ -72,7 +72,7 @@ async def get_api_key(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ):
-    email = context.redis.db.get(f"api_key:{api_key}")
+    email = context.redis.get_api_key_email(api_key)
     if not email:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
@@ -91,7 +91,7 @@ async def post_api_key(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ):
-    context.redis.db.set(f"api_key:{api_key}", email)
+    context.redis.set_api_key(api_key, email)
 
 
 @router.delete(
@@ -103,4 +103,4 @@ async def delete_api_key(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ):
-    context.redis.db.delete("api_key:" + api_key)
+    context.redis.delete_api_key(api_key)

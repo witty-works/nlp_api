@@ -7,6 +7,8 @@ import datetime
 
 from app.settings import Settings
 from app.models import MetricsType, CheckRequestIn
+import hmac
+import hashlib
 
 
 class Redis:
@@ -187,3 +189,60 @@ class Redis:
         }
 
         self.db.lpush(key, json.dumps(data))
+
+    def _hash_api_key(self, api_key: str) -> str:
+        """HMAC-SHA256 hash an API key using configured secret.
+
+        Uses `settings.api_key_hmac_key` if present, otherwise `settings.secret_key`.
+        If no secret is configured, return empty string.
+        """
+        secret = getattr(self.settings, "api_key_hmac_key", None) or getattr(
+            self.settings, "secret_key", None
+        )
+        if not secret:
+            return ""
+
+        return hmac.new(
+            secret.encode("utf-8"), api_key.encode("utf-8"), hashlib.sha256
+        ).hexdigest()
+
+    def get_api_key_email(self, api_key: str) -> str | None:
+        """Retrieve the email associated with an API key.
+
+        If HMAC secret is configured, the API key is HMACed before lookup.
+        Falls back to plaintext lookup if no secret configured.
+        """
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            val = self.db.get("api_key:" + hashed)
+            if val:
+                return val
+
+        # Fallback to plaintext lookup for backward compatibility
+        return self.db.get("api_key:" + api_key)
+
+    def set_api_key(
+        self, api_key: str, email: str, remove_plaintext: bool = False
+    ) -> None:
+        """Store an API key mapping. If HMAC secret exists, store under hashed key.
+
+        If `remove_plaintext` is True, also remove the plaintext key.
+        """
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            self.db.set("api_key:" + hashed, email)
+            if remove_plaintext:
+                self.db.delete("api_key:" + api_key)
+            return
+
+        # No secret configured: store plaintext
+        self.db.set("api_key:" + api_key, email)
+
+    def delete_api_key(self, api_key: str) -> None:
+        """Delete an API key mapping. Attempts both hashed and plaintext keys."""
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            self.db.delete("api_key:" + hashed)
+
+        # Always attempt to delete plaintext key as well
+        self.db.delete("api_key:" + api_key)

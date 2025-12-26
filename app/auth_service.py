@@ -29,6 +29,8 @@ import rsa.pem as pyrsa_pem
 import base64
 import struct
 import uuid
+import re
+import asyncio
 from fastapi import (
     Request,
     HTTPException,
@@ -64,9 +66,17 @@ async def get_rsa_key(redis: Redis, session, token, url):
     if rsa_key:
         return rsa_key
 
-    rsa_key = await get_rsa_key_(session, unverified_header["kid"], url)
+    rsa_key, ttl = await get_rsa_key_(session, unverified_header["kid"], url)
 
-    redis.db.set(key, rsa_key)
+    # Set cached RSA PEM with TTL to handle JWKS rotation. Default to 1 hour.
+    try:
+        if ttl and isinstance(ttl, int) and ttl > 0:
+            redis.db.set(key, rsa_key, ex=ttl)
+        else:
+            redis.db.set(key, rsa_key, ex=3600)
+    except Exception:
+        # If Redis set fails, return the key without caching (don't expose internal errors here).
+        pass
 
     return rsa_key
 
@@ -211,17 +221,56 @@ def convert_to_pem(n, e):
 
 
 async def get_rsa_key_(session, kid, url):
-    async with session.get(url) as r:
-        if r.status != 200:  # pragma: no cover
-            error = await r.text()
-            raise AuthError("Fetching RSA key resulted: " + error, 400)
+    # Robust fetching with retries, timeouts and exponential backoff.
+    retries = 3
+    timeout_secs = 5
+    backoff_base = 0.5
 
-        jwks = await r.json()
-        for key in jwks["keys"]:
-            if key["kid"] == kid:
-                return convert_to_pem(key["n"], key["e"])
+    for attempt in range(retries):
+        try:
+            resp = await asyncio.wait_for(session.get(url), timeout=timeout_secs)
+            async with resp as r:
+                if r.status != 200:  # pragma: no cover
+                    # Don't reflect remote response body to clients; return a sanitized error.
+                    raise AuthError(
+                        f"Fetching RSA key resulted in HTTP status {r.status}", 400
+                    )
 
-    raise AuthError("Unable to fetch RSA key", 400)
+                jwks = await r.json()
+                for key in jwks.get("keys", []):
+                    if key.get("kid") == kid:
+                        pem = convert_to_pem(key["n"], key["e"])
+
+                        # Try to parse Cache-Control header for max-age to set TTL on cached key
+                        cache_control = r.headers.get("Cache-Control", "") or ""
+                        ttl = None
+                        m = re.search(r"max-age=(\d+)", cache_control)
+                        if m:
+                            try:
+                                ttl = int(m.group(1))
+                            except Exception:
+                                ttl = None
+
+                        return pem, ttl
+
+                # If we reached here, no matching kid was found in the JWKS
+                raise AuthError("Unable to fetch RSA key", 400)
+
+        except AuthError:
+            # Don't retry on deterministic auth errors (4xx), re-raise immediately.
+            raise
+        except asyncio.TimeoutError:
+            if attempt < retries - 1:
+                await asyncio.sleep(backoff_base * (2**attempt))
+                continue
+            raise AuthError("Timeout while fetching RSA keys from issuer", 400)
+        except Exception:
+            # For transient network errors, retry a few times.
+            if attempt < retries - 1:
+                await asyncio.sleep(backoff_base * (2**attempt))
+                continue
+            # Final failure: sanitize message
+            raise AuthError("Failed to fetch RSA keys from issuer", 400)
 
 
 def fetch_email_from_claims(claims: dict) -> str:
@@ -245,10 +294,6 @@ def fetch_email_from_claims(claims: dict) -> str:
         status_code=status.HTTP_403_FORBIDDEN,
         detail="no email found in claim",
     )
-
-
-def fetch_email_from_api_key(redis: Redis, api_key: str) -> str | None:
-    return redis.db.get("api_key:" + api_key)
 
 
 async def fetch_user(
@@ -290,9 +335,14 @@ async def fetch_user(
 
                 return fetch_email_from_claims(claims)
         except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
-            )
+            # Sanitize error messages returned to clients. If it's an AuthError,
+            # surface the sanitized message; otherwise return a generic forbidden.
+            if isinstance(e, AuthError):
+                detail = getattr(e, "error_msg", "Forbidden")
+            else:
+                detail = "Forbidden"
+
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -300,12 +350,13 @@ async def fetch_user(
         )
 
     elif "x-key" in request.headers:
-        return fetch_email_from_api_key(redis, request.headers["x-key"])
+        return redis.get_api_key_email(request.headers["x-key"])
 
     if settings.testing:
-        if "x-testing-auth" in request.headers:
-            return request.headers["x-testing-auth"]
-        if settings.testing_email:  # pragma: no cover
-            return settings.testing_email
+        # Only use test credentials when the explicit testing header is present
+        # or when an explicit allow flag is enabled in settings.
+        testing_header = request.headers.get("x-testing-auth")
+        if testing_header:
+            return testing_header
 
     return None

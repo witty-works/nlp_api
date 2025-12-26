@@ -18,6 +18,25 @@
 - Docs can be protected via HTTP Basic; see API docs protection. Core endpoints use OAuth2 or API Keys; see Authentication.
 - Relevant code: `app/middleware.py`, `app/auth_service.py`.
 
+### Authentication
+
+Authentication and authorization are implemented in `app/auth_service.py` and rely on two mechanisms:
+
+- OAuth2/JWT (primary): JWTs issued by configured identity providers are validated using the provider's JWKS. The implementation:
+
+  - Fetches JWKS with a request timeout and retries using exponential backoff for transient network errors.
+  - Parses `Cache-Control: max-age` from JWKS responses and caches the converted RSA public key in Redis with that TTL; a conservative default TTL is used when no max-age is provided.
+  - Validates tokens with algorithm `RS256`, checking `aud` and `iss`; unverified claims are used only to select the right issuer/config, and final validation always verifies the signature and standard claims.
+  - Sanitizes and normalizes error responses so remote response bodies are not reflected to clients.
+
+- API keys (fallback and service clients): API-key storage and lookup are centralized in `app/redis.py` via `get_api_key_email`, `set_api_key`, and `delete_api_key` helpers. Behavior:
+  - When a hashing secret is configured (`api_key_hmac_key` or `secret_key`), API keys are HMAC-SHA256 hashed before lookup/storage.
+  - If no secret is configured, the code falls back to plaintext key lookup for backward compatibility; enabling hashing is recommended for production.
+
+Testing / local development:
+
+- When `settings.testing` is enabled, the app will map requests to a testing user only when an explicit `X-TESTING-AUTH` header is supplied. This prevents local `.env` values (such as `TESTING_EMAIL`) from silently altering auth behavior during test runs.
+
 ## Framework and models
 
 - Built on FastAPI (https://fastapi.tiangolo.com) and spaCy (https://spacy.io).
