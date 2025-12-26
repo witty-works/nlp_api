@@ -63,23 +63,22 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 
 ## Core settings
 
-| Variable                    | Default                                                | Description                                                                                                        |
-| --------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| LOGGING_ENABLED             | false                                                  | Enables application logging.                                                                                       |
-| LOGGING_CONFIG_FILENAME     | ./logs/error.log                                       | Destination for logs. Use "stdout" to log to console.                                                              |
-| LOGGING_CONFIG_LEVEL        | ERROR                                                  | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                     |
-| PLATFORM_ENVIRONMENT_TYPE   | development                                            | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                  |
-| PLATFORM_ENVIRONMENT        | local                                                  | Logical environment name (used for Sentry environment).                                                            |
-| TEXT_MAX_LENGTH             | 1000                                                   | Max characters processed per request; longer texts are truncated on word boundary.                                 |
-| ALTERNATIVES_MAX_COUNT      | 5                                                      | Default max count of alternatives returned unless overridden by request.                                           |
-| TERMS_OF_SERVICE            |                                                        | Link surfaced in OpenAPI metadata.                                                                                 |
-| CONTACT                     |                                                        | Contact email in OpenAPI metadata.                                                                                 |
-| TESTING                     | false                                                  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry.                                     |
+| Variable                    | Default                                                        | Description                                                                                                        |
+| --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                       |
+| LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                              |
+| LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                     |
+| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                  |
+| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                            |
+| TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                 |
+| ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                           |
+| TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                 |
+| CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                 |
 | MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                               |
-| IMPORT_FROM_DUMP            | true                                                   | On first boot, initialize the in-memory SQLite DB from `database/dump.sql` (otherwise from `database/db.sqlite3`). |
-| LOG_MISSING_DECLENSION      | true                                                   | Log missing declension cases to help enrich the database.                                                          |
-| MINIMUM_VERSION_WEB_EXT     | (empty)                                                | If set, reject requests from the browser extension below this semver.                                              |
-| MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                | If set, reject requests from the Word plugin below this semver.                                                    |
+| IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from `database/dump.sql` (otherwise from `database/db.sqlite3`). |
+| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                          |
+| MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                              |
+| MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                    |
 
 ## API docs protection
 
@@ -224,17 +223,16 @@ Behavior:
 
 Redis stores user/organization configs, API key mappings, optional request/response logs, and metrics. If `REDIS_HOST` is empty, a fake in-memory Redis is used (great for development and tests).
 
-| Variable         | Default | Description                                                                                             |
-| ---------------- | ------- | ------------------------------------------------------------------------------------------------------- |
-| REDIS_HOST       | (empty) | Redis hostname. Leave empty to use in-memory fake Redis.                                                |
-| REDIS_PORT       | (empty) | Redis port.                                                                                             |
-| REDIS_USERNAME   | (empty) | Redis username.                                                                                         |
-| REDIS_PASSWORD   | (empty) | Redis password.                                                                                         |
-| REDIS_VERIFY_SSL | true    | Verify TLS certs when connecting to Redis over SSL.                                                     |
-| REDIS_LOG_EMAILS | (empty) | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"] |
-| LOG_METRICS      | false   | When true, counters are incremented in Redis for auth/check/rephrase usage.                             |
-| TESTING_API_KEY  | (empty) | When using fake Redis, pre-seed a test API key mapping to `TESTING_EMAIL`.                              |
-| TESTING_EMAIL    | (empty) | Email used with `TESTING_API_KEY` when fake Redis is active.                                            |
+| Variable         | Default     | Description                                                                                                                                                   |
+| ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| REDIS_HOST       | (empty)     | Redis hostname. Leave empty to use in-memory fake Redis.                                                                                                      |
+| REDIS_PORT       | (empty)     | Redis port.                                                                                                                                                   |
+| REDIS_USERNAME   | (empty)     | Redis username.                                                                                                                                               |
+| REDIS_PASSWORD   | (empty)     | Redis password.                                                                                                                                               |
+| REDIS_VERIFY_SSL | true        | Verify TLS certs when connecting to Redis over SSL.                                                                                                           |
+| REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
+| LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
+| TESTING\_\*      | (see below) | See the [Testing variables](#testing-variables) section for details on `TESTING_API_KEY`, `TESTING_EMAIL`, `TESTING_RULES`, and `TESTING_ORGANIZATION_RULES`. |
 
 Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
 
@@ -305,6 +303,20 @@ To enable continuous profiling in supported environments, set:
 BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
 PLATFORM_APPLICATION_NAME=app
 ```
+
+## Testing variables
+
+The following environment variables are used to seed test data and shortcuts when running the application in a development or test environment (for example when `REDIS_HOST` is empty and an in-memory fake Redis is used). These are loaded into `Settings` (`app/settings.py`) and applied during startup (`app/startup.py`).
+
+|                     Variable | Default | Description                                                                                                                                                                                                                                  |
+| ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry.                                                                                                                                                               |
+|            `TESTING_API_KEY` | (empty) | When using the fake in-memory Redis, a mapping from this API key to `TESTING_EMAIL` will be created so you can authenticate with a reproducible test key.                                                                                    |
+|              `TESTING_EMAIL` | (empty) | Email address associated with `TESTING_API_KEY`; used as the seeded user identifier and for tests that require a known user.                                                                                                                 |
+|              `TESTING_RULES` | (empty) | JSON string containing a user-level rules object. On startup the app parses this JSON and writes it to Redis under the seeded user's id (the `email` field). See `.env.example` for an example payload.                                      |
+| `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
+
+These variables are optional and intended for local development or CI scenarios to make it easier to test flows without external Redis or having to manually seed data.
 
 Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
 
