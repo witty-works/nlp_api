@@ -362,6 +362,16 @@ class LanguageTool:
         payload = self.convert_to_csv(payload, "enabledCategories")
         payload = self.convert_to_csv(payload, "disabledRules")
 
+        # Include optional premium credentials if provided in settings
+        try:
+            if self.settings.languagetool_username:
+                payload["username"] = self.settings.languagetool_username
+            if self.settings.languagetool_api_key:
+                payload["apiKey"] = self.settings.languagetool_api_key
+        except Exception:
+            # In case settings are missing attributes for some reason, ignore
+            pass
+
         result = await self.http.fetch_json_post(
             self.settings.languagetool_api + "/check",
             payload,

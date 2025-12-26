@@ -111,6 +111,8 @@ Optional spell/grammar checking. You can use the public API or self-host Languag
 | ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------------- |
 | LANGUAGETOOL_API        | https://api.languagetoolplus.com/v2 | Base URL of your LanguageTool instance (must include `/v2`).                           |
 | LANGUAGETOOL_VERIFY_SSL | true                                | Verify TLS certs when calling LanguageTool. Set to false for local/self-signed setups. |
+| LANGUAGETOOL_USERNAME   | (empty)                             | Optional: your username/email for premium LanguageTool accounts (used for API access). |
+| LANGUAGETOOL_API_KEY    | (empty)                             | Optional: your API key / access token for premium LanguageTool accounts.               |
 
 Self-hosted: https://github.com/languagetool-org/languagetool
 

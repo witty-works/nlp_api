@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     platform_environment: str = "local"
     languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
+    languagetool_username: Optional[str] = ""
+    languagetool_api_key: Optional[str] = ""
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""
@@ -60,7 +62,7 @@ class Settings(BaseSettings):
 
     # Context Checker Configuration
     context_checker_local: bool = False
-    
+
     # Remote API configuration per language (used when local models unavailable)
     # Format: {"en": {"url": "...", "api_key": "..."}, "de": {...}, "fr": {...}}
     context_checker: dict[str, dict[str, str]] = {}
