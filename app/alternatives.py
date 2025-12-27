@@ -203,6 +203,7 @@ class Alternatives:
         word_count = len(rule.words)
 
         alternative_tokens = self.model.fetch_tokens(lang, alternative.lemma)
+        parts: list[str] | None = None
         if word_count > 1:
             # TODO figure out how to modify phrases
             new_alternative_lemma = alternative.lemma
@@ -210,7 +211,7 @@ class Alternatives:
                 lang, alternative_tokens[-1]
             )
         else:
-            new_alternative_lemma = ""
+            parts = []
             is_plural_alternative = False
 
             previous = False
@@ -285,14 +286,13 @@ class Alternatives:
                                 )
                             )
 
-                new_alternative_lemma = (
-                    alternative_text
-                    + alternative_token.whitespace_
-                    + new_alternative_lemma
-                )
+                parts.append(alternative_text + alternative_token.whitespace_)
 
         new_alternative = deepcopy(alternative)
-        new_alternative.lemma = new_alternative_lemma
+        if parts is None:
+            new_alternative.lemma = new_alternative_lemma
+        else:
+            new_alternative.lemma = "".join(reversed(parts)) if parts else ""
         new_alternative.is_plural = is_plural_alternative
 
         if (
@@ -428,7 +428,6 @@ class Alternatives:
         self,
         lang: LangType,
         alternative: Alternative,
-        article_index: int | None,
         article: str,
         separator: str,
     ) -> Alternative:
@@ -477,14 +476,12 @@ class Alternatives:
                 self.static_rules, lang, article
             )
 
-            if alternative.male_form is not None:
-                alternative.male_form = utils.add_article(
-                    lang, alternative.male_form, male_article, separator
-                )
-            if alternative.female_form is not None:
-                alternative.female_form = utils.add_article(
-                    lang, alternative.female_form, female_article, separator
-                )
+            alternative.male_form = utils.add_article(
+                lang, alternative.male_form, male_article, separator
+            )
+            alternative.female_form = utils.add_article(
+                lang, alternative.female_form, female_article, separator
+            )
 
         return alternative
 
@@ -494,7 +491,10 @@ class Alternatives:
         if flexion is None:
             return None
 
-        form, _ = flexion.split()
+        parts = flexion.split(maxsplit=1)
+        if not parts:
+            return None
+        form = parts[0]
         if (
             article not in self.static_rules[LangType.DE][gender + "_articles"]
             or form not in self.static_rules[LangType.DE][gender + "_articles"][article]
@@ -845,17 +845,12 @@ class Alternatives:
             ("/" in lemma and "/-" not in lemma)
             or self.static_rules[LangType.DE]["noun_conjunction"]["plural"] in lemma
         ):
-            for _ in range(text.count("-") + 1):
-                new_alternative.word_types.append(
-                    {"word_type": "", "lower_case": True, "lemmatize": True}
-                )
-                new_alternative.word_types.append(
-                    {
-                        "word_type": WordType.NOUN,
-                        "lower_case": True,
-                        "lemmatize": True,
-                    }
-                )
+            count = text.count("-") + 1
+            pair = [
+                {"word_type": "", "lower_case": True, "lemmatize": True},
+                {"word_type": WordType.NOUN, "lower_case": True, "lemmatize": True},
+            ]
+            new_alternative.word_types.extend(pair * count)
 
         if rule.dynamic.article:
             new_alternative = await self.add_german_article_to_alternative(
@@ -972,21 +967,20 @@ class Alternatives:
 
                     rule.dynamic.false_positives.append(lemma)
 
-                additional_prefix = ""
-                for additional_word in additional_words:
-                    additional_prefix += (
-                        formatting.inclusive_alternative(
-                            self.static_rules,
-                            LangType.DE,
-                            additional_word["male_form"],
-                            additional_word["female_form"],
-                            "",
-                            separator,
-                            noun_separator,
-                            separate_gender_plural,
-                        )
-                        + "-"
+                parts = [
+                    formatting.inclusive_alternative(
+                        self.static_rules,
+                        LangType.DE,
+                        aw["male_form"],
+                        aw["female_form"],
+                        "",
+                        separator,
+                        noun_separator,
+                        separate_gender_plural,
                     )
+                    for aw in additional_words
+                ]
+                additional_prefix = ("".join(p + "-" for p in parts)) if parts else ""
 
                 alternatives.append(
                     await self.clone_alternative(
@@ -1044,13 +1038,10 @@ class Alternatives:
 
             if binary:
                 additional_prefix = ""
-                for additional_word in additional_words:
-                    additional_prefix += (
-                        additional_word["female_form"]
-                        + "/"
-                        + additional_word["male_form"]
-                        + "-"
-                    )
+                additional_prefix = "".join(
+                    aw["female_form"] + "/" + aw["male_form"] + "-"
+                    for aw in additional_words
+                )
 
                 alternatives.append(
                     await self.clone_alternative(
@@ -1073,9 +1064,11 @@ class Alternatives:
                 )
 
             additional_prefix = ""
-            for additional_word in additional_words:
-                if additional_word["collective_noun"] is not None:
-                    additional_prefix += additional_word["collective_noun"] + "-"
+            additional_prefix = "".join(
+                aw["collective_noun"] + "-"
+                for aw in additional_words
+                if aw["collective_noun"] is not None
+            )
 
         for form in ["collective_noun", "collective_noun_2"]:
             if male_forms[form] is not None:
@@ -1193,7 +1186,6 @@ class Alternatives:
                 alternative = self.add_article_to_alternative(
                     LangType.FR,
                     alternative,
-                    article_index,
                     article,
                     separator,
                 )
@@ -1217,7 +1209,6 @@ class Alternatives:
                     new_alternative = self.add_article_to_alternative(
                         LangType.FR,
                         new_alternative,
-                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
@@ -1250,7 +1241,6 @@ class Alternatives:
                     alternative = self.add_article_to_alternative(
                         LangType.FR,
                         alternative,
-                        article_index,
                         self.static_rules[LangType.FR]["articles_inclusive_map"][
                             article
                         ],
@@ -1286,7 +1276,6 @@ class Alternatives:
             alternative = self.add_article_to_alternative(
                 LangType.FR,
                 alternative,
-                article_index,
                 utils.get_article_by_index(
                     self.static_rules,
                     LangType.FR,
