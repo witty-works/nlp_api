@@ -36,7 +36,11 @@ logging.basicConfig(
 
 def get_dirs(path):
     return list(
-        subpath for subpath in Path(path).iterdir() if not subpath.name.startswith(".")
+        subpath
+        for subpath in Path(path).iterdir()
+        if subpath.is_dir()
+        and not subpath.name.startswith(".")
+        and subpath.name != "__pycache__"
     )
 
 
