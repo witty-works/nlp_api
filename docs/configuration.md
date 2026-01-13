@@ -5,6 +5,7 @@
 - [Notes](#notes)
 - [Quick start: minimal .env for local dev](#quick-start-minimal-env-for-local-dev)
 - [Core settings](#core-settings)
+- [Reducing Resource Usage](#reducing-resource-usage)
 - [API docs protection](#api-docs-protection)
 - [Sentry.io](#sentryio)
 - [LanguageTool](#languagetool)
@@ -27,7 +28,6 @@ The API is configured via environment variables (loaded from a local .env file a
 ## Notes
 
 - For macOS development with spaCy, copy the provided snippet to avoid MKL warnings: `cp .env.development.mac .env`
-- If you want to use smaller spaCy models, update BOTH the MODELS setting and `pyproject.toml` (so the model wheels are available) before installing dependencies.
 
 ## Quick start: minimal .env for local dev
 
@@ -79,6 +79,160 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                          |
 | MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                              |
 | MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                    |
+
+## Reducing Resource Usage
+
+The API can be configured to use significantly fewer system resources (CPU and memory) by disabling or optimizing certain features. This is particularly useful for development environments, smaller deployments, or when running on resource-constrained infrastructure.
+
+### Using Smaller spaCy Models
+
+By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg`, `fr_core_news_lg`) which provide high accuracy but consume substantial memory (400-500 MB per language).
+
+**To use smaller models:**
+
+1. Update the `MODELS` environment variable to use medium or small models:
+
+   ```bash
+   # Medium models (~100 MB each)
+   MODELS=["en_core_web_md","de_core_news_md","fr_core_news_md"]
+
+   # Small models (~10-15 MB each)
+   MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
+   ```
+
+2. Update `pyproject.toml` to include the corresponding model wheels:
+
+   ```toml
+   [project]
+   dependencies = [
+       # ... other dependencies
+       "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.0/en_core_web_md-3.7.0-py3-none-any.whl",
+       "https://github.com/explosion/spacy-models/releases/download/de_core_news_md-3.7.0/de_core_news_md-3.7.0-py3-none-any.whl",
+       "https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-3.7.0/fr_core_news_md-3.7.0-py3-none-any.whl",
+   ]
+   ```
+
+3. Reinstall dependencies:
+   ```bash
+   pdm install
+   ```
+
+**Trade-offs:**
+
+- Small models: ~95% of large model accuracy, 30x smaller — see [spaCy Facts & Figures](https://spacy.io/usage/facts-figures) for benchmark comparisons
+- Medium models: ~98% of large model accuracy, 4-5x smaller — see [spaCy Facts & Figures](https://spacy.io/usage/facts-figures)
+- Reduced accuracy primarily affects named entity recognition and dependency parsing
+
+### Disabling LLM-Assisted Rephrasing
+
+The AWS Bedrock integration for LLM-powered alternatives and rephrasing is optional and disabled by default when AWS credentials are not configured.
+
+**To ensure it's disabled:**
+
+Simply omit or leave empty the AWS configuration variables in your `.env`:
+
+```bash
+AWS_REGION_NAME=
+AWS_KEY=
+AWS_SECRET_KEY=
+AWS_MODEL_ID=
+```
+
+**Benefits:**
+
+- No AWS API costs
+- Eliminates external API latency
+- No AWS SDK dependencies loaded at runtime
+- LLM routes (`/alternatives/llm`, `/rephrase`) will return appropriate error responses
+
+**Note:** LLM features are also restricted by plan-level feature flags in user/organization configs, so even with AWS configured, users need explicit access.
+
+### Disabling Context Checker (False Positive Filtering)
+
+The context checker reduces false positives but adds computational overhead—either through local SetFit model inference or remote API calls.
+
+**To disable context checking:**
+
+```bash
+# Disable local models
+CONTEXT_CHECKER_LOCAL=false
+
+# Don't configure remote API endpoints
+CONTEXT_CHECKER=
+```
+
+**Benefits:**
+
+- Saves 200-400 MB RAM per language when local models are disabled (no SetFit models loaded)
+- Reduces inference latency by 50-200ms per request
+- Eliminates external API dependencies (if using remote mode)
+
+**Trade-offs:**
+
+- Slightly higher false positive rate on grammar rules (typically 5-10% more false positives)
+- Most impactful for rules that are context-sensitive
+
+**When to disable:**
+
+- Development environments where false positives are acceptable
+- Resource-constrained deployments
+- When prioritizing speed over precision
+
+### Disabling LanguageTool
+
+LanguageTool provides spell-checking and additional grammar rules but requires either running a separate LanguageTool server or making external API calls.
+
+**To disable LanguageTool:**
+
+```bash
+# Set to empty string to disable
+LANGUAGETOOL_API=
+```
+
+**Benefits:**
+
+- No need to run/maintain a separate LanguageTool server
+- Eliminates external API calls and latency (100-500ms per request)
+- No LanguageTool API costs if using premium service
+
+**Trade-offs:**
+
+- No spell-checking functionality
+- Missing some grammar rules that LanguageTool provides but the API doesn't
+- Reduced coverage for certain error types
+
+**Note:** The API's core rule engine will continue to function—you'll still get alternatives, declensions, and custom rules. Only LanguageTool-specific features are disabled.
+
+### Resource Optimization Example Configuration
+
+For minimal resource usage in development:
+
+```bash
+# Use small spaCy models
+MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
+
+# Disable LLM features
+AWS_REGION_NAME=
+AWS_KEY=
+AWS_SECRET_KEY=
+
+# Disable context checker
+CONTEXT_CHECKER_LOCAL=false
+CONTEXT_CHECKER=
+
+# Disable LanguageTool
+LANGUAGETOOL_API=
+
+# Use fake in-memory Redis
+REDIS_HOST=
+
+# Basic logging
+LOGGING_ENABLED=true
+LOGGING_CONFIG_FILENAME=stdout
+LOGGING_CONFIG_LEVEL=INFO
+```
+
+This configuration reduces memory usage from ~2-3 GB to ~300-500 MB while maintaining core functionality.
 
 ## API docs protection
 
