@@ -59,26 +59,26 @@ TEXT_MAX_LENGTH=1000
 LOG_METRICS=false
 ```
 
-Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 to the settings fields in `app/settings.py` (e.g., `API_DOCS_AUTH_ENABLED` -> `api_docs_auth_enabled`).
+Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 to the settings fields in [app/settings.py](../app/settings.py) (e.g., `API_DOCS_AUTH_ENABLED` -> `api_docs_auth_enabled`).
 
 ## Core settings
 
-| Variable                    | Default                                                        | Description                                                                                                        |
-| --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                       |
-| LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                              |
-| LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                     |
-| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                  |
-| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                            |
-| TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                 |
-| ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                           |
-| TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                 |
-| CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                 |
-| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                               |
-| IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from `database/dump.sql` (otherwise from `database/db.sqlite3`). |
-| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                          |
-| MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                              |
-| MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                    |
+| Variable                    | Default                                                        | Description                                                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
+| LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
+| LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
+| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
+| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
+| TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
+| ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
+| TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
+| CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
+| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                                                                             |
+| IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from [database/dump.sql](../database/dump.sql) (otherwise from [database/db.sqlite3](../database/db.sqlite3)). |
+| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
+| MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
+| MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                                                                  |
 
 ## Reducing Resource Usage
 
@@ -319,7 +319,7 @@ platform environment:redeploy -e main
 
 #### convert_to_cpu.py reference (optional)
 
-If you obtain raw SetFit model dumps from another source and need to ensure they run on CPU, `bin/convert_to_cpu.py` converts a downloaded SetFit model directory to a CPU-only version and writes it to `models/context_aware_model/<lang>`.
+If you obtain raw SetFit model dumps from another source and need to ensure they run on CPU, [bin/convert_to_cpu.py](../bin/convert_to_cpu.py) converts a downloaded SetFit model directory to a CPU-only version and writes it to [models/context_aware_model/<lang>](../models/context_aware_model/).
 
 Usage:
 
@@ -462,7 +462,7 @@ PLATFORM_APPLICATION_NAME=app
 
 ## Testing variables
 
-The following environment variables are used to seed test data and shortcuts when running the application in a development or test environment (for example when `REDIS_HOST` is empty and an in-memory fake Redis is used). These are loaded into `Settings` (`app/settings.py`) and applied during startup (`app/startup.py`).
+The following environment variables are used to seed test data and shortcuts when running the application in a development or test environment (for example when `REDIS_HOST` is empty and an in-memory fake Redis is used). These are loaded into `Settings` ([app/settings.py](../app/settings.py)) and applied during startup ([app/startup.py](../app/startup.py)).
 
 |                     Variable | Default | Description                                                                                                                                                                                                                                  |
 | ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -490,3 +490,12 @@ Also configure Blackfire credentials in `~/.blackfire.ini` or environment variab
 - Update `MODELS` in your environment to the desired packages (e.g., use `en_core_web_md`).
 - Update `pyproject.toml` to include matching wheel URLs or pip names for those models.
 - Reinstall dependencies so spaCy can load the specified models.
+
+---
+
+## See Also
+
+- [Setup & Deployment](./setup.md) - Installation and deployment instructions
+- [Request Configuration & Categories](./request-configuration.md) - Per-request configuration options
+- [API Endpoints](./api.md) - Available endpoints and authentication
+- Back to [📋 Documentation Index](../README.md#documentation-index)

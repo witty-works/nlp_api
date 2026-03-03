@@ -54,7 +54,7 @@ Managing API Keys:
 - `GET /api_key/{email}` - Retrieve API key for an email
 - `DELETE /api_key/{email}` - Delete API key for an email
 
-These management endpoints require HTTP Basic authentication (see API docs protection).
+These management endpoints require HTTP Basic authentication (see [API docs protection](./configuration.md#api-docs-protection)).
 
 ### OAuth2 Bearer Token Authentication
 
@@ -210,9 +210,9 @@ The complete list of supported categories can be found in multiple locations:
    - French: https://www.witty.works/fr/categories.html
 
 2. Source Code (technical reference):
-   - `training_data/categories.json` - Main category definitions with translations, proficiency levels, and metadata
-   - `training_data/diversity_dimension_drivers.json` - Additional diversity dimension drivers
-   - `app/categories.py` - Category logic, utilities, and helper functions
+   - [training_data/categories.json](../training_data/categories.json) - Main category definitions with translations, proficiency levels, and metadata
+   - [training_data/diversity_dimension_drivers.json](../training_data/diversity_dimension_drivers.json) - Additional diversity dimension drivers
+   - [app/categories.py](../app/categories.py) - Category logic, utilities, and helper functions
 
 3. API Documentation (interactive):
    - OpenAPI/Swagger UI at `/docs` (when running locally or in production)
@@ -239,7 +239,7 @@ Examples of subcategories (from `diversity_dimension_drivers.json`):
 
 Note on proficiency levels: Most subcategories have both basic and `_advanced` variations (e.g., `ability` and `ability_advanced`). However, subcategories with proficiency level `inclusive` (such as `communal`, `d_and_i`, `emotional_security`) or `openly_discriminating` (such as `ableism`, `racism`, `sexism`, `transphobia`, `homophobia`, `antisemitism`, `antimuslim`, `xenophobia`) do NOT have `_advanced` variations - they only exist in their base form.
 
-Note: Category names may include subcategories and can have an `_advanced` suffix for advanced proficiency level checks. Refer to the categories documentation or source files for the complete and up-to-date list.
+Note: Category names may include subcategories and can have an `_advanced` suffix for advanced proficiency level checks. Refer to the [Finding Available Categories](#finding-available-categories) section above or the [Training Data & Resources](./training-data.md#categories) for the complete and up-to-date list.
 
 ## Example API Calls
 
@@ -381,3 +381,12 @@ Stored configurations support additional features beyond the request `config` ob
 - Term replacements: Custom replacement rules with explanations
 - Domain restrictions: Allowlist or denylist of domains where the checker should operate
 - Config versioning: `config_hash` and `sync_date` for cache invalidation
+
+---
+
+## See Also
+
+- [Configuration & Environment Variables](./configuration.md) - Server-side configuration
+- [API Endpoints](./api.md) - Core endpoints and management endpoints
+- [Technical Notes](./technical-notes.md) - Rules engine and authentication details
+- Back to [📋 Documentation Index](../README.md#documentation-index)
