@@ -142,8 +142,8 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/health`                     | GET    | No            | Health check endpoint. Returns status of API and optionally external dependencies |
 | `/health?check_external=true` | GET    | No            | Health check including LanguageTool connectivity                                  |
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
-| `/docs`                       | GET    | Optional*     | Interactive Swagger UI documentation                                              |
-| `/openapi.json`               | GET    | Optional*     | OpenAPI schema JSON                                                               |
+| `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
+| `/openapi.json`               | GET    | Optional\*    | OpenAPI schema JSON                                                               |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`
 
@@ -213,3 +213,12 @@ Available only when `SLACK_ENABLED=true`.
 | `/slack/commands` | POST   | Slack signature | Handles Slack `/witty` slash command |
 
 The `/witty` command in Slack allows users to check text for inclusive language directly in Slack channels. Configure your Slack app to send slash commands to this endpoint.
+
+---
+
+## See Also
+
+- [Request Configuration & Categories](./request-configuration.md) - Per-request configuration options
+- [Configuration & Environment Variables](./configuration.md) - Server-side configuration and environment variables
+- [Setup & Deployment](./setup.md) - Installation and deployment
+- Back to [📋 Documentation Index](../README.md#documentation-index)
