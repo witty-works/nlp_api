@@ -8,6 +8,8 @@ def fetch_static_rules(langs: list[str]):
         LangType.DE: {
             # load articles for gendered denom
             "df_articles": "articles.csv",
+            # nouns the regular Inklusivum rules cannot derive
+            "df_inklusivum_nouns": "inklusivum_nouns.csv",
         },
         LangType.EN: {},
         LangType.FR: {},
@@ -847,6 +849,17 @@ def fetch_static_rules(langs: list[str]):
             "solches",
             "solchem",
         }
+
+        static_rules[LangType.DE]["inklusivum_nouns"] = dict(
+            zip(
+                data[LangType.DE]["df_inklusivum_nouns"]["Masculine"],
+                zip(
+                    data[LangType.DE]["df_inklusivum_nouns"]["Singular"],
+                    data[LangType.DE]["df_inklusivum_nouns"]["Plural"],
+                ),
+            )
+        )
+
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [
                 "chen",

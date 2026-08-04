@@ -25,6 +25,7 @@ from logging import Logger
 from pluralizefr import pluralize
 from app.alternatives_engine import utils
 from app.alternatives_engine import formatting
+from app.alternatives_engine import inklusivum
 from app.alternatives_engine import sentences
 
 
@@ -968,7 +969,14 @@ class Alternatives:
         if female_form is not None and male_form is not None:
             if inclusive:
                 if male_form == female_form:
+                    # Already gender neutral: the Inklusivum leaves these
+                    # alone too and changes only the article.
                     lemma = prefix + male_form
+                elif separator == "DEE":
+                    lemma = self.inklusivum_noun(
+                        male_forms, female_forms, target_form, prefix
+                    )
+                    rule.dynamic.false_positives.append(lemma)
                 else:
                     lemma = formatting.inclusive_alternative(
                         self.static_rules,
@@ -984,15 +992,25 @@ class Alternatives:
                     rule.dynamic.false_positives.append(lemma)
 
                 parts = [
-                    formatting.inclusive_alternative(
-                        self.static_rules,
-                        LangType.DE,
-                        aw["male_form"],
-                        aw["female_form"],
-                        "",
-                        separator,
-                        noun_separator,
-                        separate_gender_plural,
+                    (
+                        inklusivum.noun(
+                            aw["male_form"],
+                            aw["female_form"],
+                            None,
+                            "",
+                            self.static_rules[LangType.DE]["inklusivum_nouns"],
+                        )
+                        if separator == "DEE"
+                        else formatting.inclusive_alternative(
+                            self.static_rules,
+                            LangType.DE,
+                            aw["male_form"],
+                            aw["female_form"],
+                            "",
+                            separator,
+                            noun_separator,
+                            separate_gender_plural,
+                        )
                     )
                     for aw in additional_words
                 ]
@@ -1138,6 +1156,27 @@ class Alternatives:
         )
 
         return male_sub or male_form, female_sub or female_form, variants
+
+    def inklusivum_noun(
+        self,
+        male_forms: dict,
+        female_forms: dict,
+        target_form: str | None,
+        prefix: str,
+    ) -> str | None:
+        """Build an Inklusivum noun from the nominative singular pair.
+
+        The Inklusivum declines its own stem rather than reusing a declined
+        masculine, so the base forms are used here and ``target_form`` only
+        selects number and case.
+        """
+        return inklusivum.noun(
+            male_forms.get("base_form") or male_forms.get("sg_nom"),
+            female_forms.get("base_form") or female_forms.get("sg_nom"),
+            target_form,
+            prefix,
+            self.static_rules[LangType.DE]["inklusivum_nouns"],
+        )
 
     def handle_single_tilde(
         self,

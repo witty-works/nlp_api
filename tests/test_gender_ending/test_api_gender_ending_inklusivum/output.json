@@ -178,7 +178,7 @@
                     "female_form": "meiner Professorin",
                     "gender_role": "inclusive_gender",
                     "male_form": "meines Professors",
-                    "text": "meiners Professore"
+                    "text": "meiners Professores"
                 },
                 {
                     "female_form": "meiner Professorin",
@@ -386,8 +386,8 @@
                 {
                     "female_form": "meine Kollegin",
                     "gender_role": "inclusive_gender",
-                    "male_form": "Kollegen",
-                    "text": "Kollege"
+                    "male_form": "meinen Kollegen",
+                    "text": "mein Kollegere"
                 },
                 {
                     "female_form": "meine Kollegin",
@@ -539,7 +539,7 @@
                     "female_form": "Kolleginnen",
                     "gender_role": "inclusive_gender",
                     "male_form": "Kollegen",
-                    "text": "Kollege"
+                    "text": "Kollegerne"
                 },
                 {
                     "female_form": "Kolleginnen",
