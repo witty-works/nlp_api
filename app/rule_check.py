@@ -224,6 +224,15 @@ class RuleCheck:
             if not inklusivum.is_already_neutral(noun.lemma_, neutral):
                 continue
 
+            # -ling is a suffix, not a person word: "Frühling" and
+            # "Schmetterling" carry it too, and only a person word takes the
+            # Inklusivum article at all.
+            if (
+                noun.lemma_ not in neutral
+                and noun.lemma_.lower() not in self.db.person_words.get(LangType.DE, [])
+            ):
+                continue
+
             # Plural articles are already neutral, so there is nothing to say.
             number = noun.morph.get("Number")
             if not number or "Plur" in number:

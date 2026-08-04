@@ -5,6 +5,37 @@ from app.helper import upperfirst, find_common_prefix
 from app.alternatives_engine import inklusivum
 
 
+def inklusivum_alternative(
+    static_rules: dict, lang: LangType, male_form: str, female_form: str
+) -> str | None:
+    """Inklusivum form for a pair where only the surface forms are known.
+
+    Reached from callers without declension data, the rephrase endpoint above
+    all. It goes through the same rules as the main path rather than the bare
+    noun ending, so that articles, adjectives used as nouns, the loanword
+    classes and the words that take no ending are all handled here too.
+    """
+    rules = static_rules.get(lang, {})
+    articles = rules.get("masculine_articles", {})
+    entry = articles.get(male_form.lower())
+    if entry:
+        forms = {article.inklusivum for article in entry.values() if article.inklusivum}
+        if len(forms) == 1:
+            article_form = forms.pop()
+            return upperfirst(article_form) if male_form[:1].isupper() else article_form
+        return None
+
+    return inklusivum.noun(
+        male_form,
+        female_form,
+        None,
+        "",
+        rules.get("inklusivum_nouns"),
+        True,
+        rules.get("inklusivum_neutral_nouns"),
+    )
+
+
 def inclusive_alternative(
     static_rules: dict,
     lang: LangType,
@@ -21,7 +52,7 @@ def inclusive_alternative(
         # alternatives.py, where the declensions are available; callers that
         # only hold surface forms, such as the rephrase endpoint, land here.
         if separator == INKLUSIVUM_SEPARATOR:
-            return inklusivum.singular(male_form)
+            return inklusivum_alternative(static_rules, lang, male_form, female_form)
 
         if male_form.lower() in static_rules[lang]["masculine_articles"]:
             return female_form + separator + male_form

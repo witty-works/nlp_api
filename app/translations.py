@@ -130,9 +130,9 @@ translations = {
         LangType.FR: "Dans l'Inklusivum, l'adjectif s'accorde avec le nom : « -ey » sans article, « -e » ou « -en » après un article.",
     },
     "INKLUSIVUM_ARTICLE_LONG": {
-        LangType.EN: "Words like ‘Gast’ or ‘Mitglied’ are already gender neutral and keep their form. Only the article changes, from ‘der’ to ‘de’.",
-        LangType.DE: "Wörter wie „Gast“ oder „Mitglied“ sind bereits geschlechtsneutral und bleiben unverändert. Nur der Artikel wird angepasst: aus „der“ wird „de“.",
-        LangType.FR: "Des mots comme « Gast » ou « Mitglied » sont déjà neutres et gardent leur forme. Seul l'article change : « der » devient « de ».",
+        LangType.EN: "Words like ‘Gast’ or ‘Profi’ are masculine but already refer to anyone, so the word keeps its form and only the article changes, from ‘der’ to ‘de’.",
+        LangType.DE: "Wörter wie „Gast“ oder „Profi“ sind maskulin, meinen aber bereits alle. Das Wort bleibt deshalb unverändert, nur der Artikel wird angepasst: aus „der“ wird „de“.",
+        LangType.FR: "Des mots comme « Gast » ou « Profi » sont masculins mais désignent déjà tout le monde : le mot garde sa forme, seul l'article change, « der » devient « de ».",
     },
     "INKLUSIVUM_ADJECTIVE_LONG": {
         LangType.EN: "Adjectives agree with the noun. After an article they end in ‘-e’ or ‘-en’; with no article they take ‘-ey’, ‘-ers’ or ‘-erm’.",

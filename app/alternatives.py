@@ -1052,6 +1052,8 @@ class Alternatives:
                             None,
                             "",
                             self.static_rules[LangType.DE]["inklusivum_nouns"],
+                            True,
+                            self.static_rules[LangType.DE]["inklusivum_neutral_nouns"],
                         )
                         if separator == INKLUSIVUM_SEPARATOR
                         else formatting.inclusive_alternative(
@@ -1312,8 +1314,16 @@ class Alternatives:
                     # possessive also agrees with the noun it modifies. The
                     # word being replaced already carries that agreement, so
                     # take it from there instead: "Ihre" -> "ense", not "ens".
-                    if replacement and replacement.startswith(inklusivum.POSSESSIVE):
-                        agreed = inklusivum.possessive(source_text)
+                    # Only when the match is the possessive itself. A wider
+                    # span, expanded over an article or matched by a pattern,
+                    # would be spliced into the replacement word.
+                    if (
+                        replacement
+                        and replacement.startswith(inklusivum.POSSESSIVE)
+                        and source_text
+                        and " " not in source_text.strip()
+                    ):
+                        agreed = inklusivum.possessive(source_text.strip())
                         if agreed:
                             replacement = agreed
 

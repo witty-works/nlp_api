@@ -614,3 +614,62 @@ def test_adjective_after_ein_loses_the_masculine_ending():
     """ "Ein guter Arzt" is the case where an article still means a change."""
     assert inklusivum.adjective("gut", "nominativ", True) == "gute"
     assert inklusivum.adjective("gut", "nominativ", True) != "guter"
+
+
+# --- the surface-form path used by callers without declensions -------------
+# It has to go through the same rules as the main path, or the rephrase
+# endpoint builds forms the rest of the system would never produce.
+
+
+def _static_rules():
+    from app.rules import fetch_static_rules
+
+    return fetch_static_rules(["de"])
+
+
+@pytest.mark.parametrize(
+    "male,female,expected",
+    [
+        # Articles come from the table, not from the noun rule, which would
+        # otherwise turn "der" into "dere".
+        ("der", "die", "de"),
+        ("dem", "der", "derm"),
+        # And the noun classes all have to apply here too.
+        ("Lehrer", "Lehrerin", "Lehrere"),
+        ("Kollege", "Kollegin", "Kollegere"),
+        ("Alumnus", "Alumna", "Alumne"),
+        ("Wanderer", "Wanderin", "Wandere"),
+        ("Vorgesetzter", "Vorgesetzte", "Vorgesetzte"),
+        ("Kaufmann", "Kauffrau", "Kaufperson"),
+        ("Gast", "Gästin", "Gast"),
+    ],
+)
+def test_surface_form_path_uses_the_same_rules(male, female, expected):
+    built = formatting.inclusive_alternative(
+        _static_rules(),
+        LangType.DE,
+        male,
+        female,
+        "",
+        INKLUSIVUM_SEPARATOR,
+        INKLUSIVUM_SEPARATOR,
+        False,
+    )
+
+    assert built == expected
+
+
+def test_the_ling_suffix_alone_does_not_mean_person():
+    """Frühling and Schmetterling carry it without being people."""
+    for word in ("Frühling", "Schmetterling", "Fäustling"):
+        assert word not in _neutral_nouns()
+
+    for word in ("Lehrling", "Liebling", "Prüfling", "Flüchtling"):
+        assert word in _neutral_nouns()
+
+
+def test_possessive_is_not_built_from_a_multi_word_span():
+    """It is only the possessive itself that carries the agreement."""
+    assert inklusivum.possessive("ihre") == "ense"
+    # A wider match would otherwise be spliced into the replacement.
+    assert inklusivum.possessive("ihre Vorlesungen") == "ense vorlesungen"

@@ -719,15 +719,24 @@ def fetch_static_rules(langs: list[str]):
         ]
 
         # articles
+        df_articles = data[LangType.DE]["df_articles"]
+        # zip stops at the shortest column, so a missing Inklusivum column would
+        # empty the whole article table rather than leave that one field unset.
+        inklusivum_column = (
+            df_articles["Inklusivum"]
+            if "Inklusivum" in df_articles
+            else [None] * len(df_articles["Form"])
+        )
+
         articles = list(
             zip(
-                data[LangType.DE]["df_articles"]["Form"],
-                data[LangType.DE]["df_articles"]["Masculine"],
-                data[LangType.DE]["df_articles"]["Feminine"],
-                data[LangType.DE]["df_articles"]["Neuter"],
-                data[LangType.DE]["df_articles"]["Plural"],
-                data[LangType.DE]["df_articles"]["Alternative"],
-                data[LangType.DE]["df_articles"].get("Inklusivum", []),
+                df_articles["Form"],
+                df_articles["Masculine"],
+                df_articles["Feminine"],
+                df_articles["Neuter"],
+                df_articles["Plural"],
+                df_articles["Alternative"],
+                inklusivum_column,
             )
         )
 
@@ -745,7 +754,7 @@ def fetch_static_rules(langs: list[str]):
                 neuter=article[3],
                 plural=article[4],
                 inclusive=article[5],
-                inklusivum=article[6] if len(article) > 6 else None,
+                inklusivum=article[6],
             )
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
