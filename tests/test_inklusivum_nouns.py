@@ -248,3 +248,69 @@ def test_adjective_defaults_to_nominative():
 )
 def test_adjective_stem(tilde_word, expected):
     assert inklusivum.adjective_stem(tilde_word) == expected
+
+
+# --- adjectives used as nouns ---------------------------------------------
+# Vorgesetzte(r), Angestellte(r) and the participles are adjectives, and keep
+# taking adjective endings in the Inklusivum. Suffixing them like nouns would
+# give Vorgesetztere.
+
+
+SUBSTANTIVIZED = [
+    ("Vorgesetzter", "Vorgesetzte"),
+    ("Angestellter", "Angestellte"),
+    ("Geflüchteter", "Geflüchtete"),
+    ("Abgeordneter", "Abgeordnete"),
+    ("Asylsuchender", "Asylsuchende"),
+]
+
+
+@pytest.mark.parametrize("masculine,feminine", SUBSTANTIVIZED)
+def test_substantivized_adjectives_are_recognised(masculine, feminine):
+    assert inklusivum.is_substantivized_adjective(masculine, feminine)
+
+
+@pytest.mark.parametrize("masculine,feminine,_sg,_pl", REGULAR)
+def test_ordinary_nouns_are_not_mistaken_for_adjectives(masculine, feminine, _sg, _pl):
+    """The -in derivation is what separates a noun pair from an adjective one."""
+    assert not inklusivum.is_substantivized_adjective(masculine, feminine)
+
+
+@pytest.mark.parametrize(
+    "target_form,after_article,bare",
+    [
+        ("sg_nom", "Vorgesetzte", "Vorgesetztey"),
+        ("sg_acc", "Vorgesetzte", "Vorgesetztey"),
+        ("sg_gen", "Vorgesetzten", "Vorgesetzters"),
+        ("sg_dat", "Vorgesetzten", "Vorgesetzterm"),
+        # Plurals stay ordinary German, which is already gender neutral.
+        ("pl_nom", "Vorgesetzten", "Vorgesetzte"),
+    ],
+)
+def test_substantivized_adjective_declension(target_form, after_article, bare):
+    assert (
+        inklusivum.noun("Vorgesetzter", "Vorgesetzte", target_form, "", None, True)
+        == after_article
+    )
+    assert (
+        inklusivum.noun("Vorgesetzter", "Vorgesetzte", target_form, "", None, False)
+        == bare
+    )
+
+
+@pytest.mark.parametrize("masculine,feminine", SUBSTANTIVIZED)
+def test_substantivized_adjectives_never_take_the_noun_ending(masculine, feminine):
+    """The noun paradigm would produce Vorgesetztere and Geflüchtetere."""
+    for target_form in ("sg_nom", "sg_gen", "pl_nom", "pl_dat"):
+        for has_article in (True, False):
+            form = inklusivum.noun(
+                masculine, feminine, target_form, "", None, has_article
+            )
+            assert not form.endswith("ere"), form
+            assert not form.endswith("erne"), form
+
+
+def test_substantivized_adjectives_keep_ordinary_nouns_working():
+    """Guards the dispatch: a noun pair must still reach the noun paradigm."""
+    assert inklusivum.noun("Lehrer", "Lehrerin", "sg_nom") == "Lehrere"
+    assert inklusivum.noun("Lehrer", "Lehrerin", "pl_nom") == "Lehrerne"

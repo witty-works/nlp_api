@@ -744,17 +744,22 @@ class Alternatives:
                 )
 
             if not alternative.is_gendered_noun:
-                alternative = await self.alternative_declension(
-                    LangType.DE,
-                    target_form,
-                    text,
-                    tokens[token_index].lemma_,
-                    rule.get_first_word_type(),
-                    rule,
-                    alternative,
-                    is_singular,
-                    prefix if alternative.lemma.startswith(prefix) else None,
+                declined = separator == "DEE" and await self.inklusivum_adjective(
+                    alternative, target_form, rule.dynamic.article is not None
                 )
+
+                if not declined:
+                    alternative = await self.alternative_declension(
+                        LangType.DE,
+                        target_form,
+                        text,
+                        tokens[token_index].lemma_,
+                        rule.get_first_word_type(),
+                        rule,
+                        alternative,
+                        is_singular,
+                        prefix if alternative.lemma.startswith(prefix) else None,
+                    )
 
                 if rule.dynamic.article:
                     alternative = await self.add_german_article_to_alternative(
@@ -974,13 +979,26 @@ class Alternatives:
 
         if female_form is not None and male_form is not None:
             if inclusive:
-                if male_form == female_form:
-                    # Already gender neutral: the Inklusivum leaves these
-                    # alone too and changes only the article.
+                # A word is only already gender neutral when the two genders
+                # share a base form. Comparing the declined forms instead would
+                # catch every case where they merely happen to coincide, and
+                # adjectives used as nouns do coincide in the dative, leaving
+                # "Geflüchtetem" where the Inklusivum wants "Geflüchteten".
+                is_neutral = (
+                    male_forms.get("base_form") == female_forms.get("base_form")
+                    if separator == "DEE"
+                    else male_form == female_form
+                )
+
+                if is_neutral:
                     lemma = prefix + male_form
                 elif separator == "DEE":
                     lemma = self.inklusivum_noun(
-                        male_forms, female_forms, target_form, prefix
+                        male_forms,
+                        female_forms,
+                        target_form,
+                        prefix,
+                        rule.dynamic.article is not None,
                     )
                     rule.dynamic.false_positives.append(lemma)
                 else:
@@ -1169,12 +1187,14 @@ class Alternatives:
         female_forms: dict,
         target_form: str | None,
         prefix: str,
+        has_article: bool = True,
     ) -> str | None:
         """Build an Inklusivum noun from the nominative singular pair.
 
         The Inklusivum declines its own stem rather than reusing a declined
         masculine, so the base forms are used here and ``target_form`` only
-        selects number and case.
+        selects number and case. ``has_article`` picks the adjective ending set
+        for pairs that are adjectives rather than nouns.
         """
         return inklusivum.noun(
             male_forms.get("base_form") or male_forms.get("sg_nom"),
@@ -1182,7 +1202,45 @@ class Alternatives:
             target_form,
             prefix,
             self.static_rules[LangType.DE]["inklusivum_nouns"],
+            has_article,
         )
+
+    async def inklusivum_adjective(
+        self,
+        alternative: Alternative,
+        target_form: str | None,
+        has_article: bool,
+    ) -> bool:
+        """Decline a replacement that is an adjective used as a noun.
+
+        Suggestions like "Geflüchtete" or "Vertriebene" arrive here undeclined
+        and would otherwise be declined as ordinary German, giving
+        "Geflüchtetem" in the dative where the Inklusivum wants "Geflüchteten".
+        Returns whether it applied.
+        """
+        words = alternative.lemma.split()
+        if not words:
+            return False
+
+        forms = await self.nouns.german_noun_lookup(words[-1])
+        if not forms:
+            return False
+
+        masculine = forms.get("male_form") or forms.get("base_form")
+        feminine = forms.get("female_form") or forms.get("base_form")
+
+        if not inklusivum.is_substantivized_adjective(masculine, feminine):
+            return False
+
+        words[-1] = inklusivum.substantivized_adjective(
+            masculine, target_form, "", has_article
+        )
+
+        alternative.lemma = " ".join(words)
+        if alternative.words:
+            alternative.words[-1] = words[-1]
+
+        return True
 
     def is_adjective_word_type(self, alternative: Alternative, word_index: int) -> bool:
         if word_index >= len(alternative.word_types):

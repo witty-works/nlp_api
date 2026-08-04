@@ -20,6 +20,19 @@ DATIVE_PLURAL = "pl_dat"
 
 PLURAL_FORMS = ("pl_nom", "pl_acc", "pl_dat", "pl_gen")
 
+# Declension columns carry number and case together; adjective endings only
+# care about the case.
+TARGET_FORM_CASES = {
+    "sg_nom": "nominativ",
+    "sg_acc": "akkusativ",
+    "sg_gen": "genitiv",
+    "sg_dat": "dativ",
+    "pl_nom": "nominativ",
+    "pl_acc": "akkusativ",
+    "pl_gen": "genitiv",
+    "pl_dat": "dativ",
+}
+
 
 def _without_umlauts(word: str) -> str:
     for umlaut, plain in UMLAUTS.items():
@@ -77,12 +90,48 @@ def apply_case(form: str, target_form: str | None) -> str:
     return form
 
 
+def is_substantivized_adjective(masculine: str, feminine: str) -> bool:
+    """Whether a pair is an adjective used as a noun.
+
+    Vorgesetzter/Vorgesetzte and Angestellter/Angestellte drop the masculine's
+    final r rather than adding -in, which is adjective agreement rather than
+    noun derivation and separates them cleanly from Lehrer/Lehrerin.
+    """
+    if not masculine or not feminine:
+        return False
+
+    return masculine.endswith("er") and feminine == masculine[:-1]
+
+
+def substantivized_adjective(
+    masculine: str,
+    target_form: str | None = None,
+    prefix: str = "",
+    has_article: bool = True,
+) -> str:
+    """Decline an adjective used as a noun.
+
+    These keep taking adjective endings in the Inklusivum, so "de Vorgesetzte"
+    and "Vorgesetztey", never the noun ending that would give Vorgesetztere.
+    """
+    stem = masculine[:-2]
+
+    if target_form in PLURAL_FORMS:
+        # Plurals are ordinary German here, which is already gender neutral.
+        form = stem + ("en" if has_article else "e")
+    else:
+        form = adjective(stem, TARGET_FORM_CASES.get(target_form), has_article)
+
+    return add_german_prefix(form, prefix)
+
+
 def noun(
     masculine: str,
     feminine: str,
     target_form: str | None = None,
     prefix: str = "",
     exceptions: dict | None = None,
+    has_article: bool = True,
 ) -> str | None:
     """Build the Inklusivum noun for a masculine/feminine pair.
 
@@ -101,6 +150,9 @@ def noun(
         singular_form, plural_form = override
         form = plural_form if is_plural else singular_form
         return add_german_prefix(apply_case(form, target_form), prefix)
+
+    if is_substantivized_adjective(masculine, feminine):
+        return substantivized_adjective(masculine, target_form, prefix, has_article)
 
     singular_form = singular(masculine)
 
