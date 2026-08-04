@@ -312,6 +312,13 @@ class RuleCheck:
             if token.text.lower() == token.lemma_.lower():
                 continue
 
+            # The lemma is only usable as a stem when the word is built on it.
+            # It is not always: "Liebe" lemmatises to "Lieber" here, which
+            # already carries a masculine ending and would give "Lieberey".
+            # Comparatives and superlatives fail this too, "beste" to "gut".
+            if not token.text.lower().startswith(token.lemma_.lower()):
+                continue
+
             noun = token.head
             if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
                 continue
