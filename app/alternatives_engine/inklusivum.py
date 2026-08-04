@@ -172,6 +172,50 @@ def _undo_plural(stem: str) -> list[str]:
     return forms
 
 
+# Unlike standard German the Inklusivum does not split weak from mixed: the
+# endings after de, ein and jedey are the same. Only the absence of an article
+# selects a different set, where -ey keeps the form apart from the feminine.
+ADJECTIVE_ENDINGS_AFTER_ARTICLE = {
+    "nominativ": "e",
+    "akkusativ": "e",
+    "genitiv": "en",
+    "dativ": "en",
+}
+ADJECTIVE_ENDINGS_BARE = {
+    "nominativ": "ey",
+    "akkusativ": "ey",
+    "genitiv": "ers",
+    "dativ": "erm",
+}
+
+
+def adjective(stem: str, case: str | None = None, has_article: bool = True) -> str:
+    """Decline an adjective stem.
+
+    ``stem`` is the adjective without any ending, ``case`` a German case name
+    as used in the article table. Plural adjectives are not handled here: the
+    Inklusivum keeps the ordinary German plural, which is already neutral.
+    """
+    endings = ADJECTIVE_ENDINGS_AFTER_ARTICLE if has_article else ADJECTIVE_ENDINGS_BARE
+
+    return stem + endings.get(case or "nominativ", endings["nominativ"])
+
+
+def adjective_stem(tilde_word: str) -> str:
+    """Strip the gendered ending off a tilde marked adjective.
+
+    The rules write these two ways round, with the tilde marking where the
+    gendered part starts: qualifiziert~e and qualifizierte~r both stem to
+    qualifiziert.
+    """
+    before, _, after = tilde_word.partition("~")
+
+    if after == "r" and before.endswith("e"):
+        return before[:-1]
+
+    return before
+
+
 ALL_TARGET_FORMS = ("sg_nom", "sg_gen", "pl_nom", "pl_dat")
 
 

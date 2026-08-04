@@ -735,7 +735,13 @@ class Alternatives:
                 continue
 
             if "~" in alternative.lemma:
-                self.handle_single_tilde(alternative, prefix, is_singular, separator)
+                self.handle_single_tilde(
+                    alternative,
+                    prefix,
+                    is_singular,
+                    separator,
+                    rule.dynamic.article,
+                )
 
             if not alternative.is_gendered_noun:
                 alternative = await self.alternative_declension(
@@ -1178,12 +1184,19 @@ class Alternatives:
             self.static_rules[LangType.DE]["inklusivum_nouns"],
         )
 
+    def is_adjective_word_type(self, alternative: Alternative, word_index: int) -> bool:
+        if word_index >= len(alternative.word_types):
+            return False
+
+        return alternative.word_types[word_index].get("word_type") == WordType.ADJECTIVE
+
     def handle_single_tilde(
         self,
         alternative: Alternative,
         prefix: bool,
         is_singular: bool,
         separator: str,
+        article: Article | None = None,
     ):
         lemma = ""
         word_types = []
@@ -1203,7 +1216,21 @@ class Alternatives:
                 ):
                     word, pre = (
                         utils.inklusivum_article(
-                            self.static_rules[LangType.DE]["inclusive_articles"][word]
+                            self.static_rules[LangType.DE]["inclusive_articles"][word],
+                            article.form if article else None,
+                        ),
+                        [],
+                    )
+                elif (
+                    separator == "DEE"
+                    and is_singular
+                    and self.is_adjective_word_type(alternative, word_index)
+                ):
+                    word, pre = (
+                        inklusivum.adjective(
+                            inklusivum.adjective_stem(word),
+                            article.form if article else None,
+                            article is not None,
                         ),
                         [],
                     )

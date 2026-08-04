@@ -180,3 +180,71 @@ def test_lowercase_words_are_not_candidates():
 
 def test_short_words_do_not_produce_candidates():
     assert inklusivum.base_form_candidates("Ne") == []
+
+
+# --- adjectives -----------------------------------------------------------
+# The Inklusivum does not distinguish weak from mixed declension: after de,
+# ein and jedey alike the endings are the same. Only a bare adjective takes
+# the -ey set. https://geschlechtsneutral.net/gesamtsystem/#adjektive
+
+
+@pytest.mark.parametrize(
+    "case,expected",
+    [
+        ("nominativ", "nette"),
+        ("akkusativ", "nette"),
+        ("genitiv", "netten"),
+        ("dativ", "netten"),
+    ],
+)
+def test_adjective_after_an_article(case, expected):
+    assert inklusivum.adjective("nett", case, True) == expected
+
+
+@pytest.mark.parametrize(
+    "case,expected",
+    [
+        ("nominativ", "gutey"),
+        ("akkusativ", "gutey"),
+        ("genitiv", "guters"),
+        ("dativ", "guterm"),
+    ],
+)
+def test_adjective_without_an_article(case, expected):
+    assert inklusivum.adjective("gut", case, False) == expected
+
+
+def test_presence_of_an_article_is_what_selects_the_ending_set():
+    """The -ey set exists to keep a bare adjective apart from the feminine."""
+    for case in ("nominativ", "genitiv", "dativ", "akkusativ"):
+        assert inklusivum.adjective("nett", case, True) != inklusivum.adjective(
+            "nett", case, False
+        )
+
+
+def test_adjective_after_an_article_follows_the_feminine_pattern():
+    """Standard German would split weak from mixed here; the Inklusivum does not."""
+    assert inklusivum.ADJECTIVE_ENDINGS_AFTER_ARTICLE == {
+        "nominativ": "e",
+        "akkusativ": "e",
+        "genitiv": "en",
+        "dativ": "en",
+    }
+
+
+def test_adjective_defaults_to_nominative():
+    assert inklusivum.adjective("nett") == "nette"
+    assert inklusivum.adjective("gut", None, False) == "gutey"
+
+
+@pytest.mark.parametrize(
+    "tilde_word,expected",
+    [
+        ("qualifiziert~e", "qualifiziert"),
+        ("qualifizierte~r", "qualifiziert"),
+        ("nett~e", "nett"),
+        ("gute~r", "gut"),
+    ],
+)
+def test_adjective_stem(tilde_word, expected):
+    assert inklusivum.adjective_stem(tilde_word) == expected
