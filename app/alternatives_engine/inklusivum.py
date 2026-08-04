@@ -52,6 +52,45 @@ def singular(masculine: str) -> str:
     return masculine + "e"
 
 
+def _romance_stem(masculine: str, feminine: str) -> str | None:
+    """Alumnus/Alumna, Ballerino/Ballerina and the like.
+
+    These replace their ending rather than taking -in, so the ending goes and
+    the Inklusivum -e takes its place: Alumne, Ballerine, Torere.
+    """
+    for ending in ("us", "o"):
+        if not masculine.endswith(ending) or not feminine.endswith("a"):
+            continue
+
+        stem = masculine[: -len(ending)]
+        if stem == feminine[:-1]:
+            return stem
+
+    return None
+
+
+def _double_er_stem(masculine: str, feminine: str) -> str | None:
+    """Wanderer/Wanderin, Zauberer/Zauberin.
+
+    A handful of -er nouns end in -erer, where -in replaces the second -er
+    instead of being appended. The Inklusivum is built from the shortest stem
+    the two forms share, so Wandere rather than Wanderere.
+    """
+    if masculine.endswith("erer") and feminine == masculine[:-2] + "in":
+        return masculine[:-2]
+
+    return None
+
+
+def stem(masculine: str, feminine: str) -> str:
+    """The base the Inklusivum ending attaches to."""
+    return (
+        _romance_stem(masculine, feminine or "")
+        or _double_er_stem(masculine, feminine or "")
+        or masculine
+    )
+
+
 def plural(singular_form: str) -> str:
     """Schülere -> Schülerne, Studente -> Studenterne."""
     if singular_form.endswith("re"):
@@ -154,7 +193,7 @@ def noun(
     if is_substantivized_adjective(masculine, feminine):
         return substantivized_adjective(masculine, target_form, prefix, has_article)
 
-    singular_form = singular(masculine)
+    singular_form = singular(stem(masculine, feminine))
 
     if is_plural:
         umlauted = _umlauted_stem(masculine, feminine or "")

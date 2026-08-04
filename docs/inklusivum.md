@@ -57,8 +57,14 @@ Sources for every form are the association's own tables:
 - **Nouns.** `-e` on the masculine stem, `-re` when it already ends in `-e`
   (`Kollegere`), plural `-rne`, umlaut in the plural only (`Arzte` but
   `Ärzterne`), genitive singular `-s`, dative plural `-n`.
+- **Nouns whose ending is replaced rather than suffixed**: Romance loans
+  (`Alumnus`/`Alumna` → `Alumne`, `Ballerino` → `Ballerine`) and the few `-erer`
+  nouns where `-in` replaces the second `-er` (`Wanderer`/`Wanderin` →
+  `Wandere`). Both are rules, so they cover words the exception page never
+  lists.
 - **Word replacement** for `-mann`/`-frau` compounds (`Kaufmann` →
-  `Kaufperson`, plural `Kaufleute`) and other pairs the rules cannot derive.
+  `Kaufperson`, plural `Kaufleute`) and the handful of genuinely irregular
+  pairs, which are all that is left in the lexicon.
 - **Articles and possessives** across all four cases, including the `unse`/`eue`
   special case and the `zurm` contraction.
 - **Adjectives**, `-e`/`-en` after any article and `-ey`/`-ers`/`-erm` without
@@ -116,9 +122,15 @@ von [Organisation]`. None are implemented.
 
 ### 4. Exception lexicon breadth
 
-`inklusivum_nouns.csv` holds the common cases. The association's exception page
-lists more, and is the page they themselves mark as least reviewed, so additions
-should be treated as lower confidence than the core system.
+`inklusivum_nouns.csv` is down to the pairs no rule can derive: unrelated roots,
+a stem taken from the feminine, the `-mann`/`-frau` compounds, and one entry that
+pins a recommended plural where the rules give the also accepted short form.
+
+Prefer finding the rule over adding a row. Two classes that were listed word by
+word turned out to be systematic, and deriving them covers vocabulary the
+exception page does not mention at all. What remains there is worth reading with
+that in mind, and it is the page the association marks as least reviewed, so
+additions are lower confidence than the core system either way.
 
 ### 5. Derivations
 

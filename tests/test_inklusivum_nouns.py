@@ -88,11 +88,12 @@ def test_umlaut_does_not_leak_into_the_singular():
 @pytest.mark.parametrize(
     "masculine,expected_sg,expected_pl",
     [
-        ("Wanderer", "Wandere", "Wanderne"),
-        ("Prinz", "Prinze", "Prinzerne"),
+        # Genuinely irregular: unrelated roots, or a stem taken from the
+        # feminine. Wanderer, Prinz, the Romance loans and Signore used to be
+        # listed here and are now derived, see the rule tests below.
         ("Bräutigam", "Braute", "Bräuterne"),
-        ("Enkel", "Enkele", "Enkelerne"),
-        ("Signore", "Signorere", "Signorerne"),
+        ("Hexer", "Hexere", "Hexerne"),
+        ("Witwer", "Witwere", "Witwerne"),
         # -mann/-frau compounds are replaced outright, never suffixed.
         ("Kaufmann", "Kaufperson", "Kaufleute"),
         ("Fachmann", "Fachperson", "Fachleute"),
@@ -464,3 +465,52 @@ def test_article_less_adjective_forms_are_recognised(word):
 )
 def test_adjective_recognition_does_not_overreach(word):
     assert not inklusivum.is_adjective_form(word)
+
+
+# --- classes the rules derive rather than the lexicon listing -------------
+
+
+@pytest.mark.parametrize(
+    "masculine,feminine,expected_sg,expected_pl",
+    [
+        # -in replaces the second -er instead of being appended, so the stem
+        # the two forms share is shorter than the masculine.
+        ("Wanderer", "Wanderin", "Wandere", "Wanderne"),
+        ("Zauberer", "Zauberin", "Zaubere", "Zauberne"),
+    ],
+)
+def test_double_er_nouns(masculine, feminine, expected_sg, expected_pl):
+    assert inklusivum.noun(masculine, feminine, "sg_nom") == expected_sg
+    assert inklusivum.noun(masculine, feminine, "pl_nom") == expected_pl
+
+
+@pytest.mark.parametrize(
+    "masculine,feminine,expected_sg,expected_pl",
+    [
+        # Romance loans replace their ending rather than taking -in.
+        ("Alumnus", "Alumna", "Alumne", "Alumnerne"),
+        ("Emeritus", "Emerita", "Emerite", "Emeriterne"),
+        ("Ballerino", "Ballerina", "Ballerine", "Ballerinerne"),
+        ("Mafioso", "Mafiosa", "Mafiose", "Mafioserne"),
+        ("Latino", "Latina", "Latine", "Latinerne"),
+        ("Guerillero", "Guerillera", "Guerillere", "Guerillerne"),
+        ("Filipino", "Filipina", "Filipine", "Filipinerne"),
+    ],
+)
+def test_romance_loan_nouns(masculine, feminine, expected_sg, expected_pl):
+    assert inklusivum.noun(masculine, feminine, "sg_nom") == expected_sg
+    assert inklusivum.noun(masculine, feminine, "pl_nom") == expected_pl
+
+
+@pytest.mark.parametrize("masculine,feminine,expected_sg,_pl", REGULAR)
+def test_the_new_classes_do_not_touch_regular_nouns(
+    masculine, feminine, expected_sg, _pl
+):
+    assert inklusivum.stem(masculine, feminine) == masculine
+    assert inklusivum.noun(masculine, feminine, "sg_nom") == expected_sg
+
+
+def test_romance_rule_needs_both_halves_to_agree():
+    """Otherwise any -o noun with an unrelated -a feminine would match."""
+    assert inklusivum.stem("Torero", "Lehrerin") == "Torero"
+    assert inklusivum.stem("Bruno", "Anna") == "Bruno"
