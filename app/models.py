@@ -227,6 +227,12 @@ class LangVariantType(str, Enum):
     frFR = "fr-FR"
 
 
+# Stands in for a separator where the pipeline expects one, for the Inklusivum,
+# which does not have any. It must never reach a rendered suggestion; anything
+# splicing a separator into a word has to go through utils.splice_separator.
+INKLUSIVUM_SEPARATOR = "DEE"
+
+
 class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
@@ -667,10 +673,12 @@ class Config(BaseModel):
     ):
         if gender_separator is None:
             return "", "", False
-        # special handling for De-e / Inklusivum
+
         if gender_separator == GermanGenderEndingType.INKLUSIVUM:
-            # use a sentinel separator handled by formatting logic
-            return "DEE", "DEE", True
+            # The Inklusivum is a declension system, not a separator, so this
+            # stands in for one. Nothing may splice it into a word: see
+            # utils.splice_separator.
+            return INKLUSIVUM_SEPARATOR, INKLUSIVUM_SEPARATOR, False
 
         if gender_separator in GermanGenderEndingType._member_map_.values():
             if gender_separator == GermanGenderEndingType.CAPITAL_LETTER:

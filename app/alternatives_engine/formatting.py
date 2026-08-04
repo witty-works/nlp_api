@@ -1,7 +1,8 @@
 """Formatting helpers for gendered/inclusive alternatives."""
 
-from app.models import LangType
+from app.models import LangType, INKLUSIVUM_SEPARATOR
 from app.helper import upperfirst, find_common_prefix
+from app.alternatives_engine import inklusivum
 
 
 def inclusive_alternative(
@@ -15,6 +16,13 @@ def inclusive_alternative(
     separate_gender_plural: bool,
 ):
     if lang == LangType.DE:
+        # Everything below assembles a word around a separator, which the
+        # Inklusivum does not have. The main path builds these in
+        # alternatives.py, where the declensions are available; callers that
+        # only hold surface forms, such as the rephrase endpoint, land here.
+        if separator == INKLUSIVUM_SEPARATOR:
+            return inklusivum.singular(male_form)
+
         if male_form.lower() in static_rules[lang]["masculine_articles"]:
             return female_form + separator + male_form
 

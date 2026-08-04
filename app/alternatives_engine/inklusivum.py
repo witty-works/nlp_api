@@ -253,6 +253,44 @@ def adjective(stem: str, case: str | None = None, has_article: bool = True) -> s
     return stem + endings.get(case or "nominativ", endings["nominativ"])
 
 
+# The possessive of "en". Both gendered stems map onto it.
+POSSESSIVE_STEMS = ("sein", "ihr")
+POSSESSIVE = "ens"
+
+
+def possessive(form: str) -> str | None:
+    """Swap a gendered possessive for the Inklusivum one.
+
+    "seinem" and "ihrem" already agree with the noun they modify, so only the
+    stem changes and the agreement is carried over for free: ens, ense, ensem,
+    ensen. Returns None when the word is not a possessive.
+    """
+    lowered = form.lower()
+
+    for stem in POSSESSIVE_STEMS:
+        if lowered.startswith(stem):
+            return POSSESSIVE + lowered[len(stem) :]
+
+    return None
+
+
+def possessive_pair(tilde_word: str) -> str | None:
+    """Inklusivum form for a gendered possessive pair such as "ihrem~seinem".
+
+    Both sides modify the same noun, so they have to land on the same form.
+    Requiring that is also the check that this really is such a pair.
+    """
+    parts = tilde_word.split("~")
+    if len(parts) != 2:
+        return None
+
+    forms = [possessive(part) for part in parts]
+    if forms[0] is None or forms[0] != forms[1]:
+        return None
+
+    return forms[0]
+
+
 def adjective_stem(tilde_word: str) -> str:
     """Strip the gendered ending off a tilde marked adjective.
 

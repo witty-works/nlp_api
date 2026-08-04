@@ -8,6 +8,7 @@ from app.models import (
     GenderedRolesFormatType,
     Article,
     BasicWordType,
+    INKLUSIVUM_SEPARATOR,
 )
 from app.settings import Settings
 from app.db import Db
@@ -368,7 +369,7 @@ class Alternatives:
             )
 
         is_dee = (
-            separator == "DEE"
+            separator == INKLUSIVUM_SEPARATOR
             and alternative.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
         )
         article = None
@@ -741,11 +742,15 @@ class Alternatives:
                     is_singular,
                     separator,
                     rule.dynamic.article,
+                    text,
                 )
 
             if not alternative.is_gendered_noun:
-                declined = separator == "DEE" and await self.inklusivum_adjective(
-                    alternative, target_form, rule.dynamic.article is not None
+                declined = (
+                    separator == INKLUSIVUM_SEPARATOR
+                    and await self.inklusivum_adjective(
+                        alternative, target_form, rule.dynamic.article is not None
+                    )
                 )
 
                 if not declined:
@@ -766,7 +771,9 @@ class Alternatives:
                         tokens, token_index, rule, alternative, separator
                     )
 
-                if inclusive and separator != "/":
+                # The Inklusivum has no separator to splice in, so this would
+                # write the sentinel into the suggestion itself.
+                if inclusive and separator not in ("/", INKLUSIVUM_SEPARATOR):
                     new_alternative = deepcopy(alternative)
                     new_alternative.lemma = new_alternative.lemma.replace(
                         "/", separator
@@ -986,13 +993,13 @@ class Alternatives:
                 # "Geflüchtetem" where the Inklusivum wants "Geflüchteten".
                 is_neutral = (
                     male_forms.get("base_form") == female_forms.get("base_form")
-                    if separator == "DEE"
+                    if separator == INKLUSIVUM_SEPARATOR
                     else male_form == female_form
                 )
 
                 if is_neutral:
                     lemma = prefix + male_form
-                elif separator == "DEE":
+                elif separator == INKLUSIVUM_SEPARATOR:
                     lemma = self.inklusivum_noun(
                         male_forms,
                         female_forms,
@@ -1024,7 +1031,7 @@ class Alternatives:
                             "",
                             self.static_rules[LangType.DE]["inklusivum_nouns"],
                         )
-                        if separator == "DEE"
+                        if separator == INKLUSIVUM_SEPARATOR
                         else formatting.inclusive_alternative(
                             self.static_rules,
                             LangType.DE,
@@ -1048,10 +1055,10 @@ class Alternatives:
                         rule,
                         alternative,
                         text,
-                        alternative_prefix.replace("/", separator)
+                        utils.splice_separator(alternative_prefix, separator)
                         + additional_prefix
                         + lemma
-                        + alternative_suffix.replace("/", separator),
+                        + utils.splice_separator(alternative_suffix, separator),
                         is_singular,
                         False,
                         male_form_with_prefix,
@@ -1109,10 +1116,10 @@ class Alternatives:
                         rule,
                         alternative,
                         text,
-                        alternative_prefix.replace("/", separator)
+                        utils.splice_separator(alternative_prefix, separator)
                         + additional_prefix
                         + lemma
-                        + alternative_suffix.replace("/", separator),
+                        + utils.splice_separator(alternative_suffix, separator),
                         is_singular,
                         False,
                         male_form_with_prefix,
@@ -1255,6 +1262,7 @@ class Alternatives:
         is_singular: bool,
         separator: str,
         article: Article | None = None,
+        source_text: str = "",
     ):
         lemma = ""
         word_types = []
@@ -1269,18 +1277,30 @@ class Alternatives:
                 if word.startswith("~"):
                     word, pre = utils.add_german_prefix(word[1:], prefix), []
                 elif (
-                    separator == "DEE"
+                    separator == INKLUSIVUM_SEPARATOR
                     and word in self.static_rules[LangType.DE]["inclusive_articles"]
                 ):
-                    word, pre = (
-                        utils.inklusivum_article(
-                            self.static_rules[LangType.DE]["inclusive_articles"][word],
-                            article.form if article else None,
-                        ),
-                        [],
+                    replacement = utils.inklusivum_article(
+                        self.static_rules[LangType.DE]["inclusive_articles"][word],
+                        article.form if article else None,
                     )
+
+                    # The article table holds one form per case, but a
+                    # possessive also agrees with the noun it modifies. The
+                    # word being replaced already carries that agreement, so
+                    # take it from there instead: "Ihre" -> "ense", not "ens".
+                    if replacement and replacement.startswith(inklusivum.POSSESSIVE):
+                        agreed = inklusivum.possessive(source_text)
+                        if agreed:
+                            replacement = agreed
+
+                    word, pre = replacement, []
+                elif separator == INKLUSIVUM_SEPARATOR and inklusivum.possessive_pair(
+                    word
+                ):
+                    word, pre = inklusivum.possessive_pair(word), []
                 elif (
-                    separator == "DEE"
+                    separator == INKLUSIVUM_SEPARATOR
                     and is_singular
                     and self.is_adjective_word_type(alternative, word_index)
                 ):

@@ -4,6 +4,7 @@ from app.models import (
     LangType,
     FrenchGenderSeparatorType,
     Alternative,
+    INKLUSIVUM_SEPARATOR,
 )
 
 
@@ -21,6 +22,19 @@ def article_binary_pair(
 
     # assume feminine
     return static_rules[lang]["articles_binary_map"][article], article
+
+
+def splice_separator(text: str, separator: str) -> str:
+    """Put the configured separator where a slash is standing in for it.
+
+    The Inklusivum has no separator, so nothing is spliced. Going through here
+    rather than calling replace directly is what keeps its placeholder out of
+    the text: it once shipped "ihremDEEseinem" to users.
+    """
+    if separator == INKLUSIVUM_SEPARATOR:
+        return text
+
+    return text.replace("/", separator)
 
 
 def inklusivum_article(forms: dict, form: str | None = None) -> str | None:

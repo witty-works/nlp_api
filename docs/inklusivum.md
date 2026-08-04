@@ -45,7 +45,7 @@ and a female surface form. Two consequences shape the code:
 | Routing nouns to the paradigm | `Alternatives.inklusivum_noun` in [app/alternatives.py](../app/alternatives.py) |
 | Suppressing rules on Inklusivum text | `RuleCheck.is_written_in_inklusivum` in [app/rule_check.py](../app/rule_check.py) |
 | Suppressing spell check on Inklusivum text | `LanguageTool.is_inklusivum_form` in [app/languagetool.py](../app/languagetool.py) |
-| Tests | [tests/test_dee_generation.py](../tests/test_dee_generation.py), [tests/test_inklusivum_nouns.py](../tests/test_inklusivum_nouns.py), `tests/test_gender_ending/test_api_gender_ending_inklusivum*` |
+| Tests | [tests/test_dee_generation.py](../tests/test_dee_generation.py) for the article data, [tests/test_inklusivum_nouns.py](../tests/test_inklusivum_nouns.py) for the paradigms, and the `tests/test_gender_ending/test_api_gender_ending_inklusivum*` fixtures end to end |
 
 Sources for every form are the association's own tables:
 [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/),
@@ -61,67 +61,67 @@ Sources for every form are the association's own tables:
   `Kaufperson`, plural `Kaufleute`) and other pairs the rules cannot derive.
 - **Articles and possessives** across all four cases, including the `unse`/`eue`
   special case and the `zurm` contraction.
+- **Adjectives**, `-e`/`-en` after any article and `-ey`/`-ers`/`-erm` without
+  one. The Inklusivum does not split weak from mixed declension, so `de`, `ein`
+  and `jedey` all take the same endings.
+- **Adjectives used as nouns** (`Vorgesetzte(r)`, `Angestellte(r)`, the
+  participles), which keep taking adjective endings rather than the noun ending.
+  Recognised by shape: an adjective pair agrees by dropping the masculine's
+  final `r`, where a noun pair derives the feminine with `-in`.
 - **Pronouns** `en`/`ens`/`em`/`en`, with `enser` reserved for the rare true
   genitive.
+- **Possessives**, where the gendered form already agrees with the noun it
+  modifies, so only the stem changes: `ihrem` → `ensem`, `Ihre` → `Ense`.
 - **Detection**, so text already written in the Inklusivum is neither reported by
   the gendered denomination rules nor by the spell checker.
 
 ## Remaining work
 
-Ordered by impact. The first two produce wrong output; the rest are gaps.
+Ordered by impact. None of these produce wrong output any more; they are gaps.
 
-### 1. Substantivized adjectives take adjective endings, not noun endings
+### 1. Already gender neutral words keep their gendered article
 
-`Vorgesetzte(r)`, `Angestellte(r)`, `Verlobte(r)`, `Beamte(r)`, `Jugendliche(r)`
-and participles such as `Studierende` and `Mitarbeitende` are adjectives. The
-spec is explicit that they decline as adjectives in the Inklusivum too, so
-`de Vorgesetzte` after an article and `Vorgesetztey` without one. Routing them
-through the noun paradigm yields `Vorgesetztere`, and for `dem Flüchtling` three
-alternatives with three different wrong endings, one of them masculine.
+`Gast`, `Mitglied`, `Fan`, `Person` and every `-ling` word take no suffix at all,
+which is already what happens: no rule fires on them, so nothing is suffixed.
+What is missing is the other half, that their article still becomes `de`/`jedey`,
+so `Der Gast` should be offered as `De Gast`.
 
-This class is common in workplace text, which makes it the most visible defect.
+Nothing anchors that today. The gendered denomination rules key on the noun being
+gendered, and these nouns are not, so there is no match to hang the article
+change on. It needs a check of its own, driven by the person words already loaded
+into `Db.person_words` from the `ner` column, plus the neutral person word list
+from
+[Bereits geschlechtsneutrale Personenwörter](https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/).
 
-### 2. The adjective endings are not reachable
+Worth weighing against noise: it would fire on every article before a person
+word, which is a lot of suggestions for a small change each.
 
-`inklusivum.adjective()` implements the paradigm and is unit tested, but nothing
-routes to it in practice: it hangs off the tilde handler and the rules that reach
-that path do not carry adjective word types. Fixing 1 requires making this
-reachable, so the two are one piece of work.
+### 2. The remaining pronoun forms
 
-### 3. Already gender neutral words need the article changed, nothing else
+The relative pronoun genitive `dersen`, which differs from the article genitive
+`ders`, and the pronominal `einey` as distinct from the article `ein`.
 
-`Gast`, `Mitglied`, `Fan`, `Person` and every `-ling` word take no suffix at all;
-only their article becomes `de`/`jedey`. Needs the neutral person word list from
-[Bereits geschlechtsneutrale Personenwörter](https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/),
-without which they get suffixed like ordinary nouns.
+Possessive agreement is handled: rather than looking up the possessed noun, the
+gendered form being replaced already agrees with it, so only the stem is swapped.
+That does not extend to the relative pronoun, which has no such source form.
 
-### 4. Pronoun agreement and the remaining pronoun forms
-
-`ens` agrees with the possessed noun (`ens Auto`, `ense Jacke`, `an ensem
-Geburtstag`); we always emit the bare form. Also missing: the relative pronoun
-genitive `dersen`, which differs from the article genitive `ders`, and the
-pronominal `einey` as distinct from the article `ein`.
-
-Needs the possessed noun, which is in the token stream rather than in the
-alternative, so it is a different seam from the article handling.
-
-### 5. Address forms
+### 3. Address forms
 
 `Sehr geehrte` → `Sehr geehrtey`, `Liebe`/`Lieber` → `Liebey`, `Herr`/`Frau` →
 `Person [Nachname]`, and `Sehr geehrte Damen und Herren` → `Sehr geehrtes Team
 von [Organisation]`. None are implemented.
 
-### 6. Exception lexicon breadth
+### 4. Exception lexicon breadth
 
 `inklusivum_nouns.csv` holds the common cases. The association's exception page
 lists more, and is the page they themselves mark as least reviewed, so additions
 should be treated as lower confidence than the core system.
 
-### 7. Derivations
+### 5. Derivations
 
 `kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`.
 
-### 8. Detection covers nouns and articles only
+### 6. Detection covers nouns and articles only
 
 Adjectives and pronouns written in the Inklusivum are still reported.
 

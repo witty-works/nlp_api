@@ -10,7 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from app.alternatives_engine import inklusivum
+from app.alternatives_engine import formatting, inklusivum, utils
+from app.models import INKLUSIVUM_SEPARATOR, LangType
 
 EXCEPTIONS_CSV = (
     Path(__file__).resolve().parent.parent
@@ -314,3 +315,113 @@ def test_substantivized_adjectives_keep_ordinary_nouns_working():
     """Guards the dispatch: a noun pair must still reach the noun paradigm."""
     assert inklusivum.noun("Lehrer", "Lehrerin", "sg_nom") == "Lehrere"
     assert inklusivum.noun("Lehrer", "Lehrerin", "pl_nom") == "Lehrerne"
+
+
+# --- possessives ----------------------------------------------------------
+# The possessive of "en" is "ens". A gendered possessive already agrees with
+# the noun it modifies, so swapping only the stem carries the agreement over.
+
+
+@pytest.mark.parametrize(
+    "form,expected",
+    [
+        ("sein", "ens"),
+        ("seine", "ense"),
+        ("seinem", "ensem"),
+        ("seinen", "ensen"),
+        ("ihr", "ens"),
+        ("ihre", "ense"),
+        ("ihrem", "ensem"),
+        ("ihren", "ensen"),
+        # Capitalisation of the source is not carried; callers restore it.
+        ("Ihre", "ense"),
+    ],
+)
+def test_possessive(form, expected):
+    assert inklusivum.possessive(form) == expected
+
+
+@pytest.mark.parametrize("form", ["mein", "dein", "unser", "euer", "Lehrer", ""])
+def test_possessive_ignores_other_words(form):
+    assert inklusivum.possessive(form) is None
+
+
+@pytest.mark.parametrize(
+    "pair,expected",
+    [
+        ("ihrem~seinem", "ensem"),
+        ("ihre~seine", "ense"),
+        ("ihr~sein", "ens"),
+        ("ihren~seinen", "ensen"),
+    ],
+)
+def test_possessive_pair(pair, expected):
+    assert inklusivum.possessive_pair(pair) == expected
+
+
+@pytest.mark.parametrize(
+    "pair",
+    [
+        # Both sides must land on the same form; disagreement means this is
+        # not a possessive pair for one noun.
+        "ihrer~seines",
+        "ihr~e",
+        "Lehrer~Lehrerin",
+        "qualifiziert~e",
+        "nosuchtilde",
+    ],
+)
+def test_possessive_pair_rejects_everything_else(pair):
+    assert inklusivum.possessive_pair(pair) is None
+
+
+def test_possessive_never_yields_the_sentinel():
+    """A separator has no meaning here; splicing one in leaked "DEE" once."""
+    for pair in ("ihrem~seinem", "ihre~seine", "ihr~sein"):
+        assert "DEE" not in inklusivum.possessive_pair(pair)
+
+
+# --- the separator placeholder --------------------------------------------
+# "DEE" stands in for a separator the Inklusivum does not have. It reached
+# users once as "ihremDEEseinem", so nothing may splice it into a word.
+
+
+def test_splice_separator_leaves_the_inklusivum_alone():
+    assert utils.splice_separator("ihrem/seinem", INKLUSIVUM_SEPARATOR) == (
+        "ihrem/seinem"
+    )
+
+
+@pytest.mark.parametrize("separator", ["*", ":", "_", "/"])
+def test_splice_separator_still_splices_real_separators(separator):
+    assert utils.splice_separator("Lehrer/in", separator) == f"Lehrer{separator}in"
+
+
+def test_inclusive_alternative_does_not_splice_the_placeholder():
+    """Reachable from the rephrase endpoint, which only has surface forms."""
+    built = formatting.inclusive_alternative(
+        {},
+        LangType.DE,
+        "Lehrer",
+        "Lehrerin",
+        "",
+        INKLUSIVUM_SEPARATOR,
+        INKLUSIVUM_SEPARATOR,
+        False,
+    )
+
+    assert built == "Lehrere"
+    assert INKLUSIVUM_SEPARATOR not in built
+
+
+def test_no_inklusivum_output_contains_the_placeholder():
+    forms = [
+        inklusivum.noun("Lehrer", "Lehrerin", "sg_nom"),
+        inklusivum.noun("Vorgesetzter", "Vorgesetzte", "sg_dat"),
+        inklusivum.adjective("nett", "dativ", True),
+        inklusivum.possessive_pair("ihrem~seinem"),
+        utils.splice_separator("a/b", INKLUSIVUM_SEPARATOR),
+    ]
+
+    for form in forms:
+        assert INKLUSIVUM_SEPARATOR not in form, form
