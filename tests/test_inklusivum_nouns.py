@@ -586,3 +586,31 @@ def test_neutral_csv_rows_are_well_formed():
     for row in rows:
         assert row["Word"] and row["Note"]
         assert row["Word"][0].isupper()
+
+
+# --- what the adjective pass must and must not touch ----------------------
+# Agreement follows the noun, so an adjective only changes when the noun it
+# modifies is being rewritten, and only when the ending actually differs.
+
+
+@pytest.mark.parametrize(
+    "case,has_article,source,expected",
+    [
+        # No article: the -ey set, which is the visible change.
+        ("nominativ", False, "guter", "gutey"),
+        ("dativ", False, "gutem", "guterm"),
+        ("genitiv", False, "gutes", "guters"),
+        # After an article the endings match ordinary German in the nominative
+        # and accusative, so most of these are already right and stay put.
+        ("nominativ", True, "gute", "gute"),
+        ("dativ", True, "guten", "guten"),
+    ],
+)
+def test_adjective_agreement(case, has_article, source, expected):
+    assert inklusivum.adjective("gut", case, has_article) == expected
+
+
+def test_adjective_after_ein_loses_the_masculine_ending():
+    """ "Ein guter Arzt" is the case where an article still means a change."""
+    assert inklusivum.adjective("gut", "nominativ", True) == "gute"
+    assert inklusivum.adjective("gut", "nominativ", True) != "guter"

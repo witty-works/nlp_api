@@ -262,6 +262,99 @@ class RuleCheck:
                 ],
             )
 
+    async def inklusivum_adjectives(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Convert an adjective in front of a noun the Inklusivum rewrites.
+
+        Agreement follows the noun, so once "Arzt" is written "Arzte" the
+        adjective goes with it: "als gutey Arzte". Only adjectives whose noun
+        is actually being rewritten are touched, otherwise this would rewrite
+        every adjective in the text.
+
+        Like the article pass this runs on the finished results, since whether
+        the noun is rewritten is exactly what those results say.
+        """
+        if (
+            language.lang != LangType.DE
+            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
+        ):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        def covered(start: int, end: int) -> bool:
+            return any(begin <= start and end <= stop for begin, stop in reported)
+
+        for token in tokens:
+            if token.pos_ != "ADJ":
+                continue
+
+            # An adjective that carries no ending is predicative, and those do
+            # not agree with anything: "de Arzte ist gut" keeps "gut".
+            if token.text.lower() == token.lemma_.lower():
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            noun_end = noun.idx + len(noun.text)
+            if not covered(noun.idx, noun_end) and not inklusivum.is_already_neutral(
+                noun.lemma_, neutral
+            ):
+                continue
+
+            # Plural adjectives are already neutral.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            if case is None:
+                continue
+
+            has_article = any(child.pos_ == "DET" for child in noun.lefts)
+            replacement = inklusivum.adjective(token.lemma_, case, has_article)
+
+            end = token.idx + len(token.text)
+            if replacement == token.text.lower() or covered(token.idx, end):
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.lemma_,
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+            )
+
     async def is_written_in_inklusivum(
         self, lang: LangType, config: Config, token: Token
     ) -> bool:

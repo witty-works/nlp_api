@@ -454,5 +454,8 @@ async def witty_rules(
     await context.rule_check.inklusivum_articles(
         config, client, language, text, tokens, offsets, list_full
     )
+    await context.rule_check.inklusivum_adjectives(
+        config, client, language, text, tokens, offsets, list_full
+    )
 
     return list_full
