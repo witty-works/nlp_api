@@ -11,6 +11,7 @@ from app.models import (
     RuleLabelEnum,
     Alternative,
     GenderedRolesFormatType,
+    GermanGenderEndingType,
 )
 from app.helper import is_valid_text, is_addon_enabled, upperfirst
 from app.categories import (
@@ -33,6 +34,7 @@ from spacy.tokens import Token, Doc, Span
 from logging import Logger
 from app.rule_engine.utils import append_result
 from app.rule_engine.matchers.pattern import is_phrase_match
+from app.alternatives_engine import inklusivum
 from app.alternatives_engine import utils
 from app.rule_engine import utils as rule_utils
 
@@ -145,6 +147,38 @@ class RuleCheck:
 
         return False
 
+    async def is_written_in_inklusivum(
+        self, lang: LangType, config: Config, token: Token
+    ) -> bool:
+        """Whether the token already is the Inklusivum of a gendered pair.
+
+        Shape alone cannot decide this, because an Inklusivum noun looks like
+        any other noun ending in -e, and some of its forms collide with
+        ordinary plurals ("Freunde"). So candidates are confirmed against the
+        noun lexicon, and this only runs when the Inklusivum was asked for.
+        """
+        if (
+            lang != LangType.DE
+            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
+        ):
+            return False
+
+        exceptions = self.static_rules[LangType.DE]["inklusivum_nouns"]
+
+        for candidate in inklusivum.base_form_candidates(token.text):
+            forms = await self.nouns.german_noun_lookup(candidate)
+            if not forms:
+                continue
+
+            feminine = forms.get("female_form")
+            if not feminine:
+                continue
+
+            if inklusivum.is_form_of(token.text, candidate, feminine, exceptions):
+                return True
+
+        return False
+
     async def fetch_rules(
         self,
         language: Language,
@@ -162,6 +196,15 @@ class RuleCheck:
             config.addons,
             suffix_check,
         )
+
+        if rules and await self.is_written_in_inklusivum(language.lang, config, token):
+            # Already gender neutral, so the gendered denomination rules would
+            # only suggest rewriting it into the form it is already in.
+            rules = [
+                rule
+                for rule in rules
+                if not self.db.is_gendered_denom_rule(language.lang, rule.subcategories)
+            ]
 
         if (
             language.lang == LangType.FR

@@ -9,11 +9,13 @@ from app.models import (
     ResultOut,
     GermanGenderEndingType,
     FrenchGenderSeparatorType,
+    WordType,
 )
 from app.categories import is_sub_category_enabled
 from app.http import Http
 from app.settings import Settings
 from app.db import Db
+from app.alternatives_engine import inklusivum
 from logging import Logger
 from app.helper import upperfirst
 
@@ -51,7 +53,7 @@ class LanguageTool:
         self.categories = categories
         self.http = http
 
-    def languagetool_matches(
+    async def languagetool_matches(
         self,
         config: Config,
         client: Client,
@@ -136,6 +138,17 @@ class LanguageTool:
                     for substring in self.static_rules[language.lang]["salutations"]
                 ):
                     continue
+
+            # Ignore typos on words that are already written in the Inklusivum.
+            # Its articles and noun endings are not in any dictionary, so the
+            # spell checker reports every one of them.
+            if (
+                language.lang == LangType.DE
+                and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+                and match["rule"]["category"]["id"] == "TYPOS"
+                and await self.is_inklusivum_form(text)
+            ):
+                continue
 
             if language.lang == LangType.FR:
                 # Ignore typos in French female noun forms
@@ -382,7 +395,7 @@ class LanguageTool:
         ):
             return []
 
-        return self.languagetool_matches(
+        return await self.languagetool_matches(
             config, client, language, text, ent_spans, offsets, result["matches"]
         )
 
@@ -393,6 +406,34 @@ class LanguageTool:
             del payload[key]
 
         return payload
+
+    async def is_inklusivum_form(self, text: str) -> bool:
+        """Whether the text is an Inklusivum article, pronoun or noun form.
+
+        Articles and pronouns are a closed set. Nouns are confirmed against
+        the lexicon rather than by shape, so that an ordinary misspelling that
+        happens to end in -e is still reported.
+        """
+        if text.lower() in self.static_rules[LangType.DE]["inklusivum_articles"]:
+            return True
+
+        exceptions = self.static_rules[LangType.DE]["inklusivum_nouns"]
+
+        for candidate in inklusivum.base_form_candidates(text):
+            forms = await self.db.fetch_declensions(
+                LangType.DE, WordType.NOUN, candidate
+            )
+            if not forms:
+                continue
+
+            feminine = forms.get("female_form")
+            if not feminine:
+                continue
+
+            if inklusivum.is_form_of(text, candidate, feminine, exceptions):
+                return True
+
+        return False
 
     def has_gender_denom_ending(
         self, text: str, full_text: str, offset: int, config: Config

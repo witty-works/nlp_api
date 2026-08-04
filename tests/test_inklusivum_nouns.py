@@ -125,3 +125,58 @@ def test_exception_csv_rows_are_well_formed():
     for masculine, (singular_form, plural_form) in _exceptions().items():
         assert masculine and singular_form and plural_form
         assert singular_form != masculine, masculine
+
+
+@pytest.mark.parametrize("masculine,feminine,_sg,_pl", REGULAR)
+@pytest.mark.parametrize("target_form", ["sg_nom", "sg_gen", "pl_nom", "pl_dat"])
+def test_every_generated_form_recovers_its_base(
+    target_form, masculine, feminine, _sg, _pl
+):
+    """Detection has to be able to undo whatever generation produced."""
+    form = inklusivum.noun(masculine, feminine, target_form)
+
+    expected = masculine
+    if target_form.startswith("pl_"):
+        # The umlauted plural legitimately recovers the umlauted stem.
+        expected = inklusivum._umlauted_stem(masculine, feminine) or masculine
+
+    assert expected in inklusivum.base_form_candidates(form)
+
+
+@pytest.mark.parametrize("masculine,feminine,_sg,_pl", REGULAR)
+def test_is_form_of_accepts_generated_forms(masculine, feminine, _sg, _pl):
+    for target_form in ("sg_nom", "sg_gen", "pl_nom", "pl_dat"):
+        form = inklusivum.noun(masculine, feminine, target_form)
+        assert inklusivum.is_form_of(form, masculine, feminine)
+
+
+def test_is_form_of_rejects_the_gendered_forms_themselves():
+    """The masculine and feminine are what we rewrite, never the result."""
+    assert not inklusivum.is_form_of("Schüler", "Schüler", "Schülerin")
+    assert not inklusivum.is_form_of("Schülerin", "Schüler", "Schülerin")
+    assert not inklusivum.is_form_of("Kollegen", "Kollege", "Kollegin")
+
+
+@pytest.mark.parametrize(
+    "word", ["Liebe", "Sprache", "Woche", "Schule", "Frage", "Kirche", "Ende", "Name"]
+)
+def test_ordinary_nouns_are_ambiguous_on_shape_alone(word):
+    """These are why detection cannot be a pattern over endings.
+
+    Every one of them is an ordinary German noun that the old suffix regex
+    matched, and the reversal still offers a stem for each. What rejects them
+    is that the stem is not a gendered person word, which only the lexicon
+    knows, so callers must confirm the candidate before trusting it.
+    """
+    candidates = inklusivum.base_form_candidates(word)
+
+    assert candidates, f"{word} is shape-ambiguous and must reach the lexicon"
+    assert word not in candidates
+
+
+def test_lowercase_words_are_not_candidates():
+    assert inklusivum.base_form_candidates("liebe") == []
+
+
+def test_short_words_do_not_produce_candidates():
+    assert inklusivum.base_form_candidates("Ne") == []

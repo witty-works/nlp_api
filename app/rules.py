@@ -850,6 +850,15 @@ def fetch_static_rules(langs: list[str]):
             "solchem",
         }
 
+        # Every Inklusivum article and pronoun form, for recognising text that
+        # is already written in the Inklusivum.
+        static_rules[LangType.DE]["inklusivum_articles"] = {
+            form
+            for forms in static_rules[LangType.DE]["inclusive_articles"].values()
+            for form in forms.values()
+            if form
+        }
+
         static_rules[LangType.DE]["inklusivum_nouns"] = dict(
             zip(
                 data[LangType.DE]["df_inklusivum_nouns"]["Masculine"],

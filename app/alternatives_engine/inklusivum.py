@@ -111,3 +111,95 @@ def noun(
         form = singular_form
 
     return add_german_prefix(apply_case(form, target_form), prefix)
+
+
+# Shortest form the rules can produce is a two letter stem plus its ending.
+MIN_STEM = 3
+
+
+def base_form_candidates(word: str) -> list[str]:
+    """Masculine base forms that ``word`` could be the Inklusivum of.
+
+    Detection cannot be done on shape alone, because an Inklusivum noun looks
+    like any other German noun ending in -e. This undoes the endings to
+    produce candidates; the caller decides which of them is a real gendered
+    person word by looking it up.
+
+    Ordered most specific first, so a caller taking the first hit prefers the
+    less ambiguous reading.
+    """
+    if not word or not word[0].isupper():
+        return []
+
+    candidates = []
+
+    def add(candidate: str) -> None:
+        if len(candidate) >= MIN_STEM and candidate not in candidates:
+            candidates.append(candidate)
+
+    for stem in _undeclined(word):
+        for singular_form in _undo_plural(stem):
+            for masculine in _undo_singular(singular_form):
+                add(masculine)
+
+    return candidates
+
+
+def _undeclined(word: str) -> list[str]:
+    """Undo the genitive singular -s and the dative plural -n."""
+    stems = [word]
+
+    if word.endswith("s"):
+        stems.append(word[:-1])
+    if word.endswith("nen"):
+        stems.append(word[:-1])
+
+    return stems
+
+
+def _undo_plural(stem: str) -> list[str]:
+    """Inklusivum singulars a stem could be the plural of, plus the stem."""
+    forms = [stem]
+
+    # Studenterne -> Studente
+    if stem.endswith("rne"):
+        forms.append(stem[:-3])
+
+    # Schülerne -> Schülere
+    if stem.endswith("ne"):
+        forms.append(stem[:-2] + "e")
+
+    return forms
+
+
+ALL_TARGET_FORMS = ("sg_nom", "sg_gen", "pl_nom", "pl_dat")
+
+
+def is_form_of(word: str, masculine: str, feminine: str, exceptions=None) -> bool:
+    """Whether ``word`` is an Inklusivum form of this masculine/feminine pair.
+
+    Candidates recovered from the surface alone are ambiguous, so this runs
+    the forward rules and requires an exact match rather than trusting the
+    reversal.
+    """
+    return any(
+        noun(masculine, feminine, target_form, "", exceptions) == word
+        for target_form in ALL_TARGET_FORMS
+    )
+
+
+def _undo_singular(singular_form: str) -> list[str]:
+    """Masculines a singular could have been built from.
+
+    Both readings are returned because they are genuinely ambiguous on shape:
+    Lehrere undoes to Lehrer, but by the same letters Kollegere undoes to
+    Kollege.
+    """
+    forms = []
+
+    if singular_form.endswith("re"):
+        forms.append(singular_form[:-2])
+    if singular_form.endswith("e"):
+        forms.append(singular_form[:-1])
+
+    return forms
