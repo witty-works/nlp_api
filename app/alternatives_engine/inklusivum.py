@@ -291,6 +291,37 @@ def possessive_pair(tilde_word: str) -> str | None:
     return forms[0]
 
 
+# Endings "ens" takes, agreeing with the noun it modifies.
+POSSESSIVE_ENDINGS = ("", "e", "em", "en", "er", "es", "ers", "erm")
+
+
+def is_possessive_form(word: str) -> bool:
+    """Whether the word is a declined form of the possessive "ens"."""
+    lowered = word.lower()
+
+    if not lowered.startswith(POSSESSIVE):
+        return False
+
+    return lowered[len(POSSESSIVE) :] in POSSESSIVE_ENDINGS
+
+
+# The article-less adjective endings. -ers is left out on purpose: it is a
+# perfectly ordinary word ending ("anders", "besonders"), where these two are
+# effectively unique to this system.
+DISTINCTIVE_ADJECTIVE_ENDINGS = ("ey", "erm")
+
+
+def is_adjective_form(word: str) -> bool:
+    """Whether the word carries an ending only the Inklusivum uses.
+
+    Shape is enough here, unlike for nouns, because these endings do not
+    otherwise occur. Used to keep the spell checker off them.
+    """
+    lowered = word.lower()
+
+    return len(lowered) > 4 and lowered.endswith(DISTINCTIVE_ADJECTIVE_ENDINGS)
+
+
 def adjective_stem(tilde_word: str) -> str:
     """Strip the gendered ending off a tilde marked adjective.
 

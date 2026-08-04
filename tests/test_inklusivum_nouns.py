@@ -425,3 +425,42 @@ def test_no_inklusivum_output_contains_the_placeholder():
 
     for form in forms:
         assert INKLUSIVUM_SEPARATOR not in form, form
+
+
+# --- recognising the forms we generate ------------------------------------
+# Adjective and possessive forms are in no dictionary, so the spell checker
+# reports them unless they are recognised.
+
+
+@pytest.mark.parametrize(
+    "word", ["ens", "ense", "ensem", "ensen", "enser", "ensers", "enserm", "Ense"]
+)
+def test_possessive_forms_are_recognised(word):
+    assert inklusivum.is_possessive_form(word)
+
+
+@pytest.mark.parametrize("word", ["Ensemble", "ensure", "Sense", "einem", "seinem"])
+def test_possessive_recognition_does_not_overreach(word):
+    assert not inklusivum.is_possessive_form(word)
+
+
+@pytest.mark.parametrize("word", ["gutey", "guterm", "netterm", "liebey"])
+def test_article_less_adjective_forms_are_recognised(word):
+    assert inklusivum.is_adjective_form(word)
+
+
+@pytest.mark.parametrize(
+    "word",
+    [
+        # -ers is deliberately not treated as distinctive: these are ordinary.
+        "anders",
+        "besonders",
+        "unsers",
+        "gute",
+        "guten",
+        "Abenteuer",
+        "Weg",
+    ],
+)
+def test_adjective_recognition_does_not_overreach(word):
+    assert not inklusivum.is_adjective_form(word)

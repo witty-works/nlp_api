@@ -417,6 +417,9 @@ class LanguageTool:
         if text.lower() in self.static_rules[LangType.DE]["inklusivum_articles"]:
             return True
 
+        if inklusivum.is_possessive_form(text) or inklusivum.is_adjective_form(text):
+            return True
+
         exceptions = self.static_rules[LangType.DE]["inklusivum_nouns"]
 
         for candidate in inklusivum.base_form_candidates(text):

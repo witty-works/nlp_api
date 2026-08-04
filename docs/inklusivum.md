@@ -73,7 +73,10 @@ Sources for every form are the association's own tables:
 - **Possessives**, where the gendered form already agrees with the noun it
   modifies, so only the stem changes: `ihrem` → `ensem`, `Ihre` → `Ense`.
 - **Detection**, so text already written in the Inklusivum is neither reported by
-  the gendered denomination rules nor by the spell checker.
+  the gendered denomination rules nor by the spell checker. Nouns are confirmed
+  against the lexicon; articles and possessives are closed sets; the
+  article-less adjective endings `-ey` and `-erm` are distinctive enough to go
+  by shape, where `-ers` is not ("anders", "besonders").
 
 ## Remaining work
 
@@ -121,9 +124,23 @@ should be treated as lower confidence than the core system.
 
 `kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`.
 
-### 6. Detection covers nouns and articles only
+### 6. A correct suggestion that changes nothing drops the whole finding
 
-Adjectives and pronouns written in the Inklusivum are still reported.
+After an article, the Inklusivum form of `Vorgesetzte(r)` is `Vorgesetzte`, which
+is what the text already says. The suggestion is therefore registered as a false
+positive and the entire result disappears, taking the unrelated replacement
+suggestions (`Leitungsperson`, `Führungsperson`) with it.
+
+Only the article actually needs changing here, so this resolves with item 1
+rather than on its own. Reporting nothing is at least better than the previous
+behaviour, which offered the article-less `Vorgesetztey` after an article.
+
+### 7. Attributive adjectives are not converted
+
+`Als guter Arzt` gives `Arzte` for the noun but leaves `guter`, which should be
+`gutey`. The adjective paradigm exists and is reachable for adjectives used as
+nouns; ordinary attributive adjectives sit behind the tilde handler, and the
+rules that reach it carry noun word types.
 
 ## Forms the sources do not settle
 

@@ -60,6 +60,26 @@ class Alternatives:
         self.verbs = verbs
         self.adjectives = adjectives
 
+    def has_attached_article(
+        self, token_index: int, tokens: Doc, lang: LangType
+    ) -> bool:
+        """Whether an article introduces this noun phrase.
+
+        Takes the determiner from the parse rather than from the token to the
+        immediate left, so an adjective in between does not hide it: "Der nette
+        Lehrer" has an article just as much as "Der Lehrer" does. Only the
+        attachment comes from the parse; whether a word is an article is still
+        decided by the article table, so a weaker model degrades to the
+        adjacency check rather than to guesswork.
+        """
+        articles = self.static_rules[lang]["articles"]
+
+        for child in tokens[token_index].lefts:
+            if child.text.lower() in articles:
+                return True
+
+        return self.is_previous_token_article(token_index, tokens, lang)
+
     def is_previous_token_article(self, token_index: int, tokens: Doc, lang: LangType):
         return (
             token_index > 0
@@ -749,7 +769,9 @@ class Alternatives:
                 declined = (
                     separator == INKLUSIVUM_SEPARATOR
                     and await self.inklusivum_adjective(
-                        alternative, target_form, rule.dynamic.article is not None
+                        alternative,
+                        target_form,
+                        self.has_attached_article(token_index, tokens, LangType.DE),
                     )
                 )
 
@@ -1005,7 +1027,7 @@ class Alternatives:
                         female_forms,
                         target_form,
                         prefix,
-                        rule.dynamic.article is not None,
+                        self.has_attached_article(token_index, tokens, LangType.DE),
                     )
                     rule.dynamic.false_positives.append(lemma)
                 else:
