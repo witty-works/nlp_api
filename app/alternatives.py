@@ -123,7 +123,7 @@ class Alternatives:
                 text = text_
                 start = start_
 
-            if "inclusive_articles" in self.static_rules[lang]:
+            if lang == LangType.FR:
                 article_index = list(
                     self.static_rules[lang]["inclusive_articles"].keys()
                 ).index(
@@ -356,50 +356,79 @@ class Alternatives:
         if rule.dynamic.article is None:
             return alternative
 
-        if alternative.is_gendered_noun:
-            article = (
-                rule.dynamic.article.inclusive
-                if rule.dynamic.article.inclusive
-                else rule.dynamic.article.fallback
-            )
-            article = (
-                article.replace("~", separator)
-                if alternative.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
-                else article.replace("~", "/")
-            )
-        else:
-            alternative_tokens = self.model.fetch_tokens(
-                LangType.DE, alternative.words[-1]
-            )
-            if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
-                article = rule.dynamic.article.plural
-            else:
-                gender = await self.nouns.german_noun_gender_lookup(
-                    alternative.words[-1]
-                )
-
-                article = rule.dynamic.article.get_article(gender, alternative.lemma)
-
-        if article:
+        # helper to prepend an article and insert ARTICLE token(s)
+        def _prepend_article(article_str: str) -> None:
             alternative.lemma = (
-                article + tokens[token_index - 1].whitespace_ + alternative.lemma
+                article_str + tokens[token_index - 1].whitespace_ + alternative.lemma
             )
             alternative.word_types.insert(
                 0,
-                {
-                    "word_type": WordType.ARTICLE,
-                    "lower_case": True,
-                    "lemmatize": True,
-                },
+                {"word_type": WordType.ARTICLE, "lower_case": True, "lemmatize": True},
             )
+
+        is_dee = (
+            separator == "DEE"
+            and alternative.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
+        )
+        article = None
+
+        if is_dee:
+            if alternative.is_gendered_noun:
+                article = getattr(rule.dynamic.article, "inklusivum", None) or (
+                    rule.dynamic.article.inclusive or rule.dynamic.article.fallback
+                )
+                if isinstance(article, str) and "~" in article:
+                    article = article.replace("~", "")
+            else:
+                if rule.dynamic.article:
+                    try:
+                        from app.dee_articles import generate_dee_inclusive
+
+                        article = generate_dee_inclusive(
+                            rule.dynamic.article.form,
+                            rule.dynamic.article.masculine,
+                            rule.dynamic.article.feminine,
+                        )
+                    except Exception:
+                        article = "de"
+                else:
+                    article = "de"
+
+                _prepend_article(article)
+                return alternative
+        else:
+            if alternative.is_gendered_noun:
+                article = (
+                    rule.dynamic.article.inclusive or rule.dynamic.article.fallback
+                )
+                sep = (
+                    separator
+                    if alternative.gender_role
+                    == GenderedRolesFormatType.INCLUSIVE_GENDER
+                    else "/"
+                )
+                if isinstance(article, str):
+                    article = article.replace("~", sep)
+            else:
+                alternative_tokens = self.model.fetch_tokens(
+                    LangType.DE, alternative.words[-1]
+                )
+                if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
+                    article = rule.dynamic.article.plural
+                else:
+                    gender = await self.nouns.german_noun_gender_lookup(
+                        alternative.words[-1]
+                    )
+                    article = rule.dynamic.article.get_article(
+                        gender, alternative.lemma
+                    )
+
+        if article:
+            _prepend_article(article)
+
             if "/" in article:
                 alternative.word_types.insert(
-                    0,
-                    {
-                        "word_type": "",
-                        "lower_case": True,
-                        "lemmatize": True,
-                    },
+                    0, {"word_type": "", "lower_case": True, "lemmatize": True}
                 )
                 alternative.word_types.insert(
                     0,
@@ -718,7 +747,7 @@ class Alternatives:
                 continue
 
             if "~" in alternative.lemma:
-                self.handle_single_tilde(alternative, prefix, is_singular)
+                self.handle_single_tilde(alternative, prefix, is_singular, separator)
 
             if not alternative.is_gendered_noun:
                 alternative = await self.alternative_declension(
@@ -1124,7 +1153,11 @@ class Alternatives:
         return male_sub or male_form, female_sub or female_form, variants
 
     def handle_single_tilde(
-        self, alternative: Alternative, prefix: bool, is_singular: bool
+        self,
+        alternative: Alternative,
+        prefix: bool,
+        is_singular: bool,
+        separator: str,
     ):
         lemma = ""
         word_types = []
@@ -1133,28 +1166,50 @@ class Alternatives:
         for word_index in range(len(words)):
             word = words[word_index]
             if word.count("~") == 1:
+                pre = []
                 slash = False
+
                 if word.startswith("~"):
-                    word = utils.add_german_prefix(word[1:], prefix)
+                    word, pre = utils.add_german_prefix(word[1:], prefix), []
+                elif (
+                    separator == "DEE"
+                    and word in self.static_rules[LangType.DE]["inclusive_articles"]
+                ):
+                    word, pre = (
+                        self.static_rules[LangType.DE]["inclusive_articles"][word],
+                        [],
+                    )
                 else:
                     position = word.find("~")
-                    if word[position + 1].islower():
-                        # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
+                    if (
+                        position != -1
+                        and position + 1 < len(word)
+                        and word[position + 1].islower()
+                    ):
                         if position + 3 < len(word) or is_singular:
-                            word = word.replace("~", "/")
                             slash = True
-                        # ihr~e => ihre
+                            new_w = word.replace("~", "/")
                         elif word.endswith("e"):
-                            word = word.replace("~", "")
-                        # qualifizierte~r => qualifizierte
+                            new_w = word.replace("~", "")
                         else:
-                            word = word[0:position]
+                            new_w = word[0:position]
 
+                        pre_types = []
                         if slash:
-                            word_types.append(alternative.word_types[word_index])
-                            word_types.append(
-                                {"word_type": "", "lower_case": True, "lemmatize": True}
-                            )
+                            pre_types = [
+                                alternative.word_types[word_index],
+                                {
+                                    "word_type": "",
+                                    "lower_case": True,
+                                    "lemmatize": True,
+                                },
+                            ]
+                        word, pre = new_w, pre_types
+                    else:
+                        pre = []
+
+                if pre:
+                    word_types.extend(pre)
 
             word_types.append(alternative.word_types[word_index])
             lemma += " " + word

@@ -15,6 +15,29 @@ def inclusive_alternative(
     separate_gender_plural: bool,
 ):
     if lang == LangType.DE:
+        # De-e / Inklusivum (special inclusive system): handled via sentinel separator 'DEE'
+        if separator == "DEE" or noun_separator == "DEE":
+            # Build De-e inclusive form: prefer female stem without '-in', fallback to male stem
+            def _dee_stem(m, f):
+                if f and f.endswith("in"):
+                    return f[:-2]
+                if m and m.endswith("er"):
+                    return m[:-2]
+                # fallback to common prefix or male form
+                pref = find_common_prefix(m, f, False, False)
+                return pref if len(pref) >= 3 else m
+
+            stem = _dee_stem(male_form, female_form)
+            if stem is None:
+                return None
+
+            inclusive = stem
+            if not inclusive.endswith("e"):
+                inclusive = inclusive + "e"
+
+            # return singular De-e inclusive form with proper prefix handling
+            return _add_german_prefix(inclusive, prefix)
+
         if male_form.lower() in static_rules[lang]["masculine_articles"]:
             return female_form + separator + male_form
 

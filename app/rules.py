@@ -723,12 +723,14 @@ def fetch_static_rules(langs: list[str]):
                 data[LangType.DE]["df_articles"]["Neuter"],
                 data[LangType.DE]["df_articles"]["Plural"],
                 data[LangType.DE]["df_articles"]["Alternative"],
+                data[LangType.DE]["df_articles"].get("Inklusivum", []),
             )
         )
 
         static_rules[LangType.DE]["masculine_articles"] = {}
         static_rules[LangType.DE]["feminine_articles"] = {}
         static_rules[LangType.DE]["neuter_articles"] = {}
+        static_rules[LangType.DE]["inclusive_articles"] = {}
         static_rules[LangType.DE]["articles"] = []
 
         for article in articles:
@@ -739,6 +741,7 @@ def fetch_static_rules(langs: list[str]):
                 neuter=article[3],
                 plural=article[4],
                 inclusive=article[5],
+                inklusivum=article[6] if len(article) > 6 else None,
             )
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
@@ -772,6 +775,10 @@ def fetch_static_rules(langs: list[str]):
             static_rules[LangType.DE]["neuter_articles"][article.neuter][
                 article.form
             ] = article
+
+            static_rules[LangType.DE]["inclusive_articles"][
+                article.inclusive
+            ] = article.inklusivum
 
         static_rules[LangType.DE]["articles"] = set(
             static_rules[LangType.DE]["articles"]

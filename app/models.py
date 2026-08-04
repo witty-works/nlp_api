@@ -236,6 +236,7 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
+    INKLUSIVUM = "de-e"
 
 
 class FrenchGenderSeparatorType(str, Enum):
@@ -345,6 +346,7 @@ class Article(BaseModel):
     neuter: Optional[str] = None
     plural: Optional[str] = None
     inclusive: Optional[str] = None
+    inklusivum: Optional[str] = None
     fallback: Optional[str] = None
 
     def get_article(self, gender: str, lemma: str) -> str | None:
@@ -576,6 +578,10 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
         ),
+        # De-e / Inklusivum: nouns ending in -e / -re (singular) and -rne (plural)
+        GermanGenderEndingType.INKLUSIVUM: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)(e|re|rne)$"
+        ),
     }
     _gendereddenom_ending_article = {
         GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
@@ -586,6 +592,7 @@ class Config(BaseModel):
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
             r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"
         ),
+        #GermanGenderEndingType.INKLUSIVUM: re.compile(r"^[a-zäöü]{3,7}(e|re|rne)$"),
     }
     _gendereddenom_ending_word_type = {
         GermanGenderEndingType.STAR: (0, 0, "*"),
@@ -596,6 +603,7 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS_DASH: (-1, 2, ")"),
         GermanGenderEndingType.PARENTHESIS: (-1, 4, "("),
         GermanGenderEndingType.CAPITAL_LETTER: (0, 0, "I"),
+        GermanGenderEndingType.INKLUSIVUM: (0, 0, "e"),
     }
     french_gender_separator: FrenchGenderSeparatorType = (
         FrenchGenderSeparatorType.POINT_MEDIAN
@@ -661,6 +669,10 @@ class Config(BaseModel):
     ):
         if gender_separator is None:
             return "", "", False
+        # special handling for De-e / Inklusivum
+        if gender_separator == GermanGenderEndingType.INKLUSIVUM:
+            # use a sentinel separator handled by formatting logic
+            return "DEE", "DEE", True
 
         if gender_separator in GermanGenderEndingType._member_map_.values():
             if gender_separator == GermanGenderEndingType.CAPITAL_LETTER:

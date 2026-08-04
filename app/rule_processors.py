@@ -86,7 +86,7 @@ async def german_gender_endings(
         return token_index
 
     subcategory = "d_and_i"
-    if is_sub_category_enabled(config.disabled_categories, subcategory):
+    if GermanGenderEndingType.INKLUSIVUM != config.german_gender_ending and is_sub_category_enabled(config.disabled_categories, subcategory):
         word_types = (
             (-1, 1, config.german_gender_ending[0])
             if config.german_gender_ending.startswith("/")
@@ -139,7 +139,10 @@ async def german_gender_endings(
     ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
         endings = []
         for key, regexp in config._gendereddenom_ending.items():
-            if config.german_gender_ending == key:
+            if (
+                config.german_gender_ending == key
+                or key == GermanGenderEndingType.INKLUSIVUM
+            ):
                 continue
 
             ending = Rule(

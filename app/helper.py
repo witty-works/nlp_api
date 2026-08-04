@@ -1,10 +1,12 @@
 import emoji
 import re
-from app.models import Config, LangType
+from app.models import Config, LangType, GermanGenderEndingType
 
 
 def is_gender_star_ending(text: str) -> bool | re.Match:
-    for regexp in Config._gendereddenom_ending.default.values():
+    for key, regexp in Config._gendereddenom_ending.default.items():
+        if key == GermanGenderEndingType.INKLUSIVUM:
+            continue
         match = re.search(regexp, text)
         if match:
             return match
