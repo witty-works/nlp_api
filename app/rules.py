@@ -10,6 +10,8 @@ def fetch_static_rules(langs: list[str]):
             "df_articles": "articles.csv",
             # nouns the regular Inklusivum rules cannot derive
             "df_inklusivum_nouns": "inklusivum_nouns.csv",
+            # person words the Inklusivum leaves unchanged
+            "df_inklusivum_neutral_nouns": "inklusivum_neutral_nouns.csv",
         },
         LangType.EN: {},
         LangType.FR: {},
@@ -858,6 +860,10 @@ def fetch_static_rules(langs: list[str]):
             for form in forms.values()
             if form
         }
+
+        static_rules[LangType.DE]["inklusivum_neutral_nouns"] = set(
+            data[LangType.DE]["df_inklusivum_neutral_nouns"]["Word"]
+        )
 
         static_rules[LangType.DE]["inklusivum_nouns"] = dict(
             zip(

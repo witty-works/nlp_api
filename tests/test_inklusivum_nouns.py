@@ -514,3 +514,75 @@ def test_romance_rule_needs_both_halves_to_agree():
     """Otherwise any -o noun with an unrelated -a feminine would match."""
     assert inklusivum.stem("Torero", "Lehrerin") == "Torero"
     assert inklusivum.stem("Bruno", "Anna") == "Bruno"
+
+
+# --- words that take no ending at all --------------------------------------
+# These carry no gender to remove, so only the article changes: "de Gast",
+# never "de Gaste". https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/
+
+NEUTRAL_CSV = (
+    Path(__file__).resolve().parent.parent
+    / "training_data"
+    / "de"
+    / "inklusivum_neutral_nouns.csv"
+)
+
+
+def _neutral_nouns():
+    with open(NEUTRAL_CSV, newline="", encoding="utf-8") as fh:
+        return {row["Word"] for row in csv.DictReader(fh)}
+
+
+@pytest.mark.parametrize(
+    "word,feminine",
+    [
+        # Each of these has a feminine in the lexicon, which is why they were
+        # being suffixed. "Gästin" is a real word; it is just not a reason to
+        # build a form this system does not use.
+        ("Gast", "Gästin"),
+        ("Nerd", "Nerdin"),
+        ("Mensch", "Menschin"),
+        ("Vormund", "Vormundin"),
+    ],
+)
+def test_neutral_words_keep_their_form(word, feminine):
+    built = inklusivum.noun(word, feminine, "sg_nom", "", None, True, _neutral_nouns())
+
+    assert built == word
+
+
+@pytest.mark.parametrize(
+    "word",
+    ["Flüchtling", "Liebling", "Prüfling", "Lehrling", "Säugling", "Zwilling"],
+)
+def test_ling_nouns_are_neutral_by_rule(word):
+    """A productive suffix, so it is a rule rather than a list of words."""
+    assert inklusivum.is_already_neutral(word)
+    assert inklusivum.noun(word, word + "in", "sg_nom") == word
+
+
+@pytest.mark.parametrize("masculine,feminine,expected_sg,_pl", REGULAR)
+def test_gendered_nouns_are_still_suffixed(masculine, feminine, expected_sg, _pl):
+    built = inklusivum.noun(
+        masculine, feminine, "sg_nom", "", None, True, _neutral_nouns()
+    )
+
+    assert built == expected_sg
+    assert not inklusivum.is_already_neutral(masculine, _neutral_nouns())
+
+
+def test_neutral_list_does_not_swallow_gendered_nouns():
+    neutral = _neutral_nouns()
+
+    for word in ("Lehrer", "Kollege", "Arzt", "Student", "Professor", "Vorgesetzter"):
+        assert word not in neutral
+
+
+def test_neutral_csv_rows_are_well_formed():
+    with open(NEUTRAL_CSV, newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+
+    assert len(rows) > 50
+    for row in rows:
+        assert row["Word"] and row["Note"]
+        assert row["Word"][0].isupper()

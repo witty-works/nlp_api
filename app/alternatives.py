@@ -1232,6 +1232,7 @@ class Alternatives:
             prefix,
             self.static_rules[LangType.DE]["inklusivum_nouns"],
             has_article,
+            self.static_rules[LangType.DE]["inklusivum_neutral_nouns"],
         )
 
     async def inklusivum_adjective(

@@ -42,6 +42,7 @@ and a female surface form. Two consequences shape the code:
 | Noun and adjective forms, detection primitives | [app/alternatives_engine/inklusivum.py](../app/alternatives_engine/inklusivum.py) |
 | Articles and pronouns | [training_data/de/articles.csv](../training_data/de/articles.csv), `Inklusivum` column |
 | Nouns the rules cannot derive | [training_data/de/inklusivum_nouns.csv](../training_data/de/inklusivum_nouns.csv) |
+| Person words that take no ending | [training_data/de/inklusivum_neutral_nouns.csv](../training_data/de/inklusivum_neutral_nouns.csv) |
 | Routing nouns to the paradigm | `Alternatives.inklusivum_noun` in [app/alternatives.py](../app/alternatives.py) |
 | Suppressing rules on Inklusivum text | `RuleCheck.is_written_in_inklusivum` in [app/rule_check.py](../app/rule_check.py) |
 | Suppressing spell check on Inklusivum text | `LanguageTool.is_inklusivum_form` in [app/languagetool.py](../app/languagetool.py) |
@@ -62,6 +63,10 @@ Sources for every form are the association's own tables:
   nouns where `-in` replaces the second `-er` (`Wanderer`/`Wanderin` →
   `Wandere`). Both are rules, so they cover words the exception page never
   lists.
+- **Words that take no ending at all**, such as `Gast`, `Mitglied`, `Person` and
+  everything in `-ling`, which is a rule rather than a list. Some of these do
+  have a feminine in the lexicon, `Gästin` for one, which is a real word but not
+  a reason to derive a form the system does not use.
 - **Word replacement** for `-mann`/`-frau` compounds (`Kaufmann` →
   `Kaufperson`, plural `Kaufleute`) and the handful of genuinely irregular
   pairs, which are all that is left in the lexicon.
@@ -90,17 +95,21 @@ Ordered by impact. None of these produce wrong output any more; they are gaps.
 
 ### 1. Already gender neutral words keep their gendered article
 
-`Gast`, `Mitglied`, `Fan`, `Person` and every `-ling` word take no suffix at all,
-which is already what happens: no rule fires on them, so nothing is suffixed.
-What is missing is the other half, that their article still becomes `de`/`jedey`,
-so `Der Gast` should be offered as `De Gast`.
+The words themselves are handled: they take no ending, so `Gast` stays `Gast`.
+What is missing is the other half, that their article should become `de`/`jedey`,
+so `Der Gast` ought to be offered as `De Gast`.
 
 Nothing anchors that today. The gendered denomination rules key on the noun being
-gendered, and these nouns are not, so there is no match to hang the article
-change on. It needs a check of its own, driven by the person words already loaded
-into `Db.person_words` from the `ner` column, plus the neutral person word list
-from
-[Bereits geschlechtsneutrale Personenwörter](https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/).
+gendered; these are not, so there is no match to hang the article change on, and
+where a rule does fire the suggestion equals the source and is dropped as a false
+positive. It needs a check of its own that can report a token no rule matched.
+The same missing piece blocks items 2, 5 and 7.
+
+`Db.person_words` is not the list for it. It comes from the `ner` column and is
+mostly pejoratives, and it has `Gast` paired with `Gästin`, which is a real word
+rather than an error. Use
+[training_data/de/inklusivum_neutral_nouns.csv](../training_data/de/inklusivum_neutral_nouns.csv)
+instead.
 
 Worth weighing against noise: it would fire on every article before a person
 word, which is a lot of suggestions for a small change each.

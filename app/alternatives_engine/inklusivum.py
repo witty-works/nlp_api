@@ -52,6 +52,28 @@ def singular(masculine: str) -> str:
     return masculine + "e"
 
 
+# A productive suffix, and every noun formed with it is already neutral:
+# Flüchtling, Liebling, Prüfling, Lehrling, Säugling, Zwilling and so on.
+NEUTRAL_SUFFIXES = ("ling",)
+
+
+def is_already_neutral(word: str, neutral_nouns: set | None = None) -> bool:
+    """Whether the word needs no ending at all.
+
+    These carry no gender to remove, so the Inklusivum leaves the word alone
+    and changes only the article: "de Gast", not "de Gaste". Some of them do
+    have a feminine in the lexicon, "Gästin" for instance, which is a real
+    word but not a reason to derive a form the system does not use.
+    """
+    if not word:
+        return False
+
+    if word.endswith(NEUTRAL_SUFFIXES):
+        return True
+
+    return word in (neutral_nouns or set())
+
+
 def _romance_stem(masculine: str, feminine: str) -> str | None:
     """Alumnus/Alumna, Ballerino/Ballerina and the like.
 
@@ -171,16 +193,21 @@ def noun(
     prefix: str = "",
     exceptions: dict | None = None,
     has_article: bool = True,
+    neutral_nouns: set | None = None,
 ) -> str | None:
     """Build the Inklusivum noun for a masculine/feminine pair.
 
     ``target_form`` is a German noun declension column (``sg_gen``,
     ``pl_dat``, ...) and selects number and case. ``exceptions`` maps a
     masculine base form to an explicit ``(singular, plural)`` pair for the
-    words the regular rules cannot derive.
+    words the regular rules cannot derive, and ``neutral_nouns`` holds the
+    words that take no ending at all.
     """
     if not masculine:
         return None
+
+    if is_already_neutral(masculine, neutral_nouns):
+        return add_german_prefix(masculine, prefix)
 
     is_plural = target_form in PLURAL_FORMS
 
