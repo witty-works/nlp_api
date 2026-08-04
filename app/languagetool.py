@@ -420,7 +420,7 @@ class LanguageTool:
         if inklusivum.is_possessive_form(text) or inklusivum.is_adjective_form(text):
             return True
 
-        exceptions = self.static_rules[LangType.DE]["inklusivum_nouns"]
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
 
         for candidate in inklusivum.base_form_candidates(text):
             forms = await self.db.fetch_declensions(
@@ -433,7 +433,7 @@ class LanguageTool:
             if not feminine:
                 continue
 
-            if inklusivum.is_form_of(text, candidate, feminine, exceptions):
+            if inklusivum.is_form_of(text, candidate, feminine, lexicon):
                 return True
 
         return False

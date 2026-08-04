@@ -1051,9 +1051,7 @@ class Alternatives:
                             aw["female_form"],
                             None,
                             "",
-                            self.static_rules[LangType.DE]["inklusivum_nouns"],
-                            True,
-                            self.static_rules[LangType.DE]["inklusivum_neutral_nouns"],
+                            self.inklusivum_lexicon(),
                         )
                         if separator == INKLUSIVUM_SEPARATOR
                         else formatting.inclusive_alternative(
@@ -1212,6 +1210,9 @@ class Alternatives:
 
         return male_sub or male_form, female_sub or female_form, variants
 
+    def inklusivum_lexicon(self) -> inklusivum.Lexicon:
+        return inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+
     def inklusivum_noun(
         self,
         male_forms: dict,
@@ -1232,9 +1233,8 @@ class Alternatives:
             female_forms.get("base_form") or female_forms.get("sg_nom"),
             target_form,
             prefix,
-            self.static_rules[LangType.DE]["inklusivum_nouns"],
+            self.inklusivum_lexicon(),
             has_article,
-            self.static_rules[LangType.DE]["inklusivum_neutral_nouns"],
         )
 
     async def inklusivum_adjective(

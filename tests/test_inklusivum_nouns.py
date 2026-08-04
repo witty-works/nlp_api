@@ -29,6 +29,12 @@ def _exceptions():
         }
 
 
+def _lexicon(exceptions=None, neutral=None):
+    return inklusivum.Lexicon(
+        exceptions=exceptions or {}, neutral=frozenset(neutral or ())
+    )
+
+
 # (masculine, feminine, expected singular, expected plural)
 REGULAR = [
     ("Schüler", "Schülerin", "Schülere", "Schülerne"),
@@ -102,8 +108,14 @@ def test_umlaut_does_not_leak_into_the_singular():
 def test_exception_forms(masculine, expected_sg, expected_pl):
     exceptions = _exceptions()
 
-    assert inklusivum.noun(masculine, "", "sg_nom", "", exceptions) == expected_sg
-    assert inklusivum.noun(masculine, "", "pl_nom", "", exceptions) == expected_pl
+    assert (
+        inklusivum.noun(masculine, "", "sg_nom", "", _lexicon(exceptions))
+        == expected_sg
+    )
+    assert (
+        inklusivum.noun(masculine, "", "pl_nom", "", _lexicon(exceptions))
+        == expected_pl
+    )
 
 
 def test_mann_compounds_are_not_suffixed():
@@ -111,7 +123,7 @@ def test_mann_compounds_are_not_suffixed():
     exceptions = _exceptions()
 
     for masculine in ("Kaufmann", "Fachmann", "Bergmann", "Landsmann"):
-        form = inklusivum.noun(masculine, "", "sg_nom", "", exceptions)
+        form = inklusivum.noun(masculine, "", "sg_nom", "", _lexicon(exceptions))
         assert not form.endswith("manne"), form
 
 
@@ -546,7 +558,9 @@ def _neutral_nouns():
     ],
 )
 def test_neutral_words_keep_their_form(word, feminine):
-    built = inklusivum.noun(word, feminine, "sg_nom", "", None, True, _neutral_nouns())
+    built = inklusivum.noun(
+        word, feminine, "sg_nom", "", _lexicon(neutral=_neutral_nouns())
+    )
 
     assert built == word
 
@@ -564,7 +578,7 @@ def test_ling_nouns_are_neutral_by_rule(word):
 @pytest.mark.parametrize("masculine,feminine,expected_sg,_pl", REGULAR)
 def test_gendered_nouns_are_still_suffixed(masculine, feminine, expected_sg, _pl):
     built = inklusivum.noun(
-        masculine, feminine, "sg_nom", "", None, True, _neutral_nouns()
+        masculine, feminine, "sg_nom", "", _lexicon(neutral=_neutral_nouns())
     )
 
     assert built == expected_sg

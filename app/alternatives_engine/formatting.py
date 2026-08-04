@@ -30,9 +30,7 @@ def inklusivum_alternative(
         female_form,
         None,
         "",
-        rules.get("inklusivum_nouns"),
-        True,
-        rules.get("inklusivum_neutral_nouns"),
+        inklusivum.Lexicon.from_static_rules(static_rules, lang),
     )
 
 

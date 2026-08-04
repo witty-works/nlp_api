@@ -155,6 +155,18 @@ class RuleCheck:
 
         return False
 
+    def is_inklusivum(self, lang: LangType, config: Config) -> bool:
+        """Whether the Inklusivum is the configured German gender ending."""
+        return (
+            lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        )
+
+    @staticmethod
+    def covers(spans: list[tuple[int, int]], start: int, end: int) -> bool:
+        """Whether a result already reported covers this span."""
+        return any(begin <= start and end <= stop for begin, stop in spans)
+
     def inklusivum_article_for(self, article: str, case: str | None) -> str | None:
         """The Inklusivum form of a masculine article."""
         forms = self.static_rules[LangType.DE]["masculine_articles"].get(
@@ -197,10 +209,7 @@ class RuleCheck:
         is passed over rather than guessed at: the noun is left untouched, so a
         wrong article is the whole of what the reader sees.
         """
-        if (
-            language.lang != LangType.DE
-            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
-        ):
+        if not self.is_inklusivum(language.lang, config):
             return
 
         subcategory = is_sub_category_enabled(
@@ -243,7 +252,7 @@ class RuleCheck:
                 continue
 
             end = token.idx + len(token.text)
-            if any(start <= token.idx and end <= stop for start, stop in reported):
+            if self.covers(reported, token.idx, end):
                 continue
 
             case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
@@ -294,10 +303,7 @@ class RuleCheck:
         Like the article pass this runs on the finished results, since whether
         the noun is rewritten is exactly what those results say.
         """
-        if (
-            language.lang != LangType.DE
-            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
-        ):
+        if not self.is_inklusivum(language.lang, config):
             return
 
         subcategory = is_sub_category_enabled(
@@ -308,9 +314,6 @@ class RuleCheck:
 
         neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
         reported = [(result.start, result.end) for result in list_full]
-
-        def covered(start: int, end: int) -> bool:
-            return any(begin <= start and end <= stop for begin, stop in reported)
 
         for token in tokens:
             if token.pos_ != "ADJ":
@@ -333,9 +336,9 @@ class RuleCheck:
                 continue
 
             noun_end = noun.idx + len(noun.text)
-            if not covered(noun.idx, noun_end) and not inklusivum.is_already_neutral(
-                noun.lemma_, neutral
-            ):
+            if not self.covers(
+                reported, noun.idx, noun_end
+            ) and not inklusivum.is_already_neutral(noun.lemma_, neutral):
                 continue
 
             # Plural adjectives are already neutral.
@@ -351,7 +354,9 @@ class RuleCheck:
             replacement = inklusivum.adjective(token.lemma_, case, has_article)
 
             end = token.idx + len(token.text)
-            if replacement == token.text.lower() or covered(token.idx, end):
+            if replacement == token.text.lower() or self.covers(
+                reported, token.idx, end
+            ):
                 continue
 
             append_result(
@@ -387,13 +392,10 @@ class RuleCheck:
         ordinary plurals ("Freunde"). So candidates are confirmed against the
         noun lexicon, and this only runs when the Inklusivum was asked for.
         """
-        if (
-            lang != LangType.DE
-            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
-        ):
+        if not self.is_inklusivum(lang, config):
             return False
 
-        exceptions = self.static_rules[LangType.DE]["inklusivum_nouns"]
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
 
         for candidate in inklusivum.base_form_candidates(token.text):
             forms = await self.nouns.german_noun_lookup(candidate)
@@ -404,7 +406,7 @@ class RuleCheck:
             if not feminine:
                 continue
 
-            if inklusivum.is_form_of(token.text, candidate, feminine, exceptions):
+            if inklusivum.is_form_of(token.text, candidate, feminine, lexicon):
                 return True
 
         return False

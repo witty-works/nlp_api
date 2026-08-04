@@ -9,7 +9,32 @@ Rules follow the Verein für geschlechtsneutrales Deutsch e. V.:
   https://geschlechtsneutral.net/ausnahmeformen/
 """
 
+from dataclasses import dataclass, field
+
 from app.alternatives_engine.utils import add_german_prefix
+
+
+@dataclass(frozen=True)
+class Lexicon:
+    """The word lists the noun rules consult.
+
+    Kept together because they are only ever correct together: leaving one out
+    silently changes which rule applies, which is how the same word once came
+    out as "Gast" on its own and "Gaste" inside a compound.
+    """
+
+    exceptions: dict = field(default_factory=dict)
+    neutral: frozenset = frozenset()
+
+    @classmethod
+    def from_static_rules(cls, static_rules: dict, lang) -> "Lexicon":
+        rules = (static_rules or {}).get(lang, {})
+
+        return cls(
+            exceptions=rules.get("inklusivum_nouns") or {},
+            neutral=frozenset(rules.get("inklusivum_neutral_nouns") or ()),
+        )
+
 
 UMLAUTS = {"ä": "a", "ö": "o", "ü": "u", "Ä": "A", "Ö": "O", "Ü": "U"}
 
@@ -191,27 +216,28 @@ def noun(
     feminine: str,
     target_form: str | None = None,
     prefix: str = "",
-    exceptions: dict | None = None,
+    lexicon: Lexicon | None = None,
     has_article: bool = True,
-    neutral_nouns: set | None = None,
 ) -> str | None:
     """Build the Inklusivum noun for a masculine/feminine pair.
 
     ``target_form`` is a German noun declension column (``sg_gen``,
     ``pl_dat``, ...) and selects number and case. ``exceptions`` maps a
     masculine base form to an explicit ``(singular, plural)`` pair for the
-    words the regular rules cannot derive, and ``neutral_nouns`` holds the
-    words that take no ending at all.
+    words the regular rules cannot derive and the words that take no ending
+    at all.
     """
     if not masculine:
         return None
 
-    if is_already_neutral(masculine, neutral_nouns):
+    lexicon = lexicon or Lexicon()
+
+    if is_already_neutral(masculine, lexicon.neutral):
         return add_german_prefix(masculine, prefix)
 
     is_plural = target_form in PLURAL_FORMS
 
-    override = (exceptions or {}).get(masculine)
+    override = lexicon.exceptions.get(masculine)
     if override is not None:
         singular_form, plural_form = override
         form = plural_form if is_plural else singular_form
@@ -406,7 +432,9 @@ def adjective_stem(tilde_word: str) -> str:
 ALL_TARGET_FORMS = ("sg_nom", "sg_gen", "pl_nom", "pl_dat")
 
 
-def is_form_of(word: str, masculine: str, feminine: str, exceptions=None) -> bool:
+def is_form_of(
+    word: str, masculine: str, feminine: str, lexicon: Lexicon | None = None
+) -> bool:
     """Whether ``word`` is an Inklusivum form of this masculine/feminine pair.
 
     Candidates recovered from the surface alone are ambiguous, so this runs
@@ -414,7 +442,7 @@ def is_form_of(word: str, masculine: str, feminine: str, exceptions=None) -> boo
     reversal.
     """
     return any(
-        noun(masculine, feminine, target_form, "", exceptions) == word
+        noun(masculine, feminine, target_form, "", lexicon) == word
         for target_form in ALL_TARGET_FORMS
     )
 
