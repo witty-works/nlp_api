@@ -373,28 +373,15 @@ class Alternatives:
         article = None
 
         if is_dee:
-            if alternative.is_gendered_noun:
-                article = getattr(rule.dynamic.article, "inklusivum", None) or (
-                    rule.dynamic.article.inclusive or rule.dynamic.article.fallback
-                )
-                if isinstance(article, str) and "~" in article:
-                    article = article.replace("~", "")
-            else:
-                if rule.dynamic.article:
-                    try:
-                        from app.dee_articles import generate_dee_inclusive
+            article = rule.dynamic.article.inklusivum or (
+                rule.dynamic.article.inclusive or rule.dynamic.article.fallback
+            )
+            if isinstance(article, str):
+                article = article.replace("~", "")
 
-                        article = generate_dee_inclusive(
-                            rule.dynamic.article.form,
-                            rule.dynamic.article.masculine,
-                            rule.dynamic.article.feminine,
-                        )
-                    except Exception:
-                        article = "de"
-                else:
-                    article = "de"
-
-                _prepend_article(article)
+            if not alternative.is_gendered_noun:
+                if article:
+                    _prepend_article(article)
                 return alternative
         else:
             if alternative.is_gendered_noun:
@@ -1176,7 +1163,9 @@ class Alternatives:
                     and word in self.static_rules[LangType.DE]["inclusive_articles"]
                 ):
                     word, pre = (
-                        self.static_rules[LangType.DE]["inclusive_articles"][word],
+                        utils.inklusivum_article(
+                            self.static_rules[LangType.DE]["inclusive_articles"][word]
+                        ),
                         [],
                     )
                 else:

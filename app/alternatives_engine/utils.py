@@ -10,10 +10,7 @@ from app.models import (
 def article_binary_pair(
     static_rules: dict, lang: LangType, article: str
 ) -> tuple[str, str]:
-    if (
-        "inclusive_articles" in static_rules[lang]
-        and article in static_rules[lang]["inclusive_articles"]
-    ):
+    if lang == LangType.FR and article in static_rules[lang]["inclusive_articles"]:
         masculine_base = static_rules[lang]["articles_map"][article]
         male_article = masculine_base
         female_article = static_rules[lang]["articles_binary_map"][masculine_base]
@@ -24,6 +21,26 @@ def article_binary_pair(
 
     # assume feminine
     return static_rules[lang]["articles_binary_map"][article], article
+
+
+def inklusivum_article(forms: dict, form: str | None = None) -> str | None:
+    """Pick the Inklusivum article out of a per-case paradigm.
+
+    Most paradigms collapse to a single form once gender is dropped, so the
+    case is only needed for the few that do not. Callers that know the case
+    pass it; the nominative stands in otherwise.
+    """
+    if not forms:
+        return None
+
+    if form is not None and form in forms:
+        return forms[form]
+
+    distinct = set(forms.values())
+    if len(distinct) == 1:
+        return distinct.pop()
+
+    return forms.get("nominativ")
 
 
 def get_noun_conjunction(static_rules: dict, lang: LangType, is_singular: bool) -> str:

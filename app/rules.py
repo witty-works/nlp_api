@@ -776,8 +776,10 @@ def fetch_static_rules(langs: list[str]):
                 article.form
             ] = article
 
-            static_rules[LangType.DE]["inclusive_articles"][
-                article.inclusive
+            if article.inclusive not in static_rules[LangType.DE]["inclusive_articles"]:
+                static_rules[LangType.DE]["inclusive_articles"][article.inclusive] = {}
+            static_rules[LangType.DE]["inclusive_articles"][article.inclusive][
+                article.form
             ] = article.inklusivum
 
         static_rules[LangType.DE]["articles"] = set(

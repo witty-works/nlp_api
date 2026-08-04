@@ -578,10 +578,10 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
         ),
-        # De-e / Inklusivum: nouns ending in -e / -re (singular) and -rne (plural)
-        GermanGenderEndingType.INKLUSIVUM: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)(e|re|rne)$"
-        ),
+        # The Inklusivum has no entry here on purpose: its nouns are not marked
+        # by a separator but by a declension ending that is indistinguishable by
+        # shape from ordinary nouns ("Liebe", "Woche"). Detecting it needs a
+        # lexicon lookup against known gendered pairs, not a suffix pattern.
     }
     _gendereddenom_ending_article = {
         GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
@@ -592,7 +592,6 @@ class Config(BaseModel):
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
             r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"
         ),
-        #GermanGenderEndingType.INKLUSIVUM: re.compile(r"^[a-zäöü]{3,7}(e|re|rne)$"),
     }
     _gendereddenom_ending_word_type = {
         GermanGenderEndingType.STAR: (0, 0, "*"),
@@ -603,7 +602,6 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS_DASH: (-1, 2, ")"),
         GermanGenderEndingType.PARENTHESIS: (-1, 4, "("),
         GermanGenderEndingType.CAPITAL_LETTER: (0, 0, "I"),
-        GermanGenderEndingType.INKLUSIVUM: (0, 0, "e"),
     }
     french_gender_separator: FrenchGenderSeparatorType = (
         FrenchGenderSeparatorType.POINT_MEDIAN

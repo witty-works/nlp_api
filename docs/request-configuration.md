@@ -177,6 +177,11 @@ hard-coding the lists below.
 - `"In"` - Capital Letter (e.g., `LehrerIn`)
 - `"()"` - Parenthesis (e.g., `Lehrer(in)`)
 - `"(-)"` - Parenthesis-Dash (e.g., `Lehrer(-in)`)
+- `"de-e"` - [Inklusivum](https://geschlechtsneutral.net/inklusivum/) (e.g., `de Lehrere`)
+
+Unlike the other values, `"de-e"` is not a separator spliced into the word but a
+separate declension system with its own articles, adjective endings and pronouns.
+Support is currently limited to nouns and their articles.
 
 `french_gender_separator`: French gender-inclusive separator format (Point médian). Supported values:
 

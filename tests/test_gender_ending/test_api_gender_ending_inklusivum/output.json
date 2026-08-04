@@ -178,7 +178,7 @@
                     "female_form": "meiner Professorin",
                     "gender_role": "inclusive_gender",
                     "male_form": "meines Professors",
-                    "text": "meinrs Professore"
+                    "text": "meiners Professore"
                 },
                 {
                     "female_form": "meiner Professorin",
@@ -218,7 +218,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Enser"
+                    "text": "Ens"
                 },
                 {
                     "text": "Dein"
@@ -252,7 +252,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Enser"
+                    "text": "Ens"
                 },
                 {
                     "text": "Deine"
