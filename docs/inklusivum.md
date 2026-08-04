@@ -67,7 +67,11 @@ Sources for every form are the association's own tables:
 - **Words that take no ending at all**, such as `Gast`, `Mitglied`, `Person` and
   everything in `-ling`, which is a rule rather than a list. Some of these do
   have a feminine in the lexicon, `Gästin` for one, which is a real word but not
-  a reason to derive a form the system does not use.
+  a reason to derive a form the system does not use. The list therefore
+  deliberately overrides the lexicon for these words, and is expected to stay
+  that way; if it needs to be maintained alongside the rest of the language data
+  it can move into the imported sqlite database, which changes where it lives
+  but not what it decides.
 - **Word replacement** for `-mann`/`-frau` compounds (`Kaufmann` →
   `Kaufperson`, plural `Kaufleute`) and the handful of genuinely irregular
   pairs, which are all that is left in the lexicon.
@@ -147,8 +151,15 @@ behaviour, which offered the article-less `Vorgesetztey` after an article.
 
 ## Forms the sources do not settle
 
-Do not treat these as decided; they are inferred by analogy and should be
-confirmed before anything depends on them.
+Do not treat these as decided; they are inferred by analogy, and the code
+already depends on them. [inklusivum-feedback.md](./inklusivum-feedback.md) puts
+them to the association as questions, along with what would make the system
+easier to implement.
+
+Two were checked again against every page the site links to and are genuinely
+absent rather than missed: the genitive plural of nouns, and the reflexive
+pronoun. The dative plural is attested (*den Schülernen*), the genitive plural is
+not.
 
 - Genitive plural of nouns, assumed identical to the nominative plural by
   analogy with standard German syncretism.
@@ -167,5 +178,6 @@ confirmed before anything depends on them.
 
 ## See Also
 
+- [Rückfragen zum Inklusivum](./inklusivum-feedback.md), open questions for the association
 - [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
 - [Training Data & Lookups](./training-data.md)
