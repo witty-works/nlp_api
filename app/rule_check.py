@@ -260,6 +260,9 @@ class RuleCheck:
                         else replacement
                     )
                 ],
+                explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ARTICLE_LONG"),
             )
 
     async def inklusivum_adjectives(
@@ -353,6 +356,9 @@ class RuleCheck:
                         else replacement
                     )
                 ],
+                explanation=language.translate("INKLUSIVUM_ADJECTIVE"),
+                url=language.translate("INKLUSIVUM_ADJECTIVE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ADJECTIVE_LONG"),
             )
 
     async def is_written_in_inklusivum(

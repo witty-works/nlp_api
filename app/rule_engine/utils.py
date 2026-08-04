@@ -60,6 +60,7 @@ def append_result(
     icon: Optional[str] = None,
     explanation_context: Optional[str] = None,
     source: Optional[ResultSource] = None,
+    long_explanation: Optional[str] = None,
 ) -> None:
     out_list.append(
         ResultOut.factory(
@@ -80,5 +81,6 @@ def append_result(
             icon,
             explanation_context,
             source,
+            long_explanation=long_explanation,
         )
     )

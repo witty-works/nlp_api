@@ -117,4 +117,38 @@ translations = {
         LangType.DE: "Lange Wörter sind schwer zu lesen und zu verstehen. Verwende kürzere Wörter oder Bindestriche.",
         LangType.FR: "Les mots longs sont difficiles à lire et à comprendre. Utilisez un mot plus court ou des tirets.",
     },
+    # The Inklusivum is unfamiliar enough that a suggestion on its own does not
+    # tell anyone why, so these say which rule produced the form.
+    "INKLUSIVUM_ARTICLE": {
+        LangType.EN: "In the Inklusivum, words for people take the article ‘de’ even when the word itself does not change.",
+        LangType.DE: "Im Inklusivum bekommen Personenwörter den Artikel „de“, auch wenn das Wort selbst unverändert bleibt.",
+        LangType.FR: "Dans l'Inklusivum, les mots désignant des personnes prennent l'article « de », même lorsque le mot lui-même ne change pas.",
+    },
+    "INKLUSIVUM_ADJECTIVE": {
+        LangType.EN: "In the Inklusivum, an adjective agrees with the noun: ‘-ey’ with no article, ‘-e’ or ‘-en’ after one.",
+        LangType.DE: "Im Inklusivum richtet sich das Adjektiv nach dem Substantiv: ohne Artikel „-ey“, nach einem Artikel „-e“ oder „-en“.",
+        LangType.FR: "Dans l'Inklusivum, l'adjectif s'accorde avec le nom : « -ey » sans article, « -e » ou « -en » après un article.",
+    },
+    "INKLUSIVUM_ARTICLE_LONG": {
+        LangType.EN: "Words like ‘Gast’ or ‘Mitglied’ are already gender neutral and keep their form. Only the article changes, from ‘der’ to ‘de’.",
+        LangType.DE: "Wörter wie „Gast“ oder „Mitglied“ sind bereits geschlechtsneutral und bleiben unverändert. Nur der Artikel wird angepasst: aus „der“ wird „de“.",
+        LangType.FR: "Des mots comme « Gast » ou « Mitglied » sont déjà neutres et gardent leur forme. Seul l'article change : « der » devient « de ».",
+    },
+    "INKLUSIVUM_ADJECTIVE_LONG": {
+        LangType.EN: "Adjectives agree with the noun. After an article they end in ‘-e’ or ‘-en’; with no article they take ‘-ey’, ‘-ers’ or ‘-erm’.",
+        LangType.DE: "Adjektive richten sich nach dem Substantiv. Nach einem Artikel enden sie auf „-e“ oder „-en“, ohne Artikel auf „-ey“, „-ers“ oder „-erm“.",
+        LangType.FR: "Les adjectifs s'accordent avec le nom. Après un article ils se terminent par « -e » ou « -en » ; sans article, par « -ey », « -ers » ou « -erm ».",
+    },
+    # Section anchors on the association's own pages, so the link lands on the
+    # rule behind the suggestion rather than on the front page.
+    "INKLUSIVUM_ARTICLE_URL": {
+        LangType.EN: "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask",
+        LangType.DE: "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask",
+        LangType.FR: "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask",
+    },
+    "INKLUSIVUM_ADJECTIVE_URL": {
+        LangType.EN: "https://geschlechtsneutral.net/gesamtsystem/#adjektive",
+        LangType.DE: "https://geschlechtsneutral.net/gesamtsystem/#adjektive",
+        LangType.FR: "https://geschlechtsneutral.net/gesamtsystem/#adjektive",
+    },
 }

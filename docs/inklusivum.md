@@ -87,6 +87,11 @@ Sources for every form are the association's own tables:
 - **The article for words that take no ending**, so `Der Gast` is offered as
   `De Gast`. Nothing else reports these, since the noun is not gendered and no
   denomination rule matches it.
+- **Attributive adjectives**, where the noun is being rewritten: `als guter
+  Arzte` becomes `als gutey Arzte`. Most need no change even then, because after
+  an article the endings are the ordinary German ones.
+- **Explanations** naming the rule behind an article or adjective suggestion,
+  linking into the association's page at the section that covers it.
 - **Detection**, so text already written in the Inklusivum is neither reported by
   the gendered denomination rules nor by the spell checker. Nouns are confirmed
   against the lexicon; articles and possessives are closed sets; the
@@ -139,13 +144,6 @@ Only the article actually needs changing here, and that is now reported
 separately, so what is left is the loss of the replacement suggestions rather
 than the missing article. Reporting nothing is at least better than the previous
 behaviour, which offered the article-less `Vorgesetztey` after an article.
-
-### 6. Attributive adjectives are not converted
-
-`Als guter Arzt` gives `Arzte` for the noun but leaves `guter`, which should be
-`gutey`. The adjective paradigm exists and is reachable for adjectives used as
-nouns; ordinary attributive adjectives sit behind the tilde handler, and the
-rules that reach it carry noun word types.
 
 ## Forms the sources do not settle
 
