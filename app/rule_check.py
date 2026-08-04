@@ -38,6 +38,14 @@ from app.alternatives_engine import inklusivum
 from app.alternatives_engine import utils
 from app.rule_engine import utils as rule_utils
 
+# spaCy reports the case as a UD tag; the article table names them in German.
+INKLUSIVUM_CASES = {
+    "Nom": "nominativ",
+    "Gen": "genitiv",
+    "Dat": "dativ",
+    "Acc": "akkusativ",
+}
+
 
 class RuleCheck:
     settings: Settings
@@ -146,6 +154,113 @@ class RuleCheck:
                     return True
 
         return False
+
+    def inklusivum_article_for(self, article: str, case: str | None) -> str | None:
+        """The Inklusivum form of a masculine article."""
+        forms = self.static_rules[LangType.DE]["masculine_articles"].get(
+            article.lower()
+        )
+        if not forms:
+            return None
+
+        entry = forms.get(case) if case else None
+        if entry is None:
+            if len(forms) != 1:
+                return None
+            entry = next(iter(forms.values()))
+
+        return entry.inklusivum
+
+    async def inklusivum_articles(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Offer the Inklusivum article for person words that take no ending.
+
+        "Gast" carries no gender to remove, so no denomination rule matches it
+        and only the article should change. Nothing else would report it.
+
+        Runs once the other results are in, because whether to report an
+        article depends on what else was found: a phrase rule that already
+        covers "Jeder Lehrling" owns that article, and reporting it again says
+        the same thing about part of the same words. That cannot be decided
+        while the results are still being collected, since a rule anchored on
+        the noun widens its span over the article afterwards.
+
+        Every signal it needs has to be present. Where one is missing the token
+        is passed over rather than guessed at: the noun is left untouched, so a
+        wrong article is the whole of what the reader sees.
+        """
+        if (
+            language.lang != LangType.DE
+            or config.german_gender_ending != GermanGenderEndingType.INKLUSIVUM
+        ):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        articles = self.static_rules[LangType.DE]["articles"]
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        for token in tokens:
+            if token.pos_ != "DET" or token.text.lower() not in articles:
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            if not inklusivum.is_already_neutral(noun.lemma_, neutral):
+                continue
+
+            # Plural articles are already neutral, so there is nothing to say.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            forms = await self.nouns.german_noun_lookup(noun.lemma_)
+            if not forms or forms.get("gender_1") != "masculine":
+                continue
+
+            end = token.idx + len(token.text)
+            if any(start <= token.idx and end <= stop for start, stop in reported):
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            replacement = self.inklusivum_article_for(token.text, case)
+            if not replacement or replacement == token.text.lower():
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.text.lower(),
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+            )
 
     async def is_written_in_inklusivum(
         self, lang: LangType, config: Config, token: Token

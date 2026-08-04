@@ -44,6 +44,7 @@ and a female surface form. Two consequences shape the code:
 | Nouns the rules cannot derive | [training_data/de/inklusivum_nouns.csv](../training_data/de/inklusivum_nouns.csv) |
 | Person words that take no ending | [training_data/de/inklusivum_neutral_nouns.csv](../training_data/de/inklusivum_neutral_nouns.csv) |
 | Routing nouns to the paradigm | `Alternatives.inklusivum_noun` in [app/alternatives.py](../app/alternatives.py) |
+| Articles for words that take no ending | `RuleCheck.inklusivum_articles` in [app/rule_check.py](../app/rule_check.py) |
 | Suppressing rules on Inklusivum text | `RuleCheck.is_written_in_inklusivum` in [app/rule_check.py](../app/rule_check.py) |
 | Suppressing spell check on Inklusivum text | `LanguageTool.is_inklusivum_form` in [app/languagetool.py](../app/languagetool.py) |
 | Tests | [tests/test_dee_generation.py](../tests/test_dee_generation.py) for the article data, [tests/test_inklusivum_nouns.py](../tests/test_inklusivum_nouns.py) for the paradigms, and the `tests/test_gender_ending/test_api_gender_ending_inklusivum*` fixtures end to end |
@@ -83,6 +84,9 @@ Sources for every form are the association's own tables:
   genitive.
 - **Possessives**, where the gendered form already agrees with the noun it
   modifies, so only the stem changes: `ihrem` → `ensem`, `Ihre` → `Ense`.
+- **The article for words that take no ending**, so `Der Gast` is offered as
+  `De Gast`. Nothing else reports these, since the noun is not gendered and no
+  denomination rule matches it.
 - **Detection**, so text already written in the Inklusivum is neither reported by
   the gendered denomination rules nor by the spell checker. Nouns are confirmed
   against the lexicon; articles and possessives are closed sets; the
@@ -93,28 +97,7 @@ Sources for every form are the association's own tables:
 
 Ordered by impact. None of these produce wrong output any more; they are gaps.
 
-### 1. Already gender neutral words keep their gendered article
-
-The words themselves are handled: they take no ending, so `Gast` stays `Gast`.
-What is missing is the other half, that their article should become `de`/`jedey`,
-so `Der Gast` ought to be offered as `De Gast`.
-
-Nothing anchors that today. The gendered denomination rules key on the noun being
-gendered; these are not, so there is no match to hang the article change on, and
-where a rule does fire the suggestion equals the source and is dropped as a false
-positive. It needs a check of its own that can report a token no rule matched.
-The same missing piece blocks items 2, 5 and 7.
-
-`Db.person_words` is not the list for it. It comes from the `ner` column and is
-mostly pejoratives, and it has `Gast` paired with `Gästin`, which is a real word
-rather than an error. Use
-[training_data/de/inklusivum_neutral_nouns.csv](../training_data/de/inklusivum_neutral_nouns.csv)
-instead.
-
-Worth weighing against noise: it would fire on every article before a person
-word, which is a lot of suggestions for a small change each.
-
-### 2. The remaining pronoun forms
+### 1. The remaining pronoun forms
 
 The relative pronoun genitive `dersen`, which differs from the article genitive
 `ders`, and the pronominal `einey` as distinct from the article `ein`.
@@ -123,13 +106,13 @@ Possessive agreement is handled: rather than looking up the possessed noun, the
 gendered form being replaced already agrees with it, so only the stem is swapped.
 That does not extend to the relative pronoun, which has no such source form.
 
-### 3. Address forms
+### 2. Address forms
 
 `Sehr geehrte` → `Sehr geehrtey`, `Liebe`/`Lieber` → `Liebey`, `Herr`/`Frau` →
 `Person [Nachname]`, and `Sehr geehrte Damen und Herren` → `Sehr geehrtes Team
 von [Organisation]`. None are implemented.
 
-### 4. Exception lexicon breadth
+### 3. Exception lexicon breadth
 
 `inklusivum_nouns.csv` is down to the pairs no rule can derive: unrelated roots,
 a stem taken from the feminine, the `-mann`/`-frau` compounds, and one entry that
@@ -141,22 +124,23 @@ exception page does not mention at all. What remains there is worth reading with
 that in mind, and it is the page the association marks as least reviewed, so
 additions are lower confidence than the core system either way.
 
-### 5. Derivations
+### 4. Derivations
 
 `kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`.
 
-### 6. A correct suggestion that changes nothing drops the whole finding
+### 5. A correct suggestion that changes nothing drops the whole finding
 
 After an article, the Inklusivum form of `Vorgesetzte(r)` is `Vorgesetzte`, which
 is what the text already says. The suggestion is therefore registered as a false
 positive and the entire result disappears, taking the unrelated replacement
 suggestions (`Leitungsperson`, `Führungsperson`) with it.
 
-Only the article actually needs changing here, so this resolves with item 1
-rather than on its own. Reporting nothing is at least better than the previous
+Only the article actually needs changing here, and that is now reported
+separately, so what is left is the loss of the replacement suggestions rather
+than the missing article. Reporting nothing is at least better than the previous
 behaviour, which offered the article-less `Vorgesetztey` after an article.
 
-### 7. Attributive adjectives are not converted
+### 6. Attributive adjectives are not converted
 
 `Als guter Arzt` gives `Arzte` for the noun but leaves `guter`, which should be
 `gutey`. The adjective paradigm exists and is reachable for adjectives used as
