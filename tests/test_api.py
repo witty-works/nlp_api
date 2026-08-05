@@ -2936,3 +2936,72 @@ def test_config_options():
 
 
         assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
+
+
+def test_api_key_mode_options_page(standalone_settings):
+    """The sequence an extension in API-key mode makes from its options page.
+
+    The options page is where a key gets entered in the first place, so the two
+    lists it renders have to come back before there is a key to send.
+    """
+    api_key = "options-page-key"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, "options@example.com")
+
+        # 1. Both lists, with no credential of any kind.
+        categories = client.get("/v2.0/categories").json()
+        assert categories["categories"]
+        options = client.get("/v2.0/config-options").json()["options"]
+
+        # 2. Signed in with the key the user just pasted in.
+        auth = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert auth.status_code == 200
+
+        text = {"text": "Wir suchen einen Ninja Programmierer für unsere Kunden."}
+        results = client.post(
+            "/v2.4/check", json=text, headers={"x-key": api_key}
+        ).json()["results"]
+
+        # A result's `subcategory` is one of the reported keys, or the
+        # `advanced_key` of one: that is what lets a toggle line up with what
+        # the user sees flagged.
+        keys = {}
+        for category in categories["categories"]:
+            keys[category["key"]] = category
+            if category["advanced_key"]:
+                keys[category["advanced_key"]] = category
+
+        reported = {result["subcategory"] for result in results}
+        assert reported
+        assert reported <= set(keys)
+        # The text is chosen to flag an advanced variant, since that is the
+        # case a client gets wrong by assuming one key per toggle.
+        assert any(key.endswith("_advanced") for key in reported)
+
+        # 3. A category switched off on the options page is gone from the next
+        # check, without any dashboard having said so. One toggle means both
+        # keys: the base and the advanced one are matched independently.
+        category = keys[sorted(reported)[0]]
+        off = [key for key in (category["key"], category["advanced_key"]) if key]
+
+        results = client.post(
+            "/v2.4/check",
+            json={**text, "config": {"disabled_categories": off}},
+            headers={"x-key": api_key},
+        ).json()["results"]
+        assert not set(off) & {result["subcategory"] for result in results}
+
+        # 4. A gender ending picked from /v2.0/config-options is honoured.
+        for ending in options["german_gender_ending"]["values"]:
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": "Wir suchen einen Programmierer.",
+                    "config": {"german_gender_ending": ending},
+                },
+                headers={"x-key": api_key},
+            )
+            assert response.status_code == 200
+
+        context.redis.delete_api_key(api_key)
