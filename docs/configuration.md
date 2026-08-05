@@ -248,7 +248,6 @@ needed. `/openapi.json` is served unguarded either way.
 | API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
 | API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
 
-## Sentry.io
 ## Protecting the management endpoints
 
 Separate from the docs switch, because reading the schema and minting a
@@ -271,6 +270,7 @@ It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
 there is one pair to configure rather than two. With auth enabled and no
 password set, those endpoints answer 500 rather than letting anyone through.
 
+## Sentry.io
 
 Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=true`, Sentry is disabled.
 

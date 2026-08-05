@@ -2452,27 +2452,6 @@ def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
         assert response.status_code == 200
 
 
-def test_require_auth_off():
-    """A deployment can choose to check text for anyone who asks."""
-    text = {"text": "Wir suchen einen Ninja Programmierer."}
-
-    with TestClient(app) as client:
-        # The default: no user, no results, but still a 200 so a client that has
-        # been signed out keeps working.
-        response = client.post("/v2.4/check", json=text)
-        assert response.status_code == 200
-        assert response.json()["results"] == []
-
-        context.settings.require_auth = False
-        try:
-            response = client.post("/v2.4/check", json=text)
-            assert response.status_code == 200
-            assert len(response.json()["results"])
-        finally:
-            context.settings.require_auth = True
-            context.settings.require_auth = True
-
-
 @pytest.fixture
 def standalone_settings():
     """Run the API the way a deployment without a dashboard would."""
@@ -2642,6 +2621,26 @@ def test_categories():
             "",
             categories["sexism"]["label"],
         )
+
+
+def test_require_auth_off():
+    """A deployment can choose to check text for anyone who asks."""
+    text = {"text": "Wir suchen einen Ninja Programmierer."}
+
+    with TestClient(app) as client:
+        # The default: no user, no results, but still a 200 so a client that has
+        # been signed out keeps working.
+        response = client.post("/v2.4/check", json=text)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+        context.settings.require_auth = False
+        try:
+            response = client.post("/v2.4/check", json=text)
+            assert response.status_code == 200
+            assert len(response.json()["results"])
+        finally:
+            context.settings.require_auth = True
 
 
 def test_management_auth():
@@ -2918,6 +2917,7 @@ def test_config_options():
 
         assert "*in" in options["german_gender_ending"]["values"]
         assert options["gendered_roles_format"]["default"] == "both"
+
         # Every value carries a label, in every locale the API serves. An
         # unlabelled one would leave an options page showing a bare `(-)`.
         for locale in LangVariantType:
@@ -2932,9 +2932,6 @@ def test_config_options():
         german = client.get("/v2.0/config-options", params={"locale": "de-DE"}).json()[
             "options"
         ]["german_gender_ending"]["labels"]
-        assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
-
-
         assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
 
 

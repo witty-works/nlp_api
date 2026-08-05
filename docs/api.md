@@ -232,7 +232,8 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/health?check_external=true` | GET    | No            | Health check including LanguageTool connectivity                                  |
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
-| `/openapi.json`               | GET    | Optional\*    | OpenAPI schema JSON                                                               |
+| `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
+| `/textarea`                   | GET    | No            | Static HTML form for pasting text by hand during development                      |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
 served unguarded either way.
@@ -254,20 +255,36 @@ Response:
 
 ## Debug Endpoints
 
-Debug endpoints are only available when `PLATFORM_ENVIRONMENT_TYPE != "production"`. They provide additional testing and debugging capabilities.
+Only listed in the schema when `PLATFORM_ENVIRONMENT_TYPE != "production"`, but
+routed in every environment — the switches below are what actually guards them.
 
-| Endpoint               | Method | Auth Required | Description                                  |
-| ---------------------- | ------ | ------------- | -------------------------------------------- |
-| `/debug/check`         | POST   | Yes           | Check text with additional debug information |
-| `/debug/rephrase`      | POST   | Yes           | Rephrase text with debug output              |
-| `/debug/prompt`        | POST   | Yes           | Generate prompt with debug information       |
-| `/debug/review_prompt` | POST   | Yes           | Generate review prompt for LLM output        |
-| `/debug/rule`          | POST   | Yes           | Test a specific rule against text            |
-| `/lemmatize`           | GET    | Yes           | Get lemma form of a word                     |
-| `/tokenize`            | GET    | Yes           | Tokenize text using spaCy                    |
-| `/settings`            | GET    | Yes           | View current server settings                 |
-| `/lt`                  | GET    | Yes           | View LanguageTool API URL                    |
-| `/save_openapi_json`   | GET    | Yes           | Export OpenAPI schema to file                |
+Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:
+
+| Endpoint               | Method | Description                                                                    |
+| ---------------------- | ------ | -------------------------------------------------------------------------------- |
+| `/debug/check`         | POST   | Check text with additional debug information                                   |
+| `/debug/rephrase`      | POST   | Rephrase text with debug output. Accepts a `model` to override `LLM_MODEL`     |
+| `/debug/prompt`        | POST   | Generate prompt with debug information                                         |
+| `/debug/review_prompt` | POST   | Generate review prompt for LLM output                                          |
+| `/debug/rule`          | POST   | Test a specific rule against text                                              |
+| `/debug/spacy`         | GET    | spaCy's tokens for `?text=&lang=`, with the API's own word types. `detailed=true` adds the raw tagger output |
+| `/debug/displacy`      | GET    | The dependency parse of `?text=&lang=` rendered as an SVG                      |
+| `/debug/german_noun`   | GET    | The declension and gendered forms the rule engine has for `?word=`             |
+| `/lemmatize`           | GET    | Get lemma form of a word                                                       |
+| `/tokenize`            | GET    | Tokenize text using spaCy                                                      |
+| `/parse-word-types`    | GET    | Parse a `?word_types=` spec (`n\|~v\|=conj`) against `?text=`, as the rule format does |
+| `/save_openapi_json`   | GET    | Export OpenAPI schema to file                                                  |
+
+Protected by `MANAGEMENT_AUTH_ENABLED`, which is **on** by default, because both
+report configuration back:
+
+| Endpoint    | Method | Description                                                     |
+| ----------- | ------ | ----------------------------------------------------------------- |
+| `/settings` | GET    | The whole settings object, including every secret it holds      |
+| `/lt`       | GET    | View LanguageTool API URL                                       |
+
+The LLM-backed ones among these are refused when `LLM_ACCESS=disabled` or no
+`LLM_MODEL` is configured, the same as the client-facing routes.
 
 Example: Test a specific rule
 
