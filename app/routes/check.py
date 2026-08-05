@@ -66,7 +66,7 @@ async def check(
         )
         configs = await fetch_configs_for_request(check_request_in, user_email, context)
     else:
-        configs = debug_configs(check_request_in)
+        configs = debug_configs(check_request_in, context.settings)
 
     context.redis.store_metrics(request, configs, version, "check")
 
@@ -79,9 +79,10 @@ async def check(
         "check",
     )
 
-    if check_request_in.config.plan and check_request_in.config.plan.startswith(
-        "witty_"
-    ):
+    # An empty `configs` means the request resolved to no user. Answering it
+    # with an empty result set rather than a 4xx is deliberate: a client that
+    # has been signed out keeps working, it just gets nothing back.
+    if configs or not context.settings.require_auth:
         text, language, limit_reached = fetch_text(
             check_request_in, context.langs, context
         )
@@ -100,7 +101,7 @@ async def check(
             return results
     else:
         results = []
-        # Default to English when plan is not witty_*; use string to align with other paths
+        # Nothing was checked, so no language was detected either.
         lang = "en"
         limit_reached = False
 

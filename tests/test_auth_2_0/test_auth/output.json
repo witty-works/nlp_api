@@ -93,6 +93,5 @@
         "type": "allow"
     },
     "organization_id": "test-org",
-    "organization_name": "Witty Works",
-    "plan": "witty_teams"
+    "organization_name": "Witty Works"
 }

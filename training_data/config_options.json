@@ -1,0 +1,86 @@
+{
+    "gendered_roles_format": {
+        "translations": {
+            "en": {
+                "none": "Suggest only gender-neutral alternatives",
+                "both": "Suggest both the chosen gender separator and the female and male form",
+                "inclusive_gender": "Suggest the chosen gender separator",
+                "binary_gender": "Suggest the female and male form"
+            },
+            "de": {
+                "none": "Nur geschlechtsneutrale Alternativen vorschlagen",
+                "both": "Das gewählte Gender-Trennzeichen und die weibliche und männliche Form vorschlagen",
+                "inclusive_gender": "Gewählte Gender-Trennzeichen vorschlagen",
+                "binary_gender": "Weibliche und männliche Form vorschlagen"
+            },
+            "fr": {
+                "none": "Proposer uniquement des alternatives non genrées",
+                "both": "Suggérer le séparateur de genre choisi ainsi que les formes féminines et masculines",
+                "inclusive_gender": "Suggérer le séparateur de genre choisi",
+                "binary_gender": "Proposer le masculin et le féminin"
+            }
+        }
+    },
+    "german_gender_ending": {
+        "translations": {
+            "en": {
+                "*in": "Genderstar, f.e Expert*in",
+                ":in": "Colon, f.e Expert:in",
+                "_in": "Gendergap, f.e Expert_in",
+                "/in": "Slash, f.e Expert/in",
+                "/-in": "Slash + Dash, f.e Expert/-in",
+                "In": "Binnen-I, f.e ExpertIn",
+                "(-)": "Parenthesis + Dash, f.e Expert(-in)",
+                "()": "Parenthesis, f.e Expert(in)"
+            },
+            "de": {
+                "*in": "Genderstar, f.e Expert*in",
+                ":in": "Doppelpunkt, z. B. Expert:in",
+                "_in": "Gendergap, z.B. Experte_in",
+                "/in": "Schrägstrich, z.B. Expert/in",
+                "/-in": "Schrägstrich + Strich, z.B. Experte/-in",
+                "In": "Binnen-I, z.B. ExpertIn",
+                "(-)": "Klammern + Strich, z.B. Expert(-in)",
+                "()": "Klammern, z.B. Expert(in)"
+            },
+            "fr": {
+                "*in": "Genderstar, p. ex. Expert*in",
+                ":in": "Côlon, p. ex. Expert:in",
+                "_in": "Gendergap, p. ex. Expert_in",
+                "/in": "Barre oblique, p. ex. Expert/in",
+                "/-in": "Barre oblique + Tiret, p. ex. Expert/-in",
+                "In": "Binnen-I, p. ex. ExpertIn",
+                "(-)": "Parenthèses + Tiret, p. ex. Expert(-in)",
+                "()": "Parenthèses, p. ex. Expert(in)"
+            }
+        }
+    },
+    "french_gender_separator": {
+        "translations": {
+            "en": {
+                "·": "Point médian, f.e. expert·es",
+                "·s": "Point médian, incl. plural, f.e. expert·e·s",
+                ".": "Point, f.e. expert.es",
+                ".s": "Dot incl. plural, f.e. expert.e.s",
+                "/": "Slash, f.e. expert/es",
+                "/s": "Slash, incl. plural, f.e. expert/e/s"
+            },
+            "de": {
+                "·": "Mittelpunkt (Point médian), z.B. expert·es",
+                "·s": "Point médian, inkl. Mehrzahl, z.B. expert·e·s",
+                ".": "Punkt (Point), z.B. expert.es",
+                ".s": "Punkt, inkl. Mehrzahl, z.B. expert.e.s",
+                "/": "Schrägstrich, z.B. expert/es",
+                "/s": "Schrägstrich, inkl. Mehrzahl, z.B. expert/e/s"
+            },
+            "fr": {
+                "·": "Point médian, p. ex. expert·es",
+                "·s": "Point médian, incl. pluriel, p. ex. expert·e·s",
+                ".": "Point, p. ex. expert.es",
+                ".s": "Point, incl. pluriel, p. ex. expert.e.s",
+                "/": "Barre oblique, p. ex. expert/es",
+                "/s": "Barre oblique, incl. pluriel, p. ex. expert/e/s"
+            }
+        }
+    }
+}

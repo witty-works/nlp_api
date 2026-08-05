@@ -7,13 +7,16 @@
 - [Core settings](#core-settings)
 - [Reducing Resource Usage](#reducing-resource-usage)
 - [API docs protection](#api-docs-protection)
+- [Protecting the management endpoints](#protecting-the-management-endpoints)
 - [Sentry.io](#sentryio)
 - [LanguageTool](#languagetool)
 - [Context Checker](#context-checker)
   - [Local SetFit Models](#local-setfit-models)
   - [Remote API](#remote-api)
 - [Redis](#redis)
-- [AWS (LLM-assisted alternatives and rephrasing)](#aws-llm-assisted-alternatives-and-rephrasing)
+- [LLM provider (LLM-assisted alternatives and rephrasing)](#llm-provider-llm-assisted-alternatives-and-rephrasing)
+  - [AWS Bedrock](#aws-bedrock)
+  - [Who may spend the LLM budget](#who-may-spend-the-llm-budget)
 - [Slack](#slack)
 - [Authentication](#authentication)
 - [Platform.sh](#platformsh)
@@ -125,27 +128,26 @@ By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg
 
 ### Disabling LLM-Assisted Rephrasing
 
-The AWS Bedrock integration for LLM-powered alternatives and rephrasing is optional and disabled by default when AWS credentials are not configured.
+LLM-powered alternatives and rephrasing are optional.
 
 **To ensure it's disabled:**
 
-Simply omit or leave empty the AWS configuration variables in your `.env`:
-
 ```bash
-AWS_REGION_NAME=
-AWS_KEY=
-AWS_SECRET_KEY=
-AWS_MODEL_ID=
+LLM_ACCESS=disabled
 ```
+
+That is the switch to use: it refuses the call whatever any config asks for, so
+it holds even where credentials happen to be present. Leaving the provider
+variables empty also stops the calls, but by failing them rather than by
+declining them.
 
 **Benefits:**
 
-- No AWS API costs
+- No provider API costs
 - Eliminates external API latency
-- No AWS SDK dependencies loaded at runtime
-- LLM routes (`/alternatives/llm`, `/rephrase`) will return appropriate error responses
+- LLM routes (`/v1.0/rephrase`, `/v1.0/prompt`) will return appropriate error responses
 
-**Note:** LLM features are also restricted by plan-level feature flags in user/organization configs, so even with AWS configured, users need explicit access.
+**Note:** LLM features are also gated by `LLM_ACCESS` and by the `llm_alternatives` flag in the user/organization config, so even with a provider configured, users need explicit access. See [Who may spend the LLM budget](#who-may-spend-the-llm-budget).
 
 ### Disabling Context Checker (False Positive Filtering)
 
@@ -236,13 +238,37 @@ This configuration reduces memory usage from ~2-3 GB to ~300-500 MB while mainta
 
 ## API docs protection
 
-Protect `/docs` and `/openapi.json` via HTTP Basic when needed.
+Protect `/docs` and the development helpers (`/save_openapi_json`,
+`/lemmatize`, `/tokenize`, `/parse-word-types`, `/debug/*`) via HTTP Basic when
+needed. `/openapi.json` is served unguarded either way.
 
 | Variable              | Default | Description                                        |
 | --------------------- | ------- | -------------------------------------------------- |
-| API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for Swagger UI and OpenAPI JSON. |
+| API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for the docs UI and dev helpers. |
 | API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
 | API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
+
+## Protecting the management endpoints
+
+Separate from the docs switch, because reading the schema and minting a
+credential are not the same risk. This one guards `/api_key`, `/user/configs`,
+`/organization/configs`, `/user/logs`, `/settings`, `/lt` and `/v1.0/prompt` —
+the endpoints that hand out or expose credentials and configuration, or act on
+a named user's behalf — and defaults to **on**, so a deployment nobody
+configured is closed rather than open.
+
+`/v1.0/prompt` is in that list because it takes `user_email` as a query
+parameter: whoever calls it picks whose configuration applies and whose LLM
+budget is spent. A caller that already sends basic auth for `/user/configs`,
+as the dashboard does, needs no change.
+
+| Variable                | Default | Description                                                                             |
+| ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development.    |
+
+It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
+there is one pair to configure rather than two. With auth enabled and no
+password set, those endpoints answer 500 rather than letting anyone through.
 
 ## Sentry.io
 
@@ -392,16 +418,80 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 
 Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
 
-## AWS (LLM-assisted alternatives and rephrasing)
+## LLM provider (LLM-assisted alternatives and rephrasing)
 
-Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). These routes are restricted by plan and feature flags in configs; in debug mode you can test locally.
+Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). In debug mode you can test locally.
+
+Calls go through [LiteLLM](https://docs.litellm.ai/docs/providers), so the
+provider is the prefix of the model identifier and switching providers is a
+config change:
+
+| Variable       | Default  | Description                                                                                        |
+| -------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
+| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
+| `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
+
+```bash
+# Anthropic directly
+LLM_MODEL="anthropic/claude-sonnet-4-5"
+LLM_API_KEY="sk-ant-…"
+
+# Anything OpenAI-compatible you host yourself
+LLM_MODEL="openai/my-model"
+LLM_API_BASE="http://localhost:8000/v1"
+```
+
+Parameters a given provider does not support are dropped rather than raising, so
+the same `max_tokens` / `temperature` / `top_p` settings work across all of them.
+
+There is no default model — no one identifier is reachable from every
+deployment. Leaving `LLM_MODEL` empty is a valid configuration meaning "this
+deployment has no LLM": the features are refused the same way
+`LLM_ACCESS=disabled` refuses them, rather than failing a call at the provider.
+
+### AWS Bedrock
+
+Bedrock keeps its own settings because it signs with a key pair and a region
+rather than a bearer token — `LLM_API_KEY` is not used for it. Leave `AWS_KEY`
+and `AWS_SECRET_KEY` empty to let an instance role supply the credentials
+instead. The model still comes from `LLM_MODEL`, as `bedrock/<model id>`.
 
 | Variable        | Default                            | Description                                                   |
 | --------------- | ---------------------------------- | ------------------------------------------------------------- |
 | AWS_REGION_NAME | (empty)                            | AWS region (e.g., eu-central-1).                              |
 | AWS_KEY         | (empty)                            | AWS access key ID.                                            |
 | AWS_SECRET_KEY  | (empty)                            | AWS secret access key.                                        |
-| AWS_MODEL_ID    | mistral.mixtral-8x7b-instruct-v0:1 | Default model ID used when a request doesn’t specify `model`. |
+
+### Who may spend the LLM budget
+
+These calls are billed to whoever runs the API, so who may make them is the
+operator's decision and nothing else can overrule it.
+
+| Variable            | Default | Description                                                                                                       |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| `LLM_ACCESS`        | `users` | `disabled`, `users` or `everyone` — see below.                                                                    |
+| `LLM_ALLOWED_USERS` | `[]`    | With `users`, narrows it to these emails. JSON list, e.g. `LLM_ALLOWED_USERS='["a@example.com","b@example.com"]'`. |
+
+- **`disabled`** — no LLM calls, whoever asks. A `force: true` rule in a synced
+  config does not override it, and neither do the debug routes.
+- **`users`** — anyone the request resolved to a user for. That covers a
+  dashboard token and an `x-key` alike: an API key *is* its user's email by the
+  time this is checked, so `LLM_ALLOWED_USERS` lists emails and one list
+  narrows both. Leave it empty to allow every user. This is the default.
+- **`everyone`** — anyone who can reach the API, resolved user or not. Pair it
+  with `REQUIRE_AUTH=false` for a deployment that is open by design.
+
+The policy says who **may**, not who **does**: it can only ever turn
+`llm_alternatives` off. Something still has to turn it on —
+
+| To turn it on for                       | Set                                                                |
+| --------------------------------------- | -------------------------------------------------------------------- |
+| every user of a dashboard-less deployment | `DEFAULT_USER_LLM_ALTERNATIVES=true` (with `DEFAULT_USER_CONFIG_ENABLED`) |
+| whoever asks per request                | `CLIENT_CONFIG_ENABLED=true`, then the client sends `config.llm_alternatives` |
+| a specific dashboard organization       | the dashboard's own LLM alternatives setting, which syncs as a `force` rule |
+
+So `LLM_ACCESS=everyone` on its own changes nothing until one of those applies.
 
 ## Slack
 
@@ -423,9 +513,28 @@ Notes
 
 Supported methods:
 
-- API Keys: manage with the `/api_key` endpoints (stored in Redis)
+- API Keys: mint with [bin/api_key.py](../bin/api_key.py) or the `/api_key` endpoints (stored in Redis)
+- Dashboard access tokens (Laravel Passport, verified against a JWKS document)
 - Azure AD B2C (per-tenant)
 - Microsoft Office SSO (multi-tenant)
+
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
 
 Azure AD B2C
 | Variable | Description |
@@ -443,6 +552,29 @@ Office/Microsoft 365 SSO
 | OFFICE_SSO_EXPECTED_SCOPE | Scope expected in access tokens. |
 
 If an `Authorization: Bearer <token>` is present, the API validates the token against the configured client(s) and required scope. Alternatively, pass an `x-key` header with a valid API key mapping to a user email in Redis. For local testing you can also use `X-TESTING-AUTH: user@example.com` when `TESTING=true`.
+
+## Running without the dashboard
+
+Normally the dashboard's `SyncUserToNlpApi` job writes each user's config into
+Redis, and a user with no config there is rejected: `/v2.0/auth` answers 403 and
+clients read that as "not signed in". A deployment that runs this API on its own
+has no such job, so the two settings below fill the gap.
+
+|                        Variable | Default       | Description                                                                                                                                                                |
+| ------------------------------: | :-----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  `DEFAULT_USER_CONFIG_ENABLED`  | false         | Give a user with no stored config the defaults below instead of a 403. The `/user/configs` management endpoint still reports 404 for them, so "nothing is stored" stays visible. |
+|  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
+| `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
+|       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
+|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it.                                                   |
+
+`CLIENT_CONFIG_ENABLED` never overrules a deployment that has an opinion: a
+`force` rule for either flag in a synced user or organisation config still wins.
+`disabled_categories` and custom rules are unaffected — a client's
+`disabled_categories` were already honoured.
+
+Users are still identified by email, so an API-key deployment needs keys before
+anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
 
 ## Platform.sh
 
@@ -499,3 +631,21 @@ Also configure Blackfire credentials in `~/.blackfire.ini` or environment variab
 - [Request Configuration & Categories](./request-configuration.md) - Per-request configuration options
 - [API Endpoints](./api.md) - Available endpoints and authentication
 - Back to [📋 Documentation Index](../README.md#documentation-index)
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
+

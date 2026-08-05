@@ -12,13 +12,13 @@ from fastapi.security.api_key import APIKeyHeader
 from app.context import AppContext
 from app.dependencies import fetch_current_username, get_app_context
 from app.settings import get_settings
-from app.models import RephraseRequestIn, RephrasesOut, Result, Client
+from app.models import Client, RephraseRequestIn, RephrasesOut, Result
 from app.version_validators import (
     client_version,
     rephrase_api_version,
     REPHRASE_API_VERSION,
 )
-from app.config_manager import fetch_configs_for_request
+from app.config_manager import fetch_configs_for_request, llm_available
 from app.auth_service import fetch_user
 
 router = APIRouter()
@@ -102,18 +102,21 @@ async def rephrase_sentence(
             rephrase_request_in, user_email, context
         )
 
-        if (
-            rephrase_request_in.config.plan is None
-            or not rephrase_request_in.config.plan.startswith("witty_")
-        ):
+        if not configs:
             response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("No valid plan on user")
+            return Result.factory("User config missing")
 
         if not rephrase_request_in.config.llm_alternatives:
             response.status_code = status.HTTP_403_FORBIDDEN
             return Result.factory("Rephrasing via LLM not enabled on user")
     else:
-        # debug mode
+        # Debug mode. There is no user to check `users` against — the route
+        # sits behind its own basic auth — but whether the deployment has an
+        # LLM at all still applies.
+        if not llm_available(context.settings, rephrase_request_in.model):
+            response.status_code = status.HTTP_403_FORBIDDEN
+            return Result.factory("LLM use is not enabled on this deployment")
+
         configs = {}
 
     context.redis.store_metrics(request, configs, version, "rephrase")

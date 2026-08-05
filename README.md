@@ -8,7 +8,7 @@
   - Reducing bias in LLM output (through prompt injection and automatic follow-ups prompts)
   - Custom, organization-specific rules
 - Integrations:
-  - Use https://github.com/witty-works/dashboard to manage to user/organization configuration
+  - Use https://github.com/witty-works/dashboard to manage to user/organization configuration — optional, see [Running without the dashboard](docs/configuration.md#running-without-the-dashboard)
   - Use https://github.com/witty-works/browser-extension and https://github.com/witty-works/world-plugin UI clients
   - Use https://github.com/witty-works/rule-editor to manage the rules
 - Quick start links:
@@ -24,8 +24,10 @@
   - [app/model.py](app/model.py) — core rule matching; includes `_fetch_word_type()` POS heuristics
   - [app/languagetool.py](app/languagetool.py) — LanguageTool client integration
   - [app/context_checker.py](app/context_checker.py) — local SetFit or remote API context checking
+  - [app/prompt.py](app/prompt.py) — the one place an LLM is called; provider comes from `LLM_MODEL` via LiteLLM
   - [bin/convert_to_cpu.py](bin/convert_to_cpu.py), [bin/download_from_huggingface.py](bin/download_from_huggingface.py), [bin/test_cpu.py](bin/test_cpu.py) — context model utilities
   - [app/auth_service.py](app/auth_service.py), [app/middleware.py](app/middleware.py) — auth (API key/OAuth2) and docs protection
+  - [bin/api_key.py](bin/api_key.py) — mint and revoke API keys where no dashboard does it
   - [app/redis.py](app/redis.py) — Redis client and helpers
 
 ## Documentation Index

@@ -10,7 +10,7 @@
   - [Unauthenticated Endpoints](#unauthenticated-endpoints)
 - [Basic Config Structure](#basic-config-structure)
   - [Context and Storage](#context-and-storage)
-  - [Plan and Features](#plan-and-features)
+  - [Addons](#addons)
   - [Language Settings](#language-settings)
   - [Gender-Inclusive Formatting](#gender-inclusive-formatting)
   - [Category and Alternative Settings](#category-and-alternative-settings)
@@ -54,14 +54,19 @@ Managing API Keys:
 - `GET /api_key/{email}` - Retrieve API key for an email
 - `DELETE /api_key/{email}` - Delete API key for an email
 
-These management endpoints require HTTP Basic authentication (see [API docs protection](./configuration.md#api-docs-protection)).
+These management endpoints require HTTP Basic authentication (see [API docs protection](./configuration.md#api-docs-protection)). Where there is no dashboard to create keys, [bin/api_key.py](../bin/api_key.py) does the same from the command line — see [API keys](./setup.md#api-keys).
 
 ### OAuth2 Bearer Token Authentication
 
-The API supports OAuth2 Bearer token authentication through two providers:
+The API supports OAuth2 Bearer token authentication through three providers:
 
-1. Azure AD B2C (Single-tenant)
-2. Microsoft Office SSO (Multi-tenant)
+1. The dashboard (Laravel Passport, verified against its JWKS document)
+2. Azure AD B2C (Single-tenant)
+3. Microsoft Office SSO (Multi-tenant)
+
+The token's `aud` claim selects which of them verifies it — see
+[Authentication](./configuration.md#authentication) for the variables that
+register each one.
 
 ```bash
 curl -X 'POST' \
@@ -104,8 +109,10 @@ When multiple authentication methods are provided, the API checks them in this o
 Some endpoints do not require authentication:
 
 - Health checks and status endpoints
-- Public documentation (`/docs`, `/redoc`) - unless `API_DOCS_AUTH_ENABLED=true`
-- OpenAPI schema (`/openapi.json`) - unless `API_DOCS_AUTH_ENABLED=true`
+- The category list (`/v2.0/categories`) and the config options
+  (`/v2.0/config-options`) - the same answer for everyone
+- Public documentation (`/docs`) - unless `API_DOCS_AUTH_ENABLED=true`
+- OpenAPI schema (`/openapi.json`)
 
 ## Basic Config Structure
 
@@ -120,16 +127,17 @@ The `config` object in a `/check` request supports the following options.
 
 `store_context`: When true, includes surrounding text context (±100 chars) in results. Context is sanitized for privacy. Clients use this flag to decide whether to persist data with analytics.
 
-`llm_alternatives`: Enable LLM-powered grammatically correct alternatives (requires plan with LLM access).
+`llm_alternatives`: Enable LLM-powered grammatically correct alternatives. Requires
+`CLIENT_CONFIG_ENABLED` to be settable per request, AWS credentials for the LLM
+itself, and an [`LLM_ACCESS`](./configuration.md#who-may-spend-the-llm-budget)
+policy that covers the requester — that last one is the operator's and can only
+ever turn this off.
 
-### Plan and Features
+### Addons
 
 | Field    | Type             | Default |
 | -------- | ---------------- | ------- |
-| `plan`   | string           | `null`  |
 | `addons` | array of strings | `null`  |
-
-`plan`: Plan identifier (e.g., "premium", "enterprise").
 
 `addons`: List of enabled addon features.
 
@@ -148,6 +156,10 @@ The `config` object in a `/check` request supports the following options.
 `preferred_variants`: Language variants for spelling/grammar. Supported values: `"en-US"`, `"en-GB"`, `"de-DE"`, `"de-CH"`, `"de-AT"`, `"fr-FR"`.
 
 ### Gender-Inclusive Formatting
+
+`GET /v2.0/config-options` returns these three fields' accepted values and
+defaults, read off the request model, so a client can offer them without
+hard-coding the lists below.
 
 | Field                     | Type | Default  |
 | ------------------------- | ---- | -------- |
@@ -202,7 +214,14 @@ The API checks text against multiple diversity dimensions and language categorie
 
 ### Finding Available Categories
 
-The complete list of supported categories can be found in multiple locations:
+Ask the API: `GET /v2.0/categories` returns the keys this deployment accepts,
+with their groups and their `advanced_key`. That is the one source that cannot
+go stale against the running version, and it needs no authentication — an
+options page can render the toggles before the user has entered a credential.
+See [API Endpoints](./api.md#core-endpoints), and note that a category and its
+`advanced_key` have to be disabled together.
+
+The same list can also be read from:
 
 1. Public Documentation (with explanations and examples):
    - English: https://www.witty.works/en/categories.html
@@ -365,6 +384,15 @@ When a `/check` request is made with authentication (via API key or OAuth token)
 4. Default config: Server defaults as documented
 
 Settings are merged with this precedence, meaning you can override specific fields per request while keeping other settings from stored configurations.
+
+A stored setting carrying `"status": "force"` reverses that for its own field
+and overrides the request; one carrying `"status": "suggestion"` applies only
+where the request left the field out. Two fields are not the request's to
+set unless the deployment says so:
+
+- `store_context` and `llm_alternatives` are ignored unless
+  [`CLIENT_CONFIG_ENABLED`](./configuration.md#running-without-the-dashboard) is
+  on.
 
 ## Stored Configuration via Management API
 

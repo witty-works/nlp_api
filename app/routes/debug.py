@@ -46,7 +46,7 @@ async def post_debug_rule(
     username: str = Depends(fetch_current_username),
 ):
     language = context.languages[rule_data.lang]
-    config = Config(plan="witty_teams")
+    config = Config()
 
     tokens = context.model.fetch_tokens(language.lang, rule_data.text)
     for token in tokens:

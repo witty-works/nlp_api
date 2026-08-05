@@ -22,9 +22,11 @@ These are the main endpoints for checking and rephrasing text.
 | Endpoint         | Method | Auth Required | Description                                                   |
 | ---------------- | ------ | ------------- | ------------------------------------------------------------- |
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
-| `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires plan with LLM access)       |
+| `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
+| `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
+| `/v2.0/config-options` | GET | No        | List the values the enumerated `config` fields accept         |
 
 Example `/v2.4/check` request:
 
@@ -55,9 +57,96 @@ curl -X 'POST' \
 }'
 ```
 
+Example `/v2.0/categories` request:
+
+```bash
+curl 'http://127.0.0.1:8000/v2.0/categories?locale=de-DE'
+```
+
+```jsonc
+{
+  "categories": [
+    {
+      "key": "sexism",
+      "label": "Sexismus",
+      "parent": "gender-orientation",
+      "advanced_key": "sexism_advanced",   // null where there is no variant
+      "proficiency_level": "unconscious_bias"
+    }
+    // ...
+  ],
+  "groups": [{ "key": "gender-orientation", "label": "Gender + Orientation" }]
+}
+```
+
+`/v2.0/auth` only reports the categories the dashboard synced into a user's
+organization config, so this endpoint is how a deployment without a dashboard
+tells clients what they may switch off. The list comes from the training data
+and is therefore the same either way. `locale` accepts the same values as
+`preferred_variants` and only affects the labels; keys and grouping do not
+change. Labels are empty for categories that carry no translation.
+
+**A category and its `advanced_key` are matched independently.** A result
+comes back under whichever one fired, and disabling `sexism` leaves
+`sexism_advanced` firing. One checkbox on an options page therefore has to
+put **both** keys in `config.disabled_categories`:
+
+```js
+const off = [category.key, category.advanced_key].filter(Boolean);
+```
+
+Splitting them is what lets a deployment offer the stricter variant as its
+own setting; the dashboard does exactly that.
+
+No authentication: the answer is identical for everyone and says nothing about
+any user. It is served with `Cache-Control: public, max-age=3600`, so clients
+and any proxy can hold a copy instead of asking per user.
+
+Example `/v2.0/config-options` request:
+
+```bash
+curl 'http://127.0.0.1:8000/v2.0/config-options'
+```
+
+```jsonc
+{
+  "options": {
+    "german_gender_ending": {
+      "values": ["/in", "/-in", "_in", "*in", ":in", "(-)", "()", "In"],
+      "default": "*in",
+      "labels": { "*in": "Genderstar, f.e Expert*in" }   // one per value
+    },
+    "french_gender_separator": {
+      "values": ["·", "·s", ".", ".s", "/", "/s"],
+      "default": "·"
+    },
+    "gendered_roles_format": {
+      "values": ["none", "both", "inclusive_gender", "binary_gender"],
+      "default": "both"
+    }
+  }
+}
+```
+
+The `config` fields whose accepted values a client cannot guess — each is a
+closed set of tokens rather than a boolean or free text. The values are read off
+the request model itself, so the answer is what the running version accepts
+rather than what was documented at some point. Unauthenticated and cacheable for
+the same reason as the category list.
+
+`labels` follows `locale`, and is the same wording the dashboard shows for the
+same setting — both read
+[training_data/config_options.json](../training_data/config_options.json),
+which is copied from the dashboard's `resources/lang/*/guidelines.php`. A value
+the dashboard has no wording for is returned without a label, and a client shows
+the raw value.
+
+See [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
+for what each value renders as.
+
 ## Management Endpoints
 
-These endpoints manage user and organization configurations. All require HTTP Basic authentication (configured via `API_DOCS_AUTH_ENABLED`, `API_DOCS_USERNAME`, and `API_DOCS_PASSWORD`).
+These endpoints manage user and organization configurations. All require HTTP Basic authentication, on by default and configured via `MANAGEMENT_AUTH_ENABLED`, `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` — see [Protecting the management endpoints](./configuration.md#protecting-the-management-endpoints).
 
 ### User Configuration
 
@@ -143,9 +232,11 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/health?check_external=true` | GET    | No            | Health check including LanguageTool connectivity                                  |
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
-| `/openapi.json`               | GET    | Optional\*    | OpenAPI schema JSON                                                               |
+| `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
+| `/textarea`                   | GET    | No            | Static HTML form for pasting text by hand during development                      |
 
-\* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`
+\* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
+served unguarded either way.
 
 Example health check:
 
@@ -164,20 +255,36 @@ Response:
 
 ## Debug Endpoints
 
-Debug endpoints are only available when `PLATFORM_ENVIRONMENT_TYPE != "production"`. They provide additional testing and debugging capabilities.
+Only listed in the schema when `PLATFORM_ENVIRONMENT_TYPE != "production"`, but
+routed in every environment — the switches below are what actually guards them.
 
-| Endpoint               | Method | Auth Required | Description                                  |
-| ---------------------- | ------ | ------------- | -------------------------------------------- |
-| `/debug/check`         | POST   | Yes           | Check text with additional debug information |
-| `/debug/rephrase`      | POST   | Yes           | Rephrase text with debug output              |
-| `/debug/prompt`        | POST   | Yes           | Generate prompt with debug information       |
-| `/debug/review_prompt` | POST   | Yes           | Generate review prompt for LLM output        |
-| `/debug/rule`          | POST   | Yes           | Test a specific rule against text            |
-| `/lemmatize`           | GET    | Yes           | Get lemma form of a word                     |
-| `/tokenize`            | GET    | Yes           | Tokenize text using spaCy                    |
-| `/settings`            | GET    | Yes           | View current server settings                 |
-| `/lt`                  | GET    | Yes           | View LanguageTool API URL                    |
-| `/save_openapi_json`   | GET    | Yes           | Export OpenAPI schema to file                |
+Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:
+
+| Endpoint               | Method | Description                                                                    |
+| ---------------------- | ------ | -------------------------------------------------------------------------------- |
+| `/debug/check`         | POST   | Check text with additional debug information                                   |
+| `/debug/rephrase`      | POST   | Rephrase text with debug output. Accepts a `model` to override `LLM_MODEL`     |
+| `/debug/prompt`        | POST   | Generate prompt with debug information                                         |
+| `/debug/review_prompt` | POST   | Generate review prompt for LLM output                                          |
+| `/debug/rule`          | POST   | Test a specific rule against text                                              |
+| `/debug/spacy`         | GET    | spaCy's tokens for `?text=&lang=`, with the API's own word types. `detailed=true` adds the raw tagger output |
+| `/debug/displacy`      | GET    | The dependency parse of `?text=&lang=` rendered as an SVG                      |
+| `/debug/german_noun`   | GET    | The declension and gendered forms the rule engine has for `?word=`             |
+| `/lemmatize`           | GET    | Get lemma form of a word                                                       |
+| `/tokenize`            | GET    | Tokenize text using spaCy                                                      |
+| `/parse-word-types`    | GET    | Parse a `?word_types=` spec (`n\|~v\|=conj`) against `?text=`, as the rule format does |
+| `/save_openapi_json`   | GET    | Export OpenAPI schema to file                                                  |
+
+Protected by `MANAGEMENT_AUTH_ENABLED`, which is **on** by default, because both
+report configuration back:
+
+| Endpoint    | Method | Description                                                     |
+| ----------- | ------ | ----------------------------------------------------------------- |
+| `/settings` | GET    | The whole settings object, including every secret it holds      |
+| `/lt`       | GET    | View LanguageTool API URL                                       |
+
+The LLM-backed ones among these are refused when `LLM_ACCESS=disabled` or no
+`LLM_MODEL` is configured, the same as the client-facing routes.
 
 Example: Test a specific rule
 

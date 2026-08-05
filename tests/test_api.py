@@ -1,25 +1,38 @@
+import base64
 import pytest
 import logging
 import json
+import time
 from pathlib import Path
+
+import jwt
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi.testclient import TestClient
 from app.main import (
     app,
     context,
 )
+from app.categories import get_category_keys
+from app.prompt import Prompt
 from app.config_manager import (
+    debug_configs,
     fetch_configs_for_request,
     parse_term_replacements,
 )
 from app.auth_service import (
     AuthError,
+    convert_to_pem,
     validate_scope_,
     get_token_,
     get_unverified_token_claims_,
 )
 from app.models import (
+    Config,
+    LangVariantType,
     LangWithAutoType,
     CheckRequestIn,
+    LlmAccessType,
 )
 
 tokens = {
@@ -132,7 +145,7 @@ def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
     "spacy_model_dir",
     get_dirs("tests/test_spacy_model"),
 )
-def test_spacy_model(spacy_model_dir, snapshot):
+def test_spacy_model(spacy_model_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = spacy_model_dir.joinpath("input.json").read_text()
@@ -960,10 +973,9 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
             "/v2.0/auth", headers={"X-TESTING-AUTH": "2_2@gmail.com"}
         )
         assert response.status_code == 200
-
-        response = response.json()
-        assert "organization_trial_ends_at" in response
-        assert response["organization_trial_ends_at"] is not None
+        # A stored `trial_ends_at` is ignored rather than reported on: the
+        # dashboard still syncs one, and nothing here acts on it.
+        assert "organization_trial_ends_at" not in response.json()
 
         response = client.post(
             "/v2.0/auth", headers={"X-TESTING-AUTH": "test@gmail.com"}
@@ -2040,7 +2052,7 @@ def test_spacy():
     "lemma_case_dir",
     get_dirs("tests/test_lemmatizers"),
 )
-def test_lemmatizer(lemma_case_dir, snapshot):
+def test_lemmatizer(lemma_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = lemma_case_dir.joinpath("input.json").read_text()
@@ -2302,3 +2314,691 @@ def test_plain_language(plain_language_dir, snapshot, set_redis):
         # Snapshot the return value.
         snapshot.snapshot_dir = plain_language_dir
         snapshot.assert_match(output, "output.json")
+
+
+@pytest.fixture
+def dashboard_sso(request):
+    """Register a dashboard issuer and pre-seed its verification key.
+
+    The RSA PEM is written straight into the cache `get_rsa_key` reads, so the
+    test never reaches out for the JWKS document — the fetch path itself is
+    shared with the Microsoft issuers and covered by their tests.
+    """
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    numbers = private_key.public_key().public_numbers()
+
+    def to_base64_url(value: int) -> str:
+        raw = value.to_bytes((value.bit_length() + 7) // 8, "big")
+        return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
+
+    kid = "test-dashboard-kid"
+    context.redis.db.set(
+        "rsa_pem:" + kid,
+        convert_to_pem(to_base64_url(numbers.n), to_base64_url(numbers.e)),
+    )
+
+    previous = context.settings.sso_configs.get("dashboard")
+    context.settings.sso_configs["dashboard"] = {
+        "client_id": "1",
+        "jwks_url": "https://dashboard.example.com/.well-known/jwks.json",
+        "issuer": None,
+        "expected_scope": None,
+    }
+
+    def issue(**overrides) -> str:
+        now = int(time.time())
+        claims = {
+            "aud": "1",
+            "jti": "1234",
+            "iat": now,
+            "nbf": now,
+            "exp": now + 3600,
+            "sub": "1",
+            "scopes": [],
+            "email": "test@gmail.com",
+            "preferred_username": "test@gmail.com",
+        }
+        claims.update(overrides)
+
+        return jwt.encode(
+            claims,
+            private_key.private_bytes(
+                serialization.Encoding.PEM,
+                serialization.PrivateFormat.PKCS8,
+                serialization.NoEncryption(),
+            ).decode(),
+            algorithm="RS256",
+            headers={"kid": kid},
+        )
+
+    yield issue
+
+    context.redis.db.delete("rsa_pem:" + kid)
+    if previous is None:
+        del context.settings.sso_configs["dashboard"]
+    else:  # pragma: no cover
+        context.settings.sso_configs["dashboard"] = previous
+
+
+def test_dashboard_token(dashboard_sso, set_redis):
+    """A Passport access token maps to the user it names."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 200
+        assert response.json()["id"] == "test-user"
+
+
+def test_dashboard_token_rejections(dashboard_sso, set_redis):
+    """Expired, wrong-audience and unsigned variants are all refused."""
+    with TestClient(app) as client:
+        expired = dashboard_sso(iat=1, nbf=1, exp=2)
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + expired}
+        )
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Token error: The token has expired"
+
+        # A different client id belongs to no configured issuer at all.
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso(aud="2")},
+        )
+        assert response.status_code == 403
+        assert (
+            response.json()["detail"]
+            == "Token provided did not map to a valid client ID"
+        )
+
+        # Same claims, signed with a key the issuer does not publish.
+        tampered = jwt.encode(
+            get_unverified_token_claims_(dashboard_sso()),
+            "secret",
+            algorithm="HS256",
+            headers={"kid": "test-dashboard-kid"},
+        )
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + tampered}
+        )
+        assert response.status_code == 403
+
+
+def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
+    """Configuring an issuer makes a token without an `iss` claim invalid."""
+    context.settings.sso_configs["dashboard"][
+        "issuer"
+    ] = "https://dashboard.example.com"
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 403
+
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={
+                "Authorization": "Bearer "
+                + dashboard_sso(iss="https://dashboard.example.com")
+            },
+        )
+        assert response.status_code == 200
+
+
+@pytest.fixture
+def standalone_settings():
+    """Run the API the way a deployment without a dashboard would."""
+    previous = (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    )
+    context.settings.default_user_config_enabled = True
+    context.settings.client_config_enabled = True
+
+    yield context.settings
+
+    (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    ) = previous
+
+
+def test_auth_without_dashboard_config(standalone_settings):
+    """An API key for an unsynced user still resolves to a usable config."""
+    api_key = "standalone-api-key"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 200
+
+        config = response.json()
+        # No organisation exists to belong to, and nulls are stripped from the
+        # response, so the key is absent rather than null.
+        assert "organization_id" not in config
+        assert config["config_hash"]
+
+        # Stable across calls, so a client can tell a stale copy from a fresh one.
+        again = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert again.json()["config_hash"] == config["config_hash"]
+
+        # And the check endpoint works for the same key.
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Wir suchen einen Ninja Programmierer."},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+        assert len(response.json()["results"])
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_default_user_config_flags(standalone_settings):
+    """The configured defaults take effect whether or not clients may set them."""
+    email = "nobody-synced-me@example.com"
+    standalone_settings.default_user_llm_alternatives = True
+
+    try:
+        # Clients may set the flags, so the default is only a starting point.
+        request_in = CheckRequestIn(text="Hello world.")
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is False
+
+        # Clients may not, so the default is the last word.
+        standalone_settings.client_config_enabled = False
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+    finally:
+        standalone_settings.default_user_llm_alternatives = False
+
+
+def test_auth_without_dashboard_config_disabled():
+    """Without the flag an unsynced user keeps being rejected."""
+    api_key = "standalone-api-key-off"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 403
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config(standalone_settings, set_redis):
+    """`store_context` and `llm_alternatives` follow the request when allowed."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    # default@gmail.com's organisation forces neither of the two.
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is False
+    assert request_in.config.llm_alternatives is True
+
+    # An organisation that does force them keeps the last word.
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": False},
+    )
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is True
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config_disabled(set_redis):
+    """With the flag off the server keeps deciding both."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is False
+
+
+def test_categories():
+    """The category list is public and cacheable."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/categories")
+        assert response.status_code == 200
+        # The security middleware must not have clobbered this with no-cache.
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        payload = response.json()
+        categories = {category["key"]: category for category in payload["categories"]}
+
+        # Every reported key is one the check endpoint accepts as disabled.
+        assert set(categories) <= set(get_category_keys())
+
+        assert categories["sexism"]["parent"] == "gender-orientation"
+        assert categories["sexism"]["advanced_key"] == "sexism_advanced"
+        assert categories["orthography"]["advanced_key"] is None
+        assert categories["sexism"]["label"] == "Sexism"
+
+        groups = {group["key"]: group for group in payload["groups"]}
+        assert set(category["parent"] for category in categories.values()) == set(
+            groups
+        )
+        assert groups["gender-orientation"]["label"] == "Gender + Orientation"
+
+        response = client.get("/v2.0/categories", params={"locale": "de-DE"})
+        assert response.status_code == 200
+
+        german = {
+            category["key"]: category for category in response.json()["categories"]
+        }
+        assert set(german) == set(categories)
+        assert german["sexism"]["label"] not in (
+            None,
+            "",
+            categories["sexism"]["label"],
+        )
+
+
+def test_require_auth_off():
+    """A deployment can choose to check text for anyone who asks."""
+    text = {"text": "Wir suchen einen Ninja Programmierer."}
+
+    with TestClient(app) as client:
+        # The default: no user, no results, but still a 200 so a client that has
+        # been signed out keeps working.
+        response = client.post("/v2.4/check", json=text)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+        context.settings.require_auth = False
+        try:
+            response = client.post("/v2.4/check", json=text)
+            assert response.status_code == 200
+            assert len(response.json()["results"])
+        finally:
+            context.settings.require_auth = True
+
+
+def test_management_auth():
+    """The endpoints that mint credentials are closed unless told otherwise."""
+    with TestClient(app) as client:
+        context.settings.management_auth_enabled = True
+        try:
+            response = client.post(
+                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+            )
+            assert response.status_code == 401
+
+            # The settings object carries every secret the deployment holds.
+            assert client.get("/settings").status_code == 401
+
+            # `user_email` is a query parameter here, so the caller picks whose
+            # config applies and whose LLM budget is spent.
+            response = client.post(
+                "/v1.0/prompt",
+                params={"user_email": "test@gmail.com"},
+                json={"text": "Hello world."},
+            )
+            assert response.status_code == 401
+
+            # The docs switch is a separate decision and stays where it was.
+            assert context.settings.api_docs_auth_enabled is False
+        finally:
+            context.settings.management_auth_enabled = False
+
+        assert context.redis.get_api_key_email("should-not-exist") is None
+
+
+@pytest.fixture
+def llm_access():
+    """Set the LLM access policy for one test and put it back afterwards."""
+    previous = (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    )
+
+    def set_access(access, allowed_users=None):
+        context.settings.llm_access = access
+        context.settings.llm_allowed_users = allowed_users or []
+        # A deployment with no model configured has no LLM whatever the policy
+        # says, so naming one is what makes the policy observable at all.
+        context.settings.llm_model = "bedrock/some.model"
+
+        return context.settings
+
+    yield set_access
+
+    (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    ) = previous
+
+
+@pytest.mark.asyncio
+async def test_llm_access_disabled(llm_access, standalone_settings, set_redis):
+    """Nothing turns LLM alternatives on once the operator says no."""
+    llm_access(LlmAccessType.DISABLED)
+
+    # Not the client...
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # ...and not an organisation that forces them on either.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # Nor the debug routes, which resolve no user at all.
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_access_users(llm_access, standalone_settings, set_redis):
+    """`users` allows whoever the request resolved to, or only the named ones."""
+    settings = llm_access(LlmAccessType.USERS)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # No user resolved, so there is nobody to allow.
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+    # An allowlist narrows it to the named emails, matched case-insensitively.
+    llm_access(LlmAccessType.USERS, ["Default@Gmail.com"])
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # test@gmail.com's organisation forces them on, and still does not get them.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert settings.llm_allowed_users == ["Default@Gmail.com"]
+
+
+@pytest.mark.asyncio
+async def test_llm_access_everyone(llm_access, standalone_settings):
+    """`everyone` covers requests that resolved to no user at all."""
+    llm_access(LlmAccessType.EVERYONE)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is True
+
+    # Still opt-in: the policy permits the spend, it does not ask for it.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+
+def test_llm_access_rephrase(llm_access, set_redis):
+    """The policy reaches the endpoint that actually spends the tokens."""
+    llm_access(LlmAccessType.DISABLED)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase",
+            json={
+                "sentence": "The chairman called.",
+                "text": "The chairman called.",
+                "start": 0,
+                "alternatives": [],
+                "lang": "en",
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+        # test@gmail.com's organisation forces llm_alternatives on, so without
+        # the policy this would have reached the LLM.
+        assert response.status_code == 403
+
+
+@pytest.fixture
+def llm_calls(monkeypatch):
+    """Capture what would have been sent to a provider, without calling one."""
+    calls = []
+
+    class Message:
+        content = "a reply"
+
+    class Choice:
+        message = Message()
+
+    class Response:
+        choices = [Choice()]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+    return calls
+
+
+@pytest.mark.asyncio
+async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
+    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
+
+    prompt = Prompt(context.settings)
+    result = await prompt.handle("say something", "be brief")
+    assert result == "a reply"
+
+    call = llm_calls[0]
+    assert call["model"] == "bedrock/some.model"
+    assert call["messages"] == [
+        {"role": "system", "content": "be brief"},
+        {"role": "user", "content": "say something"},
+    ]
+    # Bedrock signs with a key pair, so the bearer token is not offered to it.
+    assert "api_key" not in call
+
+    monkeypatch.setattr(context.settings, "aws_key", "an-id")
+    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
+    await prompt.handle("say something")
+    assert llm_calls[1]["aws_access_key_id"] == "an-id"
+
+    # An unset key pair has to stay unset so an instance role can take over.
+    monkeypatch.setattr(context.settings, "aws_key", "")
+    await prompt.handle("say something")
+    assert "aws_access_key_id" not in llm_calls[2]
+
+
+@pytest.mark.asyncio
+async def test_llm_unconfigured_model(set_redis, monkeypatch):
+    """No model configured is no LLM, rather than a call that fails."""
+    monkeypatch.setattr(context.settings, "llm_model", "")
+
+    # test@gmail.com's organisation forces llm_alternatives on.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_provider_switch(llm_calls, monkeypatch):
+    """Pointing at another provider is a config change and nothing else."""
+    monkeypatch.setattr(context.settings, "llm_model", "openrouter/some/model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "a-key")
+    monkeypatch.setattr(context.settings, "llm_api_base", "https://example.com/v1")
+
+    await Prompt(context.settings).handle("say something")
+
+    call = llm_calls[0]
+    assert call["model"] == "openrouter/some/model"
+    assert call["api_key"] == "a-key"
+    assert call["api_base"] == "https://example.com/v1"
+    # The AWS key pair is not offered to a provider that cannot use it.
+    assert "aws_access_key_id" not in call
+    # An omitted system prompt still gets the inclusive-language default.
+    assert "inclusive language" in call["messages"][0]["content"]
+
+
+@pytest.mark.asyncio
+async def test_llm_model_override(llm_calls):
+    """The debug routes' per-request model wins over the configured one."""
+    await Prompt(context.settings).handle("hi", None, "anthropic/some-model")
+
+    assert llm_calls[0]["model"] == "anthropic/some-model"
+    assert "aws_access_key_id" not in llm_calls[0]
+
+
+def test_config_options():
+    """Every reported value is one a check request is allowed to send."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/config-options")
+        assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        options = response.json()["options"]
+        assert set(options) == {
+            "german_gender_ending",
+            "french_gender_separator",
+            "gendered_roles_format",
+        }
+
+        for field, option in options.items():
+            assert option["default"] in option["values"]
+
+            for value in option["values"]:
+                # The model is the same one /v2.4/check validates against, so a
+                # reported value that it rejects would be a contradiction.
+                assert Config(**{field: value})
+
+            rejected = client.post(
+                "/v2.4/check", json={"text": "Hello.", "config": {field: "not-a-value"}}
+            )
+            assert rejected.status_code == 422
+
+        assert "*in" in options["german_gender_ending"]["values"]
+        assert options["gendered_roles_format"]["default"] == "both"
+
+        # Every value carries a label, in every locale the API serves. An
+        # unlabelled one would leave an options page showing a bare `(-)`.
+        for locale in LangVariantType:
+            response = client.get(
+                "/v2.0/config-options", params={"locale": locale.value}
+            )
+            assert response.status_code == 200
+
+            for field, option in response.json()["options"].items():
+                assert set(option["labels"]) == set(option["values"]), (locale, field)
+
+        german = client.get("/v2.0/config-options", params={"locale": "de-DE"}).json()[
+            "options"
+        ]["german_gender_ending"]["labels"]
+        assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
+
+
+def test_api_key_mode_options_page(standalone_settings):
+    """The sequence an extension in API-key mode makes from its options page.
+
+    The options page is where a key gets entered in the first place, so the two
+    lists it renders have to come back before there is a key to send.
+    """
+    api_key = "options-page-key"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, "options@example.com")
+
+        # 1. Both lists, with no credential of any kind.
+        categories = client.get("/v2.0/categories").json()
+        assert categories["categories"]
+        options = client.get("/v2.0/config-options").json()["options"]
+
+        # 2. Signed in with the key the user just pasted in.
+        auth = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert auth.status_code == 200
+
+        text = {"text": "Wir suchen einen Ninja Programmierer für unsere Kunden."}
+        results = client.post(
+            "/v2.4/check", json=text, headers={"x-key": api_key}
+        ).json()["results"]
+
+        # A result's `subcategory` is one of the reported keys, or the
+        # `advanced_key` of one: that is what lets a toggle line up with what
+        # the user sees flagged.
+        keys = {}
+        for category in categories["categories"]:
+            keys[category["key"]] = category
+            if category["advanced_key"]:
+                keys[category["advanced_key"]] = category
+
+        reported = {result["subcategory"] for result in results}
+        assert reported
+        assert reported <= set(keys)
+        # The text is chosen to flag an advanced variant, since that is the
+        # case a client gets wrong by assuming one key per toggle.
+        assert any(key.endswith("_advanced") for key in reported)
+
+        # 3. A category switched off on the options page is gone from the next
+        # check, without any dashboard having said so. One toggle means both
+        # keys: the base and the advanced one are matched independently.
+        category = keys[sorted(reported)[0]]
+        off = [key for key in (category["key"], category["advanced_key"]) if key]
+
+        results = client.post(
+            "/v2.4/check",
+            json={**text, "config": {"disabled_categories": off}},
+            headers={"x-key": api_key},
+        ).json()["results"]
+        assert not set(off) & {result["subcategory"] for result in results}
+
+        # 4. A gender ending picked from /v2.0/config-options is honoured.
+        for ending in options["german_gender_ending"]["values"]:
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": "Wir suchen einen Programmierer.",
+                    "config": {"german_gender_ending": ending},
+                },
+                headers={"x-key": api_key},
+            )
+            assert response.status_code == 200
+
+        context.redis.delete_api_key(api_key)

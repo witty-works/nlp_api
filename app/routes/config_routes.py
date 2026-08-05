@@ -6,7 +6,7 @@ Handles organization and user configuration CRUD operations.
 from fastapi import APIRouter, Depends, status
 
 from app.context import AppContext
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import fetch_management_username, get_app_context
 from app.models import (
     ConfResponse,
     ErrorMessage,
@@ -33,7 +33,7 @@ router = APIRouter()
 async def post_organization_configs(
     organization_configs: OrganizationConfRequest,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     organization_configs.term_replacements = parse_term_replacements(
         organization_configs.term_replacements, context
@@ -50,7 +50,7 @@ async def post_organization_configs(
 async def delete_organization_configs(
     organization_id: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     context.redis.db.delete(organization_id)
 
@@ -64,7 +64,7 @@ async def delete_organization_configs(
 async def get_organization_configs(
     organization_id: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     return await context.redis.fetch_organization_configs_from_redis(organization_id)
 
@@ -79,7 +79,7 @@ async def get_organization_configs(
 async def post_user_configs(
     user_configs: UserConfRequest,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     user_configs.term_replacements = parse_term_replacements(
         user_configs.term_replacements, context
@@ -96,7 +96,7 @@ async def post_user_configs(
 async def delete_user_configs(
     email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     context.redis.db.delete(context.redis.get_user_id(email))
 
@@ -110,7 +110,7 @@ async def delete_user_configs(
 async def get_user_configs(
     email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     return await fetch_user_organization_configs(email, context)
 
@@ -125,6 +125,6 @@ async def get_user_configs(
 async def get_user_logs(
     email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     return context.redis.get_user_logs(email)

@@ -11,7 +11,11 @@ from fastapi.security.api_key import APIKeyHeader
 
 from app.context import AppContext
 from app.categories import inclusive_categories
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import (
+    fetch_current_username,
+    fetch_management_username,
+    get_app_context,
+)
 from app.settings import get_settings
 from app.models import CheckRequestIn, PromptOut, Result, ReviewType, Client
 from app.version_validators import REPHRASE_API_VERSION
@@ -72,7 +76,7 @@ async def debug_prompt(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
-    configs = debug_configs(check_request_in)
+    configs = debug_configs(check_request_in, context.settings)
     return await prompt(response, check_request_in, configs, context)
 
 
@@ -87,8 +91,15 @@ async def post_prompt(
     check_request_in: CheckRequestIn,
     user_email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ) -> Result | PromptOut:
+    """Run a prompt on a named user's behalf.
+
+    A trusted-caller endpoint rather than a client-facing one: `user_email` is a
+    query parameter, so whoever calls this picks whose configuration applies and
+    whose LLM budget is spent. That puts it with the management endpoints rather
+    than behind the docs switch, which is off by default.
+    """
     configs = await fetch_configs_for_request(check_request_in, user_email, context)
     if configs == {}:
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -104,12 +115,9 @@ async def prompt(
     configs: dict,
     context: AppContext,
 ) -> Result | PromptOut:
-    if (
-        check_request_in.config.plan is None
-        or not check_request_in.config.plan.startswith("witty_")
-    ):
-        response.status_code = status.HTTP_402_PAYMENT_REQUIRED
-        return Result.factory("Plan missing")
+    if not configs:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config missing")
 
     if not check_request_in.config.llm_alternatives:
         response.status_code = status.HTTP_401_UNAUTHORIZED

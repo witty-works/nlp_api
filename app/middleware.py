@@ -31,7 +31,17 @@ secure_headers = secure.Secure(
 
 async def add_security_headers(request, call_next):
     response = await call_next(request)
+
+    # `secure` overwrites Cache-Control with no-cache, which is right for
+    # everything that depends on who is asking. A route that deliberately sets
+    # its own keeps it — see /v2.0/categories.
+    route_cache_control = response.headers.get("Cache-Control")
+
     await secure_headers.set_headers_async(response)
+
+    if route_cache_control is not None:
+        response.headers["Cache-Control"] = route_cache_control
+
     return response
 
 

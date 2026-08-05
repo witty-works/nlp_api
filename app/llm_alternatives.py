@@ -30,12 +30,6 @@ class LlmAlternatives:
         self,
         rephrase_request_in: RephraseRequestIn,
     ):
-        aws_model_id = (
-            self.settings.aws_model_id
-            if rephrase_request_in.model is None
-            else rephrase_request_in.model
-        )
-
         placeholder = "|---|"
         sentence = rephrase_request_in.sentence
         alternatives = []
@@ -232,7 +226,11 @@ class LlmAlternatives:
             + json.dumps(input_data)
         )
 
-        result = await self.prompt.handle(user_prompt, system_prompt, aws_model_id)
+        # `model` is a debug-only override; it is None for every other caller,
+        # and Prompt falls back to the configured one.
+        result = await self.prompt.handle(
+            user_prompt, system_prompt, rephrase_request_in.model
+        )
         result = self.prompt.parse_json(result)
 
         separator, noun_separator, separate_gender_plural = (

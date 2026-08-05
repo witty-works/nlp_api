@@ -100,17 +100,25 @@ class Language(object):
 class MetricsType(str, Enum):
     ALL = "all"
     AUTH_COUNTS = "auth_counts"
-    AUTH_PLANS = "auth_plans"
     AUTH_HOST = "auth_host"
     CHECK_COUNTS = "check_counts"
-    CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
-    REPHRASE_PLANS = "rephrase_plans"
     REPHRASE_HOST = "rephrase_host"
     PROMPT_COUNTS = "prompt_counts"
-    PROMPT_PLANS = "prompt_plans"
     PROMPT_HOST = "prompt_host"
+
+
+class LlmAccessType(str, Enum):
+    """Who a deployment is willing to spend LLM tokens on."""
+
+    # No LLM calls at all, whatever any config asks for.
+    DISABLED = "disabled"
+    # Anyone the request resolves to a user for, optionally narrowed to the
+    # emails in `llm_allowed_users`.
+    USERS = "users"
+    # Anyone who can reach the API, resolved user or not.
+    EVERYONE = "everyone"
 
 
 class ContentType(str, Enum):
@@ -514,7 +522,6 @@ class RuleIn(BaseModel):
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
-    plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
@@ -608,6 +615,25 @@ class Config(BaseModel):
             if lang == LangType.DE
             else self.french_gender_separator
         )
+
+    @staticmethod
+    def field_options(*names: str) -> dict:
+        """The accepted values and the default, for enum-typed config fields.
+
+        Read off the model rather than listed out, so a new member of one of
+        those enums cannot be forgotten here.
+        """
+        options = {}
+        for name in names:
+            field = Config.model_fields[name]
+            default = field.default
+
+            options[name] = {
+                "values": [member.value for member in field.annotation],
+                "default": default.value if isinstance(default, Enum) else default,
+            }
+
+        return options
 
     @staticmethod
     def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
@@ -794,7 +820,6 @@ class DomainConfig(BaseModel):
 class ConfRequest(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = Field(default_factory=list)
     term_replacements: dict[str, TermReplacement | dict] = Field(default_factory=dict)
@@ -812,13 +837,14 @@ class UserConfRequest(ConfRequest):
 
 
 class OrganizationConfRequest(ConfRequest):
-    trial_ends_at: Optional[str] = None
+    # No fields of its own; kept as a distinct type so the organisation and
+    # user config endpoints stay separately typed.
+    pass
 
 
 class ConfResponse(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = Field(default_factory=list)
     term_replacements: dict[str, TermReplacement] = Field(default_factory=dict)
@@ -837,7 +863,6 @@ class UserConfResponse(ConfRequest):
     )
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
-    organization_trial_ends_at: Optional[str] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
@@ -1239,16 +1264,44 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: Optional[RuleConfig] = None
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
     domains: Optional[DomainConfig] = None
     organization_domains: Optional[DomainConfig] = None
-    organization_trial_ends_at: Optional[str] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
+
+
+class CategoryGroupOut(BaseModel):
+    key: str
+    label: Optional[str] = None
+
+
+class CategoryOut(CategoryGroupOut):
+    parent: str
+    # The key of the stricter variant, where there is one. Independent of
+    # `key`: switching the category off entirely means disabling both.
+    advanced_key: Optional[str] = None
+    proficiency_level: Optional[str] = None
+
+
+class CategoriesOut(BaseModel):
+    categories: list[CategoryOut]
+    groups: list[CategoryGroupOut]
+
+
+class ConfigOptionOut(BaseModel):
+    values: list[str]
+    default: Optional[str] = None
+    # Value -> display label. Absent for values the dashboard has no wording
+    # for; clients fall back to showing the value itself.
+    labels: dict[str, str] = {}
+
+
+class ConfigOptionsOut(BaseModel):
+    options: dict[str, ConfigOptionOut]
 
 
 class RephrasesOut(BaseModel):

@@ -15,7 +15,7 @@
 ## Configuration and management endpoints
 
 - Store user/organization configs to customize behavior; see [Management Endpoints](./api.md#management-endpoints) and [Configuration](./configuration.md).
-- Docs can be protected via HTTP Basic; see [API docs protection](./configuration.md#api-docs-protection). Core endpoints use OAuth2 or API Keys; see [Authentication](./request-configuration.md#authentication).
+- Docs can be protected via HTTP Basic; see [API docs protection](./configuration.md#api-docs-protection). The endpoints that hand out or expose credentials are protected separately and by default; see [Protecting the management endpoints](./configuration.md#protecting-the-management-endpoints). Core endpoints use OAuth2 or API Keys; see [Authentication](./request-configuration.md#authentication).
 - Relevant code: [app/middleware.py](../app/middleware.py), [app/auth_service.py](../app/auth_service.py).
 
 ### Authentication
@@ -25,11 +25,12 @@ Authentication and authorization are implemented in [app/auth_service.py](../app
 - OAuth2/JWT (primary): JWTs issued by configured identity providers are validated using the provider's JWKS. The implementation:
   - Fetches JWKS with a request timeout and retries using exponential backoff for transient network errors.
   - Parses `Cache-Control: max-age` from JWKS responses and caches the converted RSA public key in Redis with that TTL; a conservative default TTL is used when no max-age is provided.
-  - Validates tokens with algorithm `RS256`, checking `aud` and `iss`; unverified claims are used only to select the right issuer/config, and final validation always verifies the signature and standard claims.
+  - Validates tokens with algorithm `RS256`, checking `aud`, `exp`/`nbf` and, where the issuer defines one, `iss`; unverified claims are used only to select the right issuer/config, and final validation always verifies the signature and standard claims.
+  - Selects the issuer by `aud` alone, then by what the token carries: a B2C policy, a plain JWKS url (the dashboard's Passport tokens), or a `tid` (Entra). Issuers with no client id configured are skipped, so an unset one cannot match a token with an empty audience.
   - Sanitizes and normalizes error responses so remote response bodies are not reflected to clients.
 
 - API keys (fallback and service clients): API-key storage and lookup are centralized in [app/redis.py](../app/redis.py) via `get_api_key_email`, `set_api_key`, and `delete_api_key` helpers. Behavior:
-  - When a hashing secret is configured (`api_key_hmac_key` or `secret_key`), API keys are HMAC-SHA256 hashed before lookup/storage.
+  - When `API_KEY_HMAC_KEY` is configured, API keys are HMAC-SHA256 hashed before lookup/storage.
   - If no secret is configured, the code falls back to plaintext key lookup for backward compatibility; enabling hashing is recommended for production.
 
 Testing / local development:

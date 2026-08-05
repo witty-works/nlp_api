@@ -32,6 +32,29 @@ def get_diversity_dimensions_drivers():
 
 
 @lru_cache()
+def get_config_option_labels() -> dict:
+    """Display labels for the enum-typed config fields, keyed by field.
+
+    Shipped in the same data directory as categories.json and copied from the
+    dashboard the same way, so the wording a user sees in the extension is the
+    wording the dashboard uses. The API's enums stay the authority on which
+    values *exist*; this only says how to name them.
+    """
+    return load_json_data("training_data/config_options.json")
+
+
+def get_config_option_labels_for(field: str, lang: str) -> dict:
+    """Labels for one field in one language, falling back to English.
+
+    A value the dashboard has no label for is simply absent — clients show the
+    raw value, which reads fine for punctuation such as `(-)`.
+    """
+    translations = get_config_option_labels().get(field, {}).get("translations", {})
+
+    return translations.get(lang) or translations.get("en") or {}
+
+
+@lru_cache()
 def get_proficiency_levels():
     return load_json_data("training_data/proficiency_levels.json")
 
@@ -56,6 +79,54 @@ def get_category_keys(only_category_advanced_keys=False):
         return category_advanced_keys
 
     return category_keys + category_advanced_keys
+
+
+def get_category_list(language=None) -> tuple[list[dict], list[dict]]:
+    """The categories a client may switch off, plus the groups they sit in.
+
+    A deployment without the dashboard has nothing to populate
+    `organization_config.categories` with, so this is the only way a client can
+    learn which keys `config.disabled_categories` accepts. Only the drivers are
+    togglable; the dimensions they belong to are reported separately so a client
+    can group and label them without hard-coding the taxonomy.
+
+    `advanced_key` is reported rather than a "has an advanced variant" flag,
+    because the two keys are independent: results come back under whichever one
+    matched, and switching a category off entirely means naming both.
+    """
+    categories = get_categories()
+    advanced_keys = set(get_category_keys(True))
+
+    def label(key):
+        return language._(key, "hs_name") if language is not None else None
+
+    category_list = []
+    group_keys = []
+    for key, data in categories.items():
+        parent = data.get("category")
+        if not parent:
+            # A dimension rather than a driver — it carries no rules of its own.
+            continue
+
+        if parent not in group_keys:
+            group_keys.append(parent)
+
+        advanced_key = make_category_advanced(key)
+        category_list.append(
+            {
+                "key": key,
+                "label": label(key),
+                "parent": parent,
+                "advanced_key": (
+                    advanced_key if advanced_key in advanced_keys else None
+                ),
+                "proficiency_level": get_proficiency_level(key),
+            }
+        )
+
+    groups = [{"key": key, "label": label(key)} for key in group_keys]
+
+    return category_list, groups
 
 
 def get_category_name(category):
