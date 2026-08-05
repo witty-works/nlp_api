@@ -146,7 +146,7 @@ for what each value renders as.
 
 ## Management Endpoints
 
-These endpoints manage user and organization configurations. All require HTTP Basic authentication (configured via `API_DOCS_AUTH_ENABLED`, `API_DOCS_USERNAME`, and `API_DOCS_PASSWORD`).
+These endpoints manage user and organization configurations. All require HTTP Basic authentication, on by default and configured via `MANAGEMENT_AUTH_ENABLED`, `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` — see [Protecting the management endpoints](./configuration.md#protecting-the-management-endpoints).
 
 ### User Configuration
 

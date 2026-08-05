@@ -22,7 +22,16 @@ class Settings(BaseSettings):
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""
+    # Guards /docs and the development helpers: /save_openapi_json, /lemmatize,
+    # /tokenize, /parse-word-types and /debug/*. Separate from the switch below
+    # because reading the schema and minting a credential are not the same
+    # risk. (/openapi.json is served unguarded either way.)
     api_docs_auth_enabled: bool = False
+    # Guards the endpoints that create or read credentials and configuration, or
+    # act on a named user's behalf: /api_key, /user/configs,
+    # /organization/configs, /user/logs, /settings, /lt and /v1.0/prompt.
+    # Defaults to on so an unconfigured deployment is closed rather than open.
+    management_auth_enabled: bool = True
     testing: bool = False
     sentry_dsn: Optional[str] = ""
     sentry_traces_sample_rate: float = 0.0

@@ -11,7 +11,11 @@ from fastapi.exceptions import RequestValidationError
 from starlette.responses import RedirectResponse
 
 from app.models import LangType
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import (
+    fetch_current_username,
+    fetch_management_username,
+    get_app_context,
+)
 from app.context import AppContext
 from app.settings import get_settings, Settings
 from app.text_utils import parse_word_type
@@ -72,7 +76,7 @@ async def get_health(
 
 @router.get("/lt", include_in_schema=not get_settings().is_prod)
 def get_lt(
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
     context: AppContext = Depends(get_app_context),
 ) -> str:
     return context.settings.languagetool_api
@@ -80,7 +84,7 @@ def get_lt(
 
 @router.get("/settings", include_in_schema=not get_settings().is_prod)
 def get_app_settings(
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
     context: AppContext = Depends(get_app_context),
 ) -> Settings:
     return context.settings

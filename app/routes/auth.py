@@ -11,7 +11,7 @@ from fastapi.security.api_key import APIKeyHeader
 
 from app.categories import get_category_list, get_config_option_labels_for
 from app.context import AppContext
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import fetch_management_username, get_app_context
 from app.models import (
     BaseRequestIn,
     CategoriesOut,
@@ -155,7 +155,7 @@ async def get_config_options_2_0(
 async def get_api_key(
     api_key: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     email = context.redis.get_api_key_email(api_key)
     if not email:
@@ -174,7 +174,7 @@ async def post_api_key(
     api_key: str,
     email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     context.redis.set_api_key(api_key, email)
 
@@ -186,6 +186,6 @@ async def post_api_key(
 async def delete_api_key(
     api_key: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ):
     context.redis.delete_api_key(api_key)

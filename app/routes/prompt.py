@@ -11,7 +11,11 @@ from fastapi.security.api_key import APIKeyHeader
 
 from app.context import AppContext
 from app.categories import inclusive_categories
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import (
+    fetch_current_username,
+    fetch_management_username,
+    get_app_context,
+)
 from app.settings import get_settings
 from app.models import CheckRequestIn, PromptOut, Result, ReviewType, Client
 from app.version_validators import REPHRASE_API_VERSION
@@ -87,8 +91,15 @@ async def post_prompt(
     check_request_in: CheckRequestIn,
     user_email: str,
     context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_current_username),
+    username: str = Depends(fetch_management_username),
 ) -> Result | PromptOut:
+    """Run a prompt on a named user's behalf.
+
+    A trusted-caller endpoint rather than a client-facing one: `user_email` is a
+    query parameter, so whoever calls this picks whose configuration applies and
+    whose LLM budget is spent. That puts it with the management endpoints rather
+    than behind the docs switch, which is off by default.
+    """
     configs = await fetch_configs_for_request(check_request_in, user_email, context)
     if configs == {}:
         response.status_code = status.HTTP_401_UNAUTHORIZED

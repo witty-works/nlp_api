@@ -7,6 +7,7 @@
 - [Core settings](#core-settings)
 - [Reducing Resource Usage](#reducing-resource-usage)
 - [API docs protection](#api-docs-protection)
+- [Protecting the management endpoints](#protecting-the-management-endpoints)
 - [Sentry.io](#sentryio)
 - [LanguageTool](#languagetool)
 - [Context Checker](#context-checker)
@@ -240,15 +241,39 @@ This configuration reduces memory usage from ~2-3 GB to ~300-500 MB while mainta
 
 ## API docs protection
 
-Protect `/docs` and `/openapi.json` via HTTP Basic when needed.
+Protect `/docs` and the development helpers (`/save_openapi_json`,
+`/lemmatize`, `/tokenize`, `/parse-word-types`, `/debug/*`) via HTTP Basic when
+needed. `/openapi.json` is served unguarded either way.
 
 | Variable              | Default | Description                                        |
 | --------------------- | ------- | -------------------------------------------------- |
-| API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for Swagger UI and OpenAPI JSON. |
+| API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for the docs UI and dev helpers. |
 | API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
 | API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
 
 ## Sentry.io
+## Protecting the management endpoints
+
+Separate from the docs switch, because reading the schema and minting a
+credential are not the same risk. This one guards `/api_key`, `/user/configs`,
+`/organization/configs`, `/user/logs`, `/settings`, `/lt` and `/v1.0/prompt` —
+the endpoints that hand out or expose credentials and configuration, or act on
+a named user's behalf — and defaults to **on**, so a deployment nobody
+configured is closed rather than open.
+
+`/v1.0/prompt` is in that list because it takes `user_email` as a query
+parameter: whoever calls it picks whose configuration applies and whose LLM
+budget is spent. A caller that already sends basic auth for `/user/configs`,
+as the dashboard does, needs no change.
+
+| Variable                | Default | Description                                                                             |
+| ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development.    |
+
+It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
+there is one pair to configure rather than two. With auth enabled and no
+password set, those endpoints answer 500 rather than letting anyone through.
+
 
 Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=true`, Sentry is disabled.
 

@@ -2683,3 +2683,36 @@ def test_config_options():
             "options"
         ]["german_gender_ending"]["labels"]
         assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
+
+
+        assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
+
+
+def test_management_auth():
+    """The endpoints that mint credentials are closed unless told otherwise."""
+    with TestClient(app) as client:
+        context.settings.management_auth_enabled = True
+        try:
+            response = client.post(
+                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+            )
+            assert response.status_code == 401
+
+            # The settings object carries every secret the deployment holds.
+            assert client.get("/settings").status_code == 401
+
+            # `user_email` is a query parameter here, so the caller picks whose
+            # config applies and whose LLM budget is spent.
+            response = client.post(
+                "/v1.0/prompt",
+                params={"user_email": "test@gmail.com"},
+                json={"text": "Hello world."},
+            )
+            assert response.status_code == 401
+
+            # The docs switch is a separate decision and stays where it was.
+            assert context.settings.api_docs_auth_enabled is False
+        finally:
+            context.settings.management_auth_enabled = False
+
+        assert context.redis.get_api_key_email("should-not-exist") is None

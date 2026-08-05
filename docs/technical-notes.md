@@ -15,7 +15,7 @@
 ## Configuration and management endpoints
 
 - Store user/organization configs to customize behavior; see [Management Endpoints](./api.md#management-endpoints) and [Configuration](./configuration.md).
-- Docs can be protected via HTTP Basic; see [API docs protection](./configuration.md#api-docs-protection). Core endpoints use OAuth2 or API Keys; see [Authentication](./request-configuration.md#authentication).
+- Docs can be protected via HTTP Basic; see [API docs protection](./configuration.md#api-docs-protection). The endpoints that hand out or expose credentials are protected separately and by default; see [Protecting the management endpoints](./configuration.md#protecting-the-management-endpoints). Core endpoints use OAuth2 or API Keys; see [Authentication](./request-configuration.md#authentication).
 - Relevant code: [app/middleware.py](../app/middleware.py), [app/auth_service.py](../app/auth_service.py).
 
 ### Authentication
