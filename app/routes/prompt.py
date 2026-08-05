@@ -76,7 +76,7 @@ async def debug_prompt(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ) -> Result | PromptOut:
-    configs = debug_configs(check_request_in)
+    configs = debug_configs(check_request_in, context.settings)
     return await prompt(response, check_request_in, configs, context)
 
 

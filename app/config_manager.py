@@ -13,6 +13,7 @@ from app.models import (
     BaseRequestIn,
     CheckRequestIn,
     LangType,
+    LlmAccessType,
     ResultConf,
     RuleConfig,
 )
@@ -246,6 +247,44 @@ def apply_configs(
     check_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
 
+def llm_available(settings: Settings, model: Optional[str] = None) -> bool:
+    """Whether this deployment can reach an LLM at all, for anybody.
+
+    No model configured means there is nothing to reach, which is treated the
+    same as having turned LLM use off: refused rather than attempted, so an
+    unconfigured deployment answers 403 instead of failing at the provider.
+    """
+    return settings.llm_access != LlmAccessType.DISABLED and bool(
+        settings.resolve_llm_model(model)
+    )
+
+
+def llm_alternatives_allowed(settings: Settings, user_email: Optional[str]) -> bool:
+    """Whether this request may spend the deployment's LLM budget.
+
+    The operator's call, and the last word: LLM calls are billed to whoever runs
+    the API, so neither a client asking for them nor a dashboard `force` rule
+    can turn them on where this says no.
+    """
+    if not llm_available(settings):
+        return False
+
+    if settings.llm_access == LlmAccessType.EVERYONE:
+        return True
+
+    if not user_email:
+        return False
+
+    if not settings.llm_allowed_users:
+        return True
+
+    # An API key is its user's email by this point, so one list covers a key and
+    # a dashboard login alike.
+    return user_email.lower() in {
+        allowed.lower().strip() for allowed in settings.llm_allowed_users
+    }
+
+
 async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email: Optional[str], context: AppContext
 ) -> dict:
@@ -284,6 +323,10 @@ async def fetch_configs_for_request(
                     configs["false_positives"] + configs["organization_false_positives"]
                 )
             )
+
+    # Last, so that it overrules both the client and any synced config.
+    if not llm_alternatives_allowed(context.settings, user_email):
+        request_in.config.__setattr__("llm_alternatives", False)
 
     return configs
 
@@ -362,7 +405,7 @@ def fetch_result_conf(configs: dict) -> ResultConf | None:
     )
 
 
-def debug_configs(request_in: BaseRequestIn) -> dict:
+def debug_configs(request_in: BaseRequestIn, settings: Settings) -> dict:
     if "none" in request_in.config.disabled_categories:
         request_in.config.__setattr__("disabled_categories", [])
     elif request_in.config.disabled_categories == []:
@@ -372,7 +415,10 @@ def debug_configs(request_in: BaseRequestIn) -> dict:
 
     configs = {
         "categories": {},
-        "llm_alternatives": {"status": "suggestion", "value": True},
+        # The debug routes have no user to resolve, so `users` cannot be checked
+        # against anything — they sit behind their own basic auth instead. What
+        # still applies is whether the deployment has an LLM at all.
+        "llm_alternatives": {"status": "suggestion", "value": llm_available(settings)},
     }
     apply_configs(request_in, configs)
 

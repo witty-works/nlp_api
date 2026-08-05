@@ -14,7 +14,9 @@
   - [Local SetFit Models](#local-setfit-models)
   - [Remote API](#remote-api)
 - [Redis](#redis)
-- [AWS (LLM-assisted alternatives and rephrasing)](#aws-llm-assisted-alternatives-and-rephrasing)
+- [LLM provider (LLM-assisted alternatives and rephrasing)](#llm-provider-llm-assisted-alternatives-and-rephrasing)
+  - [AWS Bedrock](#aws-bedrock)
+  - [Who may spend the LLM budget](#who-may-spend-the-llm-budget)
 - [Slack](#slack)
 - [Authentication](#authentication)
 - [Platform.sh](#platformsh)
@@ -126,17 +128,12 @@ By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg
 
 ### Disabling LLM-Assisted Rephrasing
 
-The AWS Bedrock integration for LLM-powered alternatives and rephrasing is optional and disabled by default when AWS credentials are not configured.
+LLM-powered alternatives and rephrasing are optional.
 
 **To ensure it's disabled:**
 
-Simply omit or leave empty the AWS configuration variables in your `.env`:
-
 ```bash
-AWS_REGION_NAME=
-AWS_KEY=
-AWS_SECRET_KEY=
-AWS_MODEL_ID=
+LLM_ACCESS=disabled
 ```
 
 That is the switch to use: it refuses the call whatever any config asks for, so
@@ -150,7 +147,7 @@ declining them.
 - Eliminates external API latency
 - LLM routes (`/v1.0/rephrase`, `/v1.0/prompt`) will return appropriate error responses
 
-**Note:** LLM features are also restricted by plan-level feature flags in user/organization configs, so even with AWS configured, users need explicit access.
+**Note:** LLM features are also gated by `LLM_ACCESS` and by the `llm_alternatives` flag in the user/organization config, so even with a provider configured, users need explicit access. See [Who may spend the LLM budget](#who-may-spend-the-llm-budget).
 
 ### Disabling Context Checker (False Positive Filtering)
 
@@ -421,9 +418,44 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 
 Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
 
-## AWS (LLM-assisted alternatives and rephrasing)
+## LLM provider (LLM-assisted alternatives and rephrasing)
 
-Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). These routes are restricted by plan and feature flags in configs; in debug mode you can test locally.
+Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). In debug mode you can test locally.
+
+Calls go through [LiteLLM](https://docs.litellm.ai/docs/providers), so the
+provider is the prefix of the model identifier and switching providers is a
+config change:
+
+| Variable       | Default  | Description                                                                                        |
+| -------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
+| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
+| `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
+
+```bash
+# Anthropic directly
+LLM_MODEL="anthropic/claude-sonnet-4-5"
+LLM_API_KEY="sk-ant-…"
+
+# Anything OpenAI-compatible you host yourself
+LLM_MODEL="openai/my-model"
+LLM_API_BASE="http://localhost:8000/v1"
+```
+
+Parameters a given provider does not support are dropped rather than raising, so
+the same `max_tokens` / `temperature` / `top_p` settings work across all of them.
+
+There is no default model — no one identifier is reachable from every
+deployment. Leaving `LLM_MODEL` empty is a valid configuration meaning "this
+deployment has no LLM": the features are refused the same way
+`LLM_ACCESS=disabled` refuses them, rather than failing a call at the provider.
+
+### AWS Bedrock
+
+Bedrock keeps its own settings because it signs with a key pair and a region
+rather than a bearer token — `LLM_API_KEY` is not used for it. Leave `AWS_KEY`
+and `AWS_SECRET_KEY` empty to let an instance role supply the credentials
+instead. The model still comes from `LLM_MODEL`, as `bedrock/<model id>`.
 
 | Variable        | Default                            | Description                                                   |
 | --------------- | ---------------------------------- | ------------------------------------------------------------- |

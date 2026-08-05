@@ -109,6 +109,18 @@ class MetricsType(str, Enum):
     PROMPT_HOST = "prompt_host"
 
 
+class LlmAccessType(str, Enum):
+    """Who a deployment is willing to spend LLM tokens on."""
+
+    # No LLM calls at all, whatever any config asks for.
+    DISABLED = "disabled"
+    # Anyone the request resolves to a user for, optionally narrowed to the
+    # emails in `llm_allowed_users`.
+    USERS = "users"
+    # Anyone who can reach the API, resolved user or not.
+    EVERYONE = "everyone"
+
+
 class ContentType(str, Enum):
     ADVANCED = "advanced"
     VIDEO = "video"

@@ -13,7 +13,10 @@ from app.main import (
     app,
     context,
 )
+from app.categories import get_category_keys
+from app.prompt import Prompt
 from app.config_manager import (
+    debug_configs,
     fetch_configs_for_request,
     parse_term_replacements,
 )
@@ -29,6 +32,7 @@ from app.models import (
     LangVariantType,
     LangWithAutoType,
     CheckRequestIn,
+    LlmAccessType,
 )
 
 tokens = {
@@ -2599,6 +2603,8 @@ async def test_client_settable_config_disabled(set_redis):
 
     assert request_in.config.store_context is True
     assert request_in.config.llm_alternatives is False
+
+
 def test_categories():
     """The category list is public and cacheable."""
     with TestClient(app) as client:
@@ -2638,6 +2644,251 @@ def test_categories():
         )
 
 
+def test_management_auth():
+    """The endpoints that mint credentials are closed unless told otherwise."""
+    with TestClient(app) as client:
+        context.settings.management_auth_enabled = True
+        try:
+            response = client.post(
+                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+            )
+            assert response.status_code == 401
+
+            # The settings object carries every secret the deployment holds.
+            assert client.get("/settings").status_code == 401
+
+            # `user_email` is a query parameter here, so the caller picks whose
+            # config applies and whose LLM budget is spent.
+            response = client.post(
+                "/v1.0/prompt",
+                params={"user_email": "test@gmail.com"},
+                json={"text": "Hello world."},
+            )
+            assert response.status_code == 401
+
+            # The docs switch is a separate decision and stays where it was.
+            assert context.settings.api_docs_auth_enabled is False
+        finally:
+            context.settings.management_auth_enabled = False
+
+        assert context.redis.get_api_key_email("should-not-exist") is None
+
+
+@pytest.fixture
+def llm_access():
+    """Set the LLM access policy for one test and put it back afterwards."""
+    previous = (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    )
+
+    def set_access(access, allowed_users=None):
+        context.settings.llm_access = access
+        context.settings.llm_allowed_users = allowed_users or []
+        # A deployment with no model configured has no LLM whatever the policy
+        # says, so naming one is what makes the policy observable at all.
+        context.settings.llm_model = "bedrock/some.model"
+
+        return context.settings
+
+    yield set_access
+
+    (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    ) = previous
+
+
+@pytest.mark.asyncio
+async def test_llm_access_disabled(llm_access, standalone_settings, set_redis):
+    """Nothing turns LLM alternatives on once the operator says no."""
+    llm_access(LlmAccessType.DISABLED)
+
+    # Not the client...
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # ...and not an organisation that forces them on either.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # Nor the debug routes, which resolve no user at all.
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_access_users(llm_access, standalone_settings, set_redis):
+    """`users` allows whoever the request resolved to, or only the named ones."""
+    settings = llm_access(LlmAccessType.USERS)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # No user resolved, so there is nobody to allow.
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+    # An allowlist narrows it to the named emails, matched case-insensitively.
+    llm_access(LlmAccessType.USERS, ["Default@Gmail.com"])
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # test@gmail.com's organisation forces them on, and still does not get them.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert settings.llm_allowed_users == ["Default@Gmail.com"]
+
+
+@pytest.mark.asyncio
+async def test_llm_access_everyone(llm_access, standalone_settings):
+    """`everyone` covers requests that resolved to no user at all."""
+    llm_access(LlmAccessType.EVERYONE)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is True
+
+    # Still opt-in: the policy permits the spend, it does not ask for it.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+
+def test_llm_access_rephrase(llm_access, set_redis):
+    """The policy reaches the endpoint that actually spends the tokens."""
+    llm_access(LlmAccessType.DISABLED)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase",
+            json={
+                "sentence": "The chairman called.",
+                "text": "The chairman called.",
+                "start": 0,
+                "alternatives": [],
+                "lang": "en",
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+        # test@gmail.com's organisation forces llm_alternatives on, so without
+        # the policy this would have reached the LLM.
+        assert response.status_code == 403
+
+
+@pytest.fixture
+def llm_calls(monkeypatch):
+    """Capture what would have been sent to a provider, without calling one."""
+    calls = []
+
+    class Message:
+        content = "a reply"
+
+    class Choice:
+        message = Message()
+
+    class Response:
+        choices = [Choice()]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+    return calls
+
+
+@pytest.mark.asyncio
+async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
+    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
+
+    prompt = Prompt(context.settings)
+    result = await prompt.handle("say something", "be brief")
+    assert result == "a reply"
+
+    call = llm_calls[0]
+    assert call["model"] == "bedrock/some.model"
+    assert call["messages"] == [
+        {"role": "system", "content": "be brief"},
+        {"role": "user", "content": "say something"},
+    ]
+    # Bedrock signs with a key pair, so the bearer token is not offered to it.
+    assert "api_key" not in call
+
+    monkeypatch.setattr(context.settings, "aws_key", "an-id")
+    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
+    await prompt.handle("say something")
+    assert llm_calls[1]["aws_access_key_id"] == "an-id"
+
+    # An unset key pair has to stay unset so an instance role can take over.
+    monkeypatch.setattr(context.settings, "aws_key", "")
+    await prompt.handle("say something")
+    assert "aws_access_key_id" not in llm_calls[2]
+
+
+@pytest.mark.asyncio
+async def test_llm_unconfigured_model(set_redis, monkeypatch):
+    """No model configured is no LLM, rather than a call that fails."""
+    monkeypatch.setattr(context.settings, "llm_model", "")
+
+    # test@gmail.com's organisation forces llm_alternatives on.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_provider_switch(llm_calls, monkeypatch):
+    """Pointing at another provider is a config change and nothing else."""
+    monkeypatch.setattr(context.settings, "llm_model", "openrouter/some/model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "a-key")
+    monkeypatch.setattr(context.settings, "llm_api_base", "https://example.com/v1")
+
+    await Prompt(context.settings).handle("say something")
+
+    call = llm_calls[0]
+    assert call["model"] == "openrouter/some/model"
+    assert call["api_key"] == "a-key"
+    assert call["api_base"] == "https://example.com/v1"
+    # The AWS key pair is not offered to a provider that cannot use it.
+    assert "aws_access_key_id" not in call
+    # An omitted system prompt still gets the inclusive-language default.
+    assert "inclusive language" in call["messages"][0]["content"]
+
+
+@pytest.mark.asyncio
+async def test_llm_model_override(llm_calls):
+    """The debug routes' per-request model wins over the configured one."""
+    await Prompt(context.settings).handle("hi", None, "anthropic/some-model")
+
+    assert llm_calls[0]["model"] == "anthropic/some-model"
+    assert "aws_access_key_id" not in llm_calls[0]
+
+
 def test_config_options():
     """Every reported value is one a check request is allowed to send."""
     with TestClient(app) as client:
@@ -2667,7 +2918,6 @@ def test_config_options():
 
         assert "*in" in options["german_gender_ending"]["values"]
         assert options["gendered_roles_format"]["default"] == "both"
-
         # Every value carries a label, in every locale the API serves. An
         # unlabelled one would leave an options page showing a bare `(-)`.
         for locale in LangVariantType:
@@ -2686,33 +2936,3 @@ def test_config_options():
 
 
         assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
-
-
-def test_management_auth():
-    """The endpoints that mint credentials are closed unless told otherwise."""
-    with TestClient(app) as client:
-        context.settings.management_auth_enabled = True
-        try:
-            response = client.post(
-                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
-            )
-            assert response.status_code == 401
-
-            # The settings object carries every secret the deployment holds.
-            assert client.get("/settings").status_code == 401
-
-            # `user_email` is a query parameter here, so the caller picks whose
-            # config applies and whose LLM budget is spent.
-            response = client.post(
-                "/v1.0/prompt",
-                params={"user_email": "test@gmail.com"},
-                json={"text": "Hello world."},
-            )
-            assert response.status_code == 401
-
-            # The docs switch is a separate decision and stays where it was.
-            assert context.settings.api_docs_auth_enabled is False
-        finally:
-            context.settings.management_auth_enabled = False
-
-        assert context.redis.get_api_key_email("should-not-exist") is None

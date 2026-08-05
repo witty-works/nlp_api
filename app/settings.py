@@ -3,7 +3,7 @@ from functools import lru_cache
 import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from app.models import LangType
+from app.models import LangType, LlmAccessType
 from platformshconfig import Config
 
 
@@ -119,10 +119,38 @@ class Settings(BaseSettings):
     import_from_dump: bool = True
     log_missing_declension: bool = True
     log_metrics: Optional[bool] = False
+    # Bedrock credentials. Still their own settings rather than LLM_API_KEY
+    # because Bedrock signs with a key pair and a region, and because a
+    # deployment on AWS may have none of them set and rely on an instance role.
     aws_region_name: Optional[str] = ""
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
-    aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
+
+    # Which model to talk to, as a LiteLLM identifier — the provider is the
+    # prefix: `bedrock/…`, `anthropic/…`, `openai/…`, `openrouter/…`. No
+    # default: there is no model every deployment can reach, and guessing one
+    # would turn a missing setting into a runtime error against someone else's
+    # endpoint. Unset simply means this deployment has no LLM.
+    llm_model: Optional[str] = ""
+    llm_api_key: Optional[str] = ""
+    # Only for a provider that is not at its vendor's own address: a self-hosted
+    # vLLM or Ollama, a gateway, an Azure deployment.
+    llm_api_base: Optional[str] = ""
+
+    # Who the deployment is willing to spend LLM tokens on. `users` — the
+    # default — means anyone the request resolves to a user for.
+    # `llm_allowed_users` narrows that to named emails; an API key counts as
+    # the email it maps to, so one list covers both kinds of credential.
+    # Leave it empty to allow every user.
+    llm_access: LlmAccessType = LlmAccessType.USERS
+    llm_allowed_users: list[str] = []
+
+    def resolve_llm_model(self, model: Optional[str] = None) -> str:
+        """The model identifier to hand LiteLLM.
+
+        `model` is the per-request override the debug routes accept.
+        """
+        return model or self.llm_model
 
     def jwks_url(self) -> str:
         """Resolve the dashboard's JWKS document, RFC 8615 path by default."""

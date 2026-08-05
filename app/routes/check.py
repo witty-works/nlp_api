@@ -66,7 +66,7 @@ async def check(
         )
         configs = await fetch_configs_for_request(check_request_in, user_email, context)
     else:
-        configs = debug_configs(check_request_in)
+        configs = debug_configs(check_request_in, context.settings)
 
     context.redis.store_metrics(request, configs, version, "check")
 
