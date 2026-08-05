@@ -12,6 +12,7 @@
   - [Adjust size on platform.sh](#adjust-size-on-platformsh)
 - [Run Locally](#run-locally)
 - [Profiling locally with Blackfire](#profiling-locally-with-blackfire)
+- [Running against a dashboard on Lando](#running-against-a-dashboard-on-lando)
 - [API keys](#api-keys)
 - [Production Deployment](#production-deployment)
 
@@ -198,6 +199,45 @@ https://blackfire.io/docs/php/configuration
 BLACKFIRE_SERVER_ID=""
 BLACKFIRE_SERVER_TOKEN=""
 ```
+
+## Running against a dashboard on Lando
+
+Account mode has the API verify the dashboard's access tokens against
+`{DASHBOARD_URL}/.well-known/jwks.json`. A Lando dashboard serves that over
+HTTPS with a certificate signed by Lando's own CA, which is not in the trust
+store Python uses, so the fetch fails and every sign-in is rejected with:
+
+```
+Failed to fetch RSA keys from issuer
+```
+
+That message is deliberately sanitized — it says nothing about certificates, and
+reads the same as the dashboard being unreachable. The underlying error is
+logged, so `LOGGING_ENABLED=true` shows the real cause:
+
+```
+Fetching RSA keys from https://dashboard.lndo.site/.well-known/jwks.json failed:
+ClientConnectorCertificateError: ... certificate verify failed: unable to get local issuer certificate
+```
+
+The fix is to trust Lando's CA in addition to the normal roots. Python takes one
+bundle, not a directory of extras, so concatenate them and point `SSL_CERT_FILE`
+at the result:
+
+```bash
+cat "$(pdm run python -m certifi)" ~/.lando/certs/LandoCA.crt > .lando-ca-bundle.crt
+export SSL_CERT_FILE="$PWD/.lando-ca-bundle.crt"
+```
+
+`SSL_CERT_FILE` is read by `ssl.create_default_context()`, which is what the
+API's HTTPS session is built from ([app/http.py](../app/http.py)), so it covers
+the JWKS fetch and every other outbound HTTPS call. Export it in the shell that
+starts the API — putting it in `.env` does not work, since that is read by the
+application rather than by the TLS layer.
+
+Regenerate the bundle whenever `certifi` is updated; it is a copy, not a
+reference. Nothing about this is needed for API-key mode, which makes no call
+back to the dashboard.
 
 ## API keys
 

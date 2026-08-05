@@ -25,6 +25,7 @@ SOFTWARE.
 from fastapi import Request
 import jwt
 import base64
+import logging
 import uuid
 import re
 import asyncio
@@ -295,12 +296,22 @@ async def get_rsa_key_(session, kid, url):
                 await asyncio.sleep(backoff_base * (2**attempt))
                 continue
             raise AuthError("Timeout while fetching RSA keys from issuer", 400)
-        except Exception:
+        except Exception as error:
             # For transient network errors, retry a few times.
             if attempt < retries - 1:
                 await asyncio.sleep(backoff_base * (2**attempt))
                 continue
-            # Final failure: sanitize message
+
+            # The client only ever sees the sanitized message, which makes a
+            # misconfiguration hard to place — a self-signed issuer certificate
+            # reads exactly like the issuer being down. Log the real cause.
+            logging.getLogger("nlp_api").error(
+                "Fetching RSA keys from %s failed: %s: %s",
+                url,
+                type(error).__name__,
+                error,
+            )
+
             raise AuthError("Failed to fetch RSA keys from issuer", 400)
 
 

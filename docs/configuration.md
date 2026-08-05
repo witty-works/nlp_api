@@ -536,6 +536,10 @@ and cached in Redis for the lifetime the document's `Cache-Control` header
 allows (one hour when it says nothing), so rotating the dashboard's Passport
 keys needs no redeploy here.
 
+A dashboard behind a self-signed certificate — a local Lando one, for
+instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
+[Running against a dashboard on Lando](./setup.md#running-against-a-dashboard-on-lando).
+
 Azure AD B2C
 | Variable | Description |
 |---|---|
@@ -648,4 +652,8 @@ The signing key is fetched from the JWKS document by the token header's `kid`
 and cached in Redis for the lifetime the document's `Cache-Control` header
 allows (one hour when it says nothing), so rotating the dashboard's Passport
 keys needs no redeploy here.
+
+A dashboard behind a self-signed certificate — a local Lando one, for
+instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
+[Running against a dashboard on Lando](./setup.md#running-against-a-dashboard-on-lando).
 
