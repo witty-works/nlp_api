@@ -1225,9 +1225,9 @@ class ResultOut(BaseModel):
 
             preceding_text = full_text[max(0, start - 5) : start]
             if (
-                re.search(r"^ *$", preceding_text) is not None
-                or re.search(r"\s{3,}}$", preceding_text, re.MULTILINE) is not None
-                or re.search(punctuation + r"\s*$", preceding_text, re.MULTILINE)
+                re.search(r"^ {0,5}$", preceding_text) is not None
+                or re.search(r"\s{3,5}$", preceding_text, re.MULTILINE) is not None
+                or re.search(punctuation + r"\s{0,5}$", preceding_text, re.MULTILINE)
                 is not None
             ):
                 return True

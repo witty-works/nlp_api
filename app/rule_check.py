@@ -968,10 +968,12 @@ class RuleCheck:
             return token_index
 
         if token.lemma_ == "aber" and language.lang == LangType.DE:
+            # Bounded to the 5 characters sliced above; see Result.isUpper.
             preceding_text = full_text[max(0, token.idx - 5) : token.idx]
             if (
-                re.search(r"^ *$", preceding_text) is not None
-                or re.search(r"[.!?:,]\s*$", preceding_text, re.MULTILINE) is not None
+                re.search(r"^ {0,5}$", preceding_text) is not None
+                or re.search(r"[.!?:,]\s{0,5}$", preceding_text, re.MULTILINE)
+                is not None
             ):
                 return token_index
 
