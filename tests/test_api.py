@@ -145,7 +145,7 @@ def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
     "spacy_model_dir",
     get_dirs("tests/test_spacy_model"),
 )
-def test_spacy_model(spacy_model_dir, snapshot):
+def test_spacy_model(spacy_model_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = spacy_model_dir.joinpath("input.json").read_text()
@@ -2052,7 +2052,7 @@ def test_spacy():
     "lemma_case_dir",
     get_dirs("tests/test_lemmatizers"),
 )
-def test_lemmatizer(lemma_case_dir, snapshot):
+def test_lemmatizer(lemma_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = lemma_case_dir.joinpath("input.json").read_text()
