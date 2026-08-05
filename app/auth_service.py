@@ -24,13 +24,12 @@ SOFTWARE.
 
 from fastapi import Request
 import jwt
-import rsa as pyrsa
-import rsa.pem as pyrsa_pem
 import base64
-import struct
 import uuid
 import re
 import asyncio
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi import (
     Request,
     HTTPException,
@@ -123,17 +122,45 @@ async def decode_jwt(
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
+async def decode_jwks_jwt(
+    redis: Redis,
+    session,
+    request: Request,
+    jwks_url: str,
+    client_id: str,
+    issuer: str | None = None,
+    scope: str | None = None,
+):
+    """Verify a token against a plain JWKS document, looked up by `kid`.
+
+    Used for the tokens the dashboard issues via Laravel Passport, which carry
+    neither the tenant id of an Entra token nor a B2C policy — only a `kid` in
+    the header pointing at the issuer's JWKS. The key is fetched and cached by
+    the same path as the Microsoft ones, so a key rotation needs no redeploy.
+    """
+    token = get_token_auth_header(request)
+    rsa_key = await get_rsa_key(redis, session, token, jwks_url)
+
+    return decode_jwt_(token, rsa_key, issuer, client_id, scope)
+
+
 def decode_jwt_(
     token: str,
     rsa_key: dict,
-    issuer: str,
+    issuer: str | None,
     audience: str,
-    scope: str,
+    scope: str | None,
 ):
     try:
+        # `exp` and `nbf` are verified by PyJWT itself. `issuer=None` skips the
+        # issuer check, which is what a Passport token needs — it has no `iss`.
         claims = jwt.decode(
             token, rsa_key, algorithms=["RS256"], audience=audience, issuer=issuer
         )
+    except jwt.MissingRequiredClaimError as error:
+        # Raised when the token omits a claim we asked to be verified, e.g. an
+        # `iss` for an issuer that was configured to emit one.
+        raise AuthError(f"Token error: The {error.claim} claim is missing", 401)
     except jwt.ExpiredSignatureError:
         raise AuthError("Token error: The token has expired", 401)
     except jwt.InvalidIssuerError:
@@ -145,7 +172,12 @@ def decode_jwt_(
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
-    validate_scope_(scope, claims)
+    # An explicit None means the issuer defines no scopes to check against —
+    # Passport's `scopes` claim is a JSON array and empty for our client. An
+    # empty string still fails validation, so a misconfigured Microsoft issuer
+    # keeps being rejected rather than silently accepting every scope.
+    if scope is not None:
+        validate_scope_(scope, claims)
 
     return claims
 
@@ -198,26 +230,25 @@ def get_unverified_token_claims_(token: str):
     return jwt.decode(token, options={"verify_signature": False})
 
 
-# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
-def int_arr_to_long(arr):
-    return int("".join(["%02x" % byte for byte in arr]), 16)
-
-
-# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
 def base64_to_long(data):
     if isinstance(data, str):
         data = data.encode("ascii")
 
-    # urlsafe_b64decode will happily convert b64encoded data
-    _d = base64.urlsafe_b64decode(bytes(data) + b"==")
-    return int_arr_to_long(struct.unpack("%sB" % len(_d), _d))
+    # urlsafe_b64decode will happily convert b64encoded data. JWKS values carry
+    # no padding, and the extra "==" is ignored when none is needed.
+    return int.from_bytes(base64.urlsafe_b64decode(bytes(data) + b"=="), "big")
 
 
-# Inspired by https://github.com/mpdavis/python-jose/blob/master/jose/backends/rsa_backend.py - MIT License
 def convert_to_pem(n, e):
-    rsa_key = pyrsa.PublicKey(e=base64_to_long(e), n=base64_to_long(n))
-    der = rsa_key.save_pkcs1(format="DER")
-    return pyrsa_pem.save_pem(der, pem_marker="RSA PUBLIC KEY")
+    """Turn a JWKS RSA entry into a PEM that PyJWT and Redis can both hold."""
+    public_key = rsa.RSAPublicNumbers(
+        e=base64_to_long(e), n=base64_to_long(n)
+    ).public_key()
+
+    return public_key.public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo,
+    )
 
 
 async def get_rsa_key_(session, kid, url):
@@ -306,6 +337,11 @@ async def fetch_user(
             unverified_claims = get_unverified_token_claims(request)
             for key in settings.sso_configs:
                 config = settings.sso_configs[key]
+                # An unconfigured issuer has an empty client_id, which would
+                # otherwise match any token whose `aud` is missing or empty.
+                if not config.get("client_id"):
+                    continue
+
                 if (
                     "aud" not in unverified_claims
                     or unverified_claims["aud"] != config["client_id"]
@@ -323,6 +359,16 @@ async def fetch_user(
                         config["domain"],
                         config["policy"],
                     )
+                elif "jwks_url" in config:
+                    claims = await decode_jwks_jwt(
+                        redis,
+                        http.ssl_session,
+                        request,
+                        config["jwks_url"],
+                        config["client_id"],
+                        config["issuer"],
+                        config["expected_scope"],
+                    )
                 elif "tid" in unverified_claims:
                     claims = await decode_jwt(
                         redis,
@@ -332,6 +378,10 @@ async def fetch_user(
                         config["client_id"],
                         config["expected_scope"],
                     )
+                else:
+                    # The client id matched but the token carries nothing this
+                    # issuer knows how to verify with.
+                    continue
 
                 return fetch_email_from_claims(claims)
         except Exception as e:

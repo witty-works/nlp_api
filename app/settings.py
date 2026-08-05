@@ -42,6 +42,15 @@ class Settings(BaseSettings):
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
 
+    # Dashboard-issued access tokens (Laravel Passport). Unlike the Microsoft
+    # issuers these carry neither a `tid` nor a B2C policy, so they are verified
+    # against a plain JWKS document looked up by the token header's `kid`.
+    dashboard_client_id: Optional[str] = ""
+    dashboard_url: Optional[str] = ""
+    dashboard_jwks_url: Optional[str] = ""
+    dashboard_issuer: Optional[str] = ""
+    dashboard_expected_scope: Optional[str] = ""
+
     sso_configs: dict[str, dict[str, Optional[str]]] = {}
 
     redis_host: Optional[str] = ""
@@ -54,6 +63,7 @@ class Settings(BaseSettings):
     testing_email: Optional[str] = ""
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
+
     slack_enabled: bool = False
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
@@ -84,6 +94,19 @@ class Settings(BaseSettings):
     aws_secret_key: Optional[str] = ""
     aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
 
+    def jwks_url(self) -> str:
+        """Resolve the dashboard's JWKS document, RFC 8615 path by default."""
+        if self.dashboard_jwks_url:
+            return self.dashboard_jwks_url
+
+        if not self.dashboard_url:
+            raise ValueError(
+                "DASHBOARD_CLIENT_ID is set but neither DASHBOARD_URL nor "
+                "DASHBOARD_JWKS_URL is, so dashboard tokens cannot be verified"
+            )
+
+        return self.dashboard_url.rstrip("/") + "/.well-known/jwks.json"
+
     @staticmethod
     def factory():
         """Construct a fully initialized Settings instance.
@@ -108,6 +131,17 @@ class Settings(BaseSettings):
                 "expected_scope": settings.office_sso_expected_scope,
             },
         }
+
+        if settings.dashboard_client_id:
+            settings.sso_configs["dashboard"] = {
+                "client_id": settings.dashboard_client_id,
+                "jwks_url": settings.jwks_url(),
+                # Passport does not emit an `iss` claim, so issuer verification
+                # is opt-in: setting DASHBOARD_ISSUER turns it into a hard
+                # requirement and tokens without the claim are then rejected.
+                "issuer": settings.dashboard_issuer or None,
+                "expected_scope": settings.dashboard_expected_scope or None,
+            }
 
         if settings.minimum_version_web_ext:
             settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext

@@ -58,10 +58,15 @@ These management endpoints require HTTP Basic authentication (see [API docs prot
 
 ### OAuth2 Bearer Token Authentication
 
-The API supports OAuth2 Bearer token authentication through two providers:
+The API supports OAuth2 Bearer token authentication through three providers:
 
-1. Azure AD B2C (Single-tenant)
-2. Microsoft Office SSO (Multi-tenant)
+1. The dashboard (Laravel Passport, verified against its JWKS document)
+2. Azure AD B2C (Single-tenant)
+3. Microsoft Office SSO (Multi-tenant)
+
+The token's `aud` claim selects which of them verifies it — see
+[Authentication](./configuration.md#authentication) for the variables that
+register each one.
 
 ```bash
 curl -X 'POST' \

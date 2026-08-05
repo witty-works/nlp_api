@@ -423,7 +423,8 @@ Notes
 
 Supported methods:
 
-- API Keys: manage with the `/api_key` endpoints (stored in Redis)
+- API Keys: mint with [bin/api_key.py](../bin/api_key.py) or the `/api_key` endpoints (stored in Redis)
+- Dashboard access tokens (Laravel Passport, verified against a JWKS document)
 - Azure AD B2C (per-tenant)
 - Microsoft Office SSO (multi-tenant)
 
@@ -499,3 +500,21 @@ Also configure Blackfire credentials in `~/.blackfire.ini` or environment variab
 - [Request Configuration & Categories](./request-configuration.md) - Per-request configuration options
 - [API Endpoints](./api.md) - Available endpoints and authentication
 - Back to [📋 Documentation Index](../README.md#documentation-index)
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
+

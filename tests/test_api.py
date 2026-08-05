@@ -1,7 +1,13 @@
+import base64
 import pytest
 import logging
 import json
+import time
 from pathlib import Path
+
+import jwt
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi.testclient import TestClient
 from app.main import (
     app,
@@ -13,6 +19,7 @@ from app.config_manager import (
 )
 from app.auth_service import (
     AuthError,
+    convert_to_pem,
     validate_scope_,
     get_token_,
     get_unverified_token_claims_,
@@ -2302,3 +2309,139 @@ def test_plain_language(plain_language_dir, snapshot, set_redis):
         # Snapshot the return value.
         snapshot.snapshot_dir = plain_language_dir
         snapshot.assert_match(output, "output.json")
+
+
+@pytest.fixture
+def dashboard_sso(request):
+    """Register a dashboard issuer and pre-seed its verification key.
+
+    The RSA PEM is written straight into the cache `get_rsa_key` reads, so the
+    test never reaches out for the JWKS document — the fetch path itself is
+    shared with the Microsoft issuers and covered by their tests.
+    """
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    numbers = private_key.public_key().public_numbers()
+
+    def to_base64_url(value: int) -> str:
+        raw = value.to_bytes((value.bit_length() + 7) // 8, "big")
+        return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
+
+    kid = "test-dashboard-kid"
+    context.redis.db.set(
+        "rsa_pem:" + kid,
+        convert_to_pem(to_base64_url(numbers.n), to_base64_url(numbers.e)),
+    )
+
+    previous = context.settings.sso_configs.get("dashboard")
+    context.settings.sso_configs["dashboard"] = {
+        "client_id": "1",
+        "jwks_url": "https://dashboard.example.com/.well-known/jwks.json",
+        "issuer": None,
+        "expected_scope": None,
+    }
+
+    def issue(**overrides) -> str:
+        now = int(time.time())
+        claims = {
+            "aud": "1",
+            "jti": "1234",
+            "iat": now,
+            "nbf": now,
+            "exp": now + 3600,
+            "sub": "1",
+            "scopes": [],
+            "email": "test@gmail.com",
+            "preferred_username": "test@gmail.com",
+        }
+        claims.update(overrides)
+
+        return jwt.encode(
+            claims,
+            private_key.private_bytes(
+                serialization.Encoding.PEM,
+                serialization.PrivateFormat.PKCS8,
+                serialization.NoEncryption(),
+            ).decode(),
+            algorithm="RS256",
+            headers={"kid": kid},
+        )
+
+    yield issue
+
+    context.redis.db.delete("rsa_pem:" + kid)
+    if previous is None:
+        del context.settings.sso_configs["dashboard"]
+    else:  # pragma: no cover
+        context.settings.sso_configs["dashboard"] = previous
+
+
+def test_dashboard_token(dashboard_sso, set_redis):
+    """A Passport access token maps to the user it names."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 200
+        assert response.json()["id"] == "test-user"
+
+
+def test_dashboard_token_rejections(dashboard_sso, set_redis):
+    """Expired, wrong-audience and unsigned variants are all refused."""
+    with TestClient(app) as client:
+        expired = dashboard_sso(iat=1, nbf=1, exp=2)
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + expired}
+        )
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Token error: The token has expired"
+
+        # A different client id belongs to no configured issuer at all.
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso(aud="2")},
+        )
+        assert response.status_code == 403
+        assert (
+            response.json()["detail"]
+            == "Token provided did not map to a valid client ID"
+        )
+
+        # Same claims, signed with a key the issuer does not publish.
+        tampered = jwt.encode(
+            get_unverified_token_claims_(dashboard_sso()),
+            "secret",
+            algorithm="HS256",
+            headers={"kid": "test-dashboard-kid"},
+        )
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + tampered}
+        )
+        assert response.status_code == 403
+
+
+def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
+    """Configuring an issuer makes a token without an `iss` claim invalid."""
+    context.settings.sso_configs["dashboard"][
+        "issuer"
+    ] = "https://dashboard.example.com"
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 403
+
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={
+                "Authorization": "Bearer "
+                + dashboard_sso(iss="https://dashboard.example.com")
+            },
+        )
+        assert response.status_code == 200
