@@ -2464,3 +2464,136 @@ def test_require_auth_off():
             assert len(response.json()["results"])
         finally:
             context.settings.require_auth = True
+            context.settings.require_auth = True
+
+
+@pytest.fixture
+def standalone_settings():
+    """Run the API the way a deployment without a dashboard would."""
+    previous = (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    )
+    context.settings.default_user_config_enabled = True
+    context.settings.client_config_enabled = True
+
+    yield context.settings
+
+    (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    ) = previous
+
+
+def test_auth_without_dashboard_config(standalone_settings):
+    """An API key for an unsynced user still resolves to a usable config."""
+    api_key = "standalone-api-key"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 200
+
+        config = response.json()
+        # No organisation exists to belong to, and nulls are stripped from the
+        # response, so the key is absent rather than null.
+        assert "organization_id" not in config
+        assert config["config_hash"]
+
+        # Stable across calls, so a client can tell a stale copy from a fresh one.
+        again = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert again.json()["config_hash"] == config["config_hash"]
+
+        # And the check endpoint works for the same key.
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Wir suchen einen Ninja Programmierer."},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+        assert len(response.json()["results"])
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_default_user_config_flags(standalone_settings):
+    """The configured defaults take effect whether or not clients may set them."""
+    email = "nobody-synced-me@example.com"
+    standalone_settings.default_user_llm_alternatives = True
+
+    try:
+        # Clients may set the flags, so the default is only a starting point.
+        request_in = CheckRequestIn(text="Hello world.")
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is False
+
+        # Clients may not, so the default is the last word.
+        standalone_settings.client_config_enabled = False
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+    finally:
+        standalone_settings.default_user_llm_alternatives = False
+
+
+def test_auth_without_dashboard_config_disabled():
+    """Without the flag an unsynced user keeps being rejected."""
+    api_key = "standalone-api-key-off"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 403
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config(standalone_settings, set_redis):
+    """`store_context` and `llm_alternatives` follow the request when allowed."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    # default@gmail.com's organisation forces neither of the two.
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is False
+    assert request_in.config.llm_alternatives is True
+
+    # An organisation that does force them keeps the last word.
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": False},
+    )
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is True
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config_disabled(set_redis):
+    """With the flag off the server keeps deciding both."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is False

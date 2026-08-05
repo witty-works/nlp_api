@@ -59,10 +59,26 @@ class Settings(BaseSettings):
     redis_password: Optional[str] = ""
     redis_log_emails: Optional[str] = ""
     redis_verify_ssl: bool = True
+    api_key_hmac_key: Optional[str] = ""
     testing_api_key: Optional[str] = ""
     testing_email: Optional[str] = ""
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
+
+    # Dashboard-less deployments: users authenticate with an API key and there
+    # is no SyncUserToNlpApi job to populate their config in Redis. When this is
+    # enabled, such a user falls back to the defaults below instead of being
+    # rejected with a 403.
+    default_user_config_enabled: bool = False
+    default_user_store_context: bool = True
+    default_user_llm_alternatives: bool = False
+
+    # Let a request decide `store_context` and `llm_alternatives` for itself. A
+    # `force` rule in a synced user or organisation config still wins, and
+    # `llm_access` below overrules both, so this only hands control to the
+    # client where nothing else has an opinion. Off by default: with a
+    # dashboard, those two are the dashboard's call.
+    client_config_enabled: bool = False
 
     # Whether a request has to resolve to a user before any text is checked.
     # With it off the API answers anyone who can reach it, which is a deliberate

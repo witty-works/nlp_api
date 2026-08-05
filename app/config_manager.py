@@ -1,10 +1,13 @@
 """Configuration management functions for user and organization settings."""
 
+import hashlib
+import json
 from typing import Optional
 
 from fastapi import HTTPException
 
 from app.context import AppContext
+from app.settings import Settings
 from app.text_utils import parse_word_type
 from app.models import (
     BaseRequestIn,
@@ -81,10 +84,68 @@ def parse_term_replacements(
     return term_replacements
 
 
+def build_default_user_configs(email: str, settings: Settings) -> dict:
+    """Configuration for a user nobody ever synced into Redis.
+
+    A deployment without the dashboard has no `SyncUserToNlpApi` job, so an
+    API key resolves to an email that has no stored config at all. Without this
+    fallback `/v2.0/auth` answers 403 and every client concludes it is signed
+    out.
+
+    The two flags are reported as a suggestion where clients may set them for
+    themselves and as a force where they may not, so the configured default is
+    what takes effect either way: a suggestion applies to any request that does
+    not mention the field, and a force to every request.
+    """
+    status = "suggestion" if settings.client_config_enabled else "force"
+    config = {
+        "store_context": {
+            "value": settings.default_user_store_context,
+            "status": status,
+        },
+        "llm_alternatives": {
+            "value": settings.default_user_llm_alternatives,
+            "status": status,
+        },
+        "categories": {},
+        "force_categories": [],
+    }
+
+    configs = {
+        # Stable and non-identifying: this ends up in the metrics hashes, which
+        # the dashboard deployment fills with pseudonymous ids as well.
+        "id": hashlib.sha256(email.lower().encode("utf-8")).hexdigest()[:16],
+        "name": email,
+        "email": email,
+        "organization_id": None,
+        "config": config,
+        "false_positives": [],
+        "term_replacements": {},
+        "domains": None,
+    }
+
+    # Same contract as the dashboard's hash: it only has to change when the
+    # config does, so a client can tell whether its stored copy is stale.
+    configs["config_hash"] = hashlib.md5(
+        json.dumps(configs, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+
+    return configs
+
+
 async def fetch_user_organization_configs(
-    email: str, context: AppContext
+    email: str, context: AppContext, allow_default: bool = False
 ) -> dict | None:
-    configs = await context.redis.fetch_user_configs_from_redis(email)
+    try:
+        configs = await context.redis.fetch_user_configs_from_redis(email)
+    except HTTPException:
+        # Only the request path substitutes defaults. The management endpoints
+        # keep reporting a 404 so "no config is stored for this email" stays
+        # distinguishable from "the stored config happens to be the default".
+        if not (allow_default and context.settings.default_user_config_enabled):
+            raise
+
+        configs = build_default_user_configs(email, context.settings)
 
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
@@ -160,12 +221,18 @@ def apply_configs(
 
                     if force_disables_category and category not in disabled_categories:
                         disabled_categories.append(category)
-        elif config == "store_context":
-            if data["status"] == "force" and not data["value"]:
-                check_request_in.config.__setattr__("store_context", False)
-        elif config == "llm_alternatives":
-            if data["status"] == "force" and data["value"]:
-                check_request_in.config.__setattr__("llm_alternatives", True)
+        elif config in ("store_context", "llm_alternatives"):
+            # Forcing applies in both directions: the client value is the
+            # starting point now that it is no longer overwritten up front, so
+            # a `force: false` has to actually turn the flag off rather than
+            # rely on it already being off. A suggestion only fills in for a
+            # request that never mentioned the field — which is also why the
+            # first config to suggest one wins over any later one.
+            if (
+                data["status"] == "force"
+                or config not in check_request_in.config.model_fields_set
+            ):
+                check_request_in.config.__setattr__(config, bool(data["value"]))
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
 
@@ -182,31 +249,41 @@ def apply_configs(
 async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email: Optional[str], context: AppContext
 ) -> dict:
-    request_in.config.__setattr__("store_context", True)
-    request_in.config.__setattr__("llm_alternatives", False)
     request_in.config.__setattr__(
         "alternatives_max_count", context.settings.alternatives_max_count
     )
 
+    # `store_context` and `llm_alternatives` are only the client's to set where
+    # the deployment says so. Where it does not, they are reset here before any
+    # config is layered on; where it does, a `force` rule in a synced config
+    # still overrules whatever arrived, and `llm_access` overrules everything.
+    if not context.settings.client_config_enabled:
+        request_in.config.__setattr__("store_context", True)
+        request_in.config.__setattr__("llm_alternatives", False)
+
+    configs = {}
     if not user_email:
         request_in.config.__setattr__("disabled_categories", get_category_keys(True))
-    
-        return {}
+    else:
+        try:
+            configs = await fetch_user_organization_configs(user_email, context, True)
+        except HTTPException:
+            # No config to layer on. The endpoints all refuse an empty one, so
+            # there is nothing left to protect against here.
+            pass
 
-    try:
-        configs = await fetch_user_organization_configs(user_email, context)
-    except HTTPException:
-        return {}
+    if configs:
+        apply_configs(request_in, configs["config"])
 
-    apply_configs(request_in, configs["config"])
+        if "organization_config" in configs:
+            apply_configs(request_in, configs["organization_config"], False)
 
-    if "organization_config" in configs:
-        apply_configs(request_in, configs["organization_config"], False)
-
-        configs["term_replacements"] |= configs["organization_term_replacements"]
-        configs["false_positives"] = list(
-            set(configs["false_positives"] + configs["organization_false_positives"])
-        )
+            configs["term_replacements"] |= configs["organization_term_replacements"]
+            configs["false_positives"] = list(
+                set(
+                    configs["false_positives"] + configs["organization_false_positives"]
+                )
+            )
 
     return configs
 

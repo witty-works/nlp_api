@@ -12,6 +12,7 @@
   - [Adjust size on platform.sh](#adjust-size-on-platformsh)
 - [Run Locally](#run-locally)
 - [Profiling locally with Blackfire](#profiling-locally-with-blackfire)
+- [API keys](#api-keys)
 - [Production Deployment](#production-deployment)
 
 ---
@@ -197,6 +198,32 @@ https://blackfire.io/docs/php/configuration
 BLACKFIRE_SERVER_ID=""
 BLACKFIRE_SERVER_TOKEN=""
 ```
+
+## API keys
+
+An `x-key` header is resolved against `api_key:<key>` entries in Redis, which
+the dashboard normally writes. Where there is no dashboard, mint them with:
+
+```bash
+pdm run python -m bin.api_key create user@example.com   # prints the new key
+pdm run python -m bin.api_key list
+pdm run python -m bin.api_key delete <key>
+```
+
+The CLI reads the same environment as the API, so run it wherever `REDIS_HOST`
+points at the deployment's Redis — it refuses to run against the in-memory Redis
+the API falls back to, since those writes would vanish on exit.
+
+Set `API_KEY_HMAC_KEY` to store keys as an HMAC-SHA256 digest rather than
+verbatim, so a Redis dump does not hand out working credentials. Keys minted
+before it was set keep working: lookups fall back to the plaintext entry.
+Revoking then needs the key itself rather than the email, because the plaintext
+cannot be recovered from Redis.
+
+The `/api_key` HTTP endpoints do the same thing, but they are only protected
+when `API_DOCS_AUTH_ENABLED` is `"true"` — with it unset, anyone who can reach
+the API can mint a key for any email. Turn it on for any deployment that is
+reachable from outside, or keep the endpoints off the public routing.
 
 ## Production Deployment
 

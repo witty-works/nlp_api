@@ -175,19 +175,18 @@ class Redis:
         self.db.lpush(key, json.dumps(data))
 
     def _hash_api_key(self, api_key: str) -> str:
-        """HMAC-SHA256 hash an API key using configured secret.
+        """HMAC-SHA256 hash an API key using the configured secret.
 
-        Uses `settings.api_key_hmac_key` if present, otherwise `settings.secret_key`.
-        If no secret is configured, return empty string.
+        Returns an empty string when no secret is configured, which the callers
+        read as "store and look keys up verbatim".
         """
-        secret = getattr(self.settings, "api_key_hmac_key", None) or getattr(
-            self.settings, "secret_key", None
-        )
-        if not secret:
+        if not self.settings.api_key_hmac_key:
             return ""
 
         return hmac.new(
-            secret.encode("utf-8"), api_key.encode("utf-8"), hashlib.sha256
+            self.settings.api_key_hmac_key.encode("utf-8"),
+            api_key.encode("utf-8"),
+            hashlib.sha256,
         ).hexdigest()
 
     def get_api_key_email(self, api_key: str) -> str | None:

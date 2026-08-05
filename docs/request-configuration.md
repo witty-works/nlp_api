@@ -54,7 +54,7 @@ Managing API Keys:
 - `GET /api_key/{email}` - Retrieve API key for an email
 - `DELETE /api_key/{email}` - Delete API key for an email
 
-These management endpoints require HTTP Basic authentication (see [API docs protection](./configuration.md#api-docs-protection)).
+These management endpoints require HTTP Basic authentication (see [API docs protection](./configuration.md#api-docs-protection)). Where there is no dashboard to create keys, [bin/api_key.py](../bin/api_key.py) does the same from the command line — see [API keys](./setup.md#api-keys).
 
 ### OAuth2 Bearer Token Authentication
 
@@ -125,7 +125,11 @@ The `config` object in a `/check` request supports the following options.
 
 `store_context`: When true, includes surrounding text context (±100 chars) in results. Context is sanitized for privacy. Clients use this flag to decide whether to persist data with analytics.
 
-`llm_alternatives`: Enable LLM-powered grammatically correct alternatives (requires plan with LLM access).
+`llm_alternatives`: Enable LLM-powered grammatically correct alternatives. Requires
+`CLIENT_CONFIG_ENABLED` to be settable per request, AWS credentials for the LLM
+itself, and an [`LLM_ACCESS`](./configuration.md#who-may-spend-the-llm-budget)
+policy that covers the requester — that last one is the operator's and can only
+ever turn this off.
 
 ### Addons
 
@@ -381,10 +385,6 @@ Instead of passing configuration with each request, you can store user and organ
 - `GET /organization/{id}` - Retrieve organization configuration
 
 Stored configurations support additional features beyond the request `config` object:
-
-- False positives: List of terms/phrases to ignore globally
-- Term replacements: Custom replacement rules with explanations
-- Domain restrictions: Allowlist or denylist of domains where the checker should operate
 A stored setting carrying `"status": "force"` reverses that for its own field
 and overrides the request; one carrying `"status": "suggestion"` applies only
 where the request left the field out. Two fields are not the request's to
@@ -394,6 +394,10 @@ set unless the deployment says so:
   [`CLIENT_CONFIG_ENABLED`](./configuration.md#running-without-the-dashboard) is
   on.
 
+
+- False positives: List of terms/phrases to ignore globally
+- Term replacements: Custom replacement rules with explanations
+- Domain restrictions: Allowlist or denylist of domains where the checker should operate
 - Config versioning: `config_hash` and `sync_date` for cache invalidation
 
 ---

@@ -138,12 +138,16 @@ AWS_SECRET_KEY=
 AWS_MODEL_ID=
 ```
 
+That is the switch to use: it refuses the call whatever any config asks for, so
+it holds even where credentials happen to be present. Leaving the provider
+variables empty also stops the calls, but by failing them rather than by
+declining them.
+
 **Benefits:**
 
-- No AWS API costs
+- No provider API costs
 - Eliminates external API latency
-- No AWS SDK dependencies loaded at runtime
-- LLM routes (`/alternatives/llm`, `/rephrase`) will return appropriate error responses
+- LLM routes (`/v1.0/rephrase`, `/v1.0/prompt`) will return appropriate error responses
 
 **Note:** LLM features are also restricted by plan-level feature flags in user/organization configs, so even with AWS configured, users need explicit access.
 
@@ -401,7 +405,36 @@ Used for LLM-powered features (e.g., grammatically correct alternatives, rephras
 | AWS_REGION_NAME | (empty)                            | AWS region (e.g., eu-central-1).                              |
 | AWS_KEY         | (empty)                            | AWS access key ID.                                            |
 | AWS_SECRET_KEY  | (empty)                            | AWS secret access key.                                        |
-| AWS_MODEL_ID    | mistral.mixtral-8x7b-instruct-v0:1 | Default model ID used when a request doesn’t specify `model`. |
+
+### Who may spend the LLM budget
+
+These calls are billed to whoever runs the API, so who may make them is the
+operator's decision and nothing else can overrule it.
+
+| Variable            | Default | Description                                                                                                       |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| `LLM_ACCESS`        | `users` | `disabled`, `users` or `everyone` — see below.                                                                    |
+| `LLM_ALLOWED_USERS` | `[]`    | With `users`, narrows it to these emails. JSON list, e.g. `LLM_ALLOWED_USERS='["a@example.com","b@example.com"]'`. |
+
+- **`disabled`** — no LLM calls, whoever asks. A `force: true` rule in a synced
+  config does not override it, and neither do the debug routes.
+- **`users`** — anyone the request resolved to a user for. That covers a
+  dashboard token and an `x-key` alike: an API key *is* its user's email by the
+  time this is checked, so `LLM_ALLOWED_USERS` lists emails and one list
+  narrows both. Leave it empty to allow every user. This is the default.
+- **`everyone`** — anyone who can reach the API, resolved user or not. Pair it
+  with `REQUIRE_AUTH=false` for a deployment that is open by design.
+
+The policy says who **may**, not who **does**: it can only ever turn
+`llm_alternatives` off. Something still has to turn it on —
+
+| To turn it on for                       | Set                                                                |
+| --------------------------------------- | -------------------------------------------------------------------- |
+| every user of a dashboard-less deployment | `DEFAULT_USER_LLM_ALTERNATIVES=true` (with `DEFAULT_USER_CONFIG_ENABLED`) |
+| whoever asks per request                | `CLIENT_CONFIG_ENABLED=true`, then the client sends `config.llm_alternatives` |
+| a specific dashboard organization       | the dashboard's own LLM alternatives setting, which syncs as a `force` rule |
+
+So `LLM_ACCESS=everyone` on its own changes nothing until one of those applies.
 
 ## Slack
 
@@ -428,6 +461,24 @@ Supported methods:
 - Azure AD B2C (per-tenant)
 - Microsoft Office SSO (multi-tenant)
 
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
+
 Azure AD B2C
 | Variable | Description |
 |---|---|
@@ -444,6 +495,29 @@ Office/Microsoft 365 SSO
 | OFFICE_SSO_EXPECTED_SCOPE | Scope expected in access tokens. |
 
 If an `Authorization: Bearer <token>` is present, the API validates the token against the configured client(s) and required scope. Alternatively, pass an `x-key` header with a valid API key mapping to a user email in Redis. For local testing you can also use `X-TESTING-AUTH: user@example.com` when `TESTING=true`.
+
+## Running without the dashboard
+
+Normally the dashboard's `SyncUserToNlpApi` job writes each user's config into
+Redis, and a user with no config there is rejected: `/v2.0/auth` answers 403 and
+clients read that as "not signed in". A deployment that runs this API on its own
+has no such job, so the two settings below fill the gap.
+
+|                        Variable | Default       | Description                                                                                                                                                                |
+| ------------------------------: | :-----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  `DEFAULT_USER_CONFIG_ENABLED`  | false         | Give a user with no stored config the defaults below instead of a 403. The `/user/configs` management endpoint still reports 404 for them, so "nothing is stored" stays visible. |
+|  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
+| `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
+|       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
+|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it.                                                   |
+
+`CLIENT_CONFIG_ENABLED` never overrules a deployment that has an opinion: a
+`force` rule for either flag in a synced user or organisation config still wins.
+`disabled_categories` and custom rules are unaffected — a client's
+`disabled_categories` were already honoured.
+
+Users are still identified by email, so an API-key deployment needs keys before
+anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
 
 ## Platform.sh
 
