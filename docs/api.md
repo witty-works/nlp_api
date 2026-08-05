@@ -25,6 +25,8 @@ These are the main endpoints for checking and rephrasing text.
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
+| `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
+| `/v2.0/config-options` | GET | No        | List the values the enumerated `config` fields accept         |
 
 Example `/v2.4/check` request:
 
@@ -54,6 +56,93 @@ curl -X 'POST' \
   }
 }'
 ```
+
+Example `/v2.0/categories` request:
+
+```bash
+curl 'http://127.0.0.1:8000/v2.0/categories?locale=de-DE'
+```
+
+```jsonc
+{
+  "categories": [
+    {
+      "key": "sexism",
+      "label": "Sexismus",
+      "parent": "gender-orientation",
+      "advanced_key": "sexism_advanced",   // null where there is no variant
+      "proficiency_level": "unconscious_bias"
+    }
+    // ...
+  ],
+  "groups": [{ "key": "gender-orientation", "label": "Gender + Orientation" }]
+}
+```
+
+`/v2.0/auth` only reports the categories the dashboard synced into a user's
+organization config, so this endpoint is how a deployment without a dashboard
+tells clients what they may switch off. The list comes from the training data
+and is therefore the same either way. `locale` accepts the same values as
+`preferred_variants` and only affects the labels; keys and grouping do not
+change. Labels are empty for categories that carry no translation.
+
+**A category and its `advanced_key` are matched independently.** A result
+comes back under whichever one fired, and disabling `sexism` leaves
+`sexism_advanced` firing. One checkbox on an options page therefore has to
+put **both** keys in `config.disabled_categories`:
+
+```js
+const off = [category.key, category.advanced_key].filter(Boolean);
+```
+
+Splitting them is what lets a deployment offer the stricter variant as its
+own setting; the dashboard does exactly that.
+
+No authentication: the answer is identical for everyone and says nothing about
+any user. It is served with `Cache-Control: public, max-age=3600`, so clients
+and any proxy can hold a copy instead of asking per user.
+
+Example `/v2.0/config-options` request:
+
+```bash
+curl 'http://127.0.0.1:8000/v2.0/config-options'
+```
+
+```jsonc
+{
+  "options": {
+    "german_gender_ending": {
+      "values": ["/in", "/-in", "_in", "*in", ":in", "(-)", "()", "In"],
+      "default": "*in",
+      "labels": { "*in": "Genderstar, f.e Expert*in" }   // one per value
+    },
+    "french_gender_separator": {
+      "values": ["·", "·s", ".", ".s", "/", "/s"],
+      "default": "·"
+    },
+    "gendered_roles_format": {
+      "values": ["none", "both", "inclusive_gender", "binary_gender"],
+      "default": "both"
+    }
+  }
+}
+```
+
+The `config` fields whose accepted values a client cannot guess — each is a
+closed set of tokens rather than a boolean or free text. The values are read off
+the request model itself, so the answer is what the running version accepts
+rather than what was documented at some point. Unauthenticated and cacheable for
+the same reason as the category list.
+
+`labels` follows `locale`, and is the same wording the dashboard shows for the
+same setting — both read
+[training_data/config_options.json](../training_data/config_options.json),
+which is copied from the dashboard's `resources/lang/*/guidelines.php`. A value
+the dashboard has no wording for is returned without a label, and a client shows
+the raw value.
+
+See [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
+for what each value renders as.
 
 ## Management Endpoints
 
@@ -145,7 +234,8 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
 | `/openapi.json`               | GET    | Optional\*    | OpenAPI schema JSON                                                               |
 
-\* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`
+\* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
+served unguarded either way.
 
 Example health check:
 

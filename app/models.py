@@ -605,6 +605,25 @@ class Config(BaseModel):
         )
 
     @staticmethod
+    def field_options(*names: str) -> dict:
+        """The accepted values and the default, for enum-typed config fields.
+
+        Read off the model rather than listed out, so a new member of one of
+        those enums cannot be forgotten here.
+        """
+        options = {}
+        for name in names:
+            field = Config.model_fields[name]
+            default = field.default
+
+            options[name] = {
+                "values": [member.value for member in field.annotation],
+                "default": default.value if isinstance(default, Enum) else default,
+            }
+
+        return options
+
+    @staticmethod
     def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
         return gendered_roles_format in [
             GenderedRolesFormatType.BOTH,
@@ -1241,6 +1260,36 @@ class ResultConf(BaseModel):
     organization_domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
+
+
+class CategoryGroupOut(BaseModel):
+    key: str
+    label: Optional[str] = None
+
+
+class CategoryOut(CategoryGroupOut):
+    parent: str
+    # The key of the stricter variant, where there is one. Independent of
+    # `key`: switching the category off entirely means disabling both.
+    advanced_key: Optional[str] = None
+    proficiency_level: Optional[str] = None
+
+
+class CategoriesOut(BaseModel):
+    categories: list[CategoryOut]
+    groups: list[CategoryGroupOut]
+
+
+class ConfigOptionOut(BaseModel):
+    values: list[str]
+    default: Optional[str] = None
+    # Value -> display label. Absent for values the dashboard has no wording
+    # for; clients fall back to showing the value itself.
+    labels: dict[str, str] = {}
+
+
+class ConfigOptionsOut(BaseModel):
+    options: dict[str, ConfigOptionOut]
 
 
 class RephrasesOut(BaseModel):

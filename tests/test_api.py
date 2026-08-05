@@ -25,6 +25,8 @@ from app.auth_service import (
     get_unverified_token_claims_,
 )
 from app.models import (
+    Config,
+    LangVariantType,
     LangWithAutoType,
     CheckRequestIn,
 )
@@ -2597,3 +2599,87 @@ async def test_client_settable_config_disabled(set_redis):
 
     assert request_in.config.store_context is True
     assert request_in.config.llm_alternatives is False
+def test_categories():
+    """The category list is public and cacheable."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/categories")
+        assert response.status_code == 200
+        # The security middleware must not have clobbered this with no-cache.
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        payload = response.json()
+        categories = {category["key"]: category for category in payload["categories"]}
+
+        # Every reported key is one the check endpoint accepts as disabled.
+        assert set(categories) <= set(get_category_keys())
+
+        assert categories["sexism"]["parent"] == "gender-orientation"
+        assert categories["sexism"]["advanced_key"] == "sexism_advanced"
+        assert categories["orthography"]["advanced_key"] is None
+        assert categories["sexism"]["label"] == "Sexism"
+
+        groups = {group["key"]: group for group in payload["groups"]}
+        assert set(category["parent"] for category in categories.values()) == set(
+            groups
+        )
+        assert groups["gender-orientation"]["label"] == "Gender + Orientation"
+
+        response = client.get("/v2.0/categories", params={"locale": "de-DE"})
+        assert response.status_code == 200
+
+        german = {
+            category["key"]: category for category in response.json()["categories"]
+        }
+        assert set(german) == set(categories)
+        assert german["sexism"]["label"] not in (
+            None,
+            "",
+            categories["sexism"]["label"],
+        )
+
+
+def test_config_options():
+    """Every reported value is one a check request is allowed to send."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/config-options")
+        assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        options = response.json()["options"]
+        assert set(options) == {
+            "german_gender_ending",
+            "french_gender_separator",
+            "gendered_roles_format",
+        }
+
+        for field, option in options.items():
+            assert option["default"] in option["values"]
+
+            for value in option["values"]:
+                # The model is the same one /v2.4/check validates against, so a
+                # reported value that it rejects would be a contradiction.
+                assert Config(**{field: value})
+
+            rejected = client.post(
+                "/v2.4/check", json={"text": "Hello.", "config": {field: "not-a-value"}}
+            )
+            assert rejected.status_code == 422
+
+        assert "*in" in options["german_gender_ending"]["values"]
+        assert options["gendered_roles_format"]["default"] == "both"
+
+        # Every value carries a label, in every locale the API serves. An
+        # unlabelled one would leave an options page showing a bare `(-)`.
+        for locale in LangVariantType:
+            response = client.get(
+                "/v2.0/config-options", params={"locale": locale.value}
+            )
+            assert response.status_code == 200
+
+            for field, option in response.json()["options"].items():
+                assert set(option["labels"]) == set(option["values"]), (locale, field)
+
+        german = client.get("/v2.0/config-options", params={"locale": "de-DE"}).json()[
+            "options"
+        ]["german_gender_ending"]["labels"]
+        assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]

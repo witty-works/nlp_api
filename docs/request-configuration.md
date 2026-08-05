@@ -10,7 +10,7 @@
   - [Unauthenticated Endpoints](#unauthenticated-endpoints)
 - [Basic Config Structure](#basic-config-structure)
   - [Context and Storage](#context-and-storage)
-  - [Plan and Features](#plan-and-features)
+  - [Addons](#addons)
   - [Language Settings](#language-settings)
   - [Gender-Inclusive Formatting](#gender-inclusive-formatting)
   - [Category and Alternative Settings](#category-and-alternative-settings)
@@ -109,8 +109,10 @@ When multiple authentication methods are provided, the API checks them in this o
 Some endpoints do not require authentication:
 
 - Health checks and status endpoints
-- Public documentation (`/docs`, `/redoc`) - unless `API_DOCS_AUTH_ENABLED=true`
-- OpenAPI schema (`/openapi.json`) - unless `API_DOCS_AUTH_ENABLED=true`
+- The category list (`/v2.0/categories`) and the config options
+  (`/v2.0/config-options`) - the same answer for everyone
+- Public documentation (`/docs`) - unless `API_DOCS_AUTH_ENABLED=true`
+- OpenAPI schema (`/openapi.json`)
 
 ## Basic Config Structure
 
@@ -135,10 +137,7 @@ ever turn this off.
 
 | Field    | Type             | Default |
 | -------- | ---------------- | ------- |
-| `plan`   | string           | `null`  |
 | `addons` | array of strings | `null`  |
-
-`plan`: Plan identifier (e.g., "premium", "enterprise").
 
 `addons`: List of enabled addon features.
 
@@ -157,6 +156,10 @@ ever turn this off.
 `preferred_variants`: Language variants for spelling/grammar. Supported values: `"en-US"`, `"en-GB"`, `"de-DE"`, `"de-CH"`, `"de-AT"`, `"fr-FR"`.
 
 ### Gender-Inclusive Formatting
+
+`GET /v2.0/config-options` returns these three fields' accepted values and
+defaults, read off the request model, so a client can offer them without
+hard-coding the lists below.
 
 | Field                     | Type | Default  |
 | ------------------------- | ---- | -------- |
@@ -211,7 +214,14 @@ The API checks text against multiple diversity dimensions and language categorie
 
 ### Finding Available Categories
 
-The complete list of supported categories can be found in multiple locations:
+Ask the API: `GET /v2.0/categories` returns the keys this deployment accepts,
+with their groups and their `advanced_key`. That is the one source that cannot
+go stale against the running version, and it needs no authentication — an
+options page can render the toggles before the user has entered a credential.
+See [API Endpoints](./api.md#core-endpoints), and note that a category and its
+`advanced_key` have to be disabled together.
+
+The same list can also be read from:
 
 1. Public Documentation (with explanations and examples):
    - English: https://www.witty.works/en/categories.html
@@ -375,6 +385,15 @@ When a `/check` request is made with authentication (via API key or OAuth token)
 
 Settings are merged with this precedence, meaning you can override specific fields per request while keeping other settings from stored configurations.
 
+A stored setting carrying `"status": "force"` reverses that for its own field
+and overrides the request; one carrying `"status": "suggestion"` applies only
+where the request left the field out. Two fields are not the request's to
+set unless the deployment says so:
+
+- `store_context` and `llm_alternatives` are ignored unless
+  [`CLIENT_CONFIG_ENABLED`](./configuration.md#running-without-the-dashboard) is
+  on.
+
 ## Stored Configuration via Management API
 
 Instead of passing configuration with each request, you can store user and organization configurations using the configuration management endpoints. See the API documentation at `/docs` for:
@@ -385,15 +404,6 @@ Instead of passing configuration with each request, you can store user and organ
 - `GET /organization/{id}` - Retrieve organization configuration
 
 Stored configurations support additional features beyond the request `config` object:
-A stored setting carrying `"status": "force"` reverses that for its own field
-and overrides the request; one carrying `"status": "suggestion"` applies only
-where the request left the field out. Two fields are not the request's to
-set unless the deployment says so:
-
-- `store_context` and `llm_alternatives` are ignored unless
-  [`CLIENT_CONFIG_ENABLED`](./configuration.md#running-without-the-dashboard) is
-  on.
-
 
 - False positives: List of terms/phrases to ignore globally
 - Term replacements: Custom replacement rules with explanations
