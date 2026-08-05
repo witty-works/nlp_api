@@ -96,38 +96,23 @@ class Redis:
     def store_metrics(
         self, request: Request, configs: dict, version: str | None, endpoint: str
     ) -> None:
-        """Store API usage metrics in Redis by user, plan, and host."""
+        """Store API usage metrics in Redis by user and host."""
         if not self.settings.log_metrics:
             return
 
         version = version + " - " if version is not None else "none - "
 
-        if "id" in configs:
-            user_id = configs["id"]
-            plan = None if "plan" not in configs else configs["plan"]
-            if (
-                "organization_config" in configs
-                and "trial_ends_at" in configs["organization_config"]
-                and configs["organization_config"]["trial_ends_at"] is not None
-            ):
-                plan = "witty_trial"
-        else:
-            user_id = "none"
-            plan = "none"
-
+        user_id = configs["id"] if "id" in configs else "none"
         host = request.headers.get("origin", "none")
 
         if endpoint == "auth":
             self.db.hincrby(MetricsType.AUTH_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.AUTH_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.AUTH_HOST, version + host, 1)
         elif endpoint == "check":
             self.db.hincrby(MetricsType.CHECK_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.CHECK_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.CHECK_HOST, version + host, 1)
         elif endpoint == "rephrase":
             self.db.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.REPHRASE_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
 
     def get_user_logs(
@@ -163,7 +148,6 @@ class Redis:
         data = {
             "type": "request",
             "date": datetime.datetime.now().isoformat(),
-            "plan": check_request_in.config.plan,
             "text": check_request_in.text,
             "auth_token": request.headers.get("Authorization", None),
             "configs": configs,

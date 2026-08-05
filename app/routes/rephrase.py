@@ -107,7 +107,7 @@ async def rephrase_sentence(
             or not rephrase_request_in.config.plan.startswith("witty_")
         ):
             response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("No valid plan on user")
+            return Result.factory("User config missing")
 
         if not rephrase_request_in.config.llm_alternatives:
             response.status_code = status.HTTP_403_FORBIDDEN

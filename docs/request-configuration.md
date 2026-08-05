@@ -127,7 +127,7 @@ The `config` object in a `/check` request supports the following options.
 
 `llm_alternatives`: Enable LLM-powered grammatically correct alternatives (requires plan with LLM access).
 
-### Plan and Features
+### Addons
 
 | Field    | Type             | Default |
 | -------- | ---------------- | ------- |
@@ -385,6 +385,15 @@ Stored configurations support additional features beyond the request `config` ob
 - False positives: List of terms/phrases to ignore globally
 - Term replacements: Custom replacement rules with explanations
 - Domain restrictions: Allowlist or denylist of domains where the checker should operate
+A stored setting carrying `"status": "force"` reverses that for its own field
+and overrides the request; one carrying `"status": "suggestion"` applies only
+where the request left the field out. Two fields are not the request's to
+set unless the deployment says so:
+
+- `store_context` and `llm_alternatives` are ignored unless
+  [`CLIENT_CONFIG_ENABLED`](./configuration.md#running-without-the-dashboard) is
+  on.
+
 - Config versioning: `config_hash` and `sync_date` for cache invalidation
 
 ---

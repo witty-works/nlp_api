@@ -100,16 +100,12 @@ class Language(object):
 class MetricsType(str, Enum):
     ALL = "all"
     AUTH_COUNTS = "auth_counts"
-    AUTH_PLANS = "auth_plans"
     AUTH_HOST = "auth_host"
     CHECK_COUNTS = "check_counts"
-    CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
-    REPHRASE_PLANS = "rephrase_plans"
     REPHRASE_HOST = "rephrase_host"
     PROMPT_COUNTS = "prompt_counts"
-    PROMPT_PLANS = "prompt_plans"
     PROMPT_HOST = "prompt_host"
 
 
@@ -514,7 +510,6 @@ class RuleIn(BaseModel):
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
-    plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
@@ -794,7 +789,6 @@ class DomainConfig(BaseModel):
 class ConfRequest(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = Field(default_factory=list)
     term_replacements: dict[str, TermReplacement | dict] = Field(default_factory=dict)
@@ -812,13 +806,14 @@ class UserConfRequest(ConfRequest):
 
 
 class OrganizationConfRequest(ConfRequest):
-    trial_ends_at: Optional[str] = None
+    # No fields of its own; kept as a distinct type so the organisation and
+    # user config endpoints stay separately typed.
+    pass
 
 
 class ConfResponse(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = Field(default_factory=list)
     term_replacements: dict[str, TermReplacement] = Field(default_factory=dict)
@@ -837,7 +832,6 @@ class UserConfResponse(ConfRequest):
     )
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
-    organization_trial_ends_at: Optional[str] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
@@ -1239,14 +1233,12 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: Optional[RuleConfig] = None
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
     domains: Optional[DomainConfig] = None
     organization_domains: Optional[DomainConfig] = None
-    organization_trial_ends_at: Optional[str] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 

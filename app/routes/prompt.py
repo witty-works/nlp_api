@@ -104,12 +104,9 @@ async def prompt(
     configs: dict,
     context: AppContext,
 ) -> Result | PromptOut:
-    if (
-        check_request_in.config.plan is None
-        or not check_request_in.config.plan.startswith("witty_")
-    ):
-        response.status_code = status.HTTP_402_PAYMENT_REQUIRED
-        return Result.factory("Plan missing")
+    if not configs:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Result.factory("User config missing")
 
     if not check_request_in.config.llm_alternatives:
         response.status_code = status.HTTP_401_UNAUTHORIZED

@@ -22,7 +22,7 @@ These are the main endpoints for checking and rephrasing text.
 | Endpoint         | Method | Auth Required | Description                                                   |
 | ---------------- | ------ | ------------- | ------------------------------------------------------------- |
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
-| `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires plan with LLM access)       |
+| `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
 

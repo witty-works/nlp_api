@@ -967,10 +967,9 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
             "/v2.0/auth", headers={"X-TESTING-AUTH": "2_2@gmail.com"}
         )
         assert response.status_code == 200
-
-        response = response.json()
-        assert "organization_trial_ends_at" in response
-        assert response["organization_trial_ends_at"] is not None
+        # A stored `trial_ends_at` is ignored rather than reported on: the
+        # dashboard still syncs one, and nothing here acts on it.
+        assert "organization_trial_ends_at" not in response.json()
 
         response = client.post(
             "/v2.0/auth", headers={"X-TESTING-AUTH": "test@gmail.com"}
@@ -2445,3 +2444,23 @@ def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
             },
         )
         assert response.status_code == 200
+
+
+def test_require_auth_off():
+    """A deployment can choose to check text for anyone who asks."""
+    text = {"text": "Wir suchen einen Ninja Programmierer."}
+
+    with TestClient(app) as client:
+        # The default: no user, no results, but still a 200 so a client that has
+        # been signed out keeps working.
+        response = client.post("/v2.4/check", json=text)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+        context.settings.require_auth = False
+        try:
+            response = client.post("/v2.4/check", json=text)
+            assert response.status_code == 200
+            assert len(response.json()["results"])
+        finally:
+            context.settings.require_auth = True

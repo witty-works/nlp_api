@@ -89,7 +89,6 @@ async def fetch_user_organization_configs(
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
-    configs["organization_trial_ends_at"] = None
 
     if "organization_id" in configs and configs["organization_id"] is not None:
         organization_configs = (
@@ -97,14 +96,6 @@ async def fetch_user_organization_configs(
                 configs["organization_id"]
             )
         )
-
-        if not configs.get("plan"):
-            configs["plan"] = organization_configs["plan"]
-
-        if "trial_ends_at" in organization_configs:
-            configs["organization_trial_ends_at"] = organization_configs[
-                "trial_ends_at"
-            ]
 
         configs["organization_name"] = organization_configs["name"]
 
@@ -130,7 +121,6 @@ async def fetch_user_organization_configs(
 def apply_configs(
     check_request_in: CheckRequestIn,
     configs: dict,
-    plan: str,
     force_disables: bool = True,
 ):
     disabled_categories = check_request_in.config.disabled_categories
@@ -171,20 +161,10 @@ def apply_configs(
                     if force_disables_category and category not in disabled_categories:
                         disabled_categories.append(category)
         elif config == "store_context":
-            if (
-                plan is not None
-                and plan != "witty_free"
-                and data["status"] == "force"
-                and not data["value"]
-            ):
+            if data["status"] == "force" and not data["value"]:
                 check_request_in.config.__setattr__("store_context", False)
         elif config == "llm_alternatives":
-            if (
-                plan is not None
-                and plan != "witty_free"
-                and data["status"] == "force"
-                and data["value"]
-            ):
+            if data["status"] == "force" and data["value"]:
                 check_request_in.config.__setattr__("llm_alternatives", True)
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
@@ -197,7 +177,6 @@ def apply_configs(
             disabled_categories.append(category)
 
     check_request_in.config.__setattr__("disabled_categories", disabled_categories)
-    check_request_in.config.__setattr__("plan", plan)
 
 
 async def fetch_configs_for_request(
@@ -205,15 +184,13 @@ async def fetch_configs_for_request(
 ) -> dict:
     request_in.config.__setattr__("store_context", True)
     request_in.config.__setattr__("llm_alternatives", False)
-    request_in.config.__setattr__("plan", None)
     request_in.config.__setattr__(
         "alternatives_max_count", context.settings.alternatives_max_count
     )
 
     if not user_email:
         request_in.config.__setattr__("disabled_categories", get_category_keys(True))
-        request_in.config.__setattr__("plan", None)
-
+    
         return {}
 
     try:
@@ -221,15 +198,10 @@ async def fetch_configs_for_request(
     except HTTPException:
         return {}
 
-    apply_configs(request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"])
 
     if "organization_config" in configs:
-        apply_configs(
-            request_in,
-            configs["organization_config"],
-            configs["plan"],
-            False,
-        )
+        apply_configs(request_in, configs["organization_config"], False)
 
         configs["term_replacements"] |= configs["organization_term_replacements"]
         configs["false_positives"] = list(
@@ -259,7 +231,7 @@ async def fetch_organization_configs_for_request(
         if configs["configs"][config]["status"] == "suggestion":
             configs["configs"][config]["status"] = "force"
 
-    apply_configs(request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"])
 
     return configs
 
@@ -297,14 +269,11 @@ def fetch_result_conf(configs: dict) -> ResultConf | None:
         else None
     )
 
-    plan = configs["plan"]
-
     config = RuleConfig.model_validate(configs["config"])
 
     return ResultConf(
         id=configs["id"],
         name=configs["name"],
-        plan=plan,
         config=config,
         organization_id=configs["organization_id"],
         organization_name=configs["organization_name"],
@@ -313,7 +282,6 @@ def fetch_result_conf(configs: dict) -> ResultConf | None:
         organization_domains=configs["organization_domains"],
         config_hash=configs["config_hash"],
         organization_config_hash=configs["organization_config_hash"],
-        organization_trial_ends_at=configs["organization_trial_ends_at"],
     )
 
 
@@ -329,6 +297,6 @@ def debug_configs(request_in: BaseRequestIn) -> dict:
         "categories": {},
         "llm_alternatives": {"status": "suggestion", "value": True},
     }
-    apply_configs(request_in, configs, "witty_teams")
+    apply_configs(request_in, configs)
 
     return configs

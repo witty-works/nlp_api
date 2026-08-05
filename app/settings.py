@@ -64,6 +64,11 @@ class Settings(BaseSettings):
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
 
+    # Whether a request has to resolve to a user before any text is checked.
+    # With it off the API answers anyone who can reach it, which is a deliberate
+    # choice for a private deployment and a bad one for a public host.
+    require_auth: bool = True
+
     slack_enabled: bool = False
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
