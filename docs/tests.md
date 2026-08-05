@@ -15,7 +15,7 @@ LanguageTool does. Run it locally before the suite:
 
 ```bash
 docker compose up -d languagetool
-LANGUAGETOOL_API="http://localhost:8010/v2" pdm run pytest -q
+LANGUAGETOOL_API="http://127.0.0.1:8210/v2" pdm run pytest -q
 ```
 
 Without it the tests call the hosted API, which is a different version. It moved
@@ -27,6 +27,10 @@ took a dozen unrelated tests down with it.
 The image is pinned for the same reason `latest` is not: it would drift too. The
 heap is set because the default runs out part way through the suite and the
 container exits, which surfaces as every remaining test failing to connect.
+
+Use `127.0.0.1` rather than `localhost`. If anything else on the machine listens
+on the IPv6 loopback for that port, `localhost` resolves there first and the
+requests never reach the container, which looks like LanguageTool returning 404.
 
 ## Run all tests
 

@@ -5,6 +5,26 @@
         {
             "alternatives": [
                 {
+                    "text": ", and"
+                }
+            ],
+            "category": "orthography",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 96,
+            "explanation": {
+                "icon": "❌",
+                "text": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short)."
+            },
+            "gravity": 1.0,
+            "label": "Punctuation",
+            "start": 92,
+            "subcategory": "punctuation",
+            "text": " and",
+            "text_id": " and"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Nadia."
                 },
                 {
