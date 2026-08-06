@@ -281,7 +281,7 @@ report configuration back:
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
 | `/settings` | GET    | The whole settings object, including every secret it holds      |
-| `/lt`       | GET    | View LanguageTool API URL                                       |
+| `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
 
 The LLM-backed ones among these are refused when `LLM_ACCESS=disabled` or no
 `LLM_MODEL` is configured, the same as the client-facing routes.

@@ -74,8 +74,8 @@ async def get_health(
     return content
 
 
-@router.get("/lt", include_in_schema=not get_settings().is_prod)
-def get_lt(
+@router.get("/languagetool_api", include_in_schema=not get_settings().is_prod)
+def get_languagetool_api(
     username: str = Depends(fetch_management_username),
     context: AppContext = Depends(get_app_context),
 ) -> str:

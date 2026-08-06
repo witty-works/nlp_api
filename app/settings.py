@@ -29,7 +29,8 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     # Guards the endpoints that create or read credentials and configuration, or
     # act on a named user's behalf: /api_key, /user/configs,
-    # /organization/configs, /user/logs, /settings, /lt and /v1.0/prompt.
+    # /organization/configs, /user/logs, /settings, /languagetool_api and
+    # /v1.0/prompt.
     # Defaults to on so an unconfigured deployment is closed rather than open.
     management_auth_enabled: bool = True
     testing: bool = False

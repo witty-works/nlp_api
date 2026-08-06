@@ -252,7 +252,8 @@ needed. `/openapi.json` is served unguarded either way.
 
 Separate from the docs switch, because reading the schema and minting a
 credential are not the same risk. This one guards `/api_key`, `/user/configs`,
-`/organization/configs`, `/user/logs`, `/settings`, `/lt` and `/v1.0/prompt` —
+`/organization/configs`, `/user/logs`, `/settings`, `/languagetool_api` and
+`/v1.0/prompt` —
 the endpoints that hand out or expose credentials and configuration, or act on
 a named user's behalf — and defaults to **on**, so a deployment nobody
 configured is closed rather than open.
