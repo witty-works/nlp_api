@@ -9,9 +9,12 @@ from fastapi import HTTPException
 from app.context import AppContext
 from app.settings import Settings
 from app.text_utils import parse_word_type
+from pydantic import ValidationError
+
 from app.models import (
     BaseRequestIn,
     CheckRequestIn,
+    Config,
     LangType,
     LlmAccessType,
     ResultConf,
@@ -285,9 +288,51 @@ def llm_alternatives_allowed(settings: Settings, user_email: Optional[str]) -> b
     }
 
 
+def apply_default_config(request_in: BaseRequestIn, context: AppContext) -> None:
+    """Fill in what this deployment prefers where the request said nothing.
+
+    Only fields the request did not set itself, so a client that asks for
+    something still gets it. A synced config layered on later still wins, as
+    does a `force` rule in one.
+    """
+    if not context.settings.default_config:
+        return
+
+    # Not during tests. The suite asserts on what the built-in defaults produce,
+    # and this would let a value in someone's local .env change the expected
+    # output of every fixture that does not name the field itself. The same
+    # reasoning already applies to the testing user mapping.
+    if context.settings.testing:
+        return
+
+    try:
+        defaults = json.loads(context.settings.default_config)
+    except ValueError:
+        context.logger.error(
+            "DEFAULT_CONFIG is not valid JSON, ignoring it: %r",
+            context.settings.default_config,
+        )
+        return
+
+    for key, value in defaults.items():
+        if key not in Config.model_fields:
+            context.logger.error("DEFAULT_CONFIG has no such config option: %r", key)
+            continue
+
+        if key in request_in.config.model_fields_set:
+            continue
+
+        try:
+            setattr(request_in.config, key, value)
+        except ValidationError:
+            context.logger.error("DEFAULT_CONFIG value rejected for %r: %r", key, value)
+
+
 async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email: Optional[str], context: AppContext
 ) -> dict:
+    apply_default_config(request_in, context)
+
     request_in.config.__setattr__(
         "alternatives_max_count", context.settings.alternatives_max_count
     )

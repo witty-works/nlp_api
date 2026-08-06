@@ -6,6 +6,7 @@
 - [Quick start: minimal .env for local dev](#quick-start-minimal-env-for-local-dev)
 - [Core settings](#core-settings)
 - [Reducing Resource Usage](#reducing-resource-usage)
+- [Personal server](#personal-server)
 - [API docs protection](#api-docs-protection)
 - [Protecting the management endpoints](#protecting-the-management-endpoints)
 - [Sentry.io](#sentryio)
@@ -236,6 +237,60 @@ LOGGING_CONFIG_LEVEL=INFO
 
 This configuration reduces memory usage from ~2-3 GB to ~300-500 MB while maintaining core functionality.
 
+## Personal server
+
+A server for yourself, checked from a LanguageTool client such as the desktop app, needs three things set. Nothing here suits a public host.
+
+```bash
+REQUIRE_AUTH=false                 # answer anyone who can reach it
+DEFAULT_USER_CONFIG_ENABLED=true   # or /v2.0/auth answers 403 and clients go quiet
+LANGUAGETOOL_COMPAT_ROOT=true      # serve the endpoints at the root as well
+DEFAULT_CONFIG='{"german_gender_ending": "de-e"}'
+```
+
+`DEFAULT_USER_CONFIG_ENABLED` is the one that is easy to miss. Without a dashboard there is no job filling Redis with a config for the email an API key resolves to, so `/v2.0/auth` refuses it and a client concludes it is signed out. Checking still works if you call it directly, which is what makes this confusing: the browser extension simply stops highlighting and says nothing.
+
+Watch for a forced config too. A `force` entry in a synced user or organisation config, including the ones `TESTING_RULES` and `TESTING_ORGANIZATION_RULES` carry, beats whatever a request asks for. That is deliberate, so an organisation can pin a house style, but it means a request asking for `de-e` can come back checked against `*in`. The `gender_separator` field in the response says which ending actually applied, so read that first when the results are not what the config asked for.
+
+Then run it on LanguageTool's local port, because the desktop app has no host or port field:
+
+```bash
+REQUIRE_AUTH=false LANGUAGETOOL_COMPAT_ROOT=true \
+  DEFAULT_CONFIG='{"german_gender_ending": "de-e"}' \
+  pdm run uvicorn app.main:app --port 8081
+```
+
+`DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins.
+
+Any field of the check config can go in it. Unknown keys and values the config rejects are logged and skipped rather than taken, so a typo does not silently change what the server checks for.
+
+Note that port 8081 is where a real local LanguageTool server would sit, so run one or the other, not both. The [Tests](./tests.md#languagetool) page uses a different port for exactly that reason.
+
+### From the browser extension
+
+The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too.
+
+```bash
+DEFAULT_API_KEY=pick-something-long
+DEFAULT_USER_EMAIL=you@example.com
+DEFAULT_USER_CONFIG_ENABLED=true
+```
+
+`DEFAULT_USER_CONFIG_ENABLED` belongs with it: the key resolves to an email that has no config stored, and without the fallback `/v2.0/auth` answers 403 and the extension concludes it is signed out. Checking still works if you call it directly, which is what makes that one confusing to diagnose.
+
+This is for a deployment whose users are you. Anyone with the key is that user, and it is only as protected as the environment it sits in. Where there is more than one of you, run a real Redis and mint a key each:
+
+```bash
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+```bash
+pdm run python -m bin.api_key create you@example.com
+```
+
+The in-memory Redis is per process, so without `REDIS_HOST` that script would write to its own memory and never reach the API. It refuses to run rather than appearing to succeed.
+
 ## API docs protection
 
 Protect `/docs` and the development helpers (`/save_openapi_json`,
@@ -416,7 +471,7 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_VERIFY_SSL | true        | Verify TLS certs when connecting to Redis over SSL.                                                                                                           |
 | REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
-| TESTING\_\*      | (see below) | See the [Testing variables](#testing-variables) section for details on `TESTING_API_KEY`, `TESTING_EMAIL`, `TESTING_RULES`, and `TESTING_ORGANIZATION_RULES`. |
+| TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
 
 Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
 
@@ -600,13 +655,13 @@ PLATFORM_APPLICATION_NAME=app
 
 ## Testing variables
 
+These are fixtures for the test suite, which authenticates as the email they carry. They are only loaded when `TESTING` is set; a deployment that sets them without it gets an error in the log and they are ignored. That guard exists because an entry marked `"status": "force"` in either overrides what a request asks for, so a server that loaded them would quietly answer with something other than what its clients requested.
+
 The following environment variables are used to seed test data and shortcuts when running the application in a development or test environment (for example when `REDIS_HOST` is empty and an in-memory fake Redis is used). These are loaded into `Settings` ([app/settings.py](../app/settings.py)) and applied during startup ([app/startup.py](../app/startup.py)).
 
 |                     Variable | Default | Description                                                                                                                                                                                                                                  |
 | ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry. It is necessary for running the test suite. Other settings listed below should be disabled while running the test suite.                                      |
-|            `TESTING_API_KEY` | (empty) | When using the fake in-memory Redis, a mapping from this API key to `TESTING_EMAIL` will be created so you can authenticate with a reproducible test key.                                                                                    |
-|              `TESTING_EMAIL` | (empty) | Email address associated with `TESTING_API_KEY`; used as the seeded user identifier and for tests that require a known user.                                                                                                                 |
 |              `TESTING_RULES` | (empty) | JSON string containing a user-level rules object. On startup the app parses this JSON and writes it to Redis under the seeded user's id (the `email` field). See `.env.example` for an example payload.                                      |
 | `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
 

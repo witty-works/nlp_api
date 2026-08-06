@@ -30,8 +30,7 @@ class Redis:
         """Create and return a Redis client based on settings.
 
         Uses a real Redis connection when redis_host is configured; otherwise
-        falls back to an in-memory FakeStrictRedis. When testing_api_key is
-        present, a test key is preloaded for convenience during local tests.
+        falls back to an in-memory FakeStrictRedis.
         """
         if settings.redis_host:
             redis_db = RedisCache(
@@ -45,12 +44,17 @@ class Redis:
             )
         else:
             redis_db = FakeStrictRedis(decode_responses=True)
-            if settings.testing_api_key:
-                redis_db.set(
-                    "api_key:" + settings.testing_api_key, settings.testing_email
-                )
 
-        return Redis(settings, redis_db)
+        redis = Redis(settings, redis_db)
+
+        # A deployment that runs for one person has no dashboard to mint a key
+        # and, without a Redis, nothing that would keep one. Writing it on every
+        # start covers both, and is what makes the personal setup work without
+        # borrowing the testing variables.
+        if settings.default_api_key and settings.default_user_email:
+            redis.set_api_key(settings.default_api_key, settings.default_user_email)
+
+        return redis
 
     def get_user_id(self, email: str) -> str:
         """Generate a Redis key for a user by email."""

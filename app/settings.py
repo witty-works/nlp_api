@@ -76,8 +76,6 @@ class Settings(BaseSettings):
     redis_log_emails: Optional[str] = ""
     redis_verify_ssl: bool = True
     api_key_hmac_key: Optional[str] = ""
-    testing_api_key: Optional[str] = ""
-    testing_email: Optional[str] = ""
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
 
@@ -88,6 +86,18 @@ class Settings(BaseSettings):
     default_user_config_enabled: bool = False
     default_user_store_context: bool = True
     default_user_llm_alternatives: bool = False
+
+    # An API key this deployment always has, mapped to DEFAULT_USER_EMAIL, so a
+    # server run for one person has a key without a dashboard to mint one or a
+    # Redis to keep it in. Written on every start, so it survives restarts even
+    # on the in-memory fallback.
+    #
+    # Only for a deployment whose users you are. Anyone holding this key is that
+    # user, and it is as strong as whatever is written in the environment, so
+    # mint per-user keys with bin/api_key.py where there is more than one of
+    # you.
+    default_api_key: Optional[str] = ""
+    default_user_email: Optional[str] = ""
 
     # Let a request decide `store_context` and `llm_alternatives` for itself. A
     # `force` rule in a synced user or organisation config still wins, and
@@ -100,6 +110,14 @@ class Settings(BaseSettings):
     # With it off the API answers anyone who can reach it, which is a deliberate
     # choice for a private deployment and a bad one for a public host.
     require_auth: bool = True
+
+    # Config this deployment starts from, as JSON, for the fields a request does
+    # not set itself. Without a dashboard there is nowhere else to say it, and a
+    # LanguageTool client cannot say it at all: the protocol carries a language
+    # and a category list and nothing further, so options like the German gender
+    # ending are otherwise stuck on their built-in default.
+    # Example: DEFAULT_CONFIG='{"german_gender_ending": "de-e"}'
+    default_config: Optional[str] = ""
 
     slack_enabled: bool = False
     slack_signing_secret: Optional[str] = ""

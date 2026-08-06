@@ -51,8 +51,18 @@ async def lifespan(app: FastAPI, context: AppContext):
     context.db = await Db.factory(context.settings, context.languages)
     context.model.db = context.db
 
-    # Load testing rules if configured
-    if context.settings.testing_rules:
+    # Canned user and organisation records for the test suite, which
+    # authenticates as the email they carry. They are fixtures, not
+    # configuration: an entry marked "force" in one overrides what a request
+    # asks for, so a deployment that loaded them would silently answer with
+    # something other than what its clients requested. Only under TESTING.
+    if context.settings.testing_rules and not context.settings.testing:
+        context.logger.error(
+            "TESTING_RULES is set but TESTING is not, so it will be ignored. "
+            "Use DEFAULT_CONFIG and DEFAULT_API_KEY for a real deployment."
+        )
+
+    if context.settings.testing and context.settings.testing_rules:
         rules = json.loads(context.settings.testing_rules)
 
         rules["term_replacements"] = parse_term_replacements(
@@ -61,7 +71,7 @@ async def lifespan(app: FastAPI, context: AppContext):
         email = rules["email"]
         context.redis.db.set(context.redis.get_user_id(email), json.dumps(rules))
 
-    if context.settings.testing_organization_rules:
+    if context.settings.testing and context.settings.testing_organization_rules:
         organization_rules = json.loads(context.settings.testing_organization_rules)
 
         organization_rules["term_replacements"] = parse_term_replacements(
