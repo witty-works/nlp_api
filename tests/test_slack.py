@@ -19,6 +19,7 @@ def test_register_routes_without_slack(monkeypatch):
 
     class FakeSettings:
         slack_enabled = False
+        languagetool_compat_root = False
 
     monkeypatch.setattr(routes_pkg, "get_settings", lambda: FakeSettings())
 
@@ -37,6 +38,7 @@ def test_register_routes_with_slack_but_not_initialized(monkeypatch):
 
     class FakeSettings:
         slack_enabled = True
+        languagetool_compat_root = False
 
     monkeypatch.setattr(routes_pkg, "get_settings", lambda: FakeSettings())
 

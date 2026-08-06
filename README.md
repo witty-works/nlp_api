@@ -7,6 +7,7 @@
   - Optional LLM-powered alternatives and rephrasing
   - Reducing bias in LLM output (through prompt injection and automatic follow-ups prompts)
   - Custom, organization-specific rules
+  - LanguageTool-compatible API, so LanguageTool clients (desktop app, add-ons) can use this service as their custom server — see [LanguageTool-compatible API](docs/api.md#languagetool-compatible-api)
 - Integrations:
   - Use https://github.com/witty-works/dashboard to manage to user/organization configuration — optional, see [Running without the dashboard](docs/configuration.md#running-without-the-dashboard)
   - Use https://github.com/witty-works/browser-extension and https://github.com/witty-works/world-plugin UI clients

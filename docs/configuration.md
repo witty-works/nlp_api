@@ -294,6 +294,7 @@ Optional spell/grammar checking. You can use the public API or self-host Languag
 | LANGUAGETOOL_VERIFY_SSL | true                                | Verify TLS certs when calling LanguageTool. Set to false for local/self-signed setups. |
 | LANGUAGETOOL_USERNAME   | (empty)                             | Optional: your username/email for premium LanguageTool accounts (used for API access). |
 | LANGUAGETOOL_API_KEY    | (empty)                             | Optional: your API key / access token for premium LanguageTool accounts.               |
+| LANGUAGETOOL_COMPAT_ROOT | false                              | Serve the [LanguageTool-compatible API](./api.md#languagetool-compatible-api) additionally at the root (`/v2/check`, ...), the exact path layout of a real LanguageTool server. Needed for clients that cannot be given a path in their server URL, e.g. the desktop app pointed at localhost. |
 
 Self-hosted: https://github.com/languagetool-org/languagetool
 

@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
     languagetool_api_key: Optional[str] = ""
+    # Serve the LanguageTool-compatible API additionally at the exact paths a
+    # real LanguageTool server has (/v2/check, /v2/languages, ...). Needed for
+    # clients that build the URL themselves and cannot be given a path, such
+    # as the desktop app pointed at localhost. The /lt/v2/... variant is
+    # always on; this only adds the root mount.
+    languagetool_compat_root: bool = False
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""

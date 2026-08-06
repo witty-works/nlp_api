@@ -8,6 +8,7 @@ from app.routes import (
     prompt,
     textarea,
     check,
+    lt,
     debug,
 )
 from app.settings import get_settings
@@ -40,6 +41,14 @@ def register_routes(app):
 
     # Register text checking routes (core functionality)
     app.include_router(check.router, tags=["check"])
+
+    # Register the LanguageTool-compatible API (under the /lt prefix). With
+    # LANGUAGETOOL_COMPAT_ROOT on, additionally at the root (/v2/...) — the
+    # exact path layout of a real LanguageTool server — for clients that
+    # cannot be given a path in their server URL.
+    app.include_router(lt.router, prefix="/lt", tags=["languagetool"])
+    if get_settings().languagetool_compat_root:
+        app.include_router(lt.router, tags=["languagetool"], include_in_schema=False)
 
     # Register debug routes
     app.include_router(debug.router, tags=["debug"])
