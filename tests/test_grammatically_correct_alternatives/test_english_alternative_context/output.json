@@ -13,7 +13,6 @@
             "end": 9,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "<h4>Mental health and well-being</h4>\n<p>Using words related to mental health casually and with negative connotations can be hurtful and distressing to people who are invested in managing their mental wellbeing and people living with an invisible disability. Treating mental health <span>as a joke, metaphor, or euphemism</span> and making assumptions about what it’s like to experience mental health problems enables others to internalize mental health stigma.</p><br /><br /><p><p>Avoid using mental health terms casually and <span>trivializing the difficulties people </span>who work on their mental health experience face. Explore descriptive words instead.</p>\n<p>😔 <em>Mason is so OCD when it comes to filing.<br></em>🤗 <em>Mason is perfectionist when it come to filing.</em></p></p>",
                 "text": "Repeats outdated ideas about mental health and wellbeing",
                 "url": "https://www.witty.works/en/categories/ability-physicality/mental-wellbeing?reducedView=true"
@@ -44,17 +43,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language.",
                     "height": 507,
-                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "src": "https://www.witty.works/assets/media/agentic.png",
                     "width": 900
                 },
                 "long_text": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentic Language.mp4"
             },
             "gravity": 3.0,
             "label": "Social Motive: Agentic language",
@@ -100,11 +98,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A man in a suit with his arms akimbo stands in the spotlight surrounded by a diverse crowd in the shadows",
                     "height": 409,
-                    "src": "https://www.witty.works/hs-fs/hubfs/witty-works-Generic-masculine-810x410.jpg.png?width=809&quality=high",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "To include everyone, use options that nudge people’s brains into seeing all gender possibilities.",
@@ -133,7 +130,6 @@
             "end": 77,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "<p>Sometimes a behavior of a person is considered as \"other\" according to a stereotypical view by the society, meaning the society's behavior is \"normal\" and this person's not. But this thinking is outdated. «The research of \"<span>Neurodiversity\" describes the idea that people experience and interact with the world around them in many different ways; there is no one \"right\" way of thinking, learning, and behaving, and&nbsp;</span>differences are not viewed as deficits», as described in this <a href=\"https://www.health.harvard.edu/blog/what-is-neurodiversity-202111232645\" rel=\"noopener\" target=\"_blank\">article of Harvard Health</a>.&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p><br /><br /><p>Prevent such wording as it pigeonholes people in outdated stereotypes. In order to find other wording, think of it as \"everyone is normal\" and each person is authentic to themself. That helps you to use language that applies to any kind of person and in the same way.</p>",
                 "text": "Frames authentic behavior as undesirable and other",
                 "url": "https://www.witty.works/en/categories/ability-physicality/behavior?reducedView=true"
@@ -173,11 +169,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -209,7 +204,6 @@
             "end": 125,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "To welcome and include everyone, stay mindful of myths and stereotypes about the ability to see.",
                 "text": "Repeats preconceived notions about the ability to see",
                 "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"

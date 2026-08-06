@@ -14,11 +14,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
                 "image_url": {
                     "alt": "Illustration of a two people with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble shows a neatly rolled up line.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/plain%20language.png",
+                    "src": "https://www.witty.works/assets/media/plain%20language.png",
                     "width": 900
                 },
                 "long_text": "To ensure everyone understands, keep language clear, short, and direct.",
@@ -41,17 +40,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A diverse group of people being friendly with each other",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
                     "width": 900
                 },
                 "long_text": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Communal Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Communal Language.mp4"
             },
             "label": "Social Motive: Communal language",
             "proficiency_level": "inclusive",

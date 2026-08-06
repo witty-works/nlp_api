@@ -26,7 +26,6 @@
             "end": 20,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -66,11 +65,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",

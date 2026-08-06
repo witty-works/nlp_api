@@ -34,11 +34,10 @@
             "end": 15,
             "explanation": {
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
@@ -85,11 +84,10 @@
             "end": 40,
             "explanation": {
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
@@ -135,11 +133,10 @@
             "end": 65,
             "explanation": {
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
@@ -174,7 +171,6 @@
             "end": 95,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "Pour inclure des personnes de tous les genres, adressez-vous directement à elles ou utilisez des mots non genrés.",
                 "text": "Excluez-vous les personnes non binaires ?",
                 "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/pronoms-binaires?reducedView=true"
@@ -207,11 +203,10 @@
             "end": 110,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration de paires d'hommes et de femmes astronautes, artistes, soignants, professeurs, ouvriers du bâtiment.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Pour désigner des personnes de tous les genres dans les différentes fonctions, utilisez un langage inclusif.",

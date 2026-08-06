@@ -26,11 +26,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -69,11 +68,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
                 "image_url": {
                     "alt": "Witty Works illustration: One person says,\" That's how we move the needle on sales.\" The other person says, \"Great\" but secretly wonders, \"Needles?\" ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20Works%20Empty%20words.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20Works%20Empty%20words.png",
                     "width": 900
                 },
                 "long_text": "To connect and engage your audience, avoid empty words and generic messages.",

@@ -25,7 +25,6 @@
             "end": 187,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Please add a punctuation mark at the end of paragraph."
             },
             "gravity": 1.0,
@@ -62,11 +61,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration of a diverse group of people of diffent gender identities, ages, ethnic backgrounds, and body shapes who are all LGBTQUIA+",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "src": "https://www.witty.works/assets/media/gender%20identity.png",
                     "width": 900
                 },
                 "long_text": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
@@ -92,7 +90,6 @@
             "end": 16,
             "explanation": {
                 "icon": "🧊",
-                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
                 "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
@@ -113,17 +110,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A diverse group of people being friendly with each other",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
                     "width": 900
                 },
                 "long_text": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Communal Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Communal Language.mp4"
             },
             "label": "Social Motive: Communal language",
             "proficiency_level": "inclusive",
@@ -156,17 +152,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language.",
                     "height": 507,
-                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "src": "https://www.witty.works/assets/media/agentic.png",
                     "width": 900
                 },
                 "long_text": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentic Language.mp4"
             },
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",
@@ -200,17 +195,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language.",
                     "height": 507,
-                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "src": "https://www.witty.works/assets/media/agentic.png",
                     "width": 900
                 },
                 "long_text": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentic Language.mp4"
             },
             "gravity": 3.0,
             "label": "Social Motive: Agentic language",
@@ -235,7 +229,6 @@
             "explanation": {
                 "context": "Don't use this phrase for people",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "Help prevent the stigmatization of people with diseases: Avoid referring to them by their health status, and don't infer how and why they contracted, or are not recovering from, a disease.",
                 "text": "Repeats ableist ideas about health, illness, and wellbeing",
                 "url": "https://www.witty.works/en/categories/ability-physicality/medical-state?reducedView=true"
@@ -259,7 +252,6 @@
             "end": 129,
             "explanation": {
                 "icon": "🧊",
-                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
                 "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
@@ -296,11 +288,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -339,11 +330,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
                 "image_url": {
                     "alt": "Witty Works illustration: One person says,\" That's how we move the needle on sales.\" The other person says, \"Great\" but secretly wonders, \"Needles?\" ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20Works%20Empty%20words.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20Works%20Empty%20words.png",
                     "width": 900
                 },
                 "long_text": "To connect and engage your audience, avoid empty words and generic messages.",
@@ -379,17 +369,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language.",
                     "height": 507,
-                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "src": "https://www.witty.works/assets/media/agentic.png",
                     "width": 900
                 },
                 "long_text": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
                 "text": "Spotlights individual ambition, which may exclude the collective spirit valued in team-oriented settings",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentic Language.mp4"
             },
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",

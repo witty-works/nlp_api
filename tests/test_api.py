@@ -1600,7 +1600,6 @@ def test_rule_debug():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 },
                 "gravity": 0.9,
             }
@@ -1647,7 +1646,6 @@ def test_rule_patterns():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",
                 },
                 "gravity": 0.9,
@@ -1688,7 +1686,6 @@ def test_rule_patterns():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",
                 },
                 "gravity": 0.9,

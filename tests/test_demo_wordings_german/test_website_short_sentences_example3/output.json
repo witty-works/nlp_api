@@ -14,7 +14,6 @@
             "end": 27,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Nach einer Silbe aus zwei Vokalen (hier: au) schreibt man ‚ß‘ statt ‚ss‘."
             },
             "gravity": 1.0,
@@ -42,7 +41,6 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "long_text": "Wenn du Ideen konkret und sachlich präsentierst, wirkst du seriös, greifbar und authentisch.",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
@@ -79,17 +77,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen. Der Titel des Bildes lautet \"Agentische Sprache\".",
                     "height": 1446,
-                    "src": "https://www.witty.works/hubfs/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
+                    "src": "https://www.witty.works/assets/media/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
                     "width": 1836
                 },
                 "long_text": "Wenn du teamfähige Menschen erreichen willst, verwende Wörter, die Kooperation, Zusammenarbeit, Verbindung und ein gemeinsames Ziel betonen.",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentische Sprache.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentische Sprache.mp4"
             },
             "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",

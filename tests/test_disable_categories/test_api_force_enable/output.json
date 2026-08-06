@@ -28,7 +28,6 @@
             "end": 7,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,
@@ -50,17 +49,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration of a diverse group of smiling people listening to one person. Their speech bubble is a mix of words and clouds.",
                     "height": 500,
-                    "src": "https://www.witty.works/hubfs/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
                     "width": 921
                 },
                 "long_text": "To make your message effective and easy to grasp, use filler words sparingly.",
                 "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Fillers_EN.mp4"
+                "video_url": "https://www.witty.works/assets/media/Fillers_EN.mp4"
             },
             "gravity": 3.0,
             "label": "Cultural Diversity: Filler words",

@@ -38,11 +38,10 @@
                 "content": "advanced",
                 "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration einer Gruppe von Menschen mit unterschiedlicher geschlechtlicher Identität, unterschiedlichem Alter, ethnischem Hintergrund und verschiedenen Körperformen, die alle LGBTQUIA+ sind",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "src": "https://www.witty.works/assets/media/gender%20identity.png",
                     "width": 900
                 },
                 "long_text": "Vermeide es, Menschen auf traditionelle Geschlechterrollen, Geschlechtsidentitäten und Geschlechtsausdrücke zu beschränken",
@@ -76,11 +75,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
                     "width": 900
                 },
                 "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
@@ -130,11 +128,10 @@
                 "content": "advanced",
                 "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration einer Gruppe von Menschen mit unterschiedlicher geschlechtlicher Identität, unterschiedlichem Alter, ethnischem Hintergrund und verschiedenen Körperformen, die alle LGBTQUIA+ sind",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/gender%20identity.png",
+                    "src": "https://www.witty.works/assets/media/gender%20identity.png",
                     "width": 900
                 },
                 "long_text": "Vermeide es, Menschen auf traditionelle Geschlechterrollen, Geschlechtsidentitäten und Geschlechtsausdrücke zu beschränken",
@@ -157,17 +154,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
                     "width": 900
                 },
                 "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Communal_DE.mp4"
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",

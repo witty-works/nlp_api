@@ -28,7 +28,6 @@
             "end": 68,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,
@@ -71,7 +70,6 @@
             "end": 15,
             "explanation": {
                 "icon": "🧊",
-                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
                 "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
@@ -117,7 +115,6 @@
             "end": 51,
             "explanation": {
                 "icon": "❗",
-                "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 "long_text": "better ding",
                 "text": "better ding",
                 "url": "https://witty.works/foo bar"

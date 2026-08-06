@@ -29,7 +29,6 @@
             "end": 11,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -62,7 +61,6 @@
             "end": 29,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -95,7 +93,6 @@
             "end": 35,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -128,7 +125,6 @@
             "end": 77,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -161,7 +157,6 @@
             "end": 111,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -194,7 +189,6 @@
             "end": 117,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -215,7 +209,6 @@
             "end": 15,
             "explanation": {
                 "icon": "❗",
-                "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 "long_text": "better ding",
                 "text": "better ding"
             },
@@ -303,7 +296,6 @@
             "end": 149,
             "explanation": {
                 "icon": "❗",
-                "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 "long_text": "capitalization",
                 "text": "capitalization"
             },

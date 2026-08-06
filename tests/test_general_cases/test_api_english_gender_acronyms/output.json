@@ -10,17 +10,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A diverse group of people being friendly with each other",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
                     "width": 900
                 },
                 "long_text": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Communal Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Communal Language.mp4"
             },
             "label": "Social Motive: Communal language",
             "proficiency_level": "inclusive",
@@ -48,7 +47,6 @@
             "end": 13,
             "explanation": {
                 "icon": "😮",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "<h4>Abbreviations: (m/f/d) or (d/f/m)?</h4>\n<p>Out of habit, we often mention the male gender first when we use abbreviations in job offers, forms, or other documents. This reinforces the male gender as the norm, often without us even realizing it. Although such an order in an abbreviation may seem insignificant, it influences the reader. In Latin script, we read from left to right, and this order allows us to recognize who the writer puts first quickly.&nbsp;<br><br>If you want to know more about \"the male gender as default,\" please read the amazing book by Caroline Criado Perez, \"Invisible Women, Exposing Data Bias in a World Designed for Men.\" &nbsp;This standard has sometimes even deadly consequences for women and non-binary people.</p>",
                 "text": "Put underrepresented groups first and link to your equal opportunity policy",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-specific-abbreviation?reducedView=true"
