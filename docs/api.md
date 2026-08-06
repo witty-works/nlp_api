@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Core Endpoints](#core-endpoints)
+- [LanguageTool-compatible API](#languagetool-compatible-api)
 - [Management Endpoints](#management-endpoints)
   - [User Configuration](#user-configuration)
   - [Organization Configuration](#organization-configuration)
@@ -144,6 +145,91 @@ the raw value.
 See [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
 for what each value renders as.
 
+## LanguageTool-compatible API
+
+The service also speaks the [LanguageTool HTTP API v2
+protocol](https://languagetool.org/http-api/), so any LanguageTool client with
+a custom-server setting — the desktop app, the browser add-on, editor plugins —
+can be pointed at this API and get the Witty checks rendered as LanguageTool
+matches.
+
+The endpoints live under the `/lt` prefix so they stay apart from the
+versioned native API. LanguageTool clients append `/v2/check` to the
+configured server URL, so enter `https://<host>/lt` (or `https://<host>/lt/v2`
+where the client expects the URL including `/v2`) as the custom server.
+
+Some clients cannot be given a path at all. For those, set
+`LANGUAGETOOL_COMPAT_ROOT=true` (off by default) and the same endpoints are
+additionally served at the root, the exact path layout of a real LanguageTool
+server: `/v2/check`, `/v2/languages`, and so on. This does not collide with
+the native API, whose paths (`/v2.4/check`, `/v2.0/auth`) are distinct.
+
+The desktop app's localhost mode is the strictest case: it offers no URL, path
+or port input and expects a server at LanguageTool's standard local port 8081.
+To serve it, enable `LANGUAGETOOL_COMPAT_ROOT` and run the API on that port —
+`uvicorn app.main:app --port 8081`, or map the container port with
+`8081:8000` — with nothing else (such as a real local LanguageTool server)
+bound to 8081.
+
+| Endpoint                | Method | Auth Required | Description                                          |
+| ----------------------- | ------ | ------------- | ---------------------------------------------------- |
+| `/lt/v2/check`          | POST   | Yes           | Check text, LanguageTool request/response format     |
+| `/lt/v2/languages`      | GET    | No            | List supported languages                             |
+| `/lt/v2/maxtextlength`  | GET    | No            | The check text length limit, as plain text           |
+| `/lt/v2/info`           | GET    | No            | Software name and version                            |
+| `/lt/v2/words`          | GET    | No            | Personal dictionary stub: always `{"words": []}`     |
+| `/lt/v2/words/add`      | POST   | No            | Personal dictionary stub: always `{"added": false}`  |
+| `/lt/v2/words/delete`   | POST   | No            | Personal dictionary stub: always `{"deleted": false}` |
+
+(With `LANGUAGETOOL_COMPAT_ROOT` the same endpoints exist without the `/lt`
+prefix.)
+
+Example request (form-encoded, as LanguageTool clients send it):
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/lt/v2/check' \
+  --data-urlencode 'text=The chairman called.' \
+  --data-urlencode 'language=en-US' \
+  --data-urlencode 'apiKey=your-api-key'
+```
+
+Notes on how the protocol is mapped:
+
+- **Authentication** uses the protocol's own `apiKey` form field (most clients
+  offer a username/API-key setting next to the server URL), carrying the same
+  key the `x-key` header takes on the native API; `username` is accepted but
+  the key alone identifies the user. The `x-key` header and a Bearer token also
+  work for clients that can send headers. An **invalid** key gets the same 401
+  `AuthException` the LanguageTool server sends, so a mistyped key surfaces in
+  the client; LanguageTool's `password` and `tokenV2` login styles are answered
+  with a 401 explaining that only API keys are supported. A request without any
+  credentials gets an empty match list rather than an error, as on the native
+  endpoint. Where `REQUIRE_AUTH` is off, all of these check anonymously
+  instead, mirroring LanguageTool's fall-back-to-anonymous behavior.
+- `language` accepts the supported locales (`en-US`, `en-GB`, `de-DE`, `de-AT`,
+  `de-CH`, `fr-FR`), bare codes (`en`, `de`, `fr`), and `auto` with optional
+  `preferredVariants`. Unsupported codes get a 400; text whose language cannot
+  be detected with `auto` gets an empty match list, since LanguageTool clients
+  check on every edit and would surface an error each time.
+- The `data` parameter (text-plus-markup JSON) is supported; markup is
+  neutralized in place so returned offsets index into the original data
+  stream, and matches inside markup are discarded. The desktop app's
+  undocumented variants are also handled: a bare `{"text": ...}` document in
+  `data` (with an empty `text` form field alongside), and `language=auto` on
+  texts too short or misspelled to detect, which falls back to the first
+  supported preferred variant instead of returning nothing.
+- `motherTongue` maps to `config.primary_language`; `disabledCategories`
+  accepts the Witty category keys (see `/v2.0/categories`), not LanguageTool's.
+  The remaining rule-selection parameters (`enabledRules`, `disabledRules`,
+  `enabledOnly`, `level`, `dicts`) are accepted and ignored. The
+  personal-dictionary endpoints are stubs that store nothing.
+- Offsets are UTF-16 code units, matching what LanguageTool's Java server
+  produces and its clients expect.
+- Matches carry synthetic rule IDs (`WITTY_<subcategory>`) and the Witty
+  category as the rule category, so per-rule disabling in client UIs works per
+  subcategory.
+
 ## Management Endpoints
 
 These endpoints manage user and organization configurations. All require HTTP Basic authentication, on by default and configured via `MANAGEMENT_AUTH_ENABLED`, `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` — see [Protecting the management endpoints](./configuration.md#protecting-the-management-endpoints).
@@ -281,7 +367,7 @@ report configuration back:
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
 | `/settings` | GET    | The whole settings object, including every secret it holds      |
-| `/lt`       | GET    | View LanguageTool API URL                                       |
+| `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
 
 The LLM-backed ones among these are refused when `LLM_ACCESS=disabled` or no
 `LLM_MODEL` is configured, the same as the client-facing routes.

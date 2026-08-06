@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
     languagetool_api_key: Optional[str] = ""
+    # Serve the LanguageTool-compatible API additionally at the exact paths a
+    # real LanguageTool server has (/v2/check, /v2/languages, ...). Needed for
+    # clients that build the URL themselves and cannot be given a path, such
+    # as the desktop app pointed at localhost. The /lt/v2/... variant is
+    # always on; this only adds the root mount.
+    languagetool_compat_root: bool = False
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""
@@ -29,7 +35,8 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     # Guards the endpoints that create or read credentials and configuration, or
     # act on a named user's behalf: /api_key, /user/configs,
-    # /organization/configs, /user/logs, /settings, /lt and /v1.0/prompt.
+    # /organization/configs, /user/logs, /settings, /languagetool_api and
+    # /v1.0/prompt.
     # Defaults to on so an unconfigured deployment is closed rather than open.
     management_auth_enabled: bool = True
     testing: bool = False
