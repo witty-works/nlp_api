@@ -587,6 +587,36 @@
             "subcategory": "filler_advanced",
             "text": "selbst",
             "text_id": "selbst"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "einey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer, dessen Buch fehlt, kam. Nicht jeder mag das. Kennt das einer von euch? Sehr geehrte Damen und Herren. Liebe Kollegin, lieber Kollege. Die Studierenden kamen. De",
+            "end": 72,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Ohne folgendes Substantiv erhält das ein-Paradigma die Endung „-ey“: „einey“, im Dativ „einerm“.",
+                "text": "Im Inklusivum bekommen Personenwörter den Artikel „de“, auch wenn das Wort selbst unverändert bleibt.",
+                "url": "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 67,
+            "subcategory": "hidden_image",
+            "text": "einer",
+            "text_id": "einer"
         }
     ]
 }

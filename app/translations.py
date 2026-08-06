@@ -129,6 +129,11 @@ translations = {
         LangType.DE: "Im Inklusivum richtet sich das Adjektiv nach dem Substantiv: ohne Artikel „-ey“, nach einem Artikel „-e“ oder „-en“.",
         LangType.FR: "Dans l'Inklusivum, l'adjectif s'accorde avec le nom : « -ey » sans article, « -e » ou « -en » après un article.",
     },
+    "INKLUSIVUM_PRONOMINAL_LONG": {
+        LangType.EN: "Standing on its own, with no noun after it, the ein-paradigm takes ‘-ey’: ‘einey’, and ‘einerm’ in the dative.",
+        LangType.DE: "Ohne folgendes Substantiv erhält das ein-Paradigma die Endung „-ey“: „einey“, im Dativ „einerm“.",
+        LangType.FR: "Employé seul, sans nom qui suive, le paradigme de « ein » prend « -ey » : « einey », et « einerm » au datif.",
+    },
     "INKLUSIVUM_ARTICLE_LONG": {
         LangType.EN: "Words like ‘Gast’ or ‘Profi’ are masculine but already refer to anyone, so the word keeps its form and only the article changes, from ‘der’ to ‘de’.",
         LangType.DE: "Wörter wie „Gast“ oder „Profi“ sind maskulin, meinen aber bereits alle. Das Wort bleibt deshalb unverändert, nur der Artikel wird angepasst: aus „der“ wird „de“.",

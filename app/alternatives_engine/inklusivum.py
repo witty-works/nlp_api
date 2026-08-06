@@ -383,6 +383,22 @@ def possessive_pair(tilde_word: str) -> str | None:
     return forms[0]
 
 
+# Used without a noun, the ein-paradigm takes -ey where the article form is
+# bare: "nicht jedey mag das", "kennt das einey von euch?". The article stays
+# "ein", so the two cannot share a table.
+PRONOMINAL = {
+    "nominativ": "einey",
+    "akkusativ": "einey",
+    "genitiv": "einers",
+    "dativ": "einerm",
+}
+
+
+def pronominal(case: str | None = None) -> str:
+    """The ein-paradigm standing on its own, with no noun after it."""
+    return PRONOMINAL.get(case or "nominativ", PRONOMINAL["nominativ"])
+
+
 # Endings "ens" takes, agreeing with the noun it modifies.
 POSSESSIVE_ENDINGS = ("", "e", "em", "en", "er", "es", "ers", "erm")
 

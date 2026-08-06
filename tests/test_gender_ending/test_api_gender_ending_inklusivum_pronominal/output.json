@@ -1,0 +1,201 @@
+{
+    "gender_separator": "de-e",
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "female_form": "Ärztin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Arzt",
+                    "text": "Arzte"
+                },
+                {
+                    "female_form": "Ärztin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Arzt",
+                    "text": "Ärztin/Arzt"
+                },
+                {
+                    "text": "medizinisches Team"
+                },
+                {
+                    "text": "Praxis"
+                },
+                {
+                    "text": "Untersuchung"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 84,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 80,
+            "subcategory": "titles",
+            "text": "Arzt",
+            "text_id": "Arzt"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 90,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 85,
+            "subcategory": "communal",
+            "text": "hilft",
+            "text_id": "helfen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Einey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 5,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Ohne folgendes Substantiv erhält das ein-Paradigma die Endung „-ey“: „einey“, im Dativ „einerm“.",
+                "text": "Im Inklusivum bekommen Personenwörter den Artikel „de“, auch wenn das Wort selbst unverändert bleibt.",
+                "url": "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "hidden_image",
+            "text": "Einer",
+            "text_id": "einer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "einey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 30,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Ohne folgendes Substantiv erhält das ein-Paradigma die Endung „-ey“: „einey“, im Dativ „einerm“.",
+                "text": "Im Inklusivum bekommen Personenwörter den Artikel „de“, auch wenn das Wort selbst unverändert bleibt.",
+                "url": "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 25,
+            "subcategory": "hidden_image",
+            "text": "einen",
+            "text_id": "einen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "einey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 46,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Ohne folgendes Substantiv erhält das ein-Paradigma die Endung „-ey“: „einey“, im Dativ „einerm“.",
+                "text": "Im Inklusivum bekommen Personenwörter den Artikel „de“, auch wenn das Wort selbst unverändert bleibt.",
+                "url": "https://geschlechtsneutral.net/bereits-geschlechtsneutrale-personenworter/#mask"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 41,
+            "subcategory": "hidden_image",
+            "text": "einer",
+            "text_id": "einer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "gute"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
+            "end": 79,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Adjektive richten sich nach dem Substantiv. Nach einem Artikel enden sie auf „-e“ oder „-en“, ohne Artikel auf „-ey“, „-ers“ oder „-erm“.",
+                "text": "Im Inklusivum richtet sich das Adjektiv nach dem Substantiv: ohne Artikel „-ey“, nach einem Artikel „-e“ oder „-en“.",
+                "url": "https://geschlechtsneutral.net/gesamtsystem/#adjektive"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 74,
+            "subcategory": "hidden_image",
+            "text": "guter",
+            "text_id": "gut"
+        }
+    ]
+}

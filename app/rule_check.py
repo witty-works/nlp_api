@@ -39,6 +39,12 @@ from app.alternatives_engine import utils
 from app.rule_engine import utils as rule_utils
 
 # spaCy reports the case as a UD tag; the article table names them in German.
+# Surface forms of the ein-paradigm standing on its own. Matched on the word
+# rather than the lemma because the app swaps spaCy's lemmatizer for its own,
+# which leaves "Einer" as "Einer" and reduces "einen" to "ein", so neither
+# arrives as the lemma raw spaCy would give. "jeder" has a rule of its own.
+PRONOMINAL_FORMS = {"einer", "eine", "einen", "einem", "eines"}
+
 INKLUSIVUM_CASES = {
     "Nom": "nominativ",
     "Gen": "genitiv",
@@ -223,6 +229,43 @@ class RuleCheck:
         reported = [(result.start, result.end) for result in list_full]
 
         for token in tokens:
+            # Standing on its own, with no noun to introduce, the ein-paradigm
+            # takes -ey: "Einer für alle" becomes "Einey für alle". The article
+            # form is bare "ein", so this cannot come from the article table.
+            if token.pos_ == "PRON" and token.text.lower() in PRONOMINAL_FORMS:
+                end = token.idx + len(token.text)
+                if self.covers(reported, token.idx, end):
+                    continue
+
+                case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+                replacement = inklusivum.pronominal(case)
+                if replacement == token.text.lower():
+                    continue
+
+                append_result(
+                    list_full,
+                    config=config,
+                    client=client,
+                    language=language,
+                    text=token.text,
+                    text_id=token.text.lower(),
+                    full_text=full_text,
+                    offsets=offsets,
+                    subcategory=subcategory,
+                    start=token.idx,
+                    alternatives=[
+                        Alternative(
+                            upperfirst(replacement)
+                            if token.text[0].isupper()
+                            else replacement
+                        )
+                    ],
+                    explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                    url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                    long_explanation=language.translate("INKLUSIVUM_PRONOMINAL_LONG"),
+                )
+                continue
+
             if token.pos_ != "DET" or token.text.lower() not in articles:
                 continue
 
