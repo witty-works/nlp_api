@@ -1,0 +1,580 @@
+{
+    "gender_separator": "*in",
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "female_form": "eine Kollegin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Kollegen",
+                    "text": "eine*n Kolleg*in"
+                },
+                {
+                    "female_form": "eine Kollegin",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Kollegen",
+                    "text": "eine/n Kollegin/Kollegen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Kollegschaft"
+                },
+                {
+                    "text": "ein Team"
+                },
+                {
+                    "text": "ein Teammitglied"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunde",
+            "end": 23,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 9,
+            "subcategory": "function",
+            "text": "einen Kollegen",
+            "text_id": "Kollege"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleg*innen"
+                },
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studen",
+            "end": 58,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "subcategory": "function",
+            "text": "Kollegen",
+            "text_id": "Kollege"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt",
+            "end": 82,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 74,
+            "subcategory": "communal",
+            "text": "betreuen",
+            "text_id": "betreuen"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "eine Kundin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Kunden",
+                    "text": "eine*n Kund*in"
+                },
+                {
+                    "female_form": "eine Kundin",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Kunden",
+                    "text": "eine/n Kundin/Kunden"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Kundschaft"
+                },
+                {
+                    "text": "ein Klientel"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Student",
+            "end": 95,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 83,
+            "subcategory": "function",
+            "text": "einen Kunden",
+            "text_id": "Kunde"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "ch habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe v",
+            "end": 109,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 101,
+            "subcategory": "communal",
+            "text": "betreuen",
+            "text_id": "betreuen"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kundinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kunden",
+                    "text": "Kund*innen"
+                },
+                {
+                    "female_form": "Kundinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kunden",
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "legen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Koll",
+            "end": 124,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 118,
+            "subcategory": "function",
+            "text": "Kunden",
+            "text_id": "Kunde"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Die Professorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Der Professor",
+                    "text": "Die*der Professor*in"
+                },
+                {
+                    "female_form": "Die Professorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Der Professor",
+                    "text": "Die/der Professorin/Professor"
+                },
+                {
+                    "text": "Das Praktikum"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "troffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen.",
+            "end": 139,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 126,
+            "subcategory": "titles",
+            "text": "Der Professor",
+            "text_id": "Professor"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "eine Studentin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Studenten",
+                    "text": "eine*n Student*in"
+                },
+                {
+                    "female_form": "eine Studentin",
+                    "gender_role": "binary_gender",
+                    "male_form": "einen Studenten",
+                    "text": "eine/n Studentin/Studenten"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Studierendenschaft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Studierende"
+                },
+                {
+                    "text": "einzelne Studi"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "ele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten",
+            "end": 161,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 146,
+            "subcategory": "function",
+            "text": "einen Studenten",
+            "text_id": "Student"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Die Professorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Der Professor",
+                    "text": "Die*der Professor*in"
+                },
+                {
+                    "female_form": "Die Professorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Der Professor",
+                    "text": "Die/der Professorin/Professor"
+                },
+                {
+                    "text": "Das Praktikum"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "offen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getro",
+            "end": 176,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 163,
+            "subcategory": "titles",
+            "text": "Der Professor",
+            "text_id": "Professor"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Studentinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Studenten",
+                    "text": "Student*innen"
+                },
+                {
+                    "female_form": "Studentinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Studenten",
+                    "text": "Studentinnen und Studenten"
+                },
+                {
+                    "text": "Studierendenschaft"
+                },
+                {
+                    "text": "Studierende"
+                },
+                {
+                    "text": "Studis"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
+            "end": 197,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 188,
+            "subcategory": "function",
+            "text": "Studenten",
+            "text_id": "Student"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "ere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
+            "end": 219,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 214,
+            "subcategory": "communal",
+            "text": "nette",
+            "text_id": "nett"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleg*innen"
+                },
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "nden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
+            "end": 228,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 220,
+            "subcategory": "function",
+            "text": "Kollegen",
+            "text_id": "Kollege"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "denten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
+            "end": 261,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 255,
+            "subcategory": "communal",
+            "text": "netten",
+            "text_id": "nett"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kollegin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleg*in"
+                },
+                {
+                    "female_form": "Kollegin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kollegin/Kollegen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                },
+                {
+                    "text": "Teammitglied"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
+            "end": 270,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 262,
+            "subcategory": "function",
+            "text": "Kollegen",
+            "text_id": "Kollege"
+        }
+    ]
+}

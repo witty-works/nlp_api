@@ -42,6 +42,8 @@ class Model:
     loggger: Logger
     static_rules: dict
     lemma_plural_lookup: set
+    # Filled in at startup once the database is available.
+    ambiguous_number_lookup: dict
     db: Db
 
     def __init__(
@@ -55,6 +57,7 @@ class Model:
         self.logger = logger
         self.static_rules = static_rules
         self.lemma_plural_lookup = lemma_plural_lookup
+        self.ambiguous_number_lookup = {}
 
         for model_name in self.settings.models:
             lang = model_name[0:2]
@@ -379,18 +382,92 @@ class Model:
 
         self.models[lang] = model
 
+    def is_number_ambiguous(self, lang: LangType, token: Token) -> bool:
+        """Whether the word list cannot decide this token's number.
+
+        True for forms that are both a singular and a plural of the same lemma,
+        where the list can only ever answer plural.
+        """
+        return token.text in self.ambiguous_number_lookup.get(lang, ())
+
+    def number_from_determiner(self, lang: LangType, token: Token) -> bool | None:
+        """Read the number off the determiner introducing this noun.
+
+        Preferred over the tagger for ambiguous forms because it is a fixed
+        lookup: it gives the same answer whichever model is loaded, which the
+        morphology does not. Returns None when no determiner settles it.
+        """
+        rules = self.static_rules.get(lang, {})
+        plural_only = rules.get("plural_only_determiners")
+        singular_only = rules.get("singular_only_determiners")
+
+        if not plural_only and not singular_only:
+            return None
+
+        # A determiner binds only the noun phrase it opens, so walk back over
+        # adjectives and stop at the first word that is not one. Running past
+        # that would pick up the determiner of an earlier phrase, reading
+        # "eine Arbeitskraft für unsere Kunden" as a singular Kunden.
+        for index in range(token.i - 1, max(token.i - 4, token.sent.start) - 1, -1):
+            previous = token.doc[index]
+
+            word = previous.text.lower()
+            if word in plural_only:
+                return False
+            if word in singular_only:
+                return True
+
+            if previous.pos_ not in ("ADJ", "ADV"):
+                return None
+
+        return None
+
     def is_token_singular(self, lang: LangType, token: Token) -> bool | None:
         plural_lookup_first = (
             False if token.text.endswith("e") and token.lemma_.endswith("er") else True
         )
-        if plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+        # An ambiguous form is genuinely both, so the list is not evidence and
+        # must not pre-empt the reading from the surrounding sentence.
+        ambiguous = self.is_number_ambiguous(lang, token)
+
+        if (
+            not ambiguous
+            and plural_lookup_first
+            and token.text in self.lemma_plural_lookup[lang]
+        ):
             return False
+
+        if ambiguous:
+            from_determiner = self.number_from_determiner(lang, token)
+            if from_determiner is not None:
+                return from_determiner
 
         number = token.morph.get("Number")
         if number:
-            return "Sing" in number
+            is_singular = "Sing" in number
 
-        if not plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+            if (
+                self.settings.log_metrics
+                and ambiguous
+                and is_singular
+                and token.text in self.lemma_plural_lookup[lang]
+            ):
+                # Where the two sources disagree the model decides, so record it:
+                # this is the only place a different spaCy model can change the
+                # number, and without a count the trade-off is invisible.
+                self.logger.info(
+                    "Number from morphology over word list for '%s' (%s), model '%s'",
+                    token.text,
+                    lang,
+                    self.models[lang].meta.get("name", "unknown"),
+                )
+
+            return is_singular
+
+        # Nothing decided it, so fall back to the list even when ambiguous:
+        # a guess from the lexicon beats no answer, and this keeps the previous
+        # behaviour wherever the model has no morphological reading at all.
+        if token.text in self.lemma_plural_lookup[lang]:
             return False
 
         if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):

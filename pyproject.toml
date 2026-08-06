@@ -36,7 +36,9 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
     "gunicorn",
-    "spacy",
+    # Bounded to the range the pinned models below declare, so spacy cannot
+    # float to a version they were never built against.
+    "spacy>=3.7.2,<3.8.0",
     "pandas",
     "aiofiles",
     "aiohttp",
