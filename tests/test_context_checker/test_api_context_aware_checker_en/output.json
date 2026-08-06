@@ -39,43 +39,6 @@
             "subcategory": "agentic",
             "text": "unabhängig",
             "text_id": "unabhängig"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "neutrale"
-                },
-                {
-                    "text": "unvoreingenommene"
-                },
-                {
-                    "text": "kompetente und einfallsreiche"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Du arbeitest unabhängig. Greenpeace ist eine unabhängige Organisation.",
-            "end": 56,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "image_url": {
-                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen. Der Titel des Bildes lautet \"Agentische Sprache\".",
-                    "height": 1446,
-                    "src": "https://www.witty.works/assets/media/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
-                    "width": 1836
-                },
-                "long_text": "Wenn du teamfähige Menschen erreichen willst, verwende Wörter, die Kooperation, Zusammenarbeit, Verbindung und ein gemeinsames Ziel betonen.",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true",
-                "video_url": "https://www.witty.works/assets/media/Agentische Sprache.mp4"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 45,
-            "subcategory": "agentic",
-            "text": "unabhängige",
-            "text_id": "unabhängig"
         }
     ]
 }
