@@ -13,7 +13,6 @@
             "end": 122,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "If this is a question, use a question mark."
             },
             "gravity": 1.0,
@@ -34,7 +33,6 @@
             "end": 11,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "<p>Try to imagine a reader lower in hierarchy or socio-economic level than yourself: How would you feel when re-reading your own words?</p>\n<p>For many people, this formulation implicitly communicates a feeling of condescension. It is associated with a power imbalance and can be perceived as \"a top down\" mindset. It may or may not also express a sense of social class difference. In short, readers unconsciously realize that the text is not at their eye level. And thus excludes them from the conversation.&nbsp;</p><br /><br /><p><p>In many situations, we are not aware of our own position and privilege that comes with it. We might have privilege due to our socio-economic background (education was always paid for, the parents never had to worry at the end of the month) or due to our position in a company (faster access to information, being taken more seriously due to seniority). These privileges do influence how we formulate our sentences. Daniel Kahnemann, one of the founders of behavioral economics, once realized that he inadvertently uses different tone of voice in emails when he writes to other professors or to his assistant. The first was at eye level while the second was almost bossy.</p>\n<p>When writing, try to be aware of that \"classism\" bias that happens to all of us. Ask yourself: \"Would I write it the same way with an addressee that has the same position as I?\"</p></p>",
                 "text": "Implies socioeconomic status sets the value of a person ",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/classism?reducedView=true"
@@ -58,7 +56,6 @@
             "end": 25,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "<p>Try to imagine a reader lower in hierarchy or socio-economic level than yourself: How would you feel when re-reading your own words?</p>\n<p>For many people, this formulation implicitly communicates a feeling of condescension. It is associated with a power imbalance and can be perceived as \"a top down\" mindset. It may or may not also express a sense of social class difference. In short, readers unconsciously realize that the text is not at their eye level. And thus excludes them from the conversation.&nbsp;</p><br /><br /><p><p>In many situations, we are not aware of our own position and privilege that comes with it. We might have privilege due to our socio-economic background (education was always paid for, the parents never had to worry at the end of the month) or due to our position in a company (faster access to information, being taken more seriously due to seniority). These privileges do influence how we formulate our sentences. Daniel Kahnemann, one of the founders of behavioral economics, once realized that he inadvertently uses different tone of voice in emails when he writes to other professors or to his assistant. The first was at eye level while the second was almost bossy.</p>\n<p>When writing, try to be aware of that \"classism\" bias that happens to all of us. Ask yourself: \"Would I write it the same way with an addressee that has the same position as I?\"</p></p>",
                 "text": "Implies socioeconomic status sets the value of a person ",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/classism?reducedView=true"
@@ -82,7 +79,6 @@
             "end": 43,
             "explanation": {
                 "icon": "🧊",
-                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
                 "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
@@ -120,11 +116,10 @@
                 "content": "advanced",
                 "context": "Don't use this phrase for people",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -173,11 +168,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -203,7 +197,6 @@
             "end": 129,
             "explanation": {
                 "icon": "🧊",
-                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png",
                 "long_text": "Formal language is often used in a diplomatic context. It expresses respect between countries. In everyday business situations, however, it can seem odd. It can implicitly convey that an interlocutor is \"something better.\" Formal expressions can kill emotionality and are not conducive to eye-to-eye cooperation. This is contrary to what we are trying to achieve: an inclusive culture where everyone can bring their perspective to the table and realize their full potential.<br /><br /><p>Try to write in a way that expresses the equality between you and the reader. It often helps to imagine that you are writing to a friend.&nbsp;</p>",
                 "text": "A less formal tone makes you sound more accessible",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
@@ -241,11 +234,10 @@
                 "content": "advanced",
                 "context": "Don't use this phrase for people",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
@@ -268,17 +260,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
-                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: A diverse group of people being friendly with each other",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Why%20(900%20%C3%97%20525%20px).png",
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
                     "width": 900
                 },
                 "long_text": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Communal Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Communal Language.mp4"
             },
             "label": "Social Motive: Communal language",
             "proficiency_level": "inclusive",
@@ -299,11 +290,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: One person says, \"He? She?\" Another person says, \"They.\" A third person responds with a heart in rainbow colors.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
                     "width": 900
                 },
                 "long_text": "To include all genders, adress people directly or use the genderneutral \"they\"",
@@ -336,11 +326,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: One person says, \"He? She?\" Another person says, \"They.\" A third person responds with a heart in rainbow colors.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
                     "width": 900
                 },
                 "long_text": "To include all genders, adress people directly or use the genderneutral \"they\"",
@@ -378,7 +367,6 @@
             "end": 204,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "To welcome and include everyone, stay mindful of myths and stereotypes about the ability to see.",
                 "text": "Repeats preconceived notions about the ability to see",
                 "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
@@ -406,11 +394,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration: One person says, \"He? She?\" Another person says, \"They.\" A third person responds with a heart in rainbow colors.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
                     "width": 900
                 },
                 "long_text": "To include all genders, adress people directly or use the genderneutral \"they\"",

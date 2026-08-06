@@ -26,7 +26,6 @@
             "end": 23,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Le mot « sont » ne peut pas être un verbe après « ses »."
             },
             "gravity": 1.0,

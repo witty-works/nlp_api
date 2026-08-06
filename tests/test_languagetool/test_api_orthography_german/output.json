@@ -26,7 +26,6 @@
             "end": 27,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -59,7 +58,6 @@
             "end": 39,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Nach einer lang gesprochenen Silbe (hier: a) schreibt man ‚ß‘ statt ‚ss‘."
             },
             "gravity": 1.0,
@@ -80,7 +78,6 @@
             "end": 42,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch."
             },
             "gravity": 1.0,

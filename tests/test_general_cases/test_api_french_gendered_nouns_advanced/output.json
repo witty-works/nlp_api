@@ -29,7 +29,6 @@
             "end": 2,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "Pour inclure des personnes de tous les genres, adressez-vous directement à elles ou utilisez des mots non genrés.",
                 "text": "Excluez-vous les personnes non binaires ?",
                 "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/pronoms-binaires?reducedView=true"
@@ -62,11 +61,10 @@
             "end": 17,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration de paires d'hommes et de femmes astronautes, artistes, soignants, professeurs, ouvriers du bâtiment.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Pour désigner des personnes de tous les genres dans les différentes fonctions, utilisez un langage inclusif.",
@@ -117,17 +115,16 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras croisés devant la poitrine. Le titre de l'image indique « Langage agentique » en anglais.",
                     "height": 507,
-                    "src": "https://www.witty.works/hubfs/agentic.png",
+                    "src": "https://www.witty.works/assets/media/agentic.png",
                     "width": 900
                 },
                 "long_text": "Pour atteindre les personnes qui ont l'esprit d'équipe, utilisez des mots qui mettent en avant la coopération, la collaboration, la connexion et un objectif commun.",
                 "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
                 "url": "https://www.witty.works/fr/categories/motivation-sociale/langage-agentique?reducedView=true",
-                "video_url": "https://www.witty.works/hubfs/Agentic Language.mp4"
+                "video_url": "https://www.witty.works/assets/media/Agentic Language.mp4"
             },
             "gravity": 3.0,
             "label": "Motivation sociale: Langage agentique",
