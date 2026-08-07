@@ -239,6 +239,48 @@
         {
             "alternatives": [
                 {
+                    "female_form": "Sacharbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Sacharbeiter",
+                    "text": "Sacharbeiter*in"
+                },
+                {
+                    "female_form": "Sacharbeiterin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Sacharbeiter",
+                    "text": "Sacharbeiterin/Sacharbeiter"
+                },
+                {
+                    "text": "Sacharbeit"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "s/in, beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 160,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 146,
+            "subcategory": "titles",
+            "text": "Sacharbeiterin",
+            "text_id": "Arbeiter"
+        },
+        {
+            "alternatives": [
+                {
                     "female_form": "Mitarbeiterin",
                     "gender_role": "inclusive_gender",
                     "male_form": "Mitarbeiter",

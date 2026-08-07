@@ -310,7 +310,7 @@
         "is_singular": false,
         "lemma": "Studierende",
         "morph": {
-            "Case": "Acc",
+            "Case": "Nom",
             "Number": "Plur"
         },
         "ner": "",
@@ -406,7 +406,7 @@
         "is_singular": false,
         "lemma": "Mitarbeitende",
         "morph": {
-            "Case": "Nom",
+            "Case": "Acc",
             "Gender": "Masc",
             "Number": "Plur"
         },

@@ -34,9 +34,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -78,9 +78,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -145,9 +145,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -174,11 +174,6 @@
     {
         "children": [
             {
-                "dep": "cd",
-                "ner": "",
-                "token": "und"
-            },
-            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Lehrer"
@@ -189,9 +184,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -202,7 +197,7 @@
         "dep": "cd",
         "dependent": null,
         "emoji_desc": null,
-        "head": "hier",
+        "head": "arbeiten",
         "is_emoji": false,
         "is_singular": null,
         "lemma": "und",
@@ -228,6 +223,11 @@
                 "token": "Experten"
             },
             {
+                "dep": "cj",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Lehrer"
@@ -238,9 +238,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -277,6 +277,11 @@
                 "token": "Experten"
             },
             {
+                "dep": "cj",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Lehrer"
@@ -287,9 +292,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -320,6 +325,11 @@
     {
         "children": [
             {
+                "dep": "cj",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Lehrer"
@@ -330,9 +340,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",
@@ -340,10 +350,10 @@
                 "token": "."
             }
         ],
-        "dep": "oc",
+        "dep": "cj",
         "dependent": null,
         "emoji_desc": null,
-        "head": "arbeiten",
+        "head": "und",
         "is_emoji": false,
         "is_singular": null,
         "lemma": "helfen",
@@ -371,9 +381,9 @@
                 "token": "hier"
             },
             {
-                "dep": "oc",
+                "dep": "cd",
                 "ner": "",
-                "token": "helfen"
+                "token": "und"
             },
             {
                 "dep": "punct",

@@ -45,37 +45,6 @@
         {
             "alternatives": [
                 {
-                    "remove": true
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Employees are flexible, so are companies. You are flexible. We are looking for flexible employees for our flexible company.",
-            "end": 26,
-            "explanation": {
-                "content": "video",
-                "icon": "😟",
-                "image_url": {
-                    "alt": "Illustration of a diverse group of smiling people listening to one person. Their speech bubble is a mix of words and clouds.",
-                    "height": 500,
-                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
-                    "width": 921
-                },
-                "long_text": "To make your message effective and easy to grasp, use filler words sparingly.",
-                "text": "Adding complexity but no meaning",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true",
-                "video_url": "https://www.witty.works/assets/media/Fillers_EN.mp4"
-            },
-            "gravity": 3.0,
-            "label": "Cultural Diversity: Filler words",
-            "proficiency_level": "unconscious_bias",
-            "start": 24,
-            "subcategory": "filler_advanced",
-            "text": "so",
-            "text_id": "so"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "You're"
                 }
             ],

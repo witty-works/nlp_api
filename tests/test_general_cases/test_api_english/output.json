@@ -99,35 +99,6 @@
             "text_id": "ninja"
         },
         {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "social-motive",
-            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
-            "end": 80,
-            "explanation": {
-                "icon": "🚫",
-                "image_url": {
-                    "alt": "Illustration: Eine Person flucht laut ins Handy. Zwei Personen stehen ausdruckslos daneben mit Fragezeichen in einer gemeinsamen Denkblase.",
-                    "height": 492,
-                    "src": "https://www.witty.works/assets/media/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
-                    "width": 875
-                },
-                "long_text": "Don't use foul language. Using offensive language can be subject to legal – or disciplinary – action.",
-                "text": "Language that hurts, offends, and intimidates",
-                "url": "https://www.witty.works/en/categories/social-motive/offensive-language?reducedView=true"
-            },
-            "gravity": 1.0,
-            "label": "Social Motive: Offensive language",
-            "proficiency_level": "openly_discriminating",
-            "start": 77,
-            "subcategory": "offensive_language",
-            "text": "ass",
-            "text_id": "ass"
-        },
-        {
             "alternatives": [],
             "category": "social-motive",
             "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",

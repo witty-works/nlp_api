@@ -246,15 +246,15 @@
         "emoji_desc": null,
         "head": "committee",
         "is_emoji": false,
-        "is_singular": true,
+        "is_singular": null,
         "lemma": "man-made",
         "morph": {
-            "Number": "Sing"
+            "Degree": "Pos"
         },
         "ner": "",
-        "pos": "PROPN",
+        "pos": "ADJ",
         "start": 28,
-        "tag": "NNP",
+        "tag": "JJ",
         "text": "man-made",
         "whitespace": " ",
         "word_type": "n"

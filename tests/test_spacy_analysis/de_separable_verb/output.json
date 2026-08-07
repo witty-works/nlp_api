@@ -295,7 +295,7 @@
         "is_singular": false,
         "lemma": "neue",
         "morph": {
-            "Case": "Nom",
+            "Case": "Acc",
             "Degree": "Pos",
             "Number": "Plur"
         },

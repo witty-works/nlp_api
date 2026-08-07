@@ -211,12 +211,12 @@
         "emoji_desc": null,
         "head": "berät",
         "is_emoji": false,
-        "is_singular": true,
+        "is_singular": false,
         "lemma": "Kunde",
         "morph": {
-            "Case": "Acc",
+            "Case": "Dat",
             "Gender": "Masc",
-            "Number": "Sing"
+            "Number": "Plur"
         },
         "ner": "",
         "pos": "NOUN",

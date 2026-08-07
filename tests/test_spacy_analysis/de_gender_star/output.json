@@ -189,7 +189,7 @@
         "lemma": "Kollege",
         "morph": {
             "Case": "Nom",
-            "Gender": "Fem",
+            "Gender": "Masc",
             "Number": "Plur"
         },
         "ner": "",
