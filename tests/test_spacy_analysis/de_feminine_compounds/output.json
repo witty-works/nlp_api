@@ -1,0 +1,455 @@
+[
+    {
+        "auto-detected word type": "~|~n|conj|~n|v|~|~n|conj|n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Die Geschäftsführerinnen"
+            },
+            {
+                "end": 4,
+                "start": 3,
+                "text": "Ärztinnen"
+            },
+            {
+                "end": 7,
+                "start": 5,
+                "text": "die Studierenden"
+            },
+            {
+                "end": 9,
+                "start": 8,
+                "text": "Mitarbeitende"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Geschäftsführerinnen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Die",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Geschäftsführer",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Geschäftsführerinnen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Geschäftsführerinnen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 25,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Ärztinnen"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Arzt",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 29,
+        "tag": "NN",
+        "text": "Ärztinnen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "treffen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 39,
+        "tag": "VVFIN",
+        "text": "treffen",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Studierenden",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 47,
+        "tag": "ART",
+        "text": "die",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Studierende",
+        "morph": {
+            "Case": "Acc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 51,
+        "tag": "NN",
+        "text": "Studierenden",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Studierenden",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 64,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Mitarbeitende"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "die"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Mitarbeitende",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 68,
+        "tag": "NN",
+        "text": "Mitarbeitende",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Geschäftsführerinnen"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Studierenden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 81,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

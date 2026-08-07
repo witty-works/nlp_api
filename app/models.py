@@ -395,7 +395,9 @@ class Rule(Lemma):
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     source: Optional[ResultSource] = None
     adapt_alternatives: bool = False
-    dynamic: RuleDynamic = RuleDynamic()
+    # Per-request scratch space; must be per-instance, a class-level default
+    # would be shared by every rule in the process.
+    dynamic: RuleDynamic
 
     def __init__(
         self,
@@ -411,6 +413,7 @@ class Rule(Lemma):
         self.id = id
         self.text_id = id
         self.lang = lang
+        self.dynamic = RuleDynamic()
 
         super().__init__(lemma, words, word_types)
 

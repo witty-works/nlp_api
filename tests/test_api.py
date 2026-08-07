@@ -48,9 +48,11 @@ logging.basicConfig(
 
 
 def get_dirs(path):
+    # id= keeps the test IDs stable when cases are added or removed;
+    # without it pytest numbers the directories by position.
     return list(
-        subpath
-        for subpath in Path(path).iterdir()
+        pytest.param(subpath, id=subpath.name)
+        for subpath in sorted(Path(path).iterdir())
         if subpath.is_dir()
         and not subpath.name.startswith(".")
         and subpath.name != "__pycache__"
@@ -1695,6 +1697,32 @@ def test_rule_patterns():
         assert response_content == expected
 
 
+@pytest.mark.parametrize(
+    "spacy_analysis_dir",
+    get_dirs("tests/test_spacy_analysis"),
+)
+def test_spacy_analysis(spacy_analysis_dir, snapshot):
+    """Token-level snapshot of the spaCy analysis (docs/spacy-review.md, Phase 0).
+
+    Captures word_type, lemma, is_singular plus the raw tag/pos/morph/dep per
+    token, so changes to models or the analysis pipeline show up as reviewable
+    token diffs instead of only opaque end-to-end rule changes.
+    """
+    with TestClient(app) as client:
+        input_json = json.loads(
+            spacy_analysis_dir.joinpath("input.json").read_text()
+        )
+        response = client.get("/debug/spacy", params=input_json)
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = spacy_analysis_dir
+        snapshot.assert_match(output, "output.json")
+
+
 def test_spacy():
     with TestClient(app) as client:
         request_data = {
@@ -1707,7 +1735,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1732,7 +1760,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
             },
@@ -1789,7 +1817,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "noun chunks": [
                     {"text": "👩🏻‍🚒", "start": 0, "end": 1},
@@ -1872,7 +1900,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
                 "start": 13,

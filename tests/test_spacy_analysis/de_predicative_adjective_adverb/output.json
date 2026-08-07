@@ -1,0 +1,692 @@
+[
+    {
+        "auto-detected word type": "~|n|~v|a|conj|a||conj|~pron|v|~pron|adv|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Das Team"
+            },
+            {
+                "end": 9,
+                "start": 8,
+                "text": "wir"
+            },
+            {
+                "end": 11,
+                "start": 10,
+                "text": "uns"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Das"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Team",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Neut",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Das",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Team",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Neut",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Team",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "arbeiten",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 9,
+        "tag": "VVFIN",
+        "text": "arbeitet",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "agil",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADV",
+        "start": 18,
+        "tag": "ADJD",
+        "text": "agil",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "agil",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 23,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "flexibel"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "flexibel",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADV",
+        "start": 27,
+        "tag": "ADJD",
+        "text": "flexibel",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ",",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 35,
+        "tag": "$,",
+        "text": ",",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 37,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "oft"
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "treffen"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "ich",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 41,
+        "tag": "PPER",
+        "text": "wir",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "treffen"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "treffen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "1",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 45,
+        "tag": "VVFIN",
+        "text": "treffen",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "oft"
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "treffen"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "sich",
+        "morph": {
+            "Case": "Acc",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs",
+            "Reflex": "Yes"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 53,
+        "tag": "PRF",
+        "text": "uns",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "oft"
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "treffen"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "treffen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "oft",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 57,
+        "tag": "ADV",
+        "text": "oft",
+        "whitespace": "",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Team"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "agil"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeitet",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 60,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

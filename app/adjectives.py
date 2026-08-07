@@ -260,7 +260,7 @@ class Adjectives:
             return word
 
         if word.endswith("f"):
-            return word[:-1] + "vex"
+            return word[:-1] + "ve"
 
         if word.endswith("teur"):
             return word[:-4] + "trice"

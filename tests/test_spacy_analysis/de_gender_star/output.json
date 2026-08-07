@@ -1,0 +1,297 @@
+[
+    {
+        "auto-detected word type": "~pron|~n|conj|~n|~|~v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Alle Mitarbeiter*innen"
+            },
+            {
+                "end": 4,
+                "start": 3,
+                "text": "Kolleg*innen"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Alle"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Mitarbeiter*innen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "all",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur",
+            "PronType": "Ind"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "PIAT",
+        "text": "Alle",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Mitarbeiter",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 5,
+        "tag": "NN",
+        "text": "Mitarbeiter*innen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Alle"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Mitarbeiter*innen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 23,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Kolleg*innen"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Alle"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Kollege",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 27,
+        "tag": "NN",
+        "text": "Kolleg*innen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "sein",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 40,
+        "tag": "VAFIN",
+        "text": "sind",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "einladen",
+        "morph": {
+            "VerbForm": "Part"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 45,
+        "tag": "VVPP",
+        "text": "eingeladen",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Mitarbeiter*innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "eingeladen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 55,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
