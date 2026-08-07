@@ -245,10 +245,174 @@ regressions, so the review never converged. This plan attacks that directly:
 - The lemmatizer setting isolates one axis: lemma changes can be measured
   independently of tagger changes when models move.
 
-The fasttext/numpy2 conflict that also blocks that PR is packaging, not
-spaCy usage, and stays out of scope here.
+### Language detection dependency (the numpy 2 blocker)
 
-## Defects found during review
+The fasttext/numpy2 conflict is packaging, not spaCy usage, but it gates the
+upgrade, so the decision is recorded here. Meta archived fastText in March
+2024, so every binding is community-maintained; the question is which fork,
+or which replacement. Decision: **`fasttext-predict`** (SearXNG-maintained,
+inference-only, no numpy dependency at all, same `fasttext` module name) with
+the unchanged `lid.176.bin` — predictions stay identical, so the
+language-detection snapshots verify the swap. Preferred over
+`fasttext-numpy2` (individual-maintainer rebuild of the full library whose
+purpose lapses once numpy 2 is adopted).
+
+**Lingua was evaluated and rejected, twice.** The 2024 attempt
+(pemistahl/lingua-py#242) hit short-text misclassifications; a re-check of
+releases since (only 2.2.0, March 2025 — FST memory work, no short-text
+quality changes, nothing released in the ~17 months to August 2026) shows no
+movement on that failure mode. Low-accuracy mode is not an alternative: its
+documented weakness is short text, which is this API's dominant input. And
+restricting lingua to {en, de, fr} to lift accuracy would break
+unsupported-language rejection — `get_locale` returns None when the detected
+language is unsupported, which requires a detector that can confidently name
+languages we do not process (lid.176 covers 176). If detector memory ever
+matters, the lever is fastText's compressed `lid.176.ftz` (<1MB), not a
+detector swap.
+
+### The 3.8 upgrade, measured (2026-08-07, `feature/spacy-3.8`)
+
+spacy 3.8.2 + the 3.8.0 model wheels + numpy 2 + `fasttext-predict`, in one
+lock. fasttext-predict proved a drop-in (identical predictions on
+`lid.176.bin`; language-detection snapshots unchanged). Raw model churn: 8 of
+18 analysis-corpus cases, 17 end-to-end cases. Every change was traced to a
+mechanism before deciding; the full evidence is in the branch history, the
+summary:
+
+**Model improvements taken as-is:** correct French parse structure the 3.7
+model got wrong, `man-made`-style EN compounds tagged ADJ instead of PROPN,
+German case corrections and coordination attachment, better French feminine
+morphology (`curieuses` now carries `Gender=Fem`, which lets the
+gendered-pair suppression fire across sentences).
+
+**Regressions compensated in the analysis layer** (each with a unit test and
+a corpus/e2e case citation, each retirable when a future model passes
+without it):
+- gender-symbol forms (`Kund:innen`) tagged ADJA → `attribute_ruler` pattern
+  forces NOUN/NN;
+- `pos=NOUN` with `tag=ADJD` conflicts (`Ehrgeiz`) → UPOS wins over the
+  mixed-tagset adjective check;
+- EN hyphen compounds (`state-of-the-art`): the whole-token adjective tag now
+  answers an adjective expectation before the split (3.7 hid this behind
+  PROPN-matches-anything);
+- de NER no longer labels bare surnames (`Herr Müller`) → a PROPN attached
+  to a salutation counts as name evidence for NON_PERSON/NON_NAME rules. A
+  bare PROPN is not enough: standalone compounds (`Bäcker-Confiseur-Konditor`)
+  are PROPN too.
+
+**Accepted as model behavior:** number readings on ambiguous weak-noun
+forms moved in both directions ("berät den Kunden" now reads dative plural —
+wrong; other cases improved). Context-dependent, not pattern-fixable; the
+`log_metrics` counter tracks the disagreement rate. LT typo findings shifted
+with NER labels in both directions (`Abdichterinnen` surfaced,
+`Einflußvermögen` suppressed) — if surfaced typos become noise, the
+`languagetool/` ignore list is the lever.
+
+**Rules-DB items, out of this repo's scope** — the 3.8 EN tagger reads these
+in positions the rules' declared word types don't cover, so the findings are
+lost until the rule data is relaxed (word type or lemma key): `ninja`
+(ADJ as modifier), `ass` (predicative ADJ), `so` (CCONJ), `coloured people`
+(VBN, lemma `colour` ≠ key `colored`), `intern` in signature-mangled text.
+
+**Memory zones (implemented):** `Model.nlp_session(lang)` wraps the spaCy
+span of each request in `Language.memory_zone()`, bounding per-worker
+Vocab/StringStore growth so `--preload`'s copy-on-write sharing holds up
+over a worker's lifetime. Zones are process-global on the vocab, and
+requests interleave at await points inside one worker, so the session also
+holds a per-language `asyncio.Lock`; that costs little because spaCy work
+is GIL-serialized anyway and the slow awaits stay outside: LanguageTool's
+name suppression and the context checker now receive plain-data views
+(`ent_spans`, `(end_char, text)` sentence pairs) extracted before the zone
+exits — a Doc must never outlive its zone. Kill switch: `MEMORY_ZONES=false`.
+Debug endpoints run zoneless; they are not the volume path.
+
+### Measuring without a deployment
+
+The Phase 3/5 decisions were framed around production `log_metrics`
+counters; without a deployment the same numbers come from corpora run
+locally:
+
+- **Gold morphology from UD treebanks.** UD_German-HDT (and GSD, plus the
+  French/English UD sets) carry gold `Number`/`Case`/`POS` per token. Filter
+  their sentences to tokens whose surface form is in
+  `ambiguous_number_lookup` and score the loaded model against gold: that
+  is the morph-vs-wordlist trust measurement per model, no traffic needed.
+- **Counter sweeps over any text corpus.** A `bin/` runner feeding job-ad or
+  business text through the pipeline with `LOG_METRICS=true` aggregates the
+  same disagreement counters a deployment would emit.
+- **Gold assertions in the analysis corpus.** The
+  `tests/test_spacy_analysis` cases can carry expected `word_type`/`Number`
+  for the tokens rules care about; snapshots say what changed, gold says
+  what is right.
+
+All of it stratified by input condition, because production is not clean
+prose and the trust question may answer differently per stratum:
+
+- **fully written text** - UD treebanks, job ads;
+- **partially written text** (the browser extension checks while typing) -
+  derived deterministically from the clean corpus: prefix cuts at token
+  boundaries plus a mid-word cut for the final token; gold comes from the
+  full sentence, restricted to the tokens that are complete in the prefix;
+- **typos** - synthetic corruption of the clean corpus (QWERTZ
+  adjacent-key substitution, transposition, deletion, doubling, ss/ß
+  swaps); gold stays that of the clean source, measuring robustness per
+  corruption type;
+- **word creations** - German compounding is productive and head-inheriting,
+  so novel compounds generated from the noun tables carry their own gold
+  (gender/number/inflection follow the head noun); plus real coinages from
+  job-ad vocabulary (Feelgood-Manager class).
+
+Representative cases of each stratum live in `tests/test_spacy_analysis`
+so CI sees degraded-input regressions; the bulk sweeps live in `bin/`.
+
+**Principle for partial text: when in doubt, do not highlight.** False
+positives cost more than false negatives while the user is still typing -
+the finding may resolve itself with the next keystroke. Implications:
+
+- **Scoring is asymmetric per stratum.** On the partial-text stratum a
+  false positive counts against a change; a false negative is acceptable.
+  Gold for partial cases should mainly assert "must not fire".
+- **Proposed mechanism, not yet built**: a `partial` flag on the check
+  request (the browser extension knows it is mid-keystroke; the API cannot
+  reliably infer it). When set: suppress findings that touch the final
+  token unless the text ends in a terminator, and let number/word-type
+  checks that cannot be decided from the fragment fail closed (skip the
+  rule) instead of guessing. Default off, so existing clients and
+  snapshots are untouched.
+- The same fail-closed bias applies wherever the analysis is low-context
+  (the signature-mangled email class), independent of the flag.
+
+### Rule-editor tooling for the rule-data issues
+
+- **Per-model word-type lint**: run every rule's words through the loaded
+  pipeline and report rules whose declared word type can no longer match
+  (the ninja/ass/so class) and lemma keys the lemmatizer no longer produces
+  (the coloured/colour class) - dead rules become a report instead of a
+  silent product regression.
+- **Category policy validation**: rules in categories where the term is
+  problematic in any position (offensive language, slurs, exaggeration,
+  fillers) should declare no word type; the editor can enforce that.
+- **Example sentences as rule metadata**: a positive example per rule turns
+  the whole rules DB into a generated contract-test corpus - after any
+  model change, "does each rule still fire on its own example" replaces
+  hand-adjudicating snapshot churn.
+
+### LanguageTool typo noise without a custom ignore list
+
+A managed/official LT deployment cannot take the `languagetool/` ignore
+list, so suppression must live on our side of the API boundary:
+
+- **Post-filter TYPOS matches morphologically**: before reporting an LT
+  typo on a capitalized token, strip the feminine/gendered endings
+  (`-in`, `-innen`, and the configured gender-symbol forms) and look the
+  stem up in the noun tables (plus the compound splitter for
+  `Abdichterinnen`-style derivations). Deterministic, model- and
+  deployment-independent - unlike the current NER-overlap suppression,
+  which moves with every model.
+- **LT Premium personal dictionary** (`/words` API, the credentials
+  settings already exist): syncable from the noun tables' generated forms
+  if the hosted premium tier is used; a size-limited complement, not the
+  primary mechanism.
 
 All fixed on `feature/spacy-foundations` with unit tests in
 [tests/test_unit.py](../tests/test_unit.py):

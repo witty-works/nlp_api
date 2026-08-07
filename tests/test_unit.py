@@ -4,6 +4,7 @@ These test app internals directly on blank spaCy pipelines, so they need
 neither the large models nor LanguageTool.
 """
 
+import asyncio
 import logging
 
 import pytest
@@ -143,6 +144,71 @@ def test_french_feminine_form_of_f_adjectives():
     assert adjectives.get_feminine_form_french("sportif") == "sportive"
     assert adjectives.get_feminine_form_french("neuf") == "neuve"
     assert adjectives.get_feminine_form_french("naïf") == "naïve"
+
+
+@pytest.mark.asyncio
+async def test_upos_noun_wins_over_adjective_tag():
+    # de 3.8.0 emits pos=NOUN with tag=ADJD for nouns like 'Ehrgeiz'.
+    model = fetch_model()
+    doc = spacy.blank("de")("Ehrgeiz")
+    token = doc[0]
+    token.pos_ = "NOUN"
+    token.tag_ = "ADJD"
+
+    assert await model._fetch_word_type(LangType.DE, token) == WordType.NOUN
+
+
+def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
+    # de 3.8.0 NER stays silent on bare surnames ('Herr Müller') that
+    # 3.7.0 labelled PER; a PROPN next to a salutation keeps the
+    # suppression, a standalone PROPN (job-title compounds are tagged
+    # PROPN too) does not.
+    from app.models import EntityType
+
+    rule_check = fetch_rule_check(
+        {"named_entity_labels": {EntityType.PERSON: ["PER", "PERSON"]}}
+    )
+    rule = Rule("1", "de", "Müller", None, None)
+    rule.entity_type = EntityType.NON_PERSON
+
+    doc = spacy.blank("de")("Hallo Herr Müller")
+    token = doc[2]
+    token.pos_ = "PROPN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is True
+
+    doc = spacy.blank("de")("Bäcker-Confiseur-Konditor gesucht")
+    token = doc[0]
+    token.pos_ = "PROPN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+    token.pos_ = "NOUN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+
+@pytest.mark.asyncio
+async def test_nlp_session_evicts_transient_strings():
+    model = fetch_model()
+    nlp = spacy.blank("de")
+    saved_model = Model.models.get(LangType.DE)
+    saved_lock = Model.locks.get(LangType.DE)
+    Model.models[LangType.DE] = nlp
+    Model.locks[LangType.DE] = asyncio.Lock()
+
+    try:
+        baseline = len(nlp.vocab.strings)
+        async with model.nlp_session(LangType.DE):
+            model.fetch_tokens(LangType.DE, "Xylophonorchester quixotisch kzt9x")
+            assert len(nlp.vocab.strings) > baseline
+
+        # The request-transient entries are evicted at session exit.
+        assert len(nlp.vocab.strings) == baseline
+    finally:
+        if saved_model is not None:
+            Model.models[LangType.DE] = saved_model
+            Model.locks[LangType.DE] = saved_lock
+        else:
+            Model.models.pop(LangType.DE, None)
+            Model.locks.pop(LangType.DE, None)
 
 
 def test_rule_dynamic_is_not_shared_between_rules():

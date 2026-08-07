@@ -1,18 +1,23 @@
 [
     {
-        "auto-detected word type": "~pron|n|v|adv|conj|pron|~n|v|"
+        "auto-detected word type": "~pron|~n|conj||~n|v|~|~n|"
     },
     {
         "noun chunks": [
             {
                 "end": 2,
                 "start": 0,
-                "text": "Viele Lehrer"
+                "text": "Unsere Feelgood-Managerin"
             },
             {
-                "end": 7,
-                "start": 5,
-                "text": "einige Experten"
+                "end": 5,
+                "start": 3,
+                "text": "der Datenschutzbeauftragte"
+            },
+            {
+                "end": 8,
+                "start": 6,
+                "text": "die Neukolleg:innen"
             }
         ]
     },
@@ -21,22 +26,22 @@
             {
                 "dep": "nk",
                 "ner": "",
-                "token": "Viele"
-            },
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Lehrer"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "hier"
+                "token": "Unsere"
             },
             {
                 "dep": "cd",
                 "ner": "",
                 "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -47,21 +52,22 @@
         "dep": "nk",
         "dependent": null,
         "emoji_desc": null,
-        "head": "Lehrer",
+        "head": "Feelgood-Managerin",
         "is_emoji": false,
-        "is_singular": false,
-        "lemma": "viel",
+        "is_singular": true,
+        "lemma": "mein",
         "morph": {
             "Case": "Nom",
-            "Gender": "Masc",
-            "Number": "Plur",
-            "PronType": "Ind"
+            "Gender": "Fem",
+            "Number": "Sing",
+            "Poss": "Yes",
+            "PronType": "Prs"
         },
         "ner": "",
         "pos": "DET",
         "start": 0,
-        "tag": "PIAT",
-        "text": "Viele",
+        "tag": "PPOSAT",
+        "text": "Unsere",
         "whitespace": " ",
         "word_type": "pron"
     },
@@ -70,17 +76,12 @@
             {
                 "dep": "sb",
                 "ner": "",
-                "token": "Lehrer"
+                "token": "Feelgood-Managerin"
             },
             {
-                "dep": "mo",
+                "dep": "oa",
                 "ner": "",
-                "token": "hier"
-            },
-            {
-                "dep": "cd",
-                "ner": "",
-                "token": "und"
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -91,58 +92,29 @@
         "dep": "sb",
         "dependent": null,
         "emoji_desc": null,
-        "head": "arbeiten",
+        "head": "begrüssen",
         "is_emoji": false,
-        "is_singular": false,
-        "lemma": "Lehrer",
+        "is_singular": true,
+        "lemma": "Feelgood-Manager",
         "morph": {
             "Case": "Nom",
-            "Gender": "Masc",
-            "Number": "Plur"
+            "Gender": "Fem",
+            "Number": "Sing"
         },
         "ner": "",
         "pos": "NOUN",
-        "start": 6,
+        "start": 7,
         "tag": "NN",
-        "text": "Lehrer",
+        "text": "Feelgood-Managerin",
         "whitespace": " ",
         "word_type": "n"
     },
     {
-        "children": [],
-        "dep": "ROOT",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "arbeiten",
-        "is_emoji": false,
-        "is_singular": false,
-        "lemma": "arbeiten",
-        "morph": {
-            "Mood": "Ind",
-            "Number": "Plur",
-            "Person": "3",
-            "Tense": "Pres",
-            "VerbForm": "Fin"
-        },
-        "ner": "",
-        "pos": "VERB",
-        "start": 13,
-        "tag": "VVFIN",
-        "text": "arbeiten",
-        "whitespace": " ",
-        "word_type": "v"
-    },
-    {
         "children": [
             {
-                "dep": "sb",
+                "dep": "nk",
                 "ner": "",
-                "token": "Lehrer"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "hier"
+                "token": "Unsere"
             },
             {
                 "dep": "cd",
@@ -150,43 +122,14 @@
                 "token": "und"
             },
             {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "mo",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "arbeiten",
-        "is_emoji": false,
-        "is_singular": null,
-        "lemma": "hier",
-        "morph": {},
-        "ner": "",
-        "pos": "ADV",
-        "start": 22,
-        "tag": "ADV",
-        "text": "hier",
-        "whitespace": " ",
-        "word_type": "adv"
-    },
-    {
-        "children": [
-            {
                 "dep": "sb",
                 "ner": "",
-                "token": "Lehrer"
+                "token": "Feelgood-Managerin"
             },
             {
-                "dep": "mo",
+                "dep": "oa",
                 "ner": "",
-                "token": "hier"
-            },
-            {
-                "dep": "cd",
-                "ner": "",
-                "token": "und"
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -197,14 +140,14 @@
         "dep": "cd",
         "dependent": null,
         "emoji_desc": null,
-        "head": "arbeiten",
+        "head": "Feelgood-Managerin",
         "is_emoji": false,
         "is_singular": null,
         "lemma": "und",
         "morph": {},
         "ner": "",
         "pos": "CCONJ",
-        "start": 27,
+        "start": 26,
         "tag": "KON",
         "text": "und",
         "whitespace": " ",
@@ -215,32 +158,32 @@
             {
                 "dep": "nk",
                 "ner": "",
-                "token": "einige"
-            },
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Experten"
+                "token": "der"
             },
             {
                 "dep": "cj",
                 "ner": "",
-                "token": "helfen"
+                "token": "Datenschutzbeauftragte"
             },
             {
-                "dep": "sb",
+                "dep": "nk",
                 "ner": "",
-                "token": "Lehrer"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "hier"
+                "token": "Unsere"
             },
             {
                 "dep": "cd",
                 "ner": "",
                 "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -251,45 +194,36 @@
         "dep": "nk",
         "dependent": null,
         "emoji_desc": null,
-        "head": "Experten",
+        "head": "Datenschutzbeauftragte",
         "is_emoji": false,
-        "is_singular": false,
-        "lemma": "einige",
+        "is_singular": true,
+        "lemma": "der",
         "morph": {
             "Case": "Nom",
+            "Definite": "Def",
             "Gender": "Masc",
-            "Number": "Plur",
-            "PronType": "Ind"
+            "Number": "Sing",
+            "PronType": "Art"
         },
         "ner": "",
         "pos": "DET",
-        "start": 31,
-        "tag": "PIAT",
-        "text": "einige",
+        "start": 30,
+        "tag": "ART",
+        "text": "der",
         "whitespace": " ",
-        "word_type": "pron"
+        "word_type": ""
     },
     {
         "children": [
             {
-                "dep": "sb",
-                "ner": "",
-                "token": "Experten"
-            },
-            {
                 "dep": "cj",
                 "ner": "",
-                "token": "helfen"
+                "token": "Datenschutzbeauftragte"
             },
             {
-                "dep": "sb",
+                "dep": "nk",
                 "ner": "",
-                "token": "Lehrer"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "hier"
+                "token": "Unsere"
             },
             {
                 "dep": "cd",
@@ -297,52 +231,14 @@
                 "token": "und"
             },
             {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "sb",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "helfen",
-        "is_emoji": false,
-        "is_singular": false,
-        "lemma": "Experte",
-        "morph": {
-            "Case": "Nom",
-            "Gender": "Masc",
-            "Number": "Plur"
-        },
-        "ner": "",
-        "pos": "NOUN",
-        "start": 38,
-        "tag": "NN",
-        "text": "Experten",
-        "whitespace": " ",
-        "word_type": "n"
-    },
-    {
-        "children": [
-            {
-                "dep": "cj",
-                "ner": "",
-                "token": "helfen"
-            },
-            {
                 "dep": "sb",
                 "ner": "",
-                "token": "Lehrer"
+                "token": "Feelgood-Managerin"
             },
             {
-                "dep": "mo",
+                "dep": "oa",
                 "ner": "",
-                "token": "hier"
-            },
-            {
-                "dep": "cd",
-                "ner": "",
-                "token": "und"
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -355,35 +251,139 @@
         "emoji_desc": null,
         "head": "und",
         "is_emoji": false,
-        "is_singular": null,
-        "lemma": "helfen",
+        "is_singular": true,
+        "lemma": "Datenschutzbeauftragter",
         "morph": {
-            "VerbForm": "Inf"
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 34,
+        "tag": "NN",
+        "text": "Datenschutzbeauftragte",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "begrüssen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
         },
         "ner": "",
         "pos": "VERB",
-        "start": 47,
-        "tag": "VVINF",
-        "text": "helfen",
-        "whitespace": "",
+        "start": 57,
+        "tag": "VVFIN",
+        "text": "begrüssen",
+        "whitespace": " ",
         "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Neukolleg:innen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "der",
+        "morph": {
+            "Case": "Acc",
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 67,
+        "tag": "ART",
+        "text": "die",
+        "whitespace": " ",
+        "word_type": ""
     },
     {
         "children": [
             {
                 "dep": "sb",
                 "ner": "",
-                "token": "Lehrer"
+                "token": "Feelgood-Managerin"
             },
             {
-                "dep": "mo",
+                "dep": "oa",
                 "ner": "",
-                "token": "hier"
+                "token": "Neukolleg:innen"
             },
             {
-                "dep": "cd",
+                "dep": "punct",
                 "ner": "",
-                "token": "und"
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Neukollege",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 71,
+        "tag": "NN",
+        "text": "Neukolleg:innen",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
             },
             {
                 "dep": "punct",
@@ -394,14 +394,14 @@
         "dep": "punct",
         "dependent": null,
         "emoji_desc": null,
-        "head": "arbeiten",
+        "head": "begrüssen",
         "is_emoji": false,
         "is_singular": null,
         "lemma": ".",
         "morph": {},
         "ner": "",
         "pos": "PUNCT",
-        "start": 53,
+        "start": 86,
         "tag": "$.",
         "text": ".",
         "whitespace": "",

@@ -20,7 +20,7 @@
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "eine Kollegschaft"
+                    "text": "einzelne Kollegschaft"
                 },
                 {
                     "text": "ein Team"
@@ -312,7 +312,7 @@
                     "text": "eine Studierende"
                 },
                 {
-                    "text": "einzelne Studi"
+                    "text": "eine Studi"
                 }
             ],
             "category": "gender-orientation",
@@ -402,7 +402,7 @@
                     "text": "Studierende"
                 },
                 {
-                    "text": "Studis"
+                    "text": "Studi"
                 }
             ],
             "category": "gender-orientation",

@@ -1,6 +1,6 @@
 [
     {
-        "auto-detected word type": "~pron|v||~a|n|a|n|~adv|"
+        "auto-detected word type": "~pron|v|~|n||~pron|n|"
     },
     {
         "noun chunks": [
@@ -10,14 +10,14 @@
                 "text": "Wir"
             },
             {
-                "end": 5,
-                "start": 3,
-                "text": "ersten August"
+                "end": 4,
+                "start": 2,
+                "text": "einen Mitarbetier"
             },
             {
                 "end": 7,
                 "start": 5,
-                "text": "neue Leute"
+                "text": "unser Tema"
             }
         ]
     },
@@ -29,19 +29,9 @@
                 "token": "Wir"
             },
             {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
                 "dep": "oa",
                 "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
+                "token": "Mitarbetier"
             },
             {
                 "dep": "punct",
@@ -52,7 +42,7 @@
         "dep": "sb",
         "dependent": null,
         "emoji_desc": null,
-        "head": "stellen",
+        "head": "suchen",
         "is_emoji": false,
         "is_singular": false,
         "lemma": "ich",
@@ -75,10 +65,10 @@
         "dep": "ROOT",
         "dependent": null,
         "emoji_desc": null,
-        "head": "stellen",
+        "head": "suchen",
         "is_emoji": false,
         "is_singular": false,
-        "lemma": "stellen",
+        "lemma": "suchen",
         "morph": {
             "Mood": "Ind",
             "Number": "Plur",
@@ -90,31 +80,31 @@
         "pos": "VERB",
         "start": 4,
         "tag": "VVFIN",
-        "text": "stellen",
+        "text": "suchen",
         "whitespace": " ",
         "word_type": "v"
     },
     {
         "children": [
             {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Wir"
             },
             {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
                 "dep": "oa",
                 "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
+                "token": "Mitarbetier"
             },
             {
                 "dep": "punct",
@@ -122,212 +112,39 @@
                 "token": "."
             }
         ],
-        "dep": "mo",
+        "dep": "nk",
         "dependent": null,
         "emoji_desc": null,
-        "head": "stellen",
+        "head": "Mitarbetier",
         "is_emoji": false,
         "is_singular": true,
-        "lemma": "zum",
+        "lemma": "ein",
         "morph": {
-            "Case": "Dat",
+            "Case": "Acc",
+            "Definite": "Ind",
             "Gender": "Masc",
-            "Number": "Sing"
+            "Number": "Sing",
+            "PronType": "Art"
         },
         "ner": "",
-        "pos": "ADP",
-        "start": 12,
-        "tag": "APPRART",
-        "text": "zum",
+        "pos": "DET",
+        "start": 11,
+        "tag": "ART",
+        "text": "einen",
         "whitespace": " ",
         "word_type": ""
     },
     {
         "children": [
             {
-                "dep": "nk",
-                "ner": "",
-                "token": "ersten"
-            },
-            {
-                "dep": "nk",
-                "ner": "",
-                "token": "August"
-            },
-            {
                 "dep": "sb",
                 "ner": "",
                 "token": "Wir"
             },
             {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
                 "dep": "oa",
                 "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
-            },
-            {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "nk",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "August",
-        "is_emoji": false,
-        "is_singular": true,
-        "lemma": "erst",
-        "morph": {
-            "Case": "Dat",
-            "Degree": "Pos",
-            "Gender": "Masc",
-            "Number": "Sing"
-        },
-        "ner": "",
-        "pos": "ADJ",
-        "start": 16,
-        "tag": "ADJA",
-        "text": "ersten",
-        "whitespace": " ",
-        "word_type": "a"
-    },
-    {
-        "children": [
-            {
-                "dep": "nk",
-                "ner": "",
-                "token": "August"
-            },
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Wir"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
-                "dep": "oa",
-                "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
-            },
-            {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "nk",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "zum",
-        "is_emoji": false,
-        "is_singular": true,
-        "lemma": "August",
-        "morph": {
-            "Case": "Dat",
-            "Gender": "Masc",
-            "Number": "Sing"
-        },
-        "ner": "",
-        "pos": "NOUN",
-        "start": 23,
-        "tag": "NN",
-        "text": "August",
-        "whitespace": " ",
-        "word_type": "n"
-    },
-    {
-        "children": [
-            {
-                "dep": "nk",
-                "ner": "",
-                "token": "neue"
-            },
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Wir"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
-                "dep": "oa",
-                "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
-            },
-            {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "nk",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "Leute",
-        "is_emoji": false,
-        "is_singular": false,
-        "lemma": "neue",
-        "morph": {
-            "Case": "Acc",
-            "Degree": "Pos",
-            "Number": "Plur"
-        },
-        "ner": "",
-        "pos": "ADJ",
-        "start": 30,
-        "tag": "ADJA",
-        "text": "neue",
-        "whitespace": " ",
-        "word_type": "a"
-    },
-    {
-        "children": [
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Wir"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
-                "dep": "oa",
-                "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
+                "token": "Mitarbetier"
             },
             {
                 "dep": "punct",
@@ -338,20 +155,178 @@
         "dep": "oa",
         "dependent": null,
         "emoji_desc": null,
-        "head": "stellen",
+        "head": "suchen",
         "is_emoji": false,
-        "is_singular": false,
-        "lemma": "Leute",
+        "is_singular": true,
+        "lemma": "Mitarbetier",
         "morph": {
             "Case": "Acc",
-            "Number": "Plur"
+            "Gender": "Masc",
+            "Number": "Sing"
         },
         "ner": "",
         "pos": "NOUN",
-        "start": 35,
+        "start": 17,
         "tag": "NN",
-        "text": "Leute",
+        "text": "Mitarbetier",
         "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mnr",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Mitarbetier",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "für",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 29,
+        "tag": "APPR",
+        "text": "für",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unser"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Tema"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Tema",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "sich",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Neut",
+            "Number": "Sing",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 33,
+        "tag": "PPOSAT",
+        "text": "unser",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Tema"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "für",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Tema",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Neut",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 39,
+        "tag": "NN",
+        "text": "Tema",
+        "whitespace": "",
         "word_type": "n"
     },
     {
@@ -362,63 +337,9 @@
                 "token": "Wir"
             },
             {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
                 "dep": "oa",
                 "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
-            },
-            {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "svp",
-        "dependent": null,
-        "emoji_desc": null,
-        "head": "stellen",
-        "is_emoji": false,
-        "is_singular": null,
-        "lemma": "einen",
-        "morph": {},
-        "ner": "",
-        "pos": "ADV",
-        "start": 41,
-        "tag": "PTKVZ",
-        "text": "ein",
-        "whitespace": "",
-        "word_type": "adv"
-    },
-    {
-        "children": [
-            {
-                "dep": "sb",
-                "ner": "",
-                "token": "Wir"
-            },
-            {
-                "dep": "mo",
-                "ner": "",
-                "token": "zum"
-            },
-            {
-                "dep": "oa",
-                "ner": "",
-                "token": "Leute"
-            },
-            {
-                "dep": "svp",
-                "ner": "",
-                "token": "ein"
+                "token": "Mitarbetier"
             },
             {
                 "dep": "punct",
@@ -429,14 +350,14 @@
         "dep": "punct",
         "dependent": null,
         "emoji_desc": null,
-        "head": "stellen",
+        "head": "suchen",
         "is_emoji": false,
         "is_singular": null,
         "lemma": ".",
         "morph": {},
         "ner": "",
         "pos": "PUNCT",
-        "start": 44,
+        "start": 43,
         "tag": "$.",
         "text": ".",
         "whitespace": "",

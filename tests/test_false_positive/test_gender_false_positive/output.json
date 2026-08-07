@@ -5,5 +5,70 @@
     "language": "de",
     "limit_reached": false,
     "notifications": 5,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Abdichte rinnen"
+                },
+                {
+                    "text": "Abdichte Rinnen"
+                },
+                {
+                    "text": "Dichterinnen"
+                },
+                {
+                    "text": "Abdichterbinnen"
+                },
+                {
+                    "text": "Abdichterinnern"
+                }
+            ],
+            "category": "orthography",
+            "context": "Abdichterinnen und Abdichter",
+            "end": 14,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 0,
+            "subcategory": "typos",
+            "text": "Abdichterinnen",
+            "text_id": "Abdichterinnen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ab dichter"
+                },
+                {
+                    "text": "Abdichten"
+                },
+                {
+                    "text": "Abrichter"
+                },
+                {
+                    "text": "Abdichtet"
+                },
+                {
+                    "text": "Abdichte"
+                }
+            ],
+            "category": "orthography",
+            "context": "Abdichterinnen und Abdichter",
+            "end": 28,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 19,
+            "subcategory": "typos",
+            "text": "Abdichter",
+            "text_id": "Abdichter"
+        }
+    ]
 }

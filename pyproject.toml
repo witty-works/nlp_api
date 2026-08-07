@@ -38,7 +38,10 @@ dependencies = [
     "gunicorn",
     # Bounded to the range the pinned models below declare, so spacy cannot
     # float to a version they were never built against.
-    "spacy>=3.7.2,<3.8.0",
+    "spacy>=3.8.14,<3.9.0",
+    # Floor, not ceiling: fasttext-predict has no numpy coupling, so numpy 1
+    # would resolve silently if something else preferred it.
+    "numpy>=2.0",
     "pandas",
     "aiofiles",
     "aiohttp",
@@ -46,14 +49,16 @@ dependencies = [
     "redis",
     "platformshconfig",
     "fakeredis",
-    "fasttext-wheel",
+    # Inference-only fastText build (SearXNG-maintained), no numpy dependency;
+    # Meta archived fastText upstream in 2024. See docs/spacy-review.md.
+    "fasttext-predict",
     "slack-bolt",
     "german-nouns",
     "inflex",
     "spacy-lookups-data",
-    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl",
-    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.7.0/de_core_news_lg-3.7.0-py3-none-any.whl",
-    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl",
+    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl",
+    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl",
+    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl",
     "secure>=0.3.0",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
@@ -71,7 +76,7 @@ dependencies = [
     "pluralizefr>=0.0.1",
     "python-multipart>=0.0.32",
 ]
-requires-python = ">3.12"
+requires-python = ">3.12,<3.15"
 license = "Proprietary"
 
 [build-system]

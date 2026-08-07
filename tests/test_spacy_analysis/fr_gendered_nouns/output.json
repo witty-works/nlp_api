@@ -29,9 +29,24 @@
                 "token": "Les"
             },
             {
-                "dep": "conj",
+                "dep": "nsubj",
                 "ner": "",
-                "token": "rencontrent"
+                "token": "infirmières"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directeurs"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "étudiantes"
             },
             {
                 "dep": "punct",
@@ -60,11 +75,37 @@
         "word_type": ""
     },
     {
-        "children": [],
-        "dep": "ROOT",
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directeurs"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "étudiantes"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
         "dependent": null,
         "emoji_desc": null,
-        "head": "infirmières",
+        "head": "rencontrent",
         "is_emoji": false,
         "is_singular": false,
         "lemma": "infirmier",
@@ -83,6 +124,11 @@
     {
         "children": [
             {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
                 "dep": "cc",
                 "ner": "",
                 "token": "et"
@@ -96,16 +142,6 @@
                 "dep": "obj",
                 "ner": "",
                 "token": "étudiantes"
-            },
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
             },
             {
                 "dep": "punct",
@@ -137,6 +173,11 @@
                 "token": "les"
             },
             {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
                 "dep": "cc",
                 "ner": "",
                 "token": "et"
@@ -150,16 +191,6 @@
                 "dep": "obj",
                 "ner": "",
                 "token": "étudiantes"
-            },
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
             },
             {
                 "dep": "punct",
@@ -190,6 +221,11 @@
     {
         "children": [
             {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
                 "dep": "cc",
                 "ner": "",
                 "token": "et"
@@ -203,16 +239,6 @@
                 "dep": "obj",
                 "ner": "",
                 "token": "étudiantes"
-            },
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
             },
             {
                 "dep": "punct",
@@ -240,27 +266,11 @@
         "word_type": "n"
     },
     {
-        "children": [
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
-            },
-            {
-                "dep": "punct",
-                "ner": "",
-                "token": "."
-            }
-        ],
-        "dep": "conj",
+        "children": [],
+        "dep": "ROOT",
         "dependent": null,
         "emoji_desc": null,
-        "head": "infirmières",
+        "head": "rencontrent",
         "is_emoji": false,
         "is_singular": false,
         "lemma": "rencontrer",
@@ -287,6 +297,11 @@
                 "token": "les"
             },
             {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
                 "dep": "cc",
                 "ner": "",
                 "token": "et"
@@ -300,16 +315,6 @@
                 "dep": "obj",
                 "ner": "",
                 "token": "étudiantes"
-            },
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
             },
             {
                 "dep": "punct",
@@ -340,6 +345,11 @@
     {
         "children": [
             {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "infirmières"
+            },
+            {
                 "dep": "cc",
                 "ner": "",
                 "token": "et"
@@ -353,16 +363,6 @@
                 "dep": "obj",
                 "ner": "",
                 "token": "étudiantes"
-            },
-            {
-                "dep": "det",
-                "ner": "",
-                "token": "Les"
-            },
-            {
-                "dep": "conj",
-                "ner": "",
-                "token": "rencontrent"
             },
             {
                 "dep": "punct",
@@ -392,14 +392,24 @@
     {
         "children": [
             {
-                "dep": "det",
+                "dep": "nsubj",
                 "ner": "",
-                "token": "Les"
+                "token": "infirmières"
             },
             {
-                "dep": "conj",
+                "dep": "cc",
                 "ner": "",
-                "token": "rencontrent"
+                "token": "et"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directeurs"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "étudiantes"
             },
             {
                 "dep": "punct",
@@ -410,7 +420,7 @@
         "dep": "punct",
         "dependent": null,
         "emoji_desc": null,
-        "head": "infirmières",
+        "head": "rencontrent",
         "is_emoji": false,
         "is_singular": null,
         "lemma": ".",

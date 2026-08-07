@@ -137,6 +137,10 @@ class Settings(BaseSettings):
         "de_core_news_lg",
         "fr_core_news_lg",
     ]
+    # Evict request-transient Vocab/StringStore entries after each request
+    # (spaCy memory zones). Kill switch for production rollout; costs
+    # per-language serialization of the spaCy span of a request.
+    memory_zones: bool = True
     # Which base lemmatizer to run before the lookup overrides: "lookup"
     # replaces the model's lemmatizer with the rule/lookup one from
     # spacy-lookups-data (deterministic, silently wrong on unknown compounds),

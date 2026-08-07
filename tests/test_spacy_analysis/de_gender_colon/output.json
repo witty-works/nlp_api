@@ -93,6 +93,7 @@
         "lemma": "Kunde",
         "morph": {
             "Case": "Nom",
+            "Degree": "Pos",
             "Gender": "Fem",
             "Number": "Plur"
         },
@@ -152,7 +153,7 @@
         "children": [
             {
                 "dep": "cj",
-                "ner": "MISC",
+                "ner": "",
                 "token": "Mitarbeiter:innen"
             },
             {
@@ -193,7 +194,7 @@
             "Gender": "Fem",
             "Number": "Plur"
         },
-        "ner": "MISC",
+        "ner": "",
         "pos": "NOUN",
         "start": 19,
         "tag": "NN",

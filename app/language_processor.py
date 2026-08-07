@@ -2,9 +2,6 @@
 
 from collections import defaultdict
 import json
-
-from spacy.tokens import Doc
-
 from app.context import AppContext
 from app.models import (
     Alternative,
@@ -53,25 +50,32 @@ async def apply_language_rules(
     text: str,
     context: AppContext,
 ) -> list:
-    tokens = context.model.fetch_tokens(language.lang, text)
     offsets = utf16_offsets(text)
 
     term_replacements = fetch_term_replacements(configs, language.lang, context)
 
-    list_results = await witty_rules(
-        config,
-        term_replacements,
-        client,
-        tokens,
-        offsets,
-        language,
-        text,
-        context,
-    )
+    async with context.model.nlp_session(language.lang):
+        tokens = context.model.fetch_tokens(language.lang, text)
+
+        list_results = await witty_rules(
+            config,
+            term_replacements,
+            client,
+            tokens,
+            offsets,
+            language,
+            text,
+            context,
+        )
+
+        # The steps below run after network calls, outside the session; they
+        # get plain-data views because the Doc must not outlive the zone.
+        ent_spans = [(e.start_char, e.end_char, e.label_) for e in tokens.ents]
+        sentences = [(s.end_char, s.text) for s in tokens.sents]
 
     list_results = await context.languagetool.apply_languagetool_rules(
-        config, client, language, text, tokens, offsets
-    ) + await context_false_positives(language.lang, tokens, list_results, context)
+        config, client, language, text, ent_spans, offsets
+    ) + await context_false_positives(language.lang, sentences, list_results, context)
 
     return apply_false_positives(list_results, configs)
 
@@ -153,7 +157,7 @@ def apply_false_positives(
 
 async def context_false_positives(
     lang: LangType,
-    tokens: Doc,
+    sentences: list[tuple[int, str]],
     list_results: list[ResultOut],
     context: AppContext,
 ) -> list[ResultOut]:
@@ -175,19 +179,14 @@ async def context_false_positives(
     if not use_local and not use_remote:
         return list_results
 
-    sentences = {}
     sentences_to_check = defaultdict(list)
     for result_index in range(len(list_results)):
         result = list_results[result_index]
         if result.text_id in context.static_rules[lang]["context_check"]:
-            if len(sentences) == 0:
-                for sentence in tokens.sents:
-                    sentences[sentence.end_char] = sentence.text
-
             sentence = None
-            for end_char in sentences:
+            for end_char, sentence_text in sentences:
                 if result.end <= end_char:
-                    sentence = sentences[end_char]
+                    sentence = sentence_text
                     break
 
             if sentence is None:

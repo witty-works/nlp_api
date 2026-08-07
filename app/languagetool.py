@@ -1,4 +1,3 @@
-from spacy.tokens import Doc
 from app.models import (
     LangType,
     LangVariantType,
@@ -58,14 +57,10 @@ class LanguageTool:
         client: Client,
         language: Language,
         full_text: str,
-        tokens: Doc,
+        ent_spans: list[tuple[int, int, str]],
         offsets: dict,
         matches: list,
     ) -> list:
-        entities = []
-        for ent in tokens.ents:
-            entities.append(ent)
-
         list_results = []
         ignore = ["@", "#"]
 
@@ -105,18 +100,18 @@ class LanguageTool:
                 # Ignore spelling issues on name
                 if text[0:1].isupper():
                     is_entity = False
-                    for entity in entities:
+                    for ent_start, ent_end, ent_label in ent_spans:
                         if (
-                            entity.start_char >= start
-                            and entity.start_char < end
-                            and entity.end_char >= end
+                            ent_start >= start
+                            and ent_start < end
+                            and ent_end >= end
                         ) or (
-                            entity.start_char <= start
-                            and entity.end_char > start
-                            and entity.end_char <= end
+                            ent_start <= start
+                            and ent_end > start
+                            and ent_end <= end
                         ):
                             is_entity = (
-                                entity.label_
+                                ent_label
                                 in self.static_rules["named_entity_labels"][
                                     EntityType.NAME
                                 ]
@@ -296,7 +291,7 @@ class LanguageTool:
         client: Client,
         language: Language,
         text: str,
-        tokens: Doc,
+        ent_spans: list[tuple[int, int, str]],
         offsets: dict,
     ) -> list:
         if not self.settings.languagetool_api:
@@ -388,7 +383,7 @@ class LanguageTool:
             return []
 
         return self.languagetool_matches(
-            config, client, language, text, tokens, offsets, result["matches"]
+            config, client, language, text, ent_spans, offsets, result["matches"]
         )
 
     def convert_to_csv(self, payload: dict, key: str) -> dict:
