@@ -1,0 +1,366 @@
+[
+    {
+        "auto-detected word type": "~pron|v|~|n||~pron|n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Wir"
+            },
+            {
+                "end": 4,
+                "start": 2,
+                "text": "einen Mitarbetier"
+            },
+            {
+                "end": 7,
+                "start": 5,
+                "text": "unser Tema"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "suchen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "ich",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PPER",
+        "text": "Wir",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "suchen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "suchen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "1",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 4,
+        "tag": "VVFIN",
+        "text": "suchen",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Mitarbetier",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "ein",
+        "morph": {
+            "Case": "Acc",
+            "Definite": "Ind",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 11,
+        "tag": "ART",
+        "text": "einen",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "suchen",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Mitarbetier",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 17,
+        "tag": "NN",
+        "text": "Mitarbetier",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mnr",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Mitarbetier",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "für",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 29,
+        "tag": "APPR",
+        "text": "für",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unser"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Tema"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Tema",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "sich",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Neut",
+            "Number": "Sing",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 33,
+        "tag": "PPOSAT",
+        "text": "unser",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Tema"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einen"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "für",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Tema",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Neut",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 39,
+        "tag": "NN",
+        "text": "Tema",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Mitarbetier"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "suchen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 43,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

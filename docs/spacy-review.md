@@ -345,6 +345,43 @@ locally:
   for the tokens rules care about; snapshots say what changed, gold says
   what is right.
 
+All of it stratified by input condition, because production is not clean
+prose and the trust question may answer differently per stratum:
+
+- **fully written text** - UD treebanks, job ads;
+- **partially written text** (the browser extension checks while typing) -
+  derived deterministically from the clean corpus: prefix cuts at token
+  boundaries plus a mid-word cut for the final token; gold comes from the
+  full sentence, restricted to the tokens that are complete in the prefix;
+- **typos** - synthetic corruption of the clean corpus (QWERTZ
+  adjacent-key substitution, transposition, deletion, doubling, ss/ß
+  swaps); gold stays that of the clean source, measuring robustness per
+  corruption type;
+- **word creations** - German compounding is productive and head-inheriting,
+  so novel compounds generated from the noun tables carry their own gold
+  (gender/number/inflection follow the head noun); plus real coinages from
+  job-ad vocabulary (Feelgood-Manager class).
+
+Representative cases of each stratum live in `tests/test_spacy_analysis`
+so CI sees degraded-input regressions; the bulk sweeps live in `bin/`.
+
+**Principle for partial text: when in doubt, do not highlight.** False
+positives cost more than false negatives while the user is still typing -
+the finding may resolve itself with the next keystroke. Implications:
+
+- **Scoring is asymmetric per stratum.** On the partial-text stratum a
+  false positive counts against a change; a false negative is acceptable.
+  Gold for partial cases should mainly assert "must not fire".
+- **Proposed mechanism, not yet built**: a `partial` flag on the check
+  request (the browser extension knows it is mid-keystroke; the API cannot
+  reliably infer it). When set: suppress findings that touch the final
+  token unless the text ends in a terminator, and let number/word-type
+  checks that cannot be decided from the fragment fail closed (skip the
+  rule) instead of guessing. Default off, so existing clients and
+  snapshots are untouched.
+- The same fail-closed bias applies wherever the analysis is low-context
+  (the signature-mangled email class), independent of the flag.
+
 ### Rule-editor tooling for the rule-data issues
 
 - **Per-model word-type lint**: run every rule's words through the loaded

@@ -1,0 +1,410 @@
+[
+    {
+        "auto-detected word type": "~pron|~n|conj||~n|v|~|~n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Unsere Feelgood-Managerin"
+            },
+            {
+                "end": 5,
+                "start": 3,
+                "text": "der Datenschutzbeauftragte"
+            },
+            {
+                "end": 8,
+                "start": 6,
+                "text": "die Neukolleg:innen"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Unsere"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Feelgood-Managerin",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "mein",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "PPOSAT",
+        "text": "Unsere",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Feelgood-Manager",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 7,
+        "tag": "NN",
+        "text": "Feelgood-Managerin",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Unsere"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Feelgood-Managerin",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 26,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "der"
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Datenschutzbeauftragte"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Unsere"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Datenschutzbeauftragte",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 30,
+        "tag": "ART",
+        "text": "der",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Datenschutzbeauftragte"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Unsere"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Datenschutzbeauftragter",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 34,
+        "tag": "NN",
+        "text": "Datenschutzbeauftragte",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "begrüssen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 57,
+        "tag": "VVFIN",
+        "text": "begrüssen",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Neukolleg:innen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "der",
+        "morph": {
+            "Case": "Acc",
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 67,
+        "tag": "ART",
+        "text": "die",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Neukollege",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 71,
+        "tag": "NN",
+        "text": "Neukolleg:innen",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Feelgood-Managerin"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Neukolleg:innen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "begrüssen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 86,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
