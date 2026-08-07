@@ -190,6 +190,15 @@ class Model:
             and not token.text.startswith("-")
             and not token.text.endswith("-")
         ):
+            # The tagger's reading of the whole compound answers the
+            # expectation directly; splitting loses it. en 3.7.1 hid this by
+            # tagging compounds PROPN, which matched any expectation (case:
+            # 'state-of-the-art' in tests/test_lemmatizers/test_english_lemmatizer).
+            if expected_word_type == WordType.ADJECTIVE and (
+                token.tag_ in self.adj_tags or token.pos_ in self.adj_tags
+            ):
+                return WordType.ADJECTIVE
+
             tokens = self.fetch_tokens(lang, token.text.replace("-", " "))
             word_type = await self.fetch_word_type(
                 lang, tokens[0], expected_word_type, single_word
@@ -205,7 +214,12 @@ class Model:
 
             return word_type
 
-        if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
+        # UPOS wins when the two taggers disagree: the de 3.8.0 pipeline
+        # emits pos=NOUN with tag=ADJD for nouns like 'Ehrgeiz' (case:
+        # tests/test_general_cases/test_api_capitalize_alternatives).
+        if (
+            token.tag_ in self.adj_tags or token.pos_ in self.adj_tags
+        ) and token.pos_ not in ("NOUN", "PROPN"):
             if lang == LangType.FR and token.text.lower().endswith("ez"):
                 # Vous l’incarnez et l’**animez** auprès de notre clientèle.
                 return WordType.VERB
@@ -378,6 +392,17 @@ class Model:
             model.add_pipe("lemmatizer").initialize()
 
         model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+
+        if lang == LangType.DE:
+            # Gender-symbol forms (Kund:innen, Kolleg*in) are nouns wherever
+            # they appear, but the de 3.8.0 tagger reads some as adjectives
+            # (case: tests/test_spacy_analysis/de_gender_colon). Retire this
+            # pattern when a future model passes that case without it.
+            ruler = model.get_pipe("attribute_ruler")
+            ruler.add(
+                patterns=[[{"TEXT": {"REGEX": r"^\w+[:*·](in|innen)$"}}]],
+                attrs={"POS": "NOUN", "TAG": "NN"},
+            )
 
         self.models[lang] = model
 

@@ -77,13 +77,47 @@ class RuleCheck:
 
         return standard_words
 
+    salutations = {
+        "herr",
+        "herrn",
+        "frau",
+        "hr",
+        "fr",
+        "mr",
+        "mrs",
+        "ms",
+        "miss",
+        "dr",
+        "monsieur",
+        "madame",
+        "mme",
+    }
+
+    def is_name_after_salutation(self, token: Token) -> bool:
+        """A PROPN attached to a salutation reads as a person name even when
+        the NER stays silent: the de 3.8.0 model no longer labels bare
+        surnames like 'Herr Müller' PER (case:
+        tests/test_general_cases/test_api_entity_de). A bare PROPN is not
+        enough - standalone compounds like 'Bäcker-Confiseur-Konditor' are
+        also tagged PROPN (case: tests/test_gender_ending/-dashed)."""
+        if token.pos_ != "PROPN":
+            return False
+
+        if token.head.text.lower().rstrip(".") in self.salutations:
+            return True
+
+        return (
+            token.i > 0
+            and token.doc[token.i - 1].text.lower().rstrip(".") in self.salutations
+        )
+
     def is_entity_type_mismatch(self, rule: Rule, token: Token):
         if rule.entity_type == EntityType.DEFAULT:
             return False
 
         match rule.entity_type:
             case EntityType.NON_PERSON:
-                if (
+                if self.is_name_after_salutation(token) or (
                     token.ent_type_
                     and token.ent_type_
                     in self.static_rules["named_entity_labels"][EntityType.PERSON]
@@ -96,7 +130,7 @@ class RuleCheck:
                 ):
                     return True
             case EntityType.NON_NAME:
-                if (
+                if self.is_name_after_salutation(token) or (
                     token.ent_type_
                     and token.ent_type_
                     in self.static_rules["named_entity_labels"][EntityType.NAME]

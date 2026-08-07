@@ -145,6 +145,45 @@ def test_french_feminine_form_of_f_adjectives():
     assert adjectives.get_feminine_form_french("naïf") == "naïve"
 
 
+@pytest.mark.asyncio
+async def test_upos_noun_wins_over_adjective_tag():
+    # de 3.8.0 emits pos=NOUN with tag=ADJD for nouns like 'Ehrgeiz'.
+    model = fetch_model()
+    doc = spacy.blank("de")("Ehrgeiz")
+    token = doc[0]
+    token.pos_ = "NOUN"
+    token.tag_ = "ADJD"
+
+    assert await model._fetch_word_type(LangType.DE, token) == WordType.NOUN
+
+
+def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
+    # de 3.8.0 NER stays silent on bare surnames ('Herr Müller') that
+    # 3.7.0 labelled PER; a PROPN next to a salutation keeps the
+    # suppression, a standalone PROPN (job-title compounds are tagged
+    # PROPN too) does not.
+    from app.models import EntityType
+
+    rule_check = fetch_rule_check(
+        {"named_entity_labels": {EntityType.PERSON: ["PER", "PERSON"]}}
+    )
+    rule = Rule("1", "de", "Müller", None, None)
+    rule.entity_type = EntityType.NON_PERSON
+
+    doc = spacy.blank("de")("Hallo Herr Müller")
+    token = doc[2]
+    token.pos_ = "PROPN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is True
+
+    doc = spacy.blank("de")("Bäcker-Confiseur-Konditor gesucht")
+    token = doc[0]
+    token.pos_ = "PROPN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+    token.pos_ = "NOUN"
+    assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+
 def test_rule_dynamic_is_not_shared_between_rules():
     first = Rule("1", "de", "erste", None, None)
     second = Rule("2", "de", "zweite", None, None)
