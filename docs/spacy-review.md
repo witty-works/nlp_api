@@ -138,6 +138,22 @@ depends on which checks ran before it. Target state:
   gender-symbol pattern (`:`/`*`/`·` infix) gets compound generalization without
   the `Kund:inn` failure. If the diff says otherwise, keep lookup — the point is
   the decision becomes measurable.
+
+  **Measured 2026-08-07** (`LEMMATIZER=trained`, see the setting added on
+  `feature/spacy-foundations`): not a drop-in. Corpus verdict on the ~50
+  changed lemmas: the trained lemmatizer wins on citation forms
+  (`Eine → ein`, `neue → neu`, `erste → erster Dat`, `zum → zu`), loses on
+  inclusive spellings (`Kund:innen → Kund:inn`, `Mitarbeiter*innen →
+  Mitarbeiter*inne` — and the DB lemma repair keyed on the lemma no longer
+  fires once it is mangled), loses on substantivized participles
+  (`Studierende → studierend`), and swaps the pronoun convention the lookup
+  tables use (`ich/mein` for all persons) for UD style (`wir/unser`). End to
+  end it fails 4 of 181 rule-level cases (internal email demo, two
+  gender-ending cases, one grammatical-alternatives case): the lemma
+  *conventions* are load-bearing for rule keys. Conclusion: `lookup` stays
+  the default; the trained lemmatizer is only worth revisiting together with
+  a guard for gender-symbol tokens plus a convention-normalization pass, and
+  this instrument makes that a reviewable diff when someone tries.
 - `fetch_word_type` stops mutating; `german_lemmatization` inside the token loop
   ([app/rule_processors.py:225](../app/rule_processors.py#L225)) becomes part of
   the same component or an explicit, documented step.
@@ -210,6 +226,27 @@ Options, in order of cost:
    NER, which `is_entity_type_mismatch` and the LanguageTool name suppression
    depend on; and `Model.models` keys by language, so arms must run as separate
    processes.
+
+## Relation to the spaCy 3.8 update (upstream PR #1173)
+
+The upstream 3.8 update stalled on "need to review all the test snapshot
+changes": a retrained model shifts many end-to-end snapshots, and with only
+rule-level output there is no way to separate benign re-taggings from real
+regressions, so the review never converged. This plan attacks that directly:
+
+- Phase 0 turns a model bump into a reviewable token-level diff — run the
+  analysis corpus under the new models (`--snapshot-update` in a scratch
+  worktree, `git diff`) and each changed end-to-end case can be traced to the
+  tag/morph/lemma change that caused it.
+- Phases 1–3 shrink the model-sensitive surface. The POS cascade is
+  "optimized for spaCy large models" 3.7; a table-driven UPOS mapping and
+  data-level exception patterns (each citing a corpus case) can be re-verified
+  per model version and retired when a new model no longer needs them.
+- The lemmatizer setting isolates one axis: lemma changes can be measured
+  independently of tagger changes when models move.
+
+The fasttext/numpy2 conflict that also blocks that PR is packaging, not
+spaCy usage, and stays out of scope here.
 
 ## Defects found during review
 
