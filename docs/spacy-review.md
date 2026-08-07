@@ -326,7 +326,56 @@ name suppression and the context checker now receive plain-data views
 exits — a Doc must never outlive its zone. Kill switch: `MEMORY_ZONES=false`.
 Debug endpoints run zoneless; they are not the volume path.
 
-## Defects found during review
+### Measuring without a deployment
+
+The Phase 3/5 decisions were framed around production `log_metrics`
+counters; without a deployment the same numbers come from corpora run
+locally:
+
+- **Gold morphology from UD treebanks.** UD_German-HDT (and GSD, plus the
+  French/English UD sets) carry gold `Number`/`Case`/`POS` per token. Filter
+  their sentences to tokens whose surface form is in
+  `ambiguous_number_lookup` and score the loaded model against gold: that
+  is the morph-vs-wordlist trust measurement per model, no traffic needed.
+- **Counter sweeps over any text corpus.** A `bin/` runner feeding job-ad or
+  business text through the pipeline with `LOG_METRICS=true` aggregates the
+  same disagreement counters a deployment would emit.
+- **Gold assertions in the analysis corpus.** The
+  `tests/test_spacy_analysis` cases can carry expected `word_type`/`Number`
+  for the tokens rules care about; snapshots say what changed, gold says
+  what is right.
+
+### Rule-editor tooling for the rule-data issues
+
+- **Per-model word-type lint**: run every rule's words through the loaded
+  pipeline and report rules whose declared word type can no longer match
+  (the ninja/ass/so class) and lemma keys the lemmatizer no longer produces
+  (the coloured/colour class) - dead rules become a report instead of a
+  silent product regression.
+- **Category policy validation**: rules in categories where the term is
+  problematic in any position (offensive language, slurs, exaggeration,
+  fillers) should declare no word type; the editor can enforce that.
+- **Example sentences as rule metadata**: a positive example per rule turns
+  the whole rules DB into a generated contract-test corpus - after any
+  model change, "does each rule still fire on its own example" replaces
+  hand-adjudicating snapshot churn.
+
+### LanguageTool typo noise without a custom ignore list
+
+A managed/official LT deployment cannot take the `languagetool/` ignore
+list, so suppression must live on our side of the API boundary:
+
+- **Post-filter TYPOS matches morphologically**: before reporting an LT
+  typo on a capitalized token, strip the feminine/gendered endings
+  (`-in`, `-innen`, and the configured gender-symbol forms) and look the
+  stem up in the noun tables (plus the compound splitter for
+  `Abdichterinnen`-style derivations). Deterministic, model- and
+  deployment-independent - unlike the current NER-overlap suppression,
+  which moves with every model.
+- **LT Premium personal dictionary** (`/words` API, the credentials
+  settings already exist): syncable from the noun tables' generated forms
+  if the hosted premium tier is used; a size-limited complement, not the
+  primary mechanism.
 
 All fixed on `feature/spacy-foundations` with unit tests in
 [tests/test_unit.py](../tests/test_unit.py):
