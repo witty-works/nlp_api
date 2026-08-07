@@ -148,6 +148,11 @@ class Settings(BaseSettings):
     # words, but needs the overrides to guard inclusive spellings).
     # See docs/spacy-review.md, Phase 1.
     lemmatizer: str = "lookup"
+    # Git revision of the code this process serves, baked into the image at
+    # build time (Dockerfile ARG GIT_REVISION). Exposed via /version so
+    # clients can stamp evaluation state with the exact code it was computed
+    # against; empty when running outside a built image.
+    git_revision: Optional[str] = ""
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict[str, str] = {}
