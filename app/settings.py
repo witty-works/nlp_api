@@ -137,6 +137,13 @@ class Settings(BaseSettings):
         "de_core_news_lg",
         "fr_core_news_lg",
     ]
+    # Which base lemmatizer to run before the lookup overrides: "lookup"
+    # replaces the model's lemmatizer with the rule/lookup one from
+    # spacy-lookups-data (deterministic, silently wrong on unknown compounds),
+    # "trained" keeps the lemmatizer the model ships (generalizes to unseen
+    # words, but needs the overrides to guard inclusive spellings).
+    # See docs/spacy-review.md, Phase 1.
+    lemmatizer: str = "lookup"
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict[str, str] = {}

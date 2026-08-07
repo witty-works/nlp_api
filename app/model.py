@@ -370,11 +370,12 @@ class Model:
         if tokenizer is not None:
             model.tokenizer = tokenizer
 
-        # Switch to non-trainable lemmatizer
-        model.remove_pipe("lemmatizer")
-        # Add non-trainable lemmatizer from language defaults
-        # and load lemmatizer tables from spacy-lookups-data
-        model.add_pipe("lemmatizer").initialize()
+        if self.settings.lemmatizer == "lookup":
+            # Switch to non-trainable lemmatizer
+            model.remove_pipe("lemmatizer")
+            # Add non-trainable lemmatizer from language defaults
+            # and load lemmatizer tables from spacy-lookups-data
+            model.add_pipe("lemmatizer").initialize()
 
         model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
 
