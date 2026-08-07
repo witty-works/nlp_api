@@ -13,7 +13,9 @@ from spacy.lookups import Lookups
 from spacy.tokens import Token, Doc
 from spacy.matcher import Matcher
 
+import asyncio
 import re
+from contextlib import asynccontextmanager
 from logging import Logger
 import json
 
@@ -93,6 +95,25 @@ class Model:
     ]
 
     models = {}
+    locks = {}
+
+    @asynccontextmanager
+    async def nlp_session(self, lang: LangType):
+        """Bounds per-request Vocab/StringStore growth via memory zones.
+
+        Serialized per language: zones are process-global on the vocab, so a
+        zone exiting while another request's Doc is alive would evict strings
+        that Doc still references. spaCy work is GIL-bound anyway; the slow
+        awaits (LanguageTool, LLM) belong outside this block. Docs created
+        inside must not be used after it - extract plain data before leaving.
+        """
+        if not self.settings.memory_zones:
+            yield
+            return
+
+        async with self.locks[lang]:
+            with self.models[lang].memory_zone():
+                yield
 
     def token_is_conjunction(self, token: Token) -> bool:
         return token.text == "," or token.pos_ == "CCONJ"
@@ -405,6 +426,7 @@ class Model:
             )
 
         self.models[lang] = model
+        self.locks[lang] = asyncio.Lock()
 
     def is_number_ambiguous(self, lang: LangType, token: Token) -> bool:
         """Whether the word list cannot decide this token's number.

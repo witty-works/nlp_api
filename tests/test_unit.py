@@ -4,6 +4,7 @@ These test app internals directly on blank spaCy pipelines, so they need
 neither the large models nor LanguageTool.
 """
 
+import asyncio
 import logging
 
 import pytest
@@ -182,6 +183,32 @@ def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
 
     token.pos_ = "NOUN"
     assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+
+@pytest.mark.asyncio
+async def test_nlp_session_evicts_transient_strings():
+    model = fetch_model()
+    nlp = spacy.blank("de")
+    saved_model = Model.models.get(LangType.DE)
+    saved_lock = Model.locks.get(LangType.DE)
+    Model.models[LangType.DE] = nlp
+    Model.locks[LangType.DE] = asyncio.Lock()
+
+    try:
+        baseline = len(nlp.vocab.strings)
+        async with model.nlp_session(LangType.DE):
+            model.fetch_tokens(LangType.DE, "Xylophonorchester quixotisch kzt9x")
+            assert len(nlp.vocab.strings) > baseline
+
+        # The request-transient entries are evicted at session exit.
+        assert len(nlp.vocab.strings) == baseline
+    finally:
+        if saved_model is not None:
+            Model.models[LangType.DE] = saved_model
+            Model.locks[LangType.DE] = saved_lock
+        else:
+            Model.models.pop(LangType.DE, None)
+            Model.locks.pop(LangType.DE, None)
 
 
 def test_rule_dynamic_is_not_shared_between_rules():
