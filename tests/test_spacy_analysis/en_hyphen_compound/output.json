@@ -1,0 +1,334 @@
+[
+    {
+        "auto-detected word type": "~|a|n|~v||n|n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 3,
+                "start": 0,
+                "text": "A one-eyed chairman"
+            },
+            {
+                "end": 7,
+                "start": 4,
+                "text": "the man-made committee"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "A"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "one-eyed"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "chairman",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "a",
+        "morph": {
+            "Definite": "Ind",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "DT",
+        "text": "A",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "A"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "one-eyed"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "chairman",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "one-eyed",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 2,
+        "tag": "JJ",
+        "text": "one-eyed",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "met",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "chairman",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 11,
+        "tag": "NN",
+        "text": "chairman",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "met",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "meet",
+        "morph": {
+            "Tense": "Past",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 20,
+        "tag": "VBD",
+        "text": "met",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "the"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "man-made"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "committee",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "the",
+        "morph": {
+            "Definite": "Def",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 24,
+        "tag": "DT",
+        "text": "the",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "the"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "man-made"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "committee",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "man-made",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "PROPN",
+        "start": 28,
+        "tag": "NNP",
+        "text": "man-made",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "dobj",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "met",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "committee",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 37,
+        "tag": "NN",
+        "text": "committee",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "chairman"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "committee"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": "committee",
+        "emoji_desc": null,
+        "head": "met",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 46,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

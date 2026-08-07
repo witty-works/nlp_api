@@ -1,0 +1,308 @@
+[
+    {
+        "auto-detected word type": "~|~n|conj|~n|~|a|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 1,
+                "text": "Kund:innen"
+            },
+            {
+                "end": 4,
+                "start": 3,
+                "text": "Mitarbeiter:innen"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Die",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Kunde",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Kund:innen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kund:innen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 15,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "MISC",
+                "token": "Mitarbeiter:innen"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Mitarbeiter",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "MISC",
+        "pos": "NOUN",
+        "start": 19,
+        "tag": "NN",
+        "text": "Mitarbeiter:innen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "sein",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 37,
+        "tag": "VAFIN",
+        "text": "sind",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "zufrieden",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADV",
+        "start": 42,
+        "tag": "ADJD",
+        "text": "zufrieden",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Kund:innen"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "zufrieden"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sind",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 51,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

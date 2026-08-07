@@ -1,0 +1,400 @@
+[
+    {
+        "auto-detected word type": "~pron|n|v|adv|conj|pron|~n|v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Viele Lehrer"
+            },
+            {
+                "end": 7,
+                "start": 5,
+                "text": "einige Experten"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Viele"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Lehrer",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "viel",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Plur",
+            "PronType": "Ind"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "PIAT",
+        "text": "Viele",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeiten",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Lehrer",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 6,
+        "tag": "NN",
+        "text": "Lehrer",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeiten",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "arbeiten",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 13,
+        "tag": "VVFIN",
+        "text": "arbeiten",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeiten",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "hier",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 22,
+        "tag": "ADV",
+        "text": "hier",
+        "whitespace": " ",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "hier",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 27,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "einige"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experten"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Experten",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "einige",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Plur",
+            "PronType": "Ind"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 31,
+        "tag": "PIAT",
+        "text": "einige",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experten"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "helfen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Experte",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 38,
+        "tag": "NN",
+        "text": "Experten",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeiten",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "helfen",
+        "morph": {
+            "VerbForm": "Inf"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 47,
+        "tag": "VVINF",
+        "text": "helfen",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Lehrer"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "hier"
+            },
+            {
+                "dep": "oc",
+                "ner": "",
+                "token": "helfen"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arbeiten",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 53,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

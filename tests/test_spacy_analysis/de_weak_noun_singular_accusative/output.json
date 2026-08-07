@@ -1,0 +1,309 @@
+[
+    {
+        "auto-detected word type": "~|n|~v|~|~n|a|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Der Experte"
+            },
+            {
+                "end": 5,
+                "start": 3,
+                "text": "den Kunden"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Der"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Experte",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Der",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "berät",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Experte",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Experte",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "berät",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "beraten",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 12,
+        "tag": "VVFIN",
+        "text": "berät",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "den"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kunden",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Acc",
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 18,
+        "tag": "ART",
+        "text": "den",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "oa",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "berät",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Kunde",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 22,
+        "tag": "NN",
+        "text": "Kunden",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "berät",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "persönlich",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADV",
+        "start": 29,
+        "tag": "ADJD",
+        "text": "persönlich",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Experte"
+            },
+            {
+                "dep": "oa",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "persönlich"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "berät",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 39,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

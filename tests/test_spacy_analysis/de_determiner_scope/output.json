@@ -1,0 +1,375 @@
+[
+    {
+        "auto-detected word type": "|~a|n||~pron|~a|~n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 3,
+                "start": 0,
+                "text": "Eine engagierte Arbeitskraft"
+            },
+            {
+                "end": 7,
+                "start": 4,
+                "text": "unsere treuen Kunden"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Arbeitskraft",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Eine",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Ind",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Eine",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Arbeitskraft",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "engagiert",
+        "morph": {
+            "Case": "Nom",
+            "Degree": "Pos",
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 5,
+        "tag": "ADJA",
+        "text": "engagierte",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Arbeitskraft",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Arbeitskraft",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 16,
+        "tag": "NN",
+        "text": "Arbeitskraft",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mnr",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Arbeitskraft",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "für",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 29,
+        "tag": "APPR",
+        "text": "für",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unsere"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "treuen"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kunden",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "mein",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Masc",
+            "Number": "Plur",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 33,
+        "tag": "PPOSAT",
+        "text": "unsere",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unsere"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "treuen"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kunden",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "treu",
+        "morph": {
+            "Case": "Acc",
+            "Degree": "Pos",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 40,
+        "tag": "ADJA",
+        "text": "treuen",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "für",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Kunde",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 47,
+        "tag": "NN",
+        "text": "Kunden",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Eine"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "engagierte"
+            },
+            {
+                "dep": "mnr",
+                "ner": "",
+                "token": "für"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Arbeitskraft",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 53,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

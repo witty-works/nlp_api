@@ -1,0 +1,335 @@
+[
+    {
+        "auto-detected word type": "~n|conj|~n|~v|~n||~n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Policemen"
+            },
+            {
+                "end": 3,
+                "start": 2,
+                "text": "firemen"
+            },
+            {
+                "end": 5,
+                "start": 4,
+                "text": "questions"
+            },
+            {
+                "end": 7,
+                "start": 6,
+                "text": "chairmen"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "answered",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "policeman",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 0,
+        "tag": "NNS",
+        "text": "Policemen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "firemen"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "Policemen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "and",
+        "morph": {
+            "ConjType": "Cmp"
+        },
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 10,
+        "tag": "CC",
+        "text": "and",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "firemen"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "Policemen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "fireman",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 14,
+        "tag": "NNS",
+        "text": "firemen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "answered",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "answer",
+        "morph": {
+            "Tense": "Past",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 22,
+        "tag": "VBD",
+        "text": "answered",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "dobj",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "answered",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "question",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 31,
+        "tag": "NNS",
+        "text": "questions",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "from"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "prep",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "questions",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "from",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 41,
+        "tag": "IN",
+        "text": "from",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "chairmen"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "from"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pobj",
+        "dependent": "chairmen",
+        "emoji_desc": null,
+        "head": "from",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "chairman",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 46,
+        "tag": "NNS",
+        "text": "chairmen",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Policemen"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "questions"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": "questions",
+        "emoji_desc": null,
+        "head": "answered",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 54,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
