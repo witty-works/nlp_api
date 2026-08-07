@@ -314,10 +314,17 @@ lost until the rule data is relaxed (word type or lemma key): `ninja`
 (ADJ as modifier), `ass` (predicative ADJ), `so` (CCONJ), `coloured people`
 (VBN, lemma `colour` ≠ key `colored`), `intern` in signature-mangled text.
 
-**Deferred:** `Language.memory_zone()` (ships with 3.8) — adopting it needs
-a per-language lock design because requests interleave at await points
-inside one worker; see the plan discussion before wiring it in. Interim
-lever: gunicorn `--max-requests` + `--preload` makes worker recycling cheap.
+**Memory zones (implemented):** `Model.nlp_session(lang)` wraps the spaCy
+span of each request in `Language.memory_zone()`, bounding per-worker
+Vocab/StringStore growth so `--preload`'s copy-on-write sharing holds up
+over a worker's lifetime. Zones are process-global on the vocab, and
+requests interleave at await points inside one worker, so the session also
+holds a per-language `asyncio.Lock`; that costs little because spaCy work
+is GIL-serialized anyway and the slow awaits stay outside: LanguageTool's
+name suppression and the context checker now receive plain-data views
+(`ent_spans`, `(end_char, text)` sentence pairs) extracted before the zone
+exits — a Doc must never outlive its zone. Kill switch: `MEMORY_ZONES=false`.
+Debug endpoints run zoneless; they are not the volume path.
 
 ## Defects found during review
 
