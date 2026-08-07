@@ -117,6 +117,50 @@ Two were checked again against every page the site links to and are genuinely ab
 
 ---
 
+## Logo instead of the sad-face icon (decided, not yet wired)
+
+When the Inklusivum is the configured `german_gender_ending`, **all** gendered
+findings carry the Inklusivum logo in place of the emoji icon — the logo
+signals "this suggestion is in your chosen system", which holds for every
+gendered suggestion under that config, not only for forms the Inklusivum
+engine generated.
+
+The plumbing already exists; the wiring is data plus one conditional:
+
+- The `Result` schema has `icon_image`, and the explanation assembly emits it
+  whenever category data carries `emoji_image` (the corporate-rules branding
+  path) - clients that render corporate icons render this too, and older
+  clients fall back to the emoji `icon`.
+- Dashboard: host the SVG in the regular asset pipeline and attach it as
+  `icon_image` to the *Inklusivum ending option* in the config-options data
+  (not to a subcategory - the same subcategories serve every ending style).
+- API: at result assembly, when the active config's ending is the Inklusivum
+  and the finding is a gendered one, pass that `icon_image` through.
+- Extension: QA that `icon_image` renders in the highlight UI and that the
+  CSP `img-src` allowlist covers the assets domain; fall back to an inline
+  `data:` SVG only if a rendering context forces it.
+
+## Dashboard readiness
+
+What the dashboard must provide for the Inklusivum to reach users, stated
+from this API's contract:
+
+- **Settings UI**: offer the Inklusivum as a `german_gender_ending` option
+  for user and organization configs, storing the value this API expects
+  (see the option key in `training_data/config_options.json`). The option
+  labels/translations flow through the existing dashboard→`config_options.json`
+  sync, which already carries the Inklusivum label.
+- **Logo asset + option metadata**: host the SVG and attach it as
+  `icon_image` to the ending option in that same synced data (see the logo
+  section above).
+- **Rendering of Inklusivum text**: anywhere the dashboard displays findings
+  or alternatives (team analytics, demos), expect Inklusivum forms - `einey`,
+  `ens` possessives, endings without a separator character - and the logo in
+  `icon_image` where it renders finding icons.
+- **Category/driver sync**: if the association's material adds an
+  Inklusivum-specific explanation page, the drivers data (`hs_path`,
+  translations) is the channel; no API change needed.
+
 ## See Also
 
 - [Rückfragen zum Inklusivum](./inklusivum-feedback.md), open questions for the association
