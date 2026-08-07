@@ -374,6 +374,7 @@ class Alternatives:
         rule: Rule,
         alternative: Alternative,
         separator: str,
+        is_singular: bool | None = None,
     ) -> Alternative:
         if rule.dynamic.article is None:
             return alternative
@@ -419,10 +420,26 @@ class Alternatives:
                 if isinstance(article, str):
                     article = article.replace("~", sep)
             else:
-                alternative_tokens = self.model.fetch_tokens(
-                    LangType.DE, alternative.words[-1]
-                )
-                if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
+                # The article must agree with what is shown, decided by
+                # grammar rather than by a model reading a word in
+                # isolation: a collective noun is singular regardless of
+                # what it replaces ("die Kollegschaft"), and any other
+                # alternative takes the number of the phrase it replaces.
+                # Models disagree with each other on isolated forms - de
+                # 3.7 and 3.8 give different numbers for the non-word
+                # "Kollege~Kollegin" and the ambiguous "Mitarbeitende".
+                word = alternative.lemma.split()[-1]
+                if alternative.is_collective_noun:
+                    plural = False
+                elif is_singular is not None:
+                    plural = not is_singular
+                else:
+                    alternative_tokens = self.model.fetch_tokens(LangType.DE, word)
+                    plural = bool(
+                        self.model.is_token_plural(LangType.DE, alternative_tokens[0])
+                    )
+
+                if plural:
                     article = rule.dynamic.article.plural
                 else:
                     gender = await self.nouns.german_noun_gender_lookup(
@@ -790,7 +807,7 @@ class Alternatives:
 
                 if rule.dynamic.article:
                     alternative = await self.add_german_article_to_alternative(
-                        tokens, token_index, rule, alternative, separator
+                        tokens, token_index, rule, alternative, separator, is_singular
                     )
 
                 # The Inklusivum has no separator to splice in, so this would
@@ -911,7 +928,7 @@ class Alternatives:
 
         if rule.dynamic.article:
             new_alternative = await self.add_german_article_to_alternative(
-                tokens, token_index, rule, new_alternative, separator
+                tokens, token_index, rule, new_alternative, separator, is_singular
             )
 
         return new_alternative
