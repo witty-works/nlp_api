@@ -245,8 +245,79 @@ regressions, so the review never converged. This plan attacks that directly:
 - The lemmatizer setting isolates one axis: lemma changes can be measured
   independently of tagger changes when models move.
 
-The fasttext/numpy2 conflict that also blocks that PR is packaging, not
-spaCy usage, and stays out of scope here.
+### Language detection dependency (the numpy 2 blocker)
+
+The fasttext/numpy2 conflict is packaging, not spaCy usage, but it gates the
+upgrade, so the decision is recorded here. Meta archived fastText in March
+2024, so every binding is community-maintained; the question is which fork,
+or which replacement. Decision: **`fasttext-predict`** (SearXNG-maintained,
+inference-only, no numpy dependency at all, same `fasttext` module name) with
+the unchanged `lid.176.bin` — predictions stay identical, so the
+language-detection snapshots verify the swap. Preferred over
+`fasttext-numpy2` (individual-maintainer rebuild of the full library whose
+purpose lapses once numpy 2 is adopted).
+
+**Lingua was evaluated and rejected, twice.** The 2024 attempt
+(pemistahl/lingua-py#242) hit short-text misclassifications; a re-check of
+releases since (only 2.2.0, March 2025 — FST memory work, no short-text
+quality changes, nothing released in the ~17 months to August 2026) shows no
+movement on that failure mode. Low-accuracy mode is not an alternative: its
+documented weakness is short text, which is this API's dominant input. And
+restricting lingua to {en, de, fr} to lift accuracy would break
+unsupported-language rejection — `get_locale` returns None when the detected
+language is unsupported, which requires a detector that can confidently name
+languages we do not process (lid.176 covers 176). If detector memory ever
+matters, the lever is fastText's compressed `lid.176.ftz` (<1MB), not a
+detector swap.
+
+### The 3.8 upgrade, measured (2026-08-07, `feature/spacy-3.8`)
+
+spacy 3.8.2 + the 3.8.0 model wheels + numpy 2 + `fasttext-predict`, in one
+lock. fasttext-predict proved a drop-in (identical predictions on
+`lid.176.bin`; language-detection snapshots unchanged). Raw model churn: 8 of
+18 analysis-corpus cases, 17 end-to-end cases. Every change was traced to a
+mechanism before deciding; the full evidence is in the branch history, the
+summary:
+
+**Model improvements taken as-is:** correct French parse structure the 3.7
+model got wrong, `man-made`-style EN compounds tagged ADJ instead of PROPN,
+German case corrections and coordination attachment, better French feminine
+morphology (`curieuses` now carries `Gender=Fem`, which lets the
+gendered-pair suppression fire across sentences).
+
+**Regressions compensated in the analysis layer** (each with a unit test and
+a corpus/e2e case citation, each retirable when a future model passes
+without it):
+- gender-symbol forms (`Kund:innen`) tagged ADJA → `attribute_ruler` pattern
+  forces NOUN/NN;
+- `pos=NOUN` with `tag=ADJD` conflicts (`Ehrgeiz`) → UPOS wins over the
+  mixed-tagset adjective check;
+- EN hyphen compounds (`state-of-the-art`): the whole-token adjective tag now
+  answers an adjective expectation before the split (3.7 hid this behind
+  PROPN-matches-anything);
+- de NER no longer labels bare surnames (`Herr Müller`) → a PROPN attached
+  to a salutation counts as name evidence for NON_PERSON/NON_NAME rules. A
+  bare PROPN is not enough: standalone compounds (`Bäcker-Confiseur-Konditor`)
+  are PROPN too.
+
+**Accepted as model behavior:** number readings on ambiguous weak-noun
+forms moved in both directions ("berät den Kunden" now reads dative plural —
+wrong; other cases improved). Context-dependent, not pattern-fixable; the
+`log_metrics` counter tracks the disagreement rate. LT typo findings shifted
+with NER labels in both directions (`Abdichterinnen` surfaced,
+`Einflußvermögen` suppressed) — if surfaced typos become noise, the
+`languagetool/` ignore list is the lever.
+
+**Rules-DB items, out of this repo's scope** — the 3.8 EN tagger reads these
+in positions the rules' declared word types don't cover, so the findings are
+lost until the rule data is relaxed (word type or lemma key): `ninja`
+(ADJ as modifier), `ass` (predicative ADJ), `so` (CCONJ), `coloured people`
+(VBN, lemma `colour` ≠ key `colored`), `intern` in signature-mangled text.
+
+**Deferred:** `Language.memory_zone()` (ships with 3.8) — adopting it needs
+a per-language lock design because requests interleave at await points
+inside one worker; see the plan discussion before wiring it in. Interim
+lever: gunicorn `--max-requests` + `--preload` makes worker recycling cheap.
 
 ## Defects found during review
 
