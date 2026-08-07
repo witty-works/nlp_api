@@ -425,51 +425,6 @@
         {
             "alternatives": [
                 {
-                    "female_form": "Müllerin",
-                    "gender_role": "inclusive_gender",
-                    "male_form": "Müller",
-                    "text": "Müllere"
-                },
-                {
-                    "female_form": "Müllerin",
-                    "gender_role": "binary_gender",
-                    "male_form": "Müller",
-                    "text": "Müllerin/Müller"
-                },
-                {
-                    "text": "Mühle"
-                },
-                {
-                    "text": "Mühlbetrieb"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "n und Herren. Liebe Kollegin, lieber Kollege. Die Studierenden kamen. Der beste Lehrer gewann. Herr Müller sprach mit Frau Meier. Jemand hat angerufen. Er selbst hat sich geirrt.",
-            "end": 206,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "image_url": {
-                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
-                    "height": 525,
-                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
-                    "width": 900
-                },
-                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
-                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Berufstitel",
-            "proficiency_level": "unconscious_bias",
-            "start": 200,
-            "subcategory": "titles",
-            "text": "Müller",
-            "text_id": "Müller"
-        },
-        {
-            "alternatives": [
-                {
                     "female_form": "Partnerin",
                     "gender_role": "inclusive_gender",
                     "male_form": "Partner",
