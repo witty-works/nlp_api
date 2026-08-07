@@ -49,12 +49,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The spacy 3.8 model wheels plus torch overflow the runner disk;
+      # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false # the LanguageTool service container must survive
+          swap-storage: true
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: pdm-project/setup-pdm@v3
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        env:
+          PIP_NO_CACHE_DIR: "1"
         run: |
           pdm sync --dev
 
