@@ -2,14 +2,20 @@ version: "3.9"
 
 services:
   languagetool:
-    image: erikvl87/languagetool:latest
+    # Pinned: the cloud API moved from 6.8 to 6.9-SNAPSHOT and stopped
+    # reporting COMMA_COMPOUND_SENTENCE, which changed test output with no
+    # change here. latest would drift the same way.
+    image: erikvl87/languagetool:6.8
     container_name: lt
     ports:
-      - "8010:8010"
-    # Environment variables for LanguageTool can be added here if needed
-    # environment:
-    #   - Java_Xms=128m
-    #   - Java_Xmx=1024m
+      # Host side deliberately not 8010: that is a common default and a local
+      # PHP server on ::1 shadowed it, so localhost resolved past the container.
+      - "8210:8010"
+    environment:
+      # The default heap runs out part way through the test suite:
+      # java.lang.OutOfMemoryError: Java heap space, and the container exits.
+      - Java_Xms=512m
+      - Java_Xmx=4g
 
   nlpapi:
     build: .

@@ -777,6 +777,67 @@ def fetch_static_rules(langs: list[str]):
             static_rules[LangType.DE]["articles"]
         )
 
+        # Determiners that fix the number of the noun they introduce, used for
+        # forms the word list cannot decide. These are surface lookups on
+        # purpose: the tagger mislabels "viele" as singular often enough that
+        # its reading of the determiner is no more trustworthy than its reading
+        # of the noun, and a fixed list behaves the same on every model.
+        # Only forms without a counterpart in the other number are listed.
+        static_rules[LangType.DE]["plural_only_determiners"] = {
+            "viele",
+            "vielen",
+            "vieler",
+            "alle",
+            "allen",
+            "mehrere",
+            "mehreren",
+            "mehrerer",
+            "beide",
+            "beiden",
+            "beider",
+            "einige",
+            "einigen",
+            "einiger",
+            "etliche",
+            "etlichen",
+            "sämtliche",
+            "sämtlichen",
+            "zahlreiche",
+            "zahlreichen",
+            "diverse",
+            "diversen",
+            "verschiedene",
+            "verschiedenen",
+            "unzählige",
+            "unzähligen",
+        }
+        # The ein and jed paradigms have no plural at all.
+        static_rules[LangType.DE]["singular_only_determiners"] = {
+            "ein",
+            "eine",
+            "einen",
+            "einem",
+            "einer",
+            "eines",
+            "kein",
+            "keinem",
+            "keines",
+            "jeder",
+            "jede",
+            "jedes",
+            "jedem",
+            "jeden",
+            "dieses",
+            "diesem",
+            "jenes",
+            "jenem",
+            "manches",
+            "manchem",
+            "welches",
+            "welchem",
+            "solches",
+            "solchem",
+        }
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [
                 "chen",

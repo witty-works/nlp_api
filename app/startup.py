@@ -50,6 +50,9 @@ async def lifespan(app: FastAPI, context: AppContext):
     # Initialize database
     context.db = await Db.factory(context.settings, context.languages)
     context.model.db = context.db
+    context.model.ambiguous_number_lookup = (
+        await context.db.fetch_ambiguous_number_forms()
+    )
 
     # Canned user and organisation records for the test suite, which
     # authenticates as the email they carry. They are fixtures, not

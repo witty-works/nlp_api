@@ -22,6 +22,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      # The snapshots contain LanguageTool findings, so they only hold still if
+      # LanguageTool does. Pinned to the same version the compose file runs,
+      # because the hosted API is a different one: it moved to 6.9 and stopped
+      # reporting COMMA_COMPOUND_SENTENCE, which changes a snapshot on its own.
+      # The heap is raised because the default runs out part way through the
+      # suite, and the container exiting reads as every later test failing to
+      # connect rather than as one crash.
+      languagetool:
+        image: erikvl87/languagetool:6.8
+        ports:
+          - 8010:8010
+        env:
+          Java_Xms: 512m
+          Java_Xmx: 4g
+        # The image defines its own healthcheck, so the runner waits for it;
+        # only the timings need widening for a cold JVM start.
+        options: >-
+          --health-interval 10s
+          --health-retries 20
+          --health-start-period 30s
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -52,6 +74,8 @@ jobs:
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
       - name: Run test suite
+        env:
+          LANGUAGETOOL_API: "http://localhost:8010/v2"
         run: |
           export testing=True
           pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html

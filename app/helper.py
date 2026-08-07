@@ -4,8 +4,8 @@ from app.models import Config, LangType
 
 
 def is_gender_star_ending(text: str) -> bool | re.Match:
-    for regexp in Config._gendereddenom_ending.default:
-        match = re.search(Config._gendereddenom_ending.default[regexp], text)
+    for regexp in Config._gendereddenom_ending.default.values():
+        match = re.search(regexp, text)
         if match:
             return match
 
