@@ -70,6 +70,13 @@ class RuleCheck:
         self.adjectives = adjectives
         self.alternatives = alternatives
 
+    def substring_standard_words(self, rule: Rule) -> list:
+        standard_words = self.static_rules[LangType.DE]["standard_words"]
+        if rule.false_positives is not None:
+            standard_words = rule.false_positives + standard_words
+
+        return standard_words
+
     def is_entity_type_mismatch(self, rule: Rule, token: Token):
         if rule.entity_type == EntityType.DEFAULT:
             return False
@@ -1006,13 +1013,7 @@ class RuleCheck:
                 if count == 0:
                     continue
 
-                if rule.false_positives is not None:
-                    standard_words = (
-                        rule.false_positives
-                        + self.static_rules[LangType.DE]["standard_words"].copy()
-                    )
-
-                for standard_word in standard_words:
+                for standard_word in self.substring_standard_words(rule):
                     if standard_word.lower() not in rule_lemma_lower:
                         token_lower = token_lower.replace(standard_word.lower(), "")
 
@@ -1374,12 +1375,11 @@ class RuleCheck:
         male_form_found = True if gender == "Masc" else False
         female_form_found = True if gender == "Fem" else False
 
-        doc = token.sent.doc
-        for token in doc:
-            if lemma != token.lemma_.lower():
+        for other in token.doc:
+            if lemma != other.lemma_.lower():
                 continue
 
-            gender = rule_utils.get_token_gender(token)
+            gender = rule_utils.get_token_gender(other)
             if not male_form_found and gender == "Masc":
                 male_form_found = True
             elif not female_form_found and gender == "Fem":

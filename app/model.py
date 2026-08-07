@@ -11,7 +11,7 @@ from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex, compile_suffix_regex, compile_prefix_regex
 from spacy.lookups import Lookups
 from spacy.tokens import Token, Doc
-from spacy.matcher import PhraseMatcher, Matcher
+from spacy.matcher import Matcher
 
 import re
 from logging import Logger
@@ -67,7 +67,6 @@ class Model:
         "AFX",
         "ADJA",
         "ADJD",
-        "ADV",
         "ADJ",
         "JJ",
         "JJR",
@@ -178,7 +177,11 @@ class Model:
             if WordType.ADVERB == expected_word_type:
                 return WordType.ADVERB
 
-            if lang == LangType.FR and WordType.ADJECTIVE == expected_word_type:
+            if WordType.ADJECTIVE == expected_word_type:
+                if lang == LangType.FR and token.text.lower().endswith("ez"):
+                    # Vous l’incarnez et l’**animez** auprès de notre clientèle.
+                    return WordType.VERB
+
                 return WordType.ADJECTIVE
 
         if (
@@ -208,6 +211,11 @@ class Model:
                 return WordType.VERB
 
             return WordType.ADJECTIVE
+
+        # Predicative/adverbial adjectives carry an adjective tag (ADJD, JJ)
+        # and are handled above; what reaches this point is a plain adverb.
+        if token.pos_ == "ADV":
+            return WordType.ADVERB
 
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
             if token.pos_ == "NOUN" or token.tag_ == "NN":
@@ -297,16 +305,6 @@ class Model:
 
         for false_positive in false_positives:
             matcher.add("FalsePositivesList", false_positive)
-
-        return matcher(tokens)
-
-    def fetch_phrase_matcher(self, lang: LangType, tokens: Doc, phrases: list) -> list:
-        # Phrase matcher part to handle False positives with two words and special symbols
-        matcher = PhraseMatcher(s[lang].vocab, attr="LOWER")
-
-        # Only run model.make_doc to speed things up
-        patterns = [self.models[lang].make_doc(text) for text in phrases]
-        matcher.add("TerminologyList", patterns)
 
         return matcher(tokens)
 
@@ -470,7 +468,7 @@ class Model:
         if token.text in self.lemma_plural_lookup[lang]:
             return False
 
-        if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
+        if lang == LangType.EN and token.pos_ == "NOUN" and token.text.endswith("s"):
             return False
 
         if token.text.endswith("-"):

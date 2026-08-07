@@ -1707,7 +1707,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1732,7 +1732,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
             },
@@ -1789,7 +1789,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "noun chunks": [
                     {"text": "👩🏻‍🚒", "start": 0, "end": 1},
@@ -1872,7 +1872,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
                 "start": 13,
