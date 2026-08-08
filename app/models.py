@@ -17,6 +17,7 @@ from app.categories import (
     get_proficiency_level,
     get_category,
     get_category_name,
+    get_config_option_labels,
     map_gravity,
 )
 
@@ -1035,6 +1036,25 @@ class ResultOut(BaseModel):
                     content = ContentType("video")
                 elif language._(subcategory_key, "hard_facts"):
                     content = ContentType("advanced")
+
+        if (
+            icon_image is None
+            and category == "gender-orientation"
+            and language.lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        ):
+            # The ending's own logo replaces the emoji on every gendered
+            # finding once the Inklusivum is the configured ending: the
+            # suggestions are in the user's chosen system, whichever rule
+            # produced them. Data comes from the dashboard via
+            # config_options.json; clients without icon_image support keep
+            # the emoji icon.
+            icon_image = (
+                get_config_option_labels()
+                .get("german_gender_ending", {})
+                .get("icon_image", {})
+                .get(config.german_gender_ending)
+            )
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = language._(subcategory, "canonical_url")
