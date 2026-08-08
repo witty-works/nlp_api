@@ -158,6 +158,13 @@ class Model:
 
         return word_type
 
+    @staticmethod
+    def _traced(trace: list | None, tag: str, word_type: str) -> str:
+        """Record which branch decided, for the word-type metrics runner."""
+        if trace is not None:
+            trace.append(tag)
+        return word_type
+
     async def _fetch_word_type(
         self,
         lang: LangType,
@@ -165,26 +172,30 @@ class Model:
         expected_word_type: str | None = None,
         single_word: bool = False,
         strict: bool = False,
+        trace: list | None = None,
     ) -> str:
         """Hacky approach to fix some issues in spaCy POS detection.
         It was optimized for spaCy large models for the current rule set.
-        Fine tuning the spaCy models is probably the cleaner approach."""
+        Fine tuning the spaCy models is probably the cleaner approach.
+
+        Every return is tagged via _traced so bin/word_type_metrics.py can
+        measure which branches still earn their keep per model version."""
         # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
         # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
         if token._.is_emoji:
-            return WordType.EMOJI
+            return self._traced(trace, "emoji", WordType.EMOJI)
 
         if token.pos_ == "NUM":
             if WordType.NUMBER != expected_word_type and (
                 token.tag_ in ["CARD", "CD"] or "Card" in token.morph.get("NumType")
             ):
-                return WordType.CARDINAL
+                return self._traced(trace, "cardinal", WordType.CARDINAL)
 
-            return WordType.NUMBER
+            return self._traced(trace, "number", WordType.NUMBER)
 
         if not is_valid_text(lang, token.text):
-            return ""
+            return self._traced(trace, "invalid-text", "")
 
         if expected_word_type is None:
             expected_word_type = ""
@@ -192,25 +203,33 @@ class Model:
             expected_word_type == WordType.ARTICLE
             and token.text.lower() in self.static_rules[lang]["articles"]
         ):
-            return WordType.ARTICLE
+            return self._traced(trace, "article-list", WordType.ARTICLE)
 
         if token.pos_ == "ADV":
             if WordType.ADVERB == expected_word_type:
-                return WordType.ADVERB
+                return self._traced(trace, "adverb-expected", WordType.ADVERB)
 
             if WordType.ADJECTIVE == expected_word_type:
                 if lang == LangType.FR and token.text.lower().endswith("ez"):
                     # Vous l’incarnez et l’**animez** auprès de notre clientèle.
-                    return WordType.VERB
+                    return self._traced(trace, "fr-ez-verb", WordType.VERB)
 
-                return WordType.ADJECTIVE
+                return self._traced(
+                    trace, "adv-as-expected-adjective", WordType.ADJECTIVE
+                )
 
         if (
             lang == LangType.EN
+            and expected_word_type
             and "-" in token.text
             and not token.text.startswith("-")
             and not token.text.endswith("-")
         ):
+            # Splitting exists so "one-eyed"-class rules can match their
+            # parts, which only makes sense against an expectation. In
+            # auto-detect the whole-token tag is the better reading: the
+            # split turns "self-driven" into a noun via "self" (measured in
+            # docs/spacy-review.md, word-type branch metrics).
             # The tagger's reading of the whole compound answers the
             # expectation directly; splitting loses it. en 3.7.1 hid this by
             # tagging compounds PROPN, which matched any expectation (case:
@@ -218,7 +237,7 @@ class Model:
             if expected_word_type == WordType.ADJECTIVE and (
                 token.tag_ in self.adj_tags or token.pos_ in self.adj_tags
             ):
-                return WordType.ADJECTIVE
+                return self._traced(trace, "hyphen-adjective", WordType.ADJECTIVE)
 
             tokens = self.fetch_tokens(lang, token.text.replace("-", " "))
             word_type = await self.fetch_word_type(
@@ -229,11 +248,15 @@ class Model:
                 WordType.CARDINAL,
                 WordType.NUMBER,
             ] and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]:
-                return await self.fetch_word_type(
-                    lang, tokens[-1], expected_word_type, single_word
+                return self._traced(
+                    trace,
+                    "hyphen-split-last",
+                    await self.fetch_word_type(
+                        lang, tokens[-1], expected_word_type, single_word
+                    ),
                 )
 
-            return word_type
+            return self._traced(trace, "hyphen-split-first", word_type)
 
         # UPOS wins when the two taggers disagree: the de 3.8.0 pipeline
         # emits pos=NOUN with tag=ADJD for nouns like 'Ehrgeiz' (case:
@@ -243,18 +266,18 @@ class Model:
         ) and token.pos_ not in ("NOUN", "PROPN"):
             if lang == LangType.FR and token.text.lower().endswith("ez"):
                 # Vous l’incarnez et l’**animez** auprès de notre clientèle.
-                return WordType.VERB
+                return self._traced(trace, "fr-ez-verb", WordType.VERB)
 
-            return WordType.ADJECTIVE
+            return self._traced(trace, "adjective-tags", WordType.ADJECTIVE)
 
         # Predicative/adverbial adjectives carry an adjective tag (ADJD, JJ)
         # and are handled above; what reaches this point is a plain adverb.
         if token.pos_ == "ADV":
-            return WordType.ADVERB
+            return self._traced(trace, "adverb", WordType.ADVERB)
 
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
             if token.pos_ == "NOUN" or token.tag_ == "NN":
-                return WordType.NOUN
+                return self._traced(trace, "fr-noun-expected", WordType.NOUN)
 
         if token.pos_ == "VERB":
             if (
@@ -262,37 +285,51 @@ class Model:
                 and lang == LangType.DE
                 and WordType.ADJECTIVE in expected_word_type
             ):
-                return WordType.ADJECTIVE
+                return self._traced(
+                    trace, "de-verb-as-expected-adjective", WordType.ADJECTIVE
+                )
 
-            return WordType.VERB
+            return self._traced(trace, "verb", WordType.VERB)
 
         if token.pos_ in self.pronoun_tags or token.tag_ in self.pronoun_tags:
             if expected_word_type == WordType.NOUN:
-                return WordType.NOUN
+                return self._traced(trace, "pronoun-as-expected-noun", WordType.NOUN)
 
-            return WordType.PRONOUN
+            return self._traced(trace, "pronoun", WordType.PRONOUN)
 
         if token.pos_ == "NOUN" or token.tag_ == "NN":
             if lang == LangType.DE:
+                # A lowercase "noun" that the verb table knows is usually a
+                # misread infinitive ("Wir wollen das abzocken"). But only
+                # when the capitalized form is not itself a known noun:
+                # informal lowercase German ("Anlaß zur sorge", "auf kosten
+                # des...") must stay a noun (measured in
+                # docs/spacy-review.md, word-type branch metrics).
                 if token.text[0].islower() and self.db:
                     result = await self.db.fetch_declensions(
                         lang, WordType.VERB, token.text, token
                     )
-                    if result is not None:
-                        return WordType.VERB
+                    # No token here: the call above cached the verb forms on
+                    # it, and this lookup must not read or overwrite that.
+                    if result is not None and not await self.db.fetch_declensions(
+                        lang, WordType.NOUN, token.text
+                    ):
+                        return self._traced(
+                            trace, "de-lowercase-noun-is-verb", WordType.VERB
+                        )
 
-            return WordType.NOUN
+            return self._traced(trace, "noun", WordType.NOUN)
 
         if lang == LangType.DE and token.text[0].isupper() and token.text.endswith("-"):
-            return WordType.NOUN
+            return self._traced(trace, "de-dash-noun", WordType.NOUN)
 
         if token.tag_ == "KON" or token.pos_ == "CCONJ":
-            return WordType.CONJUNCTION
+            return self._traced(trace, "conjunction", WordType.CONJUNCTION)
 
         if token.pos_ == "PROPN":
-            return expected_word_type
+            return self._traced(trace, "propn-as-expected", expected_word_type)
 
-        return ""
+        return self._traced(trace, "no-match", "")
 
     async def check_word_type(
         self,

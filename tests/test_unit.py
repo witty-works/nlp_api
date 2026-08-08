@@ -186,6 +186,35 @@ def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
 
 
 @pytest.mark.asyncio
+async def test_en_hyphen_compound_trusts_tagger_without_expectation():
+    # The split exists for expectation-driven matching ("one-eyed"); in
+    # auto-detect it misread "self-driven" as a noun via "self" (measured
+    # in docs/spacy-review.md, word-type branch metrics).
+    model = fetch_model()
+    # blank() would split the hyphen; the app's custom tokenizer keeps
+    # compounds whole, so build the Doc explicitly.
+    from spacy.tokens import Doc
+
+    doc = Doc(spacy.blank("en").vocab, words=["self-driven"], spaces=[False])
+    token = doc[0]
+    token.pos_ = "ADJ"
+    token.tag_ = "JJ"
+
+    trace = []
+    word_type = await model._fetch_word_type(LangType.EN, token, None, trace=trace)
+    assert word_type == WordType.ADJECTIVE
+    assert trace[-1] == "adjective-tags"
+
+    # With an adjective expectation the compound answers it directly.
+    trace = []
+    word_type = await model._fetch_word_type(
+        LangType.EN, token, WordType.ADJECTIVE, trace=trace
+    )
+    assert word_type == WordType.ADJECTIVE
+    assert trace[-1] == "hyphen-adjective"
+
+
+@pytest.mark.asyncio
 async def test_nlp_session_evicts_transient_strings():
     model = fetch_model()
     nlp = spacy.blank("de")
