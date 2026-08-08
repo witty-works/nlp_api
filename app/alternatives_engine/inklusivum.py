@@ -389,6 +389,9 @@ def possessive_pair(tilde_word: str) -> str | None:
 PRONOMINAL = {
     "nominativ": "einey",
     "akkusativ": "einey",
+    # The genitive cell of the standalone table is empty on the
+    # Deklinationstabellen page; "einers" is our analogy to the attributive
+    # genitive. Open question in docs/inklusivum-feedback.md.
     "genitiv": "einers",
     "dativ": "einerm",
 }

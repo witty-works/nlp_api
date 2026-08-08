@@ -38,7 +38,16 @@ Gilt das, oder gibt es Ausnahmen auch bei den Kasusendungen?
 
 Ist das so gemeint?
 
-### 6. Vermutlicher Tippfehler bei *deselbe*
+### 6. Genitiv des alleinstehenden Artikelpronomens
+
+Die Deklinationstabellen führen das alleinstehende Artikelpronomen mit *einey*
+(Nominativ und Akkusativ) und *einerm* (Dativ); die Genitivzelle ist leer. Wir
+nehmen analog zur attributiven Form (*einers Schüleres*) auch alleinstehend
+*einers* an, etwa in „der Vorschlag einers von euch".
+
+Bedeutet die leere Zelle, dass die Form nicht vorgesehen ist, oder gilt *einers*?
+
+### 7. Vermutlicher Tippfehler bei *deselbe*
 
 In der Aufzählung zu *derjenige*/*derselbe* steht als Grundform *deselbe*, in der Deklinationsreihe an erster Stelle aber *deselben* (*deselben/dersselben/dermselben/deselbe*). Nach dem Muster von *dejenige* und nach der Analogie zu *dieselbe/derselben/derselben/dieselbe* würden wir im Nominativ *deselbe* erwarten.
 
