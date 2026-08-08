@@ -11,6 +11,7 @@ from app.models import (
     RuleLabelEnum,
     Alternative,
     GenderedRolesFormatType,
+    GermanGenderEndingType,
 )
 from app.helper import is_valid_text, is_addon_enabled, upperfirst
 from app.categories import (
@@ -33,8 +34,23 @@ from spacy.tokens import Token, Doc, Span
 from logging import Logger
 from app.rule_engine.utils import append_result
 from app.rule_engine.matchers.pattern import is_phrase_match
+from app.alternatives_engine import inklusivum
 from app.alternatives_engine import utils
 from app.rule_engine import utils as rule_utils
+
+# spaCy reports the case as a UD tag; the article table names them in German.
+# Surface forms of the ein-paradigm standing on its own. Matched on the word
+# rather than the lemma because the app swaps spaCy's lemmatizer for its own,
+# which leaves "Einer" as "Einer" and reduces "einen" to "ein", so neither
+# arrives as the lemma raw spaCy would give. "jeder" has a rule of its own.
+PRONOMINAL_FORMS = {"einer", "eine", "einen", "einem", "eines"}
+
+INKLUSIVUM_CASES = {
+    "Nom": "nominativ",
+    "Gen": "genitiv",
+    "Dat": "dativ",
+    "Acc": "akkusativ",
+}
 
 
 class RuleCheck:
@@ -145,6 +161,299 @@ class RuleCheck:
 
         return False
 
+    def is_inklusivum(self, lang: LangType, config: Config) -> bool:
+        """Whether the Inklusivum is the configured German gender ending."""
+        return (
+            lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        )
+
+    @staticmethod
+    def covers(spans: list[tuple[int, int]], start: int, end: int) -> bool:
+        """Whether a result already reported covers this span."""
+        return any(begin <= start and end <= stop for begin, stop in spans)
+
+    def inklusivum_article_for(self, article: str, case: str | None) -> str | None:
+        """The Inklusivum form of a masculine article."""
+        forms = self.static_rules[LangType.DE]["masculine_articles"].get(
+            article.lower()
+        )
+        if not forms:
+            return None
+
+        entry = forms.get(case) if case else None
+        if entry is None:
+            if len(forms) != 1:
+                return None
+            entry = next(iter(forms.values()))
+
+        return entry.inklusivum
+
+    async def inklusivum_articles(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Offer the Inklusivum article for person words that take no ending.
+
+        "Gast" carries no gender to remove, so no denomination rule matches it
+        and only the article should change. Nothing else would report it.
+
+        Runs once the other results are in, because whether to report an
+        article depends on what else was found: a phrase rule that already
+        covers "Jeder Lehrling" owns that article, and reporting it again says
+        the same thing about part of the same words. That cannot be decided
+        while the results are still being collected, since a rule anchored on
+        the noun widens its span over the article afterwards.
+
+        Every signal it needs has to be present. Where one is missing the token
+        is passed over rather than guessed at: the noun is left untouched, so a
+        wrong article is the whole of what the reader sees.
+        """
+        if not self.is_inklusivum(language.lang, config):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        articles = self.static_rules[LangType.DE]["articles"]
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        for token in tokens:
+            # Standing on its own, with no noun to introduce, the ein-paradigm
+            # takes -ey: "Einer für alle" becomes "Einey für alle". The article
+            # form is bare "ein", so this cannot come from the article table.
+            if token.pos_ == "PRON" and token.text.lower() in PRONOMINAL_FORMS:
+                end = token.idx + len(token.text)
+                if self.covers(reported, token.idx, end):
+                    continue
+
+                case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+                replacement = inklusivum.pronominal(case)
+                if replacement == token.text.lower():
+                    continue
+
+                append_result(
+                    list_full,
+                    config=config,
+                    client=client,
+                    language=language,
+                    text=token.text,
+                    text_id=token.text.lower(),
+                    full_text=full_text,
+                    offsets=offsets,
+                    subcategory=subcategory,
+                    start=token.idx,
+                    alternatives=[
+                        Alternative(
+                            upperfirst(replacement)
+                            if token.text[0].isupper()
+                            else replacement
+                        )
+                    ],
+                    explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                    url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                    long_explanation=language.translate("INKLUSIVUM_PRONOMINAL_LONG"),
+                )
+                continue
+
+            if token.pos_ != "DET" or token.text.lower() not in articles:
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            if not inklusivum.is_already_neutral(noun.lemma_, neutral):
+                continue
+
+            # -ling is a suffix, not a person word: "Frühling" and
+            # "Schmetterling" carry it too, and only a person word takes the
+            # Inklusivum article at all.
+            if (
+                noun.lemma_ not in neutral
+                and noun.lemma_.lower() not in self.db.person_words.get(LangType.DE, [])
+            ):
+                continue
+
+            # Plural articles are already neutral, so there is nothing to say.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            forms = await self.nouns.german_noun_lookup(noun.lemma_)
+            if not forms or forms.get("gender_1") != "masculine":
+                continue
+
+            end = token.idx + len(token.text)
+            if self.covers(reported, token.idx, end):
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            replacement = self.inklusivum_article_for(token.text, case)
+            if not replacement or replacement == token.text.lower():
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.text.lower(),
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+                explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ARTICLE_LONG"),
+            )
+
+    async def inklusivum_adjectives(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Convert an adjective in front of a noun the Inklusivum rewrites.
+
+        Agreement follows the noun, so once "Arzt" is written "Arzte" the
+        adjective goes with it: "als gutey Arzte". Only adjectives whose noun
+        is actually being rewritten are touched, otherwise this would rewrite
+        every adjective in the text.
+
+        Like the article pass this runs on the finished results, since whether
+        the noun is rewritten is exactly what those results say.
+        """
+        if not self.is_inklusivum(language.lang, config):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        for token in tokens:
+            if token.pos_ != "ADJ":
+                continue
+
+            # An adjective that carries no ending is predicative, and those do
+            # not agree with anything: "de Arzte ist gut" keeps "gut".
+            if token.text.lower() == token.lemma_.lower():
+                continue
+
+            # The lemma is only usable as a stem when the word is built on it.
+            # It is not always: "Liebe" lemmatises to "Lieber" here, which
+            # already carries a masculine ending and would give "Lieberey".
+            # Comparatives and superlatives fail this too, "beste" to "gut".
+            if not token.text.lower().startswith(token.lemma_.lower()):
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            noun_end = noun.idx + len(noun.text)
+            if not self.covers(
+                reported, noun.idx, noun_end
+            ) and not inklusivum.is_already_neutral(noun.lemma_, neutral):
+                continue
+
+            # Plural adjectives are already neutral.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            if case is None:
+                continue
+
+            has_article = any(child.pos_ == "DET" for child in noun.lefts)
+            replacement = inklusivum.adjective(token.lemma_, case, has_article)
+
+            end = token.idx + len(token.text)
+            if replacement == token.text.lower() or self.covers(
+                reported, token.idx, end
+            ):
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.lemma_,
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+                explanation=language.translate("INKLUSIVUM_ADJECTIVE"),
+                url=language.translate("INKLUSIVUM_ADJECTIVE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ADJECTIVE_LONG"),
+            )
+
+    async def is_written_in_inklusivum(
+        self, lang: LangType, config: Config, token: Token
+    ) -> bool:
+        """Whether the token already is the Inklusivum of a gendered pair.
+
+        Shape alone cannot decide this, because an Inklusivum noun looks like
+        any other noun ending in -e, and some of its forms collide with
+        ordinary plurals ("Freunde"). So candidates are confirmed against the
+        noun lexicon, and this only runs when the Inklusivum was asked for.
+        """
+        if not self.is_inklusivum(lang, config):
+            return False
+
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+
+        for candidate in inklusivum.base_form_candidates(token.text):
+            forms = await self.nouns.german_noun_lookup(candidate)
+            if not forms:
+                continue
+
+            feminine = forms.get("female_form")
+            if not feminine:
+                continue
+
+            if inklusivum.is_form_of(token.text, candidate, feminine, lexicon):
+                return True
+
+        return False
+
     async def fetch_rules(
         self,
         language: Language,
@@ -162,6 +471,15 @@ class RuleCheck:
             config.addons,
             suffix_check,
         )
+
+        if rules and await self.is_written_in_inklusivum(language.lang, config, token):
+            # Already gender neutral, so the gendered denomination rules would
+            # only suggest rewriting it into the form it is already in.
+            rules = [
+                rule
+                for rule in rules
+                if not self.db.is_gendered_denom_rule(language.lang, rule.subcategories)
+            ]
 
         if (
             language.lang == LangType.FR

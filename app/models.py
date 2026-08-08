@@ -17,6 +17,7 @@ from app.categories import (
     get_proficiency_level,
     get_category,
     get_category_name,
+    get_config_option_labels,
     map_gravity,
 )
 
@@ -227,6 +228,12 @@ class LangVariantType(str, Enum):
     frFR = "fr-FR"
 
 
+# Stands in for a separator where the pipeline expects one, for the Inklusivum,
+# which does not have any. It must never reach a rendered suggestion; anything
+# splicing a separator into a word has to go through utils.splice_separator.
+INKLUSIVUM_SEPARATOR = "DEE"
+
+
 class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
@@ -236,6 +243,7 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
+    INKLUSIVUM = "de-e"
 
 
 class FrenchGenderSeparatorType(str, Enum):
@@ -345,6 +353,7 @@ class Article(BaseModel):
     neuter: Optional[str] = None
     plural: Optional[str] = None
     inclusive: Optional[str] = None
+    inklusivum: Optional[str] = None
     fallback: Optional[str] = None
 
     def get_article(self, gender: str, lemma: str) -> str | None:
@@ -576,6 +585,10 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
         ),
+        # The Inklusivum has no entry here on purpose: its nouns are not marked
+        # by a separator but by a declension ending that is indistinguishable by
+        # shape from ordinary nouns ("Liebe", "Woche"). Detecting it needs a
+        # lexicon lookup against known gendered pairs, not a suffix pattern.
     }
     _gendereddenom_ending_article = {
         GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
@@ -661,6 +674,12 @@ class Config(BaseModel):
     ):
         if gender_separator is None:
             return "", "", False
+
+        if gender_separator == GermanGenderEndingType.INKLUSIVUM:
+            # The Inklusivum is a declension system, not a separator, so this
+            # stands in for one. Nothing may splice it into a word: see
+            # utils.splice_separator.
+            return INKLUSIVUM_SEPARATOR, INKLUSIVUM_SEPARATOR, False
 
         if gender_separator in GermanGenderEndingType._member_map_.values():
             if gender_separator == GermanGenderEndingType.CAPITAL_LETTER:
@@ -1017,6 +1036,25 @@ class ResultOut(BaseModel):
                     content = ContentType("video")
                 elif language._(subcategory_key, "hard_facts"):
                     content = ContentType("advanced")
+
+        if (
+            icon_image is None
+            and category == "gender-orientation"
+            and language.lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        ):
+            # The ending's own logo replaces the emoji on every gendered
+            # finding once the Inklusivum is the configured ending: the
+            # suggestions are in the user's chosen system, whichever rule
+            # produced them. Data comes from the dashboard via
+            # config_options.json; clients without icon_image support keep
+            # the emoji icon.
+            icon_image = (
+                get_config_option_labels()
+                .get("german_gender_ending", {})
+                .get("icon_image", {})
+                .get(config.german_gender_ending)
+            )
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = language._(subcategory, "canonical_url")

@@ -8,6 +8,10 @@ def fetch_static_rules(langs: list[str]):
         LangType.DE: {
             # load articles for gendered denom
             "df_articles": "articles.csv",
+            # nouns the regular Inklusivum rules cannot derive
+            "df_inklusivum_nouns": "inklusivum_nouns.csv",
+            # person words the Inklusivum leaves unchanged
+            "df_inklusivum_neutral_nouns": "inklusivum_neutral_nouns.csv",
         },
         LangType.EN: {},
         LangType.FR: {},
@@ -715,20 +719,31 @@ def fetch_static_rules(langs: list[str]):
         ]
 
         # articles
+        df_articles = data[LangType.DE]["df_articles"]
+        # zip stops at the shortest column, so a missing Inklusivum column would
+        # empty the whole article table rather than leave that one field unset.
+        inklusivum_column = (
+            df_articles["Inklusivum"]
+            if "Inklusivum" in df_articles
+            else [None] * len(df_articles["Form"])
+        )
+
         articles = list(
             zip(
-                data[LangType.DE]["df_articles"]["Form"],
-                data[LangType.DE]["df_articles"]["Masculine"],
-                data[LangType.DE]["df_articles"]["Feminine"],
-                data[LangType.DE]["df_articles"]["Neuter"],
-                data[LangType.DE]["df_articles"]["Plural"],
-                data[LangType.DE]["df_articles"]["Alternative"],
+                df_articles["Form"],
+                df_articles["Masculine"],
+                df_articles["Feminine"],
+                df_articles["Neuter"],
+                df_articles["Plural"],
+                df_articles["Alternative"],
+                inklusivum_column,
             )
         )
 
         static_rules[LangType.DE]["masculine_articles"] = {}
         static_rules[LangType.DE]["feminine_articles"] = {}
         static_rules[LangType.DE]["neuter_articles"] = {}
+        static_rules[LangType.DE]["inclusive_articles"] = {}
         static_rules[LangType.DE]["articles"] = []
 
         for article in articles:
@@ -739,6 +754,7 @@ def fetch_static_rules(langs: list[str]):
                 neuter=article[3],
                 plural=article[4],
                 inclusive=article[5],
+                inklusivum=article[6],
             )
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
@@ -772,6 +788,12 @@ def fetch_static_rules(langs: list[str]):
             static_rules[LangType.DE]["neuter_articles"][article.neuter][
                 article.form
             ] = article
+
+            if article.inclusive not in static_rules[LangType.DE]["inclusive_articles"]:
+                static_rules[LangType.DE]["inclusive_articles"][article.inclusive] = {}
+            static_rules[LangType.DE]["inclusive_articles"][article.inclusive][
+                article.form
+            ] = article.inklusivum
 
         static_rules[LangType.DE]["articles"] = set(
             static_rules[LangType.DE]["articles"]
@@ -838,6 +860,30 @@ def fetch_static_rules(langs: list[str]):
             "solches",
             "solchem",
         }
+
+        # Every Inklusivum article and pronoun form, for recognising text that
+        # is already written in the Inklusivum.
+        static_rules[LangType.DE]["inklusivum_articles"] = {
+            form
+            for forms in static_rules[LangType.DE]["inclusive_articles"].values()
+            for form in forms.values()
+            if form
+        }
+
+        static_rules[LangType.DE]["inklusivum_neutral_nouns"] = set(
+            data[LangType.DE]["df_inklusivum_neutral_nouns"]["Word"]
+        )
+
+        static_rules[LangType.DE]["inklusivum_nouns"] = dict(
+            zip(
+                data[LangType.DE]["df_inklusivum_nouns"]["Masculine"],
+                zip(
+                    data[LangType.DE]["df_inklusivum_nouns"]["Singular"],
+                    data[LangType.DE]["df_inklusivum_nouns"]["Plural"],
+                ),
+            )
+        )
+
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [
                 "chen",

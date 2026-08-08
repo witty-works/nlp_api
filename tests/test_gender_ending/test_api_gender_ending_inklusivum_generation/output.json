@@ -1,0 +1,369 @@
+{
+    "gender_separator": "de-e",
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorg",
+            "end": 9,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 4,
+            "subcategory": "communal",
+            "text": "nette",
+            "text_id": "nett"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Lehrerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Lehrer",
+                    "text": "Lehrere"
+                },
+                {
+                    "female_form": "Lehrerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Lehrer",
+                    "text": "Lehrerin/Lehrer"
+                },
+                {
+                    "text": "Lehrkraft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte",
+            "end": 16,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 10,
+            "subcategory": "titles",
+            "text": "Lehrer",
+            "text_id": "Lehrer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ens"
+                },
+                {
+                    "text": "Dein"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die A",
+            "end": 26,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 22,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sein",
+            "text_id": "sein"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ense"
+                },
+                {
+                    "text": "Deine"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Al",
+            "end": 46,
+            "explanation": {
+                "icon": "🧊",
+                "long_text": "Im diplomatischen Kontext wird oft formelle Sprache angewendet. Sie bringt Respekt zwischen den Ländern zum Ausdruck. In alltäglichen Geschäftssituationen kann dies jedoch merkwürdig wirken. Sie kann implizit vermitteln, dass ein:e Gesprächsteilnehmer:in \"etwas Besseres\" ist. Formelle Ausdrücke können die Emotionalität töten und sind einer Zusammenarbeit auf Augenhöhe nicht förderlich. Dies steht im Gegensatz zu dem, was wir erreichen wollen: eine inklusive Kultur, in der alle ihre Perspektive einbringen und ihr volles Potenzial entfalten können.<br /><br /><p>Versuche so zu schreiben, dass die Ebenbürtigkeit zwischen dir und den Lesenden zum Ausdruck kommt. Oft hilft es sich vorzustellen, du schreibst an eine*n Freund*in.&nbsp;</p>",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "formality_advanced",
+            "text": "Ihre",
+            "text_id": "Ihre"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ensem"
+                },
+                {
+                    "text": "deinem"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist wil",
+            "end": 90,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 84,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "seinem",
+            "text_id": "seinem"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "seiner Kollegin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "seinem Kollegen",
+                    "text": "enserm Kollegere"
+                },
+                {
+                    "female_form": "seiner Kollegin",
+                    "gender_role": "binary_gender",
+                    "male_form": "seinem Kollegen",
+                    "text": "seiner/seinem Kollegin/Kollegen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "seiner Kollegschaft"
+                },
+                {
+                    "text": "seinem Team"
+                },
+                {
+                    "text": "seinem Teammitglied"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
+            "end": 99,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 84,
+            "subcategory": "function",
+            "text": "seinem Kollegen",
+            "text_id": "Kollege"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Ärztin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Arzt",
+                    "text": "Arzte"
+                },
+                {
+                    "female_form": "Ärztin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Arzt",
+                    "text": "Ärztin/Arzt"
+                },
+                {
+                    "text": "medizinisches Team"
+                },
+                {
+                    "text": "Praxis"
+                },
+                {
+                    "text": "Untersuchung"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "ngen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
+            "end": 158,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 154,
+            "subcategory": "titles",
+            "text": "Arzt",
+            "text_id": "Arzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "en"
+                },
+                {
+                    "text": "du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
+            "end": 166,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 164,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "er",
+            "text_id": "er"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jedey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
+            "end": 177,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Um zu zeigen, dass du alle Geschlechter siehst und wertschätzt, wähle geschlechtsneutrale Ausdrücke.",
+                "text": "Wortteil macht andere Geschlechter unsichtbar",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 172,
+            "subcategory": "hidden_image",
+            "text": "Jeder",
+            "text_id": "jeder"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "gutey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "orlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
+            "end": 153,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Adjektive richten sich nach dem Substantiv. Nach einem Artikel enden sie auf „-e“ oder „-en“, ohne Artikel auf „-ey“, „-ers“ oder „-erm“.",
+                "text": "Im Inklusivum richtet sich das Adjektiv nach dem Substantiv: ohne Artikel „-ey“, nach einem Artikel „-e“ oder „-en“.",
+                "url": "https://geschlechtsneutral.net/gesamtsystem/#adjektive"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 148,
+            "subcategory": "hidden_image",
+            "text": "guter",
+            "text_id": "gut"
+        }
+    ]
+}

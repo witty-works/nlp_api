@@ -1,0 +1,308 @@
+{
+    "config_changed": true,
+    "gender_separator": "de-e",
+    "language": "de",
+    "limit_reached": false,
+    "notifications": 5,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen",
+            "end": 13,
+            "explanation": {
+                "icon": "😉",
+                "long_text": "<p>Im heutigen Business-Jargon nutzen wir oft Ausdrücke aus der englischen Business-Sprache . Je nach Publikum schliessen diese Ausdrücke jedoch Menschen aus:&nbsp;</p>\n<ol>\n<li>Sie verstehen einen Anglizismus nicht oder missdeuten ihn, weil sie eine andere Ausbildung durchlaufen haben oder nicht im selben Berufsfeld arbeiten.</li>\n<li>Das Verwenden des Anglizismus wird als ausgrenzend und arrogant und 'von oben herab' erlebt.&nbsp;</li>\n</ol><br /><br /><p>Versuche dich auf die deutschen Begriffe zu besinnen und diese zu verwenden. Vielleicht brauchst du auch mehrere Wörter, deinen Gedanken zu beschreiben. Das macht deine Aussage zwar etwas länger, aber präziser.</p>",
+                "text": "Sicher, dass das alle Lesenden verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "anglicism_advanced",
+            "text": "Experte",
+            "text_id": "Experte"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jedey"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen",
+            "end": 5,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Manntage\". Eine andere Person hat eine Denkblase mit Fragezeichen. Eine dritte Person sagt: \"Tagessätze\".",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
+                    "width": 900
+                },
+                "long_text": "Um zu zeigen, dass du alle Geschlechter siehst und wertschätzt, wähle geschlechtsneutrale Ausdrücke.",
+                "text": "Wortteil macht andere Geschlechter unsichtbar",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "hidden_image",
+            "text": "Jeder",
+            "text_id": "jeder"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Jede Expertin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Jeder Experte",
+                    "text": "Jedey Expertere"
+                },
+                {
+                    "text": "Jede Fachgröße"
+                },
+                {
+                    "text": "Jede Kapazität"
+                },
+                {
+                    "text": "Jede Fachkraft"
+                },
+                {
+                    "text": "Jede Fachperson"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen",
+            "end": 13,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Jeder Experte",
+            "text_id": "Experte"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Die Lehrerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Der Lehrer",
+                    "text": "De Lehrere"
+                },
+                {
+                    "text": "Die Lehrkraft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen.",
+            "end": 36,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 24,
+            "subcategory": "titles",
+            "text": "Die Lehrerin",
+            "text_id": "Lehrer"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "der Schülerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "dem Schüler",
+                    "text": "derm Schülere"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "der Schülerschaft"
+                },
+                {
+                    "text": "dem Schulkind"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen.",
+            "end": 53,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "function",
+            "text": "dem Schüler",
+            "text_id": "Schüler"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "eine Mitarbeiterin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "einen Mitarbeiter",
+                    "text": "ein Mitarbeitere"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Mitarbeiterschaft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Mitarbeitende"
+                },
+                {
+                    "text": "ein Personal"
+                },
+                {
+                    "text": "eine Belegschaft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen.",
+            "end": 93,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 76,
+            "subcategory": "titles",
+            "text": "einen Mitarbeiter",
+            "text_id": "Mitarbeiter"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ensen"
+                },
+                {
+                    "text": "deinen"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen.",
+            "end": 104,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 98,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "seinen",
+            "text_id": "seinen"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kollegernen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Experte weiß das. Die Lehrerin gibt dem Schüler den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen.",
+            "end": 113,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 105,
+            "subcategory": "function",
+            "text": "Kollegen",
+            "text_id": "Kollege"
+        }
+    ]
+}

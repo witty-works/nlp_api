@@ -18,20 +18,29 @@ services:
       - Java_Xmx=4g
 
   nlpapi:
-    build: .
+    build:
+      context: .
+      args:
+        # Bake the served revision into the image so /version can report it:
+        # export GIT_REVISION=$(git rev-parse HEAD) before `docker compose build`.
+        - GIT_REVISION=${GIT_REVISION:-}
     container_name: nlp_api
     depends_on:
       - languagetool
     ports:
-      - "8080:8080"
+      # Container side is 8081: that is where the Dockerfile CMD binds gunicorn.
+      - "8080:8081"
     environment:
       # Point API to LanguageTool service
       - LANGUAGETOOL_API=http://languagetool:8010/v2
       # Enable local SetFit models if present in ./models
       # - CONTEXT_CHECKER_LOCAL=true
     volumes:
+      # The image does not COPY the rule database; the app reads
+      # ./database/dump.sql (or db.sqlite3) relative to /code at startup.
+      - ./database:/code/database
       # Mount local models folder if you want to use local SetFit models
-      - ./models:/app/models:ro
+      - ./models:/code/models:ro
     # If you prefer rebuilding on changes in local dev, uncomment next line
     # develop:
     #   watch:

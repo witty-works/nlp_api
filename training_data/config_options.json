@@ -31,7 +31,8 @@
                 "/-in": "Slash + Dash, f.e Expert/-in",
                 "In": "Binnen-I, f.e ExpertIn",
                 "(-)": "Parenthesis + Dash, f.e Expert(-in)",
-                "()": "Parenthesis, f.e Expert(in)"
+                "()": "Parenthesis, f.e Expert(in)",
+                "de-e": "Inklusivum, f.e de Expertere"
             },
             "de": {
                 "*in": "Genderstar, f.e Expert*in",
@@ -41,7 +42,8 @@
                 "/-in": "Schrägstrich + Strich, z.B. Experte/-in",
                 "In": "Binnen-I, z.B. ExpertIn",
                 "(-)": "Klammern + Strich, z.B. Expert(-in)",
-                "()": "Klammern, z.B. Expert(in)"
+                "()": "Klammern, z.B. Expert(in)",
+                "de-e": "Inklusivum, z.B. de Expertere"
             },
             "fr": {
                 "*in": "Genderstar, p. ex. Expert*in",
@@ -51,8 +53,12 @@
                 "/-in": "Barre oblique + Tiret, p. ex. Expert/-in",
                 "In": "Binnen-I, p. ex. ExpertIn",
                 "(-)": "Parenthèses + Tiret, p. ex. Expert(-in)",
-                "()": "Parenthèses, p. ex. Expert(in)"
+                "()": "Parenthèses, p. ex. Expert(in)",
+                "de-e": "Inklusivum, p. ex. de Expertere"
             }
+        },
+        "icon_image": {
+            "de-e": "https://www.witty.works/assets/media/vgd-icon-bunt.svg"
         }
     },
     "french_gender_separator": {

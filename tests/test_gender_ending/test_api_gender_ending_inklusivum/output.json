@@ -1,0 +1,578 @@
+{
+    "gender_separator": "de-e",
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "female_form": "Die Lehrerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Der Lehrer",
+                    "text": "De Lehrere"
+                },
+                {
+                    "female_form": "Die Lehrerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "Der Lehrer",
+                    "text": "Die/der Lehrerin/Lehrer"
+                },
+                {
+                    "text": "Die Lehrkraft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sei",
+            "end": 10,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Der Lehrer",
+            "text_id": "Lehrer"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "der Schülerin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "dem Schüler",
+                    "text": "derm Schülere"
+                },
+                {
+                    "female_form": "der Schülerin",
+                    "gender_role": "binary_gender",
+                    "male_form": "dem Schüler",
+                    "text": "der/dem Schülerin/Schüler"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "der Schülerschaft"
+                },
+                {
+                    "text": "dem Schulkind"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist intere",
+            "end": 27,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 16,
+            "subcategory": "function",
+            "text": "dem Schüler",
+            "text_id": "Schüler"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "En"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist interessant. Ihre Vo",
+            "end": 41,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 39,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er",
+            "text_id": "er"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "em"
+                },
+                {
+                    "text": "dir"
+                },
+                {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Ihr"
+                },
+                {
+                    "text": "dein"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist interessant. Ihre Vorlesungen",
+            "end": 50,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 47,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "ihr",
+            "text_id": "ihr"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "meiner Professorin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "meines Professors",
+                    "text": "meiners Professores"
+                },
+                {
+                    "female_form": "meiner Professorin",
+                    "gender_role": "binary_gender",
+                    "male_form": "meines Professors",
+                    "text": "meiner/meines Professorin/Professors"
+                },
+                {
+                    "text": "meines Praktikums"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Der Lehrer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist interessant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich me",
+            "end": 89,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 71,
+            "subcategory": "titles",
+            "text": "meiner Professorin",
+            "text_id": "Professor"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ens"
+                },
+                {
+                    "text": "Dein"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "rer gibt dem Schüler den Stift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist interessant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja,",
+            "end": 111,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 107,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sein",
+            "text_id": "sein"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ense"
+                },
+                {
+                    "text": "Deine"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "ift. Er gibt ihr den Stift. Das Buch meiner Professorin ist interessant. Sein Buch ist interessant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja, ich kenne sie schon. Und ke",
+            "end": 138,
+            "explanation": {
+                "icon": "🧊",
+                "long_text": "Im diplomatischen Kontext wird oft formelle Sprache angewendet. Sie bringt Respekt zwischen den Ländern zum Ausdruck. In alltäglichen Geschäftssituationen kann dies jedoch merkwürdig wirken. Sie kann implizit vermitteln, dass ein:e Gesprächsteilnehmer:in \"etwas Besseres\" ist. Formelle Ausdrücke können die Emotionalität töten und sind einer Zusammenarbeit auf Augenhöhe nicht förderlich. Dies steht im Gegensatz zu dem, was wir erreichen wollen: eine inklusive Kultur, in der alle ihre Perspektive einbringen und ihr volles Potenzial entfalten können.<br /><br /><p>Versuche so zu schreiben, dass die Ebenbürtigkeit zwischen dir und den Lesenden zum Ausdruck kommt. Oft hilft es sich vorzustellen, du schreibst an eine*n Freund*in.&nbsp;</p>",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 134,
+            "subcategory": "formality_advanced",
+            "text": "Ihre",
+            "text_id": "Ihre"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "r Professorin ist interessant. Sein Buch ist interessant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube",
+            "end": 186,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration einer vielfältigen Gruppe von lächelnden Menschen, die einer Person zuhören. Ihre Sprechblase ist eine Mischung aus Wörtern und Wolken.",
+                    "height": 500,
+                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": 921
+                },
+                "long_text": "Wenn du deine Botschaft effektiv und leicht verständlich rüberbringen willst, solltest du Füllwörter sparsam einsetzen.",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Fillers_DE.mp4"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 176,
+            "subcategory": "filler_advanced",
+            "text": "eigentlich",
+            "text_id": "eigentlich"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "en"
+                },
+                {
+                    "text": "du"
+                },
+                {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Sie"
+                },
+                {
+                    "text": "dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "interessant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengeler",
+            "end": 224,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 221,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "ressant. Ihre Vorlesungen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt hab",
+            "end": 230,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration einer vielfältigen Gruppe von lächelnden Menschen, die einer Person zuhören. Ihre Sprechblase ist eine Mischung aus Wörtern und Wolken.",
+                    "height": 500,
+                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": 921
+                },
+                "long_text": "Wenn du deine Botschaft effektiv und leicht verständlich rüberbringen willst, solltest du Füllwörter sparsam einsetzen.",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Fillers_DE.mp4"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 225,
+            "subcategory": "filler",
+            "text": "schon",
+            "text_id": "schon"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "meine Kollegin",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "meinen Kollegen",
+                    "text": "mein Kollegere"
+                },
+                {
+                    "female_form": "meine Kollegin",
+                    "gender_role": "binary_gender",
+                    "male_form": "meinen Kollegen",
+                    "text": "meine/n Kollegin/Kollegen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "meine Kollegschaft"
+                },
+                {
+                    "text": "mein Team"
+                },
+                {
+                    "text": "mein Teammitglied"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "ngen sind spannend. Kennst Du eigentlich meine Verlobte Kim? Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt habe. Ich kenne schon viele andere",
+            "end": 261,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 246,
+            "subcategory": "function",
+            "text": "meinen Kollegen",
+            "text_id": "Kollege"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "en"
+                },
+                {
+                    "text": "dich"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "im? Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt habe. Ich kenne schon viele andere Kolleginnen von Kim. Bei uns ist jeder willk",
+            "end": 306,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 303,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "ihn",
+            "text_id": "ihn"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Ja, ich kenne sie schon. Und kennst Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt habe. Ich kenne schon viele andere Kolleginnen von Kim. Bei uns ist jeder willkommen!",
+            "end": 312,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration einer vielfältigen Gruppe von lächelnden Menschen, die einer Person zuhören. Ihre Sprechblase ist eine Mischung aus Wörtern und Wolken.",
+                    "height": 500,
+                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": 921
+                },
+                "long_text": "Wenn du deine Botschaft effektiv und leicht verständlich rüberbringen willst, solltest du Füllwörter sparsam einsetzen.",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Fillers_DE.mp4"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 307,
+            "subcategory": "filler",
+            "text": "schon",
+            "text_id": "schon"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Du meinen Kollegen Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt habe. Ich kenne schon viele andere Kolleginnen von Kim. Bei uns ist jeder willkommen!",
+            "end": 348,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "image_url": {
+                    "alt": "Illustration einer vielfältigen Gruppe von lächelnden Menschen, die einer Person zuhören. Ihre Sprechblase ist eine Mischung aus Wörtern und Wolken.",
+                    "height": 500,
+                    "src": "https://www.witty.works/assets/media/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": 921
+                },
+                "long_text": "Wenn du deine Botschaft effektiv und leicht verständlich rüberbringen willst, solltest du Füllwörter sparsam einsetzen.",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Fillers_DE.mp4"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 343,
+            "subcategory": "filler",
+            "text": "schon",
+            "text_id": "schon"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kollegerne"
+                },
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Andrea? Nein, ich glaube nicht, dass ich ihn schon kennengelernt habe. Ich kenne schon viele andere Kolleginnen von Kim. Bei uns ist jeder willkommen!",
+            "end": 373,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration einer Gruppe von Menschen mit unterschiedlicher geschlechtlicher Identität, unterschiedlichem Alter, ethnischem Hintergrund und verschiedenen Körperformen, die alle LGBTQUIA+ sind",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/gender%20identity.png",
+                    "width": 900
+                },
+                "long_text": "Vermeide es, Menschen auf traditionelle Geschlechterrollen, Geschlechtsidentitäten und Geschlechtsausdrücke zu beschränken",
+                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 362,
+            "subcategory": "gender_identity",
+            "text": "Kolleginnen",
+            "text_id": "Kollegin"
+        }
+    ]
+}

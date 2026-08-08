@@ -3,6 +3,8 @@
 import json
 from typing import Any
 
+import spacy
+
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -72,6 +74,28 @@ async def get_health(
             )
 
     return content
+
+
+@router.get("/version")
+async def get_version(context: AppContext = Depends(get_app_context)) -> dict:
+    """Identify exactly what this service runs: app version, git revision,
+    spaCy version and the loaded model versions. Clients stamp evaluation
+    state with this so results computed against an older build are
+    recognizably stale instead of silently outdated."""
+    models = {}
+    for lang, model in context.model.models.items():
+        meta = model.meta
+        models[lang] = {
+            "name": "%s_%s" % (meta.get("lang", lang), meta.get("name", "unknown")),
+            "version": meta.get("version", "unknown"),
+        }
+
+    return {
+        "app_version": context.version,
+        "git_revision": context.settings.git_revision,
+        "spacy_version": spacy.__version__,
+        "models": models,
+    }
 
 
 @router.get("/languagetool_api", include_in_schema=not get_settings().is_prod)

@@ -8,6 +8,7 @@ from app.models import (
     GenderedRolesFormatType,
     Article,
     BasicWordType,
+    INKLUSIVUM_SEPARATOR,
 )
 from app.settings import Settings
 from app.db import Db
@@ -25,6 +26,7 @@ from logging import Logger
 from pluralizefr import pluralize
 from app.alternatives_engine import utils
 from app.alternatives_engine import formatting
+from app.alternatives_engine import inklusivum
 from app.alternatives_engine import sentences
 
 
@@ -57,6 +59,26 @@ class Alternatives:
         self.nouns = nouns
         self.verbs = verbs
         self.adjectives = adjectives
+
+    def has_attached_article(
+        self, token_index: int, tokens: Doc, lang: LangType
+    ) -> bool:
+        """Whether an article introduces this noun phrase.
+
+        Takes the determiner from the parse rather than from the token to the
+        immediate left, so an adjective in between does not hide it: "Der nette
+        Lehrer" has an article just as much as "Der Lehrer" does. Only the
+        attachment comes from the parse; whether a word is an article is still
+        decided by the article table, so a weaker model degrades to the
+        adjacency check rather than to guesswork.
+        """
+        articles = self.static_rules[lang]["articles"]
+
+        for child in tokens[token_index].lefts:
+            if child.text.lower() in articles:
+                return True
+
+        return self.is_previous_token_article(token_index, tokens, lang)
 
     def is_previous_token_article(self, token_index: int, tokens: Doc, lang: LangType):
         return (
@@ -123,7 +145,7 @@ class Alternatives:
                 text = text_
                 start = start_
 
-            if "inclusive_articles" in self.static_rules[lang]:
+            if lang == LangType.FR:
                 article_index = list(
                     self.static_rules[lang]["inclusive_articles"].keys()
                 ).index(
@@ -352,54 +374,87 @@ class Alternatives:
         rule: Rule,
         alternative: Alternative,
         separator: str,
+        is_singular: bool | None = None,
     ) -> Alternative:
         if rule.dynamic.article is None:
             return alternative
 
-        if alternative.is_gendered_noun:
-            article = (
-                rule.dynamic.article.inclusive
-                if rule.dynamic.article.inclusive
-                else rule.dynamic.article.fallback
-            )
-            article = (
-                article.replace("~", separator)
-                if alternative.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
-                else article.replace("~", "/")
-            )
-        else:
-            alternative_tokens = self.model.fetch_tokens(
-                LangType.DE, alternative.words[-1]
-            )
-            if self.model.is_token_plural(LangType.DE, alternative_tokens[0]):
-                article = rule.dynamic.article.plural
-            else:
-                gender = await self.nouns.german_noun_gender_lookup(
-                    alternative.words[-1]
-                )
-
-                article = rule.dynamic.article.get_article(gender, alternative.lemma)
-
-        if article:
+        # helper to prepend an article and insert ARTICLE token(s)
+        def _prepend_article(article_str: str) -> None:
             alternative.lemma = (
-                article + tokens[token_index - 1].whitespace_ + alternative.lemma
+                article_str + tokens[token_index - 1].whitespace_ + alternative.lemma
             )
             alternative.word_types.insert(
                 0,
-                {
-                    "word_type": WordType.ARTICLE,
-                    "lower_case": True,
-                    "lemmatize": True,
-                },
+                {"word_type": WordType.ARTICLE, "lower_case": True, "lemmatize": True},
             )
+
+        is_dee = (
+            separator == INKLUSIVUM_SEPARATOR
+            and alternative.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
+        )
+        article = None
+
+        if is_dee:
+            article = rule.dynamic.article.inklusivum or (
+                rule.dynamic.article.inclusive or rule.dynamic.article.fallback
+            )
+            if isinstance(article, str):
+                article = article.replace("~", "")
+
+            if not alternative.is_gendered_noun:
+                if article:
+                    _prepend_article(article)
+                return alternative
+        else:
+            if alternative.is_gendered_noun:
+                article = (
+                    rule.dynamic.article.inclusive or rule.dynamic.article.fallback
+                )
+                sep = (
+                    separator
+                    if alternative.gender_role
+                    == GenderedRolesFormatType.INCLUSIVE_GENDER
+                    else "/"
+                )
+                if isinstance(article, str):
+                    article = article.replace("~", sep)
+            else:
+                # The article must agree with what is shown, decided by
+                # grammar rather than by a model reading a word in
+                # isolation: a collective noun is singular regardless of
+                # what it replaces ("die Kollegschaft"), and any other
+                # alternative takes the number of the phrase it replaces.
+                # Models disagree with each other on isolated forms - de
+                # 3.7 and 3.8 give different numbers for the non-word
+                # "Kollege~Kollegin" and the ambiguous "Mitarbeitende".
+                word = alternative.lemma.split()[-1]
+                if alternative.is_collective_noun:
+                    plural = False
+                elif is_singular is not None:
+                    plural = not is_singular
+                else:
+                    alternative_tokens = self.model.fetch_tokens(LangType.DE, word)
+                    plural = bool(
+                        self.model.is_token_plural(LangType.DE, alternative_tokens[0])
+                    )
+
+                if plural:
+                    article = rule.dynamic.article.plural
+                else:
+                    gender = await self.nouns.german_noun_gender_lookup(
+                        alternative.words[-1]
+                    )
+                    article = rule.dynamic.article.get_article(
+                        gender, alternative.lemma
+                    )
+
+        if article:
+            _prepend_article(article)
+
             if "/" in article:
                 alternative.word_types.insert(
-                    0,
-                    {
-                        "word_type": "",
-                        "lower_case": True,
-                        "lemmatize": True,
-                    },
+                    0, {"word_type": "", "lower_case": True, "lemmatize": True}
                 )
                 alternative.word_types.insert(
                     0,
@@ -718,27 +773,46 @@ class Alternatives:
                 continue
 
             if "~" in alternative.lemma:
-                self.handle_single_tilde(alternative, prefix, is_singular)
+                self.handle_single_tilde(
+                    alternative,
+                    prefix,
+                    is_singular,
+                    separator,
+                    rule.dynamic.article,
+                    text,
+                )
 
             if not alternative.is_gendered_noun:
-                alternative = await self.alternative_declension(
-                    LangType.DE,
-                    target_form,
-                    text,
-                    tokens[token_index].lemma_,
-                    rule.get_first_word_type(),
-                    rule,
-                    alternative,
-                    is_singular,
-                    prefix if alternative.lemma.startswith(prefix) else None,
+                declined = (
+                    separator == INKLUSIVUM_SEPARATOR
+                    and await self.inklusivum_adjective(
+                        alternative,
+                        target_form,
+                        self.has_attached_article(token_index, tokens, LangType.DE),
+                    )
                 )
+
+                if not declined:
+                    alternative = await self.alternative_declension(
+                        LangType.DE,
+                        target_form,
+                        text,
+                        tokens[token_index].lemma_,
+                        rule.get_first_word_type(),
+                        rule,
+                        alternative,
+                        is_singular,
+                        prefix if alternative.lemma.startswith(prefix) else None,
+                    )
 
                 if rule.dynamic.article:
                     alternative = await self.add_german_article_to_alternative(
-                        tokens, token_index, rule, alternative, separator
+                        tokens, token_index, rule, alternative, separator, is_singular
                     )
 
-                if inclusive and separator != "/":
+                # The Inklusivum has no separator to splice in, so this would
+                # write the sentinel into the suggestion itself.
+                if inclusive and separator not in ("/", INKLUSIVUM_SEPARATOR):
                     new_alternative = deepcopy(alternative)
                     new_alternative.lemma = new_alternative.lemma.replace(
                         "/", separator
@@ -854,7 +928,7 @@ class Alternatives:
 
         if rule.dynamic.article:
             new_alternative = await self.add_german_article_to_alternative(
-                tokens, token_index, rule, new_alternative, separator
+                tokens, token_index, rule, new_alternative, separator, is_singular
             )
 
         return new_alternative
@@ -951,8 +1025,28 @@ class Alternatives:
 
         if female_form is not None and male_form is not None:
             if inclusive:
-                if male_form == female_form:
+                # A word is only already gender neutral when the two genders
+                # share a base form. Comparing the declined forms instead would
+                # catch every case where they merely happen to coincide, and
+                # adjectives used as nouns do coincide in the dative, leaving
+                # "Geflüchtetem" where the Inklusivum wants "Geflüchteten".
+                is_neutral = (
+                    male_forms.get("base_form") == female_forms.get("base_form")
+                    if separator == INKLUSIVUM_SEPARATOR
+                    else male_form == female_form
+                )
+
+                if is_neutral:
                     lemma = prefix + male_form
+                elif separator == INKLUSIVUM_SEPARATOR:
+                    lemma = self.inklusivum_noun(
+                        male_forms,
+                        female_forms,
+                        target_form,
+                        prefix,
+                        self.has_attached_article(token_index, tokens, LangType.DE),
+                    )
+                    rule.dynamic.false_positives.append(lemma)
                 else:
                     lemma = formatting.inclusive_alternative(
                         self.static_rules,
@@ -968,15 +1062,25 @@ class Alternatives:
                     rule.dynamic.false_positives.append(lemma)
 
                 parts = [
-                    formatting.inclusive_alternative(
-                        self.static_rules,
-                        LangType.DE,
-                        aw["male_form"],
-                        aw["female_form"],
-                        "",
-                        separator,
-                        noun_separator,
-                        separate_gender_plural,
+                    (
+                        inklusivum.noun(
+                            aw["male_form"],
+                            aw["female_form"],
+                            None,
+                            "",
+                            self.inklusivum_lexicon(),
+                        )
+                        if separator == INKLUSIVUM_SEPARATOR
+                        else formatting.inclusive_alternative(
+                            self.static_rules,
+                            LangType.DE,
+                            aw["male_form"],
+                            aw["female_form"],
+                            "",
+                            separator,
+                            noun_separator,
+                            separate_gender_plural,
+                        )
                     )
                     for aw in additional_words
                 ]
@@ -990,10 +1094,10 @@ class Alternatives:
                         rule,
                         alternative,
                         text,
-                        alternative_prefix.replace("/", separator)
+                        utils.splice_separator(alternative_prefix, separator)
                         + additional_prefix
                         + lemma
-                        + alternative_suffix.replace("/", separator),
+                        + utils.splice_separator(alternative_suffix, separator),
                         is_singular,
                         False,
                         male_form_with_prefix,
@@ -1051,10 +1155,10 @@ class Alternatives:
                         rule,
                         alternative,
                         text,
-                        alternative_prefix.replace("/", separator)
+                        utils.splice_separator(alternative_prefix, separator)
                         + additional_prefix
                         + lemma
-                        + alternative_suffix.replace("/", separator),
+                        + utils.splice_separator(alternative_suffix, separator),
                         is_singular,
                         False,
                         male_form_with_prefix,
@@ -1123,8 +1227,84 @@ class Alternatives:
 
         return male_sub or male_form, female_sub or female_form, variants
 
+    def inklusivum_lexicon(self) -> inklusivum.Lexicon:
+        return inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+
+    def inklusivum_noun(
+        self,
+        male_forms: dict,
+        female_forms: dict,
+        target_form: str | None,
+        prefix: str,
+        has_article: bool = True,
+    ) -> str | None:
+        """Build an Inklusivum noun from the nominative singular pair.
+
+        The Inklusivum declines its own stem rather than reusing a declined
+        masculine, so the base forms are used here and ``target_form`` only
+        selects number and case. ``has_article`` picks the adjective ending set
+        for pairs that are adjectives rather than nouns.
+        """
+        return inklusivum.noun(
+            male_forms.get("base_form") or male_forms.get("sg_nom"),
+            female_forms.get("base_form") or female_forms.get("sg_nom"),
+            target_form,
+            prefix,
+            self.inklusivum_lexicon(),
+            has_article,
+        )
+
+    async def inklusivum_adjective(
+        self,
+        alternative: Alternative,
+        target_form: str | None,
+        has_article: bool,
+    ) -> bool:
+        """Decline a replacement that is an adjective used as a noun.
+
+        Suggestions like "Geflüchtete" or "Vertriebene" arrive here undeclined
+        and would otherwise be declined as ordinary German, giving
+        "Geflüchtetem" in the dative where the Inklusivum wants "Geflüchteten".
+        Returns whether it applied.
+        """
+        words = alternative.lemma.split()
+        if not words:
+            return False
+
+        forms = await self.nouns.german_noun_lookup(words[-1])
+        if not forms:
+            return False
+
+        masculine = forms.get("male_form") or forms.get("base_form")
+        feminine = forms.get("female_form") or forms.get("base_form")
+
+        if not inklusivum.is_substantivized_adjective(masculine, feminine):
+            return False
+
+        words[-1] = inklusivum.substantivized_adjective(
+            masculine, target_form, "", has_article
+        )
+
+        alternative.lemma = " ".join(words)
+        if alternative.words:
+            alternative.words[-1] = words[-1]
+
+        return True
+
+    def is_adjective_word_type(self, alternative: Alternative, word_index: int) -> bool:
+        if word_index >= len(alternative.word_types):
+            return False
+
+        return alternative.word_types[word_index].get("word_type") == WordType.ADJECTIVE
+
     def handle_single_tilde(
-        self, alternative: Alternative, prefix: bool, is_singular: bool
+        self,
+        alternative: Alternative,
+        prefix: bool,
+        is_singular: bool,
+        separator: str,
+        article: Article | None = None,
+        source_text: str = "",
     ):
         lemma = ""
         word_types = []
@@ -1133,28 +1313,86 @@ class Alternatives:
         for word_index in range(len(words)):
             word = words[word_index]
             if word.count("~") == 1:
+                pre = []
                 slash = False
+
                 if word.startswith("~"):
-                    word = utils.add_german_prefix(word[1:], prefix)
+                    word, pre = utils.add_german_prefix(word[1:], prefix), []
+                elif (
+                    separator == INKLUSIVUM_SEPARATOR
+                    and word in self.static_rules[LangType.DE]["inclusive_articles"]
+                ):
+                    replacement = utils.inklusivum_article(
+                        self.static_rules[LangType.DE]["inclusive_articles"][word],
+                        article.form if article else None,
+                    )
+
+                    # The article table holds one form per case, but a
+                    # possessive also agrees with the noun it modifies. The
+                    # word being replaced already carries that agreement, so
+                    # take it from there instead: "Ihre" -> "ense", not "ens".
+                    # Only when the match is the possessive itself. A wider
+                    # span, expanded over an article or matched by a pattern,
+                    # would be spliced into the replacement word.
+                    if (
+                        replacement
+                        and replacement.startswith(inklusivum.POSSESSIVE)
+                        and source_text
+                        and " " not in source_text.strip()
+                    ):
+                        agreed = inklusivum.possessive(source_text.strip())
+                        if agreed:
+                            replacement = agreed
+
+                    word, pre = replacement, []
+                elif separator == INKLUSIVUM_SEPARATOR and inklusivum.possessive_pair(
+                    word
+                ):
+                    word, pre = inklusivum.possessive_pair(word), []
+                elif (
+                    separator == INKLUSIVUM_SEPARATOR
+                    and is_singular
+                    and self.is_adjective_word_type(alternative, word_index)
+                ):
+                    word, pre = (
+                        inklusivum.adjective(
+                            inklusivum.adjective_stem(word),
+                            article.form if article else None,
+                            article is not None,
+                        ),
+                        [],
+                    )
                 else:
                     position = word.find("~")
-                    if word[position + 1].islower():
-                        # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
+                    if (
+                        position != -1
+                        and position + 1 < len(word)
+                        and word[position + 1].islower()
+                    ):
                         if position + 3 < len(word) or is_singular:
-                            word = word.replace("~", "/")
                             slash = True
-                        # ihr~e => ihre
+                            new_w = word.replace("~", "/")
                         elif word.endswith("e"):
-                            word = word.replace("~", "")
-                        # qualifizierte~r => qualifizierte
+                            new_w = word.replace("~", "")
                         else:
-                            word = word[0:position]
+                            new_w = word[0:position]
 
+                        pre_types = []
                         if slash:
-                            word_types.append(alternative.word_types[word_index])
-                            word_types.append(
-                                {"word_type": "", "lower_case": True, "lemmatize": True}
-                            )
+                            pre_types = [
+                                alternative.word_types[word_index],
+                                {
+                                    "word_type": "",
+                                    "lower_case": True,
+                                    "lemmatize": True,
+                                },
+                            ]
+                        word, pre = new_w, pre_types
+                    else:
+                        pre = []
+
+                if pre:
+                    word_types.extend(pre)
 
             word_types.append(alternative.word_types[word_index])
             lemma += " " + word

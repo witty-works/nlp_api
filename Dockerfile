@@ -23,6 +23,11 @@ COPY ./app /code/app
 
 COPY ./training_data /code/training_data
 
+# Baked in rather than read from .git so /version reports the revision the
+# image actually contains, not whatever the build context happened to be.
+ARG GIT_REVISION=""
+ENV GIT_REVISION=${GIT_REVISION}
+
 ENV WORKERS=1
 CMD gunicorn app.main:app --preload -b 0.0.0.0:8081 -w $WORKERS -k uvicorn.workers.UvicornWorker --forwarded-allow-ips "*"
 

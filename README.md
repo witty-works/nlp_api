@@ -43,5 +43,6 @@ To keep this README scannable, detailed sections have moved to `docs/`. Quick li
 - [Request Configuration & Categories](docs/request-configuration.md)
 - [Tests](docs/tests.md)
 - [Training Data & Lookups](docs/training-data.md)
+- [Inklusivum (de-e)](docs/inklusivum.md) and [Rückfragen dazu](docs/inklusivum-feedback.md)
 
 ---

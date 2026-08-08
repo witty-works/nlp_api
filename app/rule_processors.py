@@ -85,8 +85,15 @@ async def german_gender_endings(
     if not re.search("[/):_*I]", text):
         return token_index
 
+    # The Inklusivum is a declension system rather than an infix separator, so
+    # the separator based rules below cannot express it. Until the paradigm is
+    # implemented these paths are skipped rather than splicing "d" into words.
+    is_inklusivum = config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+
     subcategory = "d_and_i"
-    if is_sub_category_enabled(config.disabled_categories, subcategory):
+    if not is_inklusivum and is_sub_category_enabled(
+        config.disabled_categories, subcategory
+    ):
         word_types = (
             (-1, 1, config.german_gender_ending[0])
             if config.german_gender_ending.startswith("/")
@@ -134,9 +141,11 @@ async def german_gender_endings(
             return new_token_index
 
     subcategory = "gendered_denominations_ending_advanced"
-    if is_sub_category_enabled(
-        config.disabled_categories, subcategory
-    ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
+    if (
+        not is_inklusivum
+        and is_sub_category_enabled(config.disabled_categories, subcategory)
+        and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
+    ):
         endings = []
         for key, regexp in config._gendereddenom_ending.items():
             if config.german_gender_ending == key:
@@ -441,5 +450,12 @@ async def witty_rules(
                         explanation=language.translate("TOO_LONG_SENTENCE"),
                     )
                 )
+
+    await context.rule_check.inklusivum_articles(
+        config, client, language, text, tokens, offsets, list_full
+    )
+    await context.rule_check.inklusivum_adjectives(
+        config, client, language, text, tokens, offsets, list_full
+    )
 
     return list_full
