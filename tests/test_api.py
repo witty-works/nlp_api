@@ -1511,6 +1511,77 @@ def test_store_get_delete_rules():
         assert response.content == b'{"detail":"Organization configs not found"}'
 
 
+def test_user_config_sync_inklusivum(snapshot):
+    """The dashboard sync path for the Inklusivum ending.
+
+    The gender-ending fixtures pass the config inline with each check; the
+    dashboard instead stores it via POST /user/configs. This covers that
+    round-trip: a dashboard-shaped payload with german_gender_ending "de-e"
+    is stored, and a subsequent check without any inline config must come
+    back Inklusivum-formatted (Jedey Expertere, ensen - not Expert*in).
+    """
+    user_request_data = {
+        "id": "test-config-sync-inklusivum",
+        "email": "config-sync-inklusivum@gmail.com",
+        "name": "Tests Config Sync Inklusivum",
+        "organization_id": None,
+        "config": {
+            "german_gender_ending": {"value": "de-e", "status": "force"},
+            "gendered_roles_format": {"value": "inclusive_gender", "status": "force"},
+            "preferred_variants": {"value": ["de-DE", "en-US"], "status": "suggestion"},
+            "french_gender_separator": {"value": "·", "status": "suggestion"},
+            "show_inspiration_alternatives": {"value": True, "status": "suggestion"},
+            "categories": {},
+        },
+        "false_positives": [],
+        "domains": {"list": [], "type": "deny"},
+        "notifications": 5,
+        "config_hash": "test-config-sync-inklusivum-hash",
+        "sync_date": "2026-08-07 12:00:00",
+    }
+
+    with TestClient(app) as client:
+        response = client.post("/user/configs", json=user_request_data)
+        assert response.status_code == 204
+
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler"
+                " den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen."
+            },
+            headers={"X-TESTING-AUTH": user_request_data["email"]},
+        )
+        assert response.status_code == 200
+
+        # The stored ending formats the suggestions; nothing may fall back to
+        # a separator ending like Expert*in.
+        body = response.json()
+        texts = [
+            alternative["text"]
+            for result in body["results"]
+            for alternative in result["alternatives"]
+        ]
+        assert not any("*" in text for text in texts)
+
+        # Gendered findings carry the Inklusivum logo from
+        # config_options.json; findings from other categories keep theirs.
+        logo = "https://www.witty.works/assets/media/vgd-icon-bunt.svg"
+        by_subcategory = {result["subcategory"]: result for result in body["results"]}
+        assert by_subcategory["titles"]["explanation"]["icon_image"] == logo
+        assert by_subcategory["function"]["explanation"]["icon_image"] == logo
+        assert (
+            by_subcategory["anglicism_advanced"]["explanation"].get("icon_image")
+            != logo
+        )
+
+        # output must be string
+        output = json.dumps(body, sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = "tests/test_user_config_sync/test_inklusivum"
+        snapshot.assert_match(output, "output.json")
+
+
 def test_api_key_get_missing():
     """GET /api_key should return 404 for unknown keys."""
     with TestClient(app) as client:
