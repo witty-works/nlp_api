@@ -7,8 +7,8 @@ from spacy.lang.char_classes import (
     ALPHA,
     HYPHENS,
 )
-from spacy.tokenizer import Tokenizer
-from spacy.util import compile_infix_regex, compile_suffix_regex, compile_prefix_regex
+
+from spacy.util import compile_infix_regex, compile_suffix_regex
 from spacy.lookups import Lookups
 from spacy.tokens import Token, Doc
 from spacy.matcher import Matcher
@@ -380,76 +380,102 @@ class Model:
 
         return matcher(tokens)
 
-    def custom_tokenizer(self, lang, nlp):
+    def tune_tokenizer(self, lang, nlp):
+        """Adjust the shipped tokenizer in place rather than rebuilding it.
+
+        de: keep gender-colon words ('Kund:in') whole; en/fr: keep hyphen
+        compounds whole; all: always split a trailing period
+        (https://github.com/explosion/spaCy/discussions/12930)."""
         if lang == LangType.DE:
-            infixes = German.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if ":<>=" in infixes[i]:
-                    # handle 'Kund:in' as one word
-                    infixes[i] = r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA)
-                    break
-
-            rules = German.Defaults.tokenizer_exceptions
+            infixes = [
+                # handle 'Kund:in' as one word
+                r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA) if ":<>=" in infix else infix
+                for infix in German.Defaults.infixes
+            ]
             suffixes = German.Defaults.suffixes
-            prefixes = German.Defaults.prefixes
-            token_match = German.Defaults.token_match
         elif lang == LangType.EN:
-            infixes = English.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if HYPHENS in infixes[i]:
-                    # https://spacy.io/usage/linguistic-features#tokenization
-                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
-                    infixes.pop(i)
-                    break
-
-            rules = English.Defaults.tokenizer_exceptions
+            # https://spacy.io/usage/linguistic-features#tokenization
+            infixes = [i for i in English.Defaults.infixes if HYPHENS not in i]
             suffixes = English.Defaults.suffixes
-            prefixes = English.Defaults.prefixes
-            token_match = English.Defaults.token_match
         elif lang == LangType.FR:
-            # return None
-            infixes = French.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if HYPHENS in infixes[i]:
-                    # https://spacy.io/usage/linguistic-features#tokenization
-                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
-                    infixes.pop(i)
-                    break
-
-            rules = French.Defaults.tokenizer_exceptions
+            infixes = [i for i in French.Defaults.infixes if HYPHENS not in i]
             suffixes = French.Defaults.suffixes
-            prefixes = French.Defaults.prefixes
-            token_match = French.Defaults.token_match
         else:
-            return None
+            return
 
-        # https://github.com/explosion/spaCy/discussions/12930
-        suffixes += [r"\."]
+        nlp.tokenizer.infix_finditer = compile_infix_regex(infixes).finditer
+        nlp.tokenizer.suffix_search = compile_suffix_regex(
+            list(suffixes) + [r"\."]
+        ).search
 
-        return Tokenizer(
-            vocab=nlp.vocab,
-            rules=rules,
-            prefix_search=compile_prefix_regex(prefixes).search,
-            suffix_search=compile_suffix_regex(suffixes).search,
-            infix_finditer=compile_infix_regex(infixes).finditer,
-            token_match=token_match,
-        )
+    salutation_titles = [
+        "herr",
+        "herrn",
+        "frau",
+        "hr",
+        "hr.",
+        "fr",
+        "fr.",
+        "mr",
+        "mr.",
+        "mrs",
+        "mrs.",
+        "ms",
+        "ms.",
+        "miss",
+        "dr",
+        "dr.",
+        "monsieur",
+        "madame",
+        "mme",
+        "mme.",
+    ]
 
     def load_nlp_model(self, lang, spacy_model):
         model = spacy.load(spacy_model, disable=["textcat"])
         model.add_pipe("emoji", first=True)
-        tokenizer = self.custom_tokenizer(lang, model)
-        if tokenizer is not None:
-            model.tokenizer = tokenizer
+        self.tune_tokenizer(lang, model)
 
         if self.settings.lemmatizer == "lookup":
-            # Switch to non-trainable lemmatizer
+            # Switch to the non-trainable lemmatizer with its tables from
+            # spacy-lookups-data.
             model.remove_pipe("lemmatizer")
-            # Add non-trainable lemmatizer from language defaults
-            # and load lemmatizer tables from spacy-lookups-data
-            model.add_pipe("lemmatizer").initialize()
+            lemmatizer = model.add_pipe("lemmatizer")
+            lemmatizer.initialize()
 
-        model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+        if (
+            self.settings.lemmatizer == "lookup"
+            and model.get_pipe("lemmatizer").mode == "lookup"
+        ):
+            # Merge the product lemma pins into the lemmatizer's own lookup
+            # table (de/fr) - last write wins, so the pins override shipped
+            # entries.
+            model.get_pipe("lemmatizer").lookups.get_table("lemma_lookup").update(
+                lemma_lookup[lang]
+            )
+        else:
+            # The rule-mode lemmatizer (en) and the trained one have no
+            # surface-keyed table to merge into, so the pins run as a pipe.
+            model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+
+        # A salutation followed by a PROPN is a person reference even where
+        # the statistical NER stays silent - the de 3.8.0 model dropped bare
+        # surnames like 'Herr Müller' (case:
+        # tests/test_general_cases/test_api_entity_de). The entity_ruler is
+        # spaCy's layer for exactly this; the ner keeps every span the ruler
+        # already claimed.
+        entity_ruler = model.add_pipe("entity_ruler", before="ner")
+        entity_ruler.add_patterns(
+            [
+                {
+                    "label": "PERSON" if lang == LangType.EN else "PER",
+                    "pattern": [
+                        {"LOWER": {"IN": self.salutation_titles}},
+                        {"POS": "PROPN"},
+                    ],
+                }
+            ]
+        )
 
         if lang == LangType.DE:
             # Gender-symbol forms (Kund:innen, Kolleg*in) are nouns wherever

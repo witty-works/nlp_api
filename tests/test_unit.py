@@ -158,11 +158,10 @@ async def test_upos_noun_wins_over_adjective_tag():
     assert await model._fetch_word_type(LangType.DE, token) == WordType.NOUN
 
 
-def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
-    # de 3.8.0 NER stays silent on bare surnames ('Herr Müller') that
-    # 3.7.0 labelled PER; a PROPN next to a salutation keeps the
-    # suppression, a standalone PROPN (job-title compounds are tagged
-    # PROPN too) does not.
+def test_person_entities_suppress_non_person_rules():
+    # Name evidence comes from ent_type_ alone; the entity_ruler pipe in
+    # Model.load_nlp_model labels salutation-attached surnames ('Herr
+    # Müller') that the de 3.8.0 statistical NER misses.
     from app.models import EntityType
 
     rule_check = fetch_rule_check(
@@ -173,15 +172,12 @@ def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
 
     doc = spacy.blank("de")("Hallo Herr Müller")
     token = doc[2]
-    token.pos_ = "PROPN"
+    token.ent_type_ = "PER"
     assert rule_check.is_entity_type_mismatch(rule, token) is True
 
     doc = spacy.blank("de")("Bäcker-Confiseur-Konditor gesucht")
     token = doc[0]
     token.pos_ = "PROPN"
-    assert rule_check.is_entity_type_mismatch(rule, token) is False
-
-    token.pos_ = "NOUN"
     assert rule_check.is_entity_type_mismatch(rule, token) is False
 
 
