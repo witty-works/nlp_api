@@ -280,6 +280,20 @@ branches (`article-list`, `adverb-expected`, `hyphen-adjective`,
 `fr-noun-expected`, `fr-ez-verb`) only fire during rule matching and are
 covered by the e2e suite and their citation cases, not by these numbers.
 
+## The right layer for our own tweaks (implemented 2026-08-08)
+
+Which workarounds belong in spaCy's own extension points rather than app
+code - the first four are done:
+
+| Tweak | Layer it lives on now |
+|---|---|
+| Tokenizer infix/suffix patches | `tune_tokenizer` mutates the shipped tokenizer in place; the German colon default is proposed upstream (docs/spacy-upstream-feedback.md item 1) |
+| Gender-symbol POS fix | `attribute_ruler` pattern - already spaCy's layer; upstreamable into the shipped model |
+| Product lemma pins (`lookup.json`) | Merged into the lemmatizer's own `lemma_lookup` table for de/fr; the override pipe remains only for en (rule-mode lemmatizer has no surface table) and the trained toggle |
+| Salutation surnames | `entity_ruler` before `ner` emits real PER spans, so entity suppression and the LanguageTool name check run on `ents` again instead of a side-channel heuristic |
+| `_fetch_word_type` tag sets | App semantics; become data tables in Phase 2 |
+| Word-type/number/article layers, DB lemma pins | App-side by design: product conventions the models must not own |
+
 ## Relation to the spaCy 3.8 update (upstream PR #1173)
 
 The upstream 3.8 update stalled on "need to review all the test snapshot
