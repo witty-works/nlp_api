@@ -60,6 +60,9 @@ class Model:
         self.static_rules = static_rules
         self.lemma_plural_lookup = lemma_plural_lookup
         self.ambiguous_number_lookup = {}
+        # Filled in at startup once the database is available.
+        self.de_verb_surface_forms = frozenset()
+        self.de_noun_surface_forms = frozenset()
 
         for model_name in self.settings.models:
             lang = model_name[0:2]
@@ -298,25 +301,24 @@ class Model:
             return self._traced(trace, "pronoun", WordType.PRONOUN)
 
         if token.pos_ == "NOUN" or token.tag_ == "NN":
-            if lang == LangType.DE:
+            if lang == LangType.DE and token.text[0].islower():
                 # A lowercase "noun" that the verb table knows is usually a
                 # misread infinitive ("Wir wollen das abzocken"). But only
-                # when the capitalized form is not itself a known noun:
-                # informal lowercase German ("Anlaß zur sorge", "auf kosten
-                # des...") must stay a noun (measured in
-                # docs/spacy-review.md, word-type branch metrics).
-                if token.text[0].islower() and self.db:
-                    result = await self.db.fetch_declensions(
-                        lang, WordType.VERB, token.text, token
+                # when the form is not also a known noun: informal lowercase
+                # German ("Anlaß zur sorge", "auf kosten des...") must stay
+                # a noun (measured in docs/spacy-review.md, word-type branch
+                # metrics). Membership sets built at startup: no per-token
+                # queries, and nothing touches the token._.forms cache,
+                # which must only ever hold forms of the type the token
+                # ended up as.
+                word = token.text.lower()
+                if (
+                    word in self.de_verb_surface_forms
+                    and word not in self.de_noun_surface_forms
+                ):
+                    return self._traced(
+                        trace, "de-lowercase-noun-is-verb", WordType.VERB
                     )
-                    # No token here: the call above cached the verb forms on
-                    # it, and this lookup must not read or overwrite that.
-                    if result is not None and not await self.db.fetch_declensions(
-                        lang, WordType.NOUN, token.text
-                    ):
-                        return self._traced(
-                            trace, "de-lowercase-noun-is-verb", WordType.VERB
-                        )
 
             return self._traced(trace, "noun", WordType.NOUN)
 
@@ -408,27 +410,35 @@ class Model:
             list(suffixes) + [r"\."]
         ).search
 
+    # Case-sensitive on purpose: lowercased matching minted person spans out
+    # of "HR" and the verb "miss". The union runs in every pipeline so names
+    # keep their titles across language boundaries ("Mrs. Smith" in a German
+    # text). Kept in step with static_rules[lang]["salutations"], which
+    # drives the LanguageTool exemptions for the same words.
     salutation_titles = [
-        "herr",
-        "herrn",
-        "frau",
-        "hr",
-        "hr.",
-        "fr",
-        "fr.",
-        "mr",
-        "mr.",
-        "mrs",
-        "mrs.",
-        "ms",
-        "ms.",
-        "miss",
-        "dr",
-        "dr.",
-        "monsieur",
-        "madame",
-        "mme",
-        "mme.",
+        "Herr",
+        "Herrn",
+        "Frau",
+        "Fräulein",
+        "Hr.",
+        "Fr.",
+        "Mr",
+        "Mr.",
+        "Mrs",
+        "Mrs.",
+        "Ms",
+        "Ms.",
+        "Miss",
+        "Monsieur",
+        "Madame",
+        "Mademoiselle",
+        "M.",
+        "Mme",
+        "Mme.",
+        "Dr",
+        "Dr.",
+        "Prof",
+        "Prof.",
     ]
 
     def load_nlp_model(self, lang, spacy_model):
@@ -458,24 +468,29 @@ class Model:
             # surface-keyed table to merge into, so the pins run as a pipe.
             model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
 
-        # A salutation followed by a PROPN is a person reference even where
+        # A salutation followed by a name is a person reference even where
         # the statistical NER stays silent - the de 3.8.0 model dropped bare
         # surnames like 'Herr Müller' (case:
         # tests/test_general_cases/test_api_entity_de). The entity_ruler is
         # spaCy's layer for exactly this; the ner keeps every span the ruler
-        # already claimed.
-        entity_ruler = model.add_pipe("entity_ruler", before="ner")
-        entity_ruler.add_patterns(
-            [
-                {
-                    "label": "PERSON" if lang == LangType.EN else "PER",
-                    "pattern": [
-                        {"LOWER": {"IN": self.salutation_titles}},
-                        {"POS": "PROPN"},
-                    ],
-                }
-            ]
-        )
+        # already claimed. The optional punctuation token covers dotted
+        # titles the loaded tokenizer splits ("Mrs." in a German text), and
+        # PROPN+ covers multi-token names ("Herr Peter Müller"). Guarded
+        # because pipelines without a ner (de_dep_news_trf) must still load.
+        if "ner" in model.pipe_names:
+            entity_ruler = model.add_pipe("entity_ruler", before="ner")
+            entity_ruler.add_patterns(
+                [
+                    {
+                        "label": "PERSON" if lang == LangType.EN else "PER",
+                        "pattern": [
+                            {"TEXT": {"IN": self.salutation_titles}},
+                            {"IS_PUNCT": True, "OP": "?"},
+                            {"POS": "PROPN", "OP": "+"},
+                        ],
+                    }
+                ]
+            )
 
         if lang == LangType.DE:
             # Gender-symbol forms (Kund:innen, Kolleg*in) are nouns wherever

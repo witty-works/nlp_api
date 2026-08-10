@@ -182,6 +182,31 @@ def test_person_entities_suppress_non_person_rules():
 
 
 @pytest.mark.asyncio
+async def test_lowercase_verb_flip_guarded_by_noun_forms():
+    # A lowercase "noun" the verb table knows flips to verb ("das
+    # abzocken"), except when the form is also a known noun ("zur sorge") -
+    # and the membership sets keep the decision off the token._.forms
+    # cache, which once got poisoned with verb forms on noun tokens.
+    model = fetch_model()
+    model.de_verb_surface_forms = frozenset({"abzocken", "sorge"})
+    model.de_noun_surface_forms = frozenset({"sorge"})
+
+    doc = spacy.blank("de")("abzocken sorge")
+    for token in doc:
+        token.pos_ = "NOUN"
+
+    trace = []
+    assert (
+        await model._fetch_word_type(LangType.DE, doc[0], None, trace=trace)
+        == WordType.VERB
+    )
+    assert trace[-1] == "de-lowercase-noun-is-verb"
+    assert (
+        await model._fetch_word_type(LangType.DE, doc[1], None) == WordType.NOUN
+    )
+
+
+@pytest.mark.asyncio
 async def test_en_hyphen_compound_trusts_tagger_without_expectation():
     # The split exists for expectation-driven matching ("one-eyed"); in
     # auto-detect it misread "self-driven" as a noun via "self" (measured
