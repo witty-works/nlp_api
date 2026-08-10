@@ -9,6 +9,7 @@ from fastapi import FastAPI
 
 from app.context import AppContext
 from app.db import Db
+from app.models import LangType, WordType
 from app.http import Http
 from app.nouns import Nouns
 from app.verbs import Verbs
@@ -52,6 +53,12 @@ async def lifespan(app: FastAPI, context: AppContext):
     context.model.db = context.db
     context.model.ambiguous_number_lookup = (
         await context.db.fetch_ambiguous_number_forms()
+    )
+    context.model.de_verb_surface_forms = await context.db.fetch_surface_forms(
+        LangType.DE, WordType.VERB
+    )
+    context.model.de_noun_surface_forms = await context.db.fetch_surface_forms(
+        LangType.DE, WordType.NOUN
     )
 
     # Canned user and organisation records for the test suite, which

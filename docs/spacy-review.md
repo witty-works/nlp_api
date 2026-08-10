@@ -227,6 +227,79 @@ Options, in order of cost:
    depend on; and `Model.models` keys by language, so arms must run as separate
    processes.
 
+## Word-type branch metrics (2026-08-08, spaCy 3.8.14 / 3.8.0 models)
+
+`_fetch_word_type` is now branch-traced, and `bin/word_type_metrics.py`
+sweeps it over the test-corpus texts plus UD dev treebanks (de GSD, en EWT,
+fr GSD; 4,276 sentences) in four strata: clean, partial (typing prefix),
+typo (keyboard slips), grammar (dropped articles, lost capitalization,
+swaps). Per branch it reports fire rate, divergence from a plain UPOS
+table, and - where UD gold aligns - the model's own UPOS error rate at
+those tokens. Verdicts:
+
+**Earning their keep (compensating measured model error):**
+- `adjective-tags` (de): fires on 3% of German tokens; where it fires the
+  model's UPOS is wrong 44% of the time (gold ADJ read as ADV, the ADJD
+  predicative class: "Es ist unbeschreiblich"). The single most load-bearing
+  heuristic. On en/fr it never diverges from the plain table - live only in
+  German.
+- `propn-as-expected`: the en model still over-reads PROPN (23% of its
+  PROPN calls disagree with UD gold) - the wildcard absorbs that.
+
+**Product semantics, ready for the Phase 2 table (zero divergence or
+intentional mapping):** `noun`, `verb`, `adverb`, `conjunction`, `emoji`,
+`cardinal`/`number` (finer classes than UPOS by design), `pronoun` (the
+DET-tag set PDAT/PPOSAT/... -> pron is an intentional mapping, 27% of its
+German fires), `de-dash-noun` (compound ellipsis "Kunden- und ..."),
+`invalid-text` (rejects stray single letters the table would call nouns).
+
+**Narrowed on this evidence:**
+- `de-lowercase-noun-is-verb`: fired once per ~800 clean German sentences,
+  and the suite proved exactly one dependent ("Wir wollen das abzocken",
+  the gender-verbs case). But on lowercase nouns - injected
+  decapitalization and genuine informal German in UD ("Anlaß zur sorge") -
+  it flipped nouns to verbs. Now guarded: the flip is skipped when the
+  noun tables know the capitalized form. The guard is deliberately scoped
+  to the rules DB, not the full german_nouns lexicon: substantivized
+  infinitives ("Abzocken") are lexicalized there too, which would kill the
+  legitimate flip. Residual miss, accepted: lowercase non-rule nouns like
+  "auf kosten des..." still flip.
+- `hyphen-split-first/-last` (en): in auto-detect mode the split misreads
+  adjectival compounds ("self-driven" -> noun via "self"); the whole-token
+  tag is right more often. The split is what lets "one-eyed"-class rules
+  match, so it stays for expectation-driven calls.
+
+**Strata findings:** branch distribution and model error rates stay stable
+under partial and typo input (no catastrophic degradation for the
+browser-extension case); the grammar stratum mildly raises pronoun/verb
+confusions and is where the lowercase-noun misfires concentrated.
+
+**Re-measured 2026-08-10** after the review fixed the runner's own drift
+(naive table now built from the WordType enum, gold alignment via spaCy's
+Alignment instead of exact-form matching): the headline figures held -
+de `adjective-tags` 440/1001 (44%) model-pos-wrong, en `propn-as-expected`
+477/2042 (23%).
+
+**Limitation:** the sweep runs the auto-detect path. Expectation-dependent
+branches (`article-list`, `adverb-expected`, `hyphen-adjective`,
+`de-verb-as-expected-adjective`, `pronoun-as-expected-noun`,
+`fr-noun-expected`, `fr-ez-verb`) only fire during rule matching and are
+covered by the e2e suite and their citation cases, not by these numbers.
+
+## The right layer for our own tweaks (implemented 2026-08-08)
+
+Which workarounds belong in spaCy's own extension points rather than app
+code - the first four are done:
+
+| Tweak | Layer it lives on now |
+|---|---|
+| Tokenizer infix/suffix patches | `tune_tokenizer` mutates the shipped tokenizer in place; the German colon default is proposed upstream (docs/spacy-upstream-feedback.md item 1) |
+| Gender-symbol POS fix | `attribute_ruler` pattern - already spaCy's layer; upstreamable into the shipped model |
+| Product lemma pins (`lookup.json`) | Merged into the lemmatizer's own `lemma_lookup` table for de/fr; the override pipe remains only for en (rule-mode lemmatizer has no surface table) and the trained toggle |
+| Salutation surnames | `entity_ruler` before `ner` emits real PER spans, so entity suppression and the LanguageTool name check run on `ents` again instead of a side-channel heuristic |
+| `_fetch_word_type` tag sets | App semantics; become data tables in Phase 2 |
+| Word-type/number/article layers, DB lemma pins | App-side by design: product conventions the models must not own |
+
 ## Relation to the spaCy 3.8 update (upstream PR #1173)
 
 The upstream 3.8 update stalled on "need to review all the test snapshot

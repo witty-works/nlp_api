@@ -158,11 +158,10 @@ async def test_upos_noun_wins_over_adjective_tag():
     assert await model._fetch_word_type(LangType.DE, token) == WordType.NOUN
 
 
-def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
-    # de 3.8.0 NER stays silent on bare surnames ('Herr Müller') that
-    # 3.7.0 labelled PER; a PROPN next to a salutation keeps the
-    # suppression, a standalone PROPN (job-title compounds are tagged
-    # PROPN too) does not.
+def test_person_entities_suppress_non_person_rules():
+    # Name evidence comes from ent_type_ alone; the entity_ruler pipe in
+    # Model.load_nlp_model labels salutation-attached surnames ('Herr
+    # Müller') that the de 3.8.0 statistical NER misses.
     from app.models import EntityType
 
     rule_check = fetch_rule_check(
@@ -173,7 +172,7 @@ def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
 
     doc = spacy.blank("de")("Hallo Herr Müller")
     token = doc[2]
-    token.pos_ = "PROPN"
+    token.ent_type_ = "PER"
     assert rule_check.is_entity_type_mismatch(rule, token) is True
 
     doc = spacy.blank("de")("Bäcker-Confiseur-Konditor gesucht")
@@ -181,8 +180,59 @@ def test_propn_after_salutation_counts_as_name_evidence_for_non_person_rules():
     token.pos_ = "PROPN"
     assert rule_check.is_entity_type_mismatch(rule, token) is False
 
-    token.pos_ = "NOUN"
-    assert rule_check.is_entity_type_mismatch(rule, token) is False
+
+@pytest.mark.asyncio
+async def test_lowercase_verb_flip_guarded_by_noun_forms():
+    # A lowercase "noun" the verb table knows flips to verb ("das
+    # abzocken"), except when the form is also a known noun ("zur sorge") -
+    # and the membership sets keep the decision off the token._.forms
+    # cache, which once got poisoned with verb forms on noun tokens.
+    model = fetch_model()
+    model.de_verb_surface_forms = frozenset({"abzocken", "sorge"})
+    model.de_noun_surface_forms = frozenset({"sorge"})
+
+    doc = spacy.blank("de")("abzocken sorge")
+    for token in doc:
+        token.pos_ = "NOUN"
+
+    trace = []
+    assert (
+        await model._fetch_word_type(LangType.DE, doc[0], None, trace=trace)
+        == WordType.VERB
+    )
+    assert trace[-1] == "de-lowercase-noun-is-verb"
+    assert (
+        await model._fetch_word_type(LangType.DE, doc[1], None) == WordType.NOUN
+    )
+
+
+@pytest.mark.asyncio
+async def test_en_hyphen_compound_trusts_tagger_without_expectation():
+    # The split exists for expectation-driven matching ("one-eyed"); in
+    # auto-detect it misread "self-driven" as a noun via "self" (measured
+    # in docs/spacy-review.md, word-type branch metrics).
+    model = fetch_model()
+    # blank() would split the hyphen; the app's custom tokenizer keeps
+    # compounds whole, so build the Doc explicitly.
+    from spacy.tokens import Doc
+
+    doc = Doc(spacy.blank("en").vocab, words=["self-driven"], spaces=[False])
+    token = doc[0]
+    token.pos_ = "ADJ"
+    token.tag_ = "JJ"
+
+    trace = []
+    word_type = await model._fetch_word_type(LangType.EN, token, None, trace=trace)
+    assert word_type == WordType.ADJECTIVE
+    assert trace[-1] == "adjective-tags"
+
+    # With an adjective expectation the compound answers it directly.
+    trace = []
+    word_type = await model._fetch_word_type(
+        LangType.EN, token, WordType.ADJECTIVE, trace=trace
+    )
+    assert word_type == WordType.ADJECTIVE
+    assert trace[-1] == "hyphen-adjective"
 
 
 @pytest.mark.asyncio

@@ -1,0 +1,526 @@
+[
+    {
+        "auto-detected word type": "~pron|~v|~|~n|a|conj|~a||~|n|a|~v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Nous"
+            },
+            {
+                "end": 7,
+                "start": 3,
+                "text": "stagiaires curieux et curieuses"
+            },
+            {
+                "end": 11,
+                "start": 8,
+                "text": "Le stagiaire curieux"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "nous",
+        "morph": {
+            "Number": "Plur",
+            "Person": "1"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRON",
+        "text": "Nous",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "chercher",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "1",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 5,
+        "tag": "VERB",
+        "text": "cherchons",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "des"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "stagiaires",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "de",
+        "morph": {
+            "Definite": "Def",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "ADP",
+        "start": 15,
+        "tag": "ADP",
+        "text": "des",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "obj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "stagiaire",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 19,
+        "tag": "NOUN",
+        "text": "stagiaires",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "des"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "stagiaires",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "curieux",
+        "morph": {
+            "Gender": "Masc"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 30,
+        "tag": "ADJ",
+        "text": "curieux",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "curieuses"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "des"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "curieuses",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "et",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 38,
+        "tag": "CCONJ",
+        "text": "et",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "curieuses"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "des"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "curieux",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "curieux",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 41,
+        "tag": "ADJ",
+        "text": "curieuses",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "stagiaires"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 50,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "stagiaire"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "stagiaire",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "le",
+        "morph": {
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 52,
+        "tag": "DET",
+        "text": "Le",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "stagiaire"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "stagiaire",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 55,
+        "tag": "NOUN",
+        "text": "stagiaire",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "curieux"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "stagiaire"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "stagiaire",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "curieux",
+        "morph": {
+            "Gender": "Masc"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 65,
+        "tag": "ADJ",
+        "text": "curieux",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "arriver",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 73,
+        "tag": "VERB",
+        "text": "arrive",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "stagiaire"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 79,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

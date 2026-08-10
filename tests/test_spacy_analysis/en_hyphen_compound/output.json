@@ -1,6 +1,6 @@
 [
     {
-        "auto-detected word type": "~|a|n|~v||n|n|"
+        "auto-detected word type": "~|a|n|~v||a|n|"
     },
     {
         "noun chunks": [
@@ -257,7 +257,7 @@
         "tag": "JJ",
         "text": "man-made",
         "whitespace": " ",
-        "word_type": "n"
+        "word_type": "a"
     },
     {
         "children": [

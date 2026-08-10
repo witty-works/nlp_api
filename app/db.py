@@ -162,6 +162,24 @@ class Db:
 
         return rows
 
+    async def fetch_surface_forms(
+        self, lang: LangType, word_type: BasicWordType
+    ) -> frozenset:
+        """Every surface form in a declension table, lowercased.
+
+        Built at startup for membership tests on the request path, so those
+        need neither a query per token nor the token._.forms cache - that
+        cache must only ever hold forms of the type the token ended up as.
+        """
+        config = declensions_config[lang][word_type]
+        rows = await self.fetch_rows(
+            f"SELECT {', '.join(config['columns'])} FROM {config['name']}"  # nosec: names are static
+        )
+
+        return frozenset(
+            value.lower() for row in rows for value in row if value
+        )
+
     async def fetch_ambiguous_number_forms(self) -> dict:
         """Noun forms that are both a singular and a plural of the same lemma.
 

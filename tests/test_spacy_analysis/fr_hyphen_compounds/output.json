@@ -1,0 +1,577 @@
+[
+    {
+        "auto-detected word type": "~|n|conj||n||~|~n|~a|~v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Le porte-parole"
+            },
+            {
+                "end": 5,
+                "start": 3,
+                "text": "le savoir-faire"
+            },
+            {
+                "end": 9,
+                "start": 6,
+                "text": "nos collaborateurs-clés"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "porte-parole",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "le",
+        "morph": {
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "DET",
+        "text": "Le",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "comptent",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "porte-parole",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 3,
+        "tag": "NOUN",
+        "text": "porte-parole",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "savoir-faire",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "et",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 16,
+        "tag": "CCONJ",
+        "text": "et",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "savoir-faire",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "le",
+        "morph": {
+            "Definite": "Def",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 19,
+        "tag": "DET",
+        "text": "le",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "porte-parole",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "savoir-faire",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 22,
+        "tag": "NOUN",
+        "text": "savoir-faire",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "case",
+                "ner": "",
+                "token": "de"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "nos"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "-clés"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "case",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "collaborateurs",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "de",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 35,
+        "tag": "ADP",
+        "text": "de",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "case",
+                "ner": "",
+                "token": "de"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "nos"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "-clés"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "collaborateurs",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "notre",
+        "morph": {
+            "Number": "Plur",
+            "Poss": "Yes"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 38,
+        "tag": "DET",
+        "text": "nos",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nmod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "savoir-faire",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "collaborateur",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 42,
+        "tag": "NOUN",
+        "text": "collaborateurs",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "case",
+                "ner": "",
+                "token": "de"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "nos"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "-clés"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "le"
+            },
+            {
+                "dep": "nmod",
+                "ner": "",
+                "token": "collaborateurs"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Le"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "savoir-faire"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "collaborateurs",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "-clé",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 56,
+        "tag": "ADJ",
+        "text": "-clés",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "comptent",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "compter",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 62,
+        "tag": "VERB",
+        "text": "comptent",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "porte-parole"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "comptent",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 70,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
