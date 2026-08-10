@@ -19,27 +19,33 @@ pipeline the API serves.
 import argparse
 import asyncio
 import difflib
+import hashlib
 import json
 import pathlib
 import sys
 from collections import Counter, defaultdict
 
 from fastapi.testclient import TestClient
+from spacy.training import Alignment
 
 from app.main import app, context
-from app.models import LangType
+from app.models import LangType, WordType
+
+STRATA = ("clean", "partial", "typo", "grammar")
 
 # The Phase-2 candidate: what a table-driven UPOS mapping would answer with
 # no heuristics at all. Divergence from this is each branch's value-add (or
-# damage) - it is not automatically wrong.
+# damage) - it is not automatically wrong. Values come from the enum so the
+# baseline cannot drift from the real word types (it once did: "number" vs
+# WordType.NUMBER == "num" skewed the number branch).
 NAIVE_UPOS = {
-    "NOUN": "n",
-    "VERB": "v",
-    "ADJ": "a",
-    "ADV": "adv",
-    "PRON": "pron",
-    "NUM": "number",
-    "CCONJ": "conj",
+    "NOUN": WordType.NOUN,
+    "VERB": WordType.VERB,
+    "ADJ": WordType.ADJECTIVE,
+    "ADV": WordType.ADVERB,
+    "PRON": WordType.PRONOUN,
+    "NUM": WordType.NUMBER,
+    "CCONJ": WordType.CONJUNCTION,
     "PROPN": "",
     "AUX": "",
     "DET": "",
@@ -54,8 +60,6 @@ NEIGHBOURS = {  # QWERTZ-ish adjacent keys, enough for realistic slips
 
 def _pick(text: str, salt: str, count: int) -> int:
     """Deterministic pseudo-random index so runs are reproducible."""
-    import hashlib
-
     digest = hashlib.md5((salt + text).encode()).digest()
     return int.from_bytes(digest[:4], "big") % count if count else 0
 
@@ -117,32 +121,74 @@ def derive(text: str, stratum: str) -> str:
 
 
 def parse_conllu(path: str, limit: int | None):
+    """Sentences as (text, [(form, gold_upos)]).
+
+    Multiword ranges keep their surface form with no gold (their parts have
+    no single reading); empty nodes are skipped. The trailing flush covers
+    files that do not end with a blank line (head-truncated slices)."""
     sentences = []
-    text, tokens = None, []
+    text, tokens, mwt_until = None, [], 0
+
+    def flush():
+        if text and tokens:
+            sentences.append((text, tokens))
+
     for line in open(path, encoding="utf-8"):
         line = line.rstrip("\n")
         if line.startswith("# text = "):
             text = line[len("# text = ") :]
         elif not line:
-            if text and tokens:
-                sentences.append((text, tokens))
-                if limit and len(sentences) >= limit:
-                    break
-            text, tokens = None, []
+            flush()
+            if limit and len(sentences) >= limit:
+                return sentences
+            text, tokens, mwt_until = None, [], 0
         elif line[0].isdigit():
             cols = line.split("\t")
-            if "-" in cols[0] or "." in cols[0]:
-                continue  # multiword ranges and empty nodes
+            if "." in cols[0]:
+                continue  # empty nodes
+            if "-" in cols[0]:
+                start, end = cols[0].split("-")
+                tokens.append((cols[1], None))
+                mwt_until = int(end)
+                continue
+            if int(cols[0]) <= mwt_until:
+                continue  # parts of a multiword range
             tokens.append((cols[1], cols[3]))  # form, gold UPOS
+    flush()
     return sentences
 
 
 def align(app_forms: list[str], gold_forms: list[str]):
-    """Pairs of (app_index, gold_index) where the surface forms agree."""
-    matcher = difflib.SequenceMatcher(a=app_forms, b=gold_forms, autojunk=False)
-    pairs = []
-    for block in matcher.get_matching_blocks():
-        pairs += [(block.a + i, block.b + i) for i in range(block.size)]
+    """One-to-one (app_index, gold_index) pairs.
+
+    spaCy's Alignment pairs tokens through split/merge differences, so the
+    forms our tokenizer deliberately keeps whole (gender-colon words, hyphen
+    compounds) still get gold where the mapping is unambiguous; many-to-one
+    mappings have no single gold reading and drop out. When the character
+    streams differ (a stratum rewrote the text), only identical runs pair.
+    """
+    try:
+        alignment = Alignment.from_strings(app_forms, gold_forms)
+    except ValueError:
+        matcher = difflib.SequenceMatcher(
+            a=app_forms, b=gold_forms, autojunk=False
+        )
+        return [
+            (block.a + i, block.b + i)
+            for block in matcher.get_matching_blocks()
+            for i in range(block.size)
+        ]
+
+    x2y_lengths = alignment.x2y.lengths.tolist()
+    x2y_targets = alignment.x2y.data.reshape(-1).tolist()
+    y2x_lengths = alignment.y2x.lengths.tolist()
+    pairs, offset = [], 0
+    for i, length in enumerate(x2y_lengths):
+        if length == 1:
+            j = x2y_targets[offset]
+            if y2x_lengths[j] == 1:
+                pairs.append((i, j))
+        offset += length
     return pairs
 
 
@@ -236,7 +282,7 @@ def test_corpus_texts():
             continue
         lang = data.get("lang")
         if lang not in ("de", "en", "fr"):
-            langs = context.lang_detection.predict_lang(text.replace("\n", " "))
+            langs = context.lang_detection.predict_lang(text)
             lang = next((l for l in langs if l in ("de", "en", "fr")), None)
         if lang:
             per_lang[LangType(lang)].append(text)
@@ -258,16 +304,21 @@ async def main():
         for lang, texts in sorted(test_corpus_texts().items()):
             stats = Stats()
             await sweep(lang, texts, stats)
-            results[f"tests-{lang}"] = report(
-                f"test corpus {lang} ({len(texts)} texts)", stats
+            results[f"tests-{lang.value}"] = report(
+                f"test corpus {lang.value} ({len(texts)} texts)", stats
             )
+
+    strata = args.strata.split(",")
+    unknown = set(strata) - set(STRATA)
+    if unknown:
+        sys.exit(f"unknown strata: {', '.join(sorted(unknown))} (known: {', '.join(STRATA)})")
 
     if args.conllu:
         if not args.lang:
             sys.exit("--conllu needs --lang")
         sentences = parse_conllu(args.conllu, args.limit)
         gold = [tokens for _, tokens in sentences]
-        for stratum in args.strata.split(","):
+        for stratum in strata:
             texts = [
                 text if stratum == "clean" else derive(text, stratum)
                 for text, _ in sentences

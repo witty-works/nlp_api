@@ -274,6 +274,12 @@ under partial and typo input (no catastrophic degradation for the
 browser-extension case); the grammar stratum mildly raises pronoun/verb
 confusions and is where the lowercase-noun misfires concentrated.
 
+**Re-measured 2026-08-10** after the review fixed the runner's own drift
+(naive table now built from the WordType enum, gold alignment via spaCy's
+Alignment instead of exact-form matching): the headline figures held -
+de `adjective-tags` 440/1001 (44%) model-pos-wrong, en `propn-as-expected`
+477/2042 (23%).
+
 **Limitation:** the sweep runs the auto-detect path. Expectation-dependent
 branches (`article-list`, `adverb-expected`, `hyphen-adjective`,
 `de-verb-as-expected-adjective`, `pronoun-as-expected-noun`,
