@@ -1,0 +1,709 @@
+[
+    {
+        "auto-detected word type": "adv|~a|n||||~n|n||conj||||v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 5,
+                "start": 0,
+                "text": "Sehr geehrter Herr Peter Müller"
+            },
+            {
+                "end": 9,
+                "start": 6,
+                "text": "Frau Prof. Meier"
+            },
+            {
+                "end": 11,
+                "start": 10,
+                "text": "Mrs"
+            },
+            {
+                "end": 13,
+                "start": 12,
+                "text": "Smith"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "Sehr"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "geehrter",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "Sehr",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 0,
+        "tag": "ADV",
+        "text": "Sehr",
+        "whitespace": " ",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "geehrt",
+        "morph": {
+            "Case": "Nom",
+            "Degree": "Pos",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 5,
+        "tag": "ADJA",
+        "text": "geehrter",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Herr",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "NOUN",
+        "start": 14,
+        "tag": "NN",
+        "text": "Herr",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "pnc",
+                "ner": "PER",
+                "token": "Peter"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "pnc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Müller",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Peter",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "PROPN",
+        "start": 19,
+        "tag": "NE",
+        "text": "Peter",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Müller",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "PROPN",
+        "start": 25,
+        "tag": "NE",
+        "text": "Müller",
+        "whitespace": "",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ",",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 31,
+        "tag": "$,",
+        "text": ",",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Mann",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 33,
+        "tag": "NN",
+        "text": "Frau",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Prof."
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Meier"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Frau",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Prof.",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "NOUN",
+        "start": 38,
+        "tag": "NE",
+        "text": "Prof.",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Prof."
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Meier"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Frau",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Meier",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "PROPN",
+        "start": 44,
+        "tag": "NE",
+        "text": "Meier",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Prof."
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Meier"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "cd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Meier",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "und",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 50,
+        "tag": "KON",
+        "text": "und",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "cj",
+                "ner": "PER",
+                "token": "Mrs"
+            },
+            {
+                "dep": "cd",
+                "ner": "",
+                "token": "und"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Prof."
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Meier"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "cj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "und",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Mrs",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "PROPN",
+        "start": 54,
+        "tag": "NE",
+        "text": "Mrs",
+        "whitespace": "",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "geehrter"
+            },
+            {
+                "dep": "nk",
+                "ner": "PER",
+                "token": "Müller"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ","
+            },
+            {
+                "dep": "cj",
+                "ner": "",
+                "token": "Frau"
+            },
+            {
+                "dep": "punct",
+                "ner": "PER",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Herr",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "PER",
+        "pos": "PUNCT",
+        "start": 57,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "PER",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "kommen",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Smith",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Sing"
+        },
+        "ner": "PER",
+        "pos": "PROPN",
+        "start": 59,
+        "tag": "NE",
+        "text": "Smith",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "kommen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "kommen",
+        "morph": {
+            "VerbForm": "Inf"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 65,
+        "tag": "VVFIN",
+        "text": "kommen",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "PER",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "kommen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 71,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

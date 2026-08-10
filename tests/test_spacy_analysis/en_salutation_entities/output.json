@@ -1,0 +1,761 @@
+[
+    {
+        "auto-detected word type": "~pron|~n||~v|||~|v|||||conj|||v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 3,
+                "start": 0,
+                "text": "Our HR Anna"
+            },
+            {
+                "end": 9,
+                "start": 8,
+                "text": "Berlin"
+            },
+            {
+                "end": 12,
+                "start": 10,
+                "text": "Mr. Smith"
+            },
+            {
+                "end": 15,
+                "start": 13,
+                "text": "Dr. Jones"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "Our"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "HR"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "poss",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Anna",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "our",
+        "morph": {
+            "Number": "Plur",
+            "Person": "1",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRP$",
+        "text": "Our",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "Our"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "HR"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Anna",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "hr",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "HR",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "says",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Anna",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "PERSON",
+        "pos": "PROPN",
+        "start": 7,
+        "tag": "NNP",
+        "text": "Anna",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "says",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "say",
+        "morph": {
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 12,
+        "tag": "VBZ",
+        "text": "says",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "says",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ":",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 16,
+        "tag": ":",
+        "text": ":",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "do"
+            },
+            {
+                "dep": "neg",
+                "ner": "",
+                "token": "n't"
+            },
+            {
+                "dep": "dobj",
+                "ner": "GPE",
+                "token": "Berlin"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "aux",
+        "dependent": "Berlin",
+        "emoji_desc": null,
+        "head": "miss",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "do",
+        "morph": {
+            "Mood": "Ind",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 18,
+        "tag": "VBP",
+        "text": "do",
+        "whitespace": "",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "do"
+            },
+            {
+                "dep": "neg",
+                "ner": "",
+                "token": "n't"
+            },
+            {
+                "dep": "dobj",
+                "ner": "GPE",
+                "token": "Berlin"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "neg",
+        "dependent": "Berlin",
+        "emoji_desc": null,
+        "head": "miss",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "not",
+        "morph": {
+            "Polarity": "Neg"
+        },
+        "ner": "",
+        "pos": "PART",
+        "start": 20,
+        "tag": "RB",
+        "text": "n't",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "ccomp",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "says",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "miss",
+        "morph": {
+            "VerbForm": "Inf"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 24,
+        "tag": "VB",
+        "text": "miss",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "do"
+            },
+            {
+                "dep": "neg",
+                "ner": "",
+                "token": "n't"
+            },
+            {
+                "dep": "dobj",
+                "ner": "GPE",
+                "token": "Berlin"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "dobj",
+        "dependent": "Berlin",
+        "emoji_desc": null,
+        "head": "miss",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Berlin",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "GPE",
+        "pos": "PROPN",
+        "start": 29,
+        "tag": "NNP",
+        "text": "Berlin",
+        "whitespace": "",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Anna"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": ":"
+            },
+            {
+                "dep": "ccomp",
+                "ner": "",
+                "token": "miss"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "says",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 35,
+        "tag": ".",
+        "text": ".",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "compound",
+                "ner": "PERSON",
+                "token": "Mr."
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "PERSON",
+                "token": "Jones"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Smith",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Mr.",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "PERSON",
+        "pos": "PROPN",
+        "start": 37,
+        "tag": "NNP",
+        "text": "Mr.",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Smith",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "PERSON",
+        "pos": "PROPN",
+        "start": 41,
+        "tag": "NNP",
+        "text": "Smith",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "compound",
+                "ner": "PERSON",
+                "token": "Mr."
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "PERSON",
+                "token": "Jones"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Smith",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "and",
+        "morph": {
+            "ConjType": "Cmp"
+        },
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 47,
+        "tag": "CC",
+        "text": "and",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "compound",
+                "ner": "PERSON",
+                "token": "Dr."
+            },
+            {
+                "dep": "compound",
+                "ner": "PERSON",
+                "token": "Mr."
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "PERSON",
+                "token": "Jones"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Jones",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Dr.",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "PERSON",
+        "pos": "PROPN",
+        "start": 51,
+        "tag": "NNP",
+        "text": "Dr.",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "compound",
+                "ner": "PERSON",
+                "token": "Mr."
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "and"
+            },
+            {
+                "dep": "conj",
+                "ner": "PERSON",
+                "token": "Jones"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Smith",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Jones",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "PERSON",
+        "pos": "PROPN",
+        "start": 55,
+        "tag": "NNP",
+        "text": "Jones",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "arrive",
+        "morph": {
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 61,
+        "tag": "VBP",
+        "text": "arrive",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "PERSON",
+                "token": "Smith"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrive",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 67,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
