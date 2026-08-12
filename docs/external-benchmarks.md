@@ -45,6 +45,28 @@ Readings:
 
 diversifix's P=0.82/R=0.89 were computed on an annotated GC4 sample that is not published, so no direct comparison is possible; the dictionary recall above measures something adjacent (vocabulary coverage), not the same statistic. INCLURE publishes corpus statistics, not checker metrics.
 
+## What the results mean for the approach
+
+The core trade - precision over coverage - is validated. The should-not-flag results (0/167 neutral German rewrites, 1.1% French true false positives) are the numbers that decide whether a tool that interrupts writers is tolerable, and they held even where the underlying French model misreads médian forms token by token: the deterministic layers deliver the precision regardless of the statistical substrate. On the shared task the detection and suggestion numbers are in the same league as the published academic system, while the suggestions themselves are declined, convention-aware product alternatives rather than dictionary rows.
+
+The binding constraint is coverage economics, not correctness: 35% overall detection on diversifix's broad vocabulary and the 324-term gap list quantify the tail. Coverage grows linearly with editorial hours through the rule editor's evaluation/import loop, which now has license-clean input (the CC0 subsets). The measured boundary of the algorithm is context-dependent rewriting - INCLURE's pronoun/participle/agreement class (86% of their gold) and pair formulas - which rule-per-lemma cannot reach; if that class becomes commercially relevant, the paths are seq2seq fine-tuning on INCLURE's MIT/CC0 pairs or the product's existing LLM-alternatives channel, as an additive layer whose output the deterministic core can check before display.
+
+## Beyond detection: operational comparison
+
+Dimensions that decide shippability, against the realistic alternatives (diversifix's dictionary+heuristics system, an INCLURE-style fine-tuned seq2seq, LLM-based checking):
+
+| dimension | this product | dict+heuristics (diversifix) | fine-tuned seq2seq | LLM API |
+|---|---|---|---|---|
+| inference | CPU-only, ~1.5GB shared via `--preload`, memory-zone-bounded; tens of ms core latency, ~2 checks/s/worker measured incl. harness overhead | comparable (architectural sibling) | GPU serving or ~10x CPU latency per generated sentence | 1-5s round trips, per-token cost |
+| output conventions | runtime request parameter: 9 German endings incl. Inklusivum, fr separators, org term replacements - no redeploy | single convention set | baked into weights; N conventions ~= N models | promptable, but slow/costly/inconsistent |
+| maintenance unit | a rule: data edit + versioned evaluation + DB sync, minutes, non-engineers | same class | retraining cycle: data, GPU, eval infra, regression risk | prompt tuning + vendor drift |
+| testability | 600+ deterministic snapshot/analysis tests; every change is an adjudicable diff | similar in principle | statistical eval only | statistical, vendor-dependent |
+| failure mode | silent miss | silent miss | wrong text generated into the user's document (inherits the measured lemma/tagging instabilities) | hallucinated rewrites |
+| explainability | rule id, category, explanation, literature source per finding | partial | none | none |
+| privacy / hosting | self-hostable, text stays in deployment | self-hostable | self-hostable, GPU cost | text transits third party |
+
+Where the model approaches genuinely win: generalization without editorial effort (the coverage tail), the context-dependent rewrite classes above, robustness to creative misspellings. Those strengths slot into the hybrid architecture as additive layers; on cost, configurability, maintenance, failure safety and auditability - the dimensions a competitor cannot close by fine-tuning - the deterministic core is the moat.
+
 ## Follow-ups
 
 - Feed the 324-term gap list through the rule editor's sentence/import loop (CC0 subsets importable as alternatives, NC subset as inspiration).
