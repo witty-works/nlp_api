@@ -15,7 +15,7 @@ Run:
 |---|---|
 | in-scope targets (role nouns) detected | **75/108 (69%)** |
 | gold rewrite re-flagged on inclusive side (true FP) | **9/800 (1.1%)** |
-| suggestions where target detected: exact / same-lemma / neither | 39 / 8 / 30 of 77 |
+| suggestions where target detected: exact / same-lemma / neither | 58 / 9 / 10 of 77 |
 | any finding on the exclusive side | 53% |
 | residual masculines we flag on their "inclusive" side | 29% |
 
@@ -23,7 +23,7 @@ Readings:
 
 - **Scope, quantified:** 86% of INCLURE's annotated rewrites target pronouns, participles and adjectives (`ceux -> celles et ceux`, `accusés -> accusé.e.s`) - deliberately outside this product's role-noun task. On the shared task (role nouns) recall is 69%.
 - **The médian tagging chaos does not leak into behavior:** despite the fr model reading `développeur·se` as ADV etc., only 1.1% of their gold rewrites get re-flagged. The residual 29% are *their* corpus's leftover generic masculines (minimal pairs fix one span), which we correctly find - a point in our favor, not a false-positive rate.
-- Suggestion "neither" cases are mostly philosophy (their flexion of the same word vs our neutralization) plus an article-prefix artifact (`les agent·es` vs `agent·es`), so 51% exact is a floor.
+- With separators, morphemes and leading articles normalized, 75% of detected targets get their exact gold rewrite among our alternatives (87% counting same-lemma inclusive forms); the remaining 13% are the genuine flexion-vs-neutralization philosophy difference.
 
 ## German - diversifix unified.csv, 500 sampled terms
 
@@ -40,6 +40,10 @@ Readings:
 - The perfect 0/167 on neutral rewrites is the German counterpart of the 1.1% French figure: already-inclusive language stays quiet.
 - Low suggestion overlap is expected: their type-0 alternatives are bare feminine forms; ours are pair forms or curated neutralizations.
 - **Rule-editor mining material:** the 324 undetected terms are coverage candidates. License care: dereko and diversifix rows are CC0 and can be imported; geschicktgendern rows (CC BY-NC-SA) can guide what to cover but their alternative texts must not be copied into the rules DB.
+
+## French - Grouin IFC corpus (hand-annotated inclusive speeches)
+
+44 sentences containing inclusive forms from the VFI (inclusive) versions: **0/44 flagged** on their inclusive spans - the third independent should-not-flag confirmation, on human-written published inclusive French rather than mined pairs. 14/44 sentences carry other gender findings (residual generic masculines in the same political speeches, consistent with the INCLURE residual picture).
 
 ## Relation to their published numbers
 
@@ -69,6 +73,5 @@ Where the model approaches genuinely win: generalization without editorial effor
 
 ## Follow-ups
 
-- Feed the 324-term gap list through the rule editor's sentence/import loop (CC0 subsets importable as alternatives, NC subset as inspiration).
+- Feed the gap list (`.cache/external-eval/de-gap-terms.csv`, 324 terms with license class per row) through the rule editor's sentence/import loop - CC0 rows carry their alternatives and are importable, mixed/NC rows guide coverage only.
 - The pronoun/participle rewrite class INCLURE covers is the measured French roadmap gap, now with 692 gold examples to design against.
-- Fold leading articles in the harness normalizer to un-floor the exact suggestion rate.

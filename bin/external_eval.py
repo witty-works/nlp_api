@@ -79,6 +79,11 @@ def normalize(text: str) -> str:
         text = text.replace(separator, "·")
     # fold '·e·s' / '·rice·s' morpheme spelling onto '·es' / '·rices'
     text = re.sub(r"·([a-zà-ÿ]{1,6})·(s|x)\b", r"·\1\2", text)
+    # fold leading articles: 'les agent·es' should equal 'agent·es'
+    text = re.sub(
+        r"^(les?|la|l'|un|une|des|die|der|das|den|dem|ein|eine|einen)\s+",
+        "", text
+    )
     return text.rstrip(".")
 
 
@@ -322,9 +327,9 @@ async def evaluate_dictionary(path: str, lang: str, config: dict, limit: int | N
                 stats["missed"] += 1
                 if not in_scope:
                     stats["missed_out_of_scope"] += 1
-                if len(misses) < 40:
-                    misses.append({"term": term, "sources": sorted(record["sources"]),
-                                   "in_scope": in_scope})
+                misses.append({"term": term, "sources": sorted(record["sources"]),
+                               "in_scope": in_scope,
+                               "alternatives": sorted(record["alternatives"])[:4]})
 
             for alternative in sorted(record["neutral"])[:1]:
                 neutral = gender_findings(
@@ -361,10 +366,56 @@ async def evaluate_dictionary(path: str, lang: str, config: dict, limit: int | N
     }
 
 
+async def evaluate_ifc(directory: str, lang: str, config: dict, limit: int | None):
+    """Grouin's IFC corpus, inclusive versions (VFI): sentences containing
+    inclusive forms must stay unflagged by gender rules - a should-not-flag
+    sanity set of real published inclusive French."""
+    inclusive_shape = re.compile(r"\w(·|\(e\)|\.e\.|/-?e\b|\w·\w)")
+    sentences = []
+    for path in sorted(pathlib.Path(directory).glob("vfi/*.txt")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for sentence in re.split(r"(?<=[.!?])\s+", text):
+            sentence = " ".join(sentence.split())
+            if 20 < len(sentence) < 600 and inclusive_shape.search(sentence):
+                sentences.append(sentence)
+                if limit and len(sentences) >= limit:
+                    break
+        if limit and len(sentences) >= limit:
+            break
+
+    stats = Counter()
+    flagged = []
+    with TestClient(app) as client:
+        seed_user()
+        for sentence in sentences:
+            stats["sentences"] += 1
+            findings = gender_findings(client, sentence, lang, config)
+            hits = [
+                f for f in findings
+                if inclusive_shape.search(f["text"])
+            ]
+            if hits:
+                stats["inclusive_span_flagged"] += 1
+                if len(flagged) < 20:
+                    flagged.append({"text": sentence[:90],
+                                    "flagged": [f["text"] for f in hits][:3]})
+            if findings and not hits:
+                stats["other_findings"] += 1
+
+    total = max(stats["sentences"], 1)
+    print(f"\n## IFC VFI inclusive sentences ({stats['sentences']}, lang={lang})")
+    print(f"inclusive spans flagged (should be 0): "
+          f"{stats['inclusive_span_flagged']}/{total}"
+          f" ({stats['inclusive_span_flagged'] / total:.1%})")
+    print(f"other gender findings in the same sentences: {stats['other_findings']}/{total}")
+    return {"stats": dict(stats), "flagged_examples": flagged}
+
+
 async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pairs")
     parser.add_argument("--dict")
+    parser.add_argument("--ifc")
     parser.add_argument("--lang", choices=["de", "fr"], required=True)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--label", default=None)
@@ -378,6 +429,8 @@ async def main():
     )
     if args.dict:
         result = await evaluate_dictionary(args.dict, args.lang, config, args.limit)
+    elif args.ifc:
+        result = await evaluate_ifc(args.ifc, args.lang, config, args.limit)
     else:
         if not args.pairs:
             sys.exit("need --pairs or --dict")
