@@ -39,7 +39,7 @@ Readings:
 - diversifix's vocabulary is much broader than person nouns (`Abbrecherquote`-style derived compounds and rare professions from dereko/geschicktgendern); 90% of sampled terms are outside our noun tables, yet 140 of those still get detected through lemma rules.
 - The perfect 0/167 on neutral rewrites is the German counterpart of the 1.1% French figure: already-inclusive language stays quiet.
 - Low suggestion overlap is expected: their type-0 alternatives are bare feminine forms; ours are pair forms or curated neutralizations.
-- **Rule-editor mining material:** the 324 undetected terms are coverage candidates. License care: dereko and diversifix rows are CC0 and can be imported; geschicktgendern rows (CC BY-NC-SA) can guide what to cover but their alternative texts must not be copied into the rules DB.
+- **Rule-editor mining material:** the 324 undetected terms reduce to **260 import candidates** once compounds are grouped by head (117 simplex terms + 143 uncovered heads; `suggested_head` column in the gap CSV). The compound machinery multiplies each head across its family - verified live: `Berufskraftfahrer` matches via the `Fahrer` rule and `Chefärzte` via `Arzt` with umlaut-aware head matching and compound-preserving alternatives (`Chefärzt:innen`) - so heads get imported, compound spellings do not. Twelve compound heads (Arbeiter, Bauer, Helfer, Politiker, Täter, ...) already have rules yet their compounds missed: head matching is conditional (rule flags, noun-table coverage - `Täter` lacks its noun row entirely), so those twelve groups are diagnosis work, not new rules. License care: dereko and diversifix rows are CC0 and can be imported; geschicktgendern rows (CC BY-NC-SA) can guide what to cover but their alternative texts must not be copied into the rules DB.
 
 ## French - Grouin IFC corpus (hand-annotated inclusive speeches)
 
@@ -73,5 +73,5 @@ Where the model approaches genuinely win: generalization without editorial effor
 
 ## Follow-ups
 
-- Feed the gap list (`.cache/external-eval/de-gap-terms.csv`, 324 terms with license class per row) through the rule editor's sentence/import loop - CC0 rows carry their alternatives and are importable, mixed/NC rows guide coverage only.
+- Feed the gap list (`.cache/external-eval/de-gap-terms.csv`, license class and `suggested_head` per row) through the rule editor's sentence/import loop: import the ~117 simplex terms and ~143 uncovered heads, diagnose the 12 covered-head groups, and let head matching cover the compound families. CC0 rows carry their alternatives and are importable, mixed/NC rows guide coverage only.
 - The pronoun/participle rewrite class INCLURE covers is the measured French roadmap gap, now with 692 gold examples to design against.
