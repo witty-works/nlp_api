@@ -1768,6 +1768,95 @@ def test_rule_patterns():
         assert response_content == expected
 
 
+def test_rule_debug_gendered_declension_fallback():
+    # Gendered pairs whose declensions the nouns DB does not carry are
+    # synthesized for the regular patterns (app.nouns.synthesize_gendered_pair)
+    # instead of bailing with "Declension ... missing" and no alternatives.
+    with TestClient(app) as client:
+        # Weak masculine n-declension: masculine oblique forms end in -n.
+        request_data = {
+            "text": "Der Guatemalteke kam am Morgen.",
+            "lang": "de",
+            "lemma": "Guatemalteke",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Guatemalteke~Guatemaltekin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        finding = response_content[0]
+        assert finding["text"] == "Guatemalteke"
+        assert finding["subcategory"] == "titles"
+        assert finding["alternatives"] == [
+            {
+                "text": "Guatemaltek*in",
+                "male_form": "Guatemalteken",
+                "female_form": "Guatemaltekin",
+                "gender_role": "inclusive_gender",
+            },
+            {
+                "text": "Guatemaltekin/Guatemalteken",
+                "male_form": "Guatemalteken",
+                "female_form": "Guatemaltekin",
+                "gender_role": "binary_gender",
+            },
+        ]
+
+        # -er class: masculine plural equals the base form.
+        request_data = {
+            "text": "Die Temposünder werden verwarnt.",
+            "lang": "de",
+            "lemma": "Temposünder",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Temposünder~Temposünderin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        finding = response_content[0]
+        assert finding["text"] == "Temposünder"
+        assert finding["alternatives"] == [
+            {
+                "text": "Temposünder*innen",
+                "male_form": "Temposünder",
+                "female_form": "Temposünderinnen",
+                "gender_role": "inclusive_gender",
+            },
+            {
+                "text": "Temposünderinnen und Temposünder",
+                "male_form": "Temposünder",
+                "female_form": "Temposünderinnen",
+                "gender_role": "binary_gender",
+            },
+        ]
+
+
 @pytest.mark.parametrize(
     "spacy_analysis_dir",
     get_dirs("tests/test_spacy_analysis"),
