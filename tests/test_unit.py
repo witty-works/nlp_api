@@ -272,3 +272,43 @@ def test_rule_dynamic_is_not_shared_between_rules():
 
     assert second.dynamic.false_positives == []
     assert second.dynamic.subcategory is None
+
+
+def test_synthesize_gendered_pair_er_class():
+    from app.nouns import synthesize_gendered_pair
+
+    masculine, feminine = synthesize_gendered_pair("Wiener", "Wienerin")
+    assert masculine["sg_nom"] == "Wiener"
+    assert masculine["sg_gen"] == "Wieners"
+    assert masculine["pl_nom"] == "Wiener"
+    assert masculine["pl_dat"] == "Wienern"
+    assert masculine["gender_1"] == "masculine"
+    assert feminine["sg_dat"] == "Wienerin"
+    assert feminine["pl_nom"] == "Wienerinnen"
+    assert feminine["collective_noun"] is None
+
+
+def test_synthesize_gendered_pair_weak_masculines():
+    from app.nouns import synthesize_gendered_pair
+
+    masculine, feminine = synthesize_gendered_pair("Kopte", "Koptin")
+    assert masculine["sg_nom"] == "Kopte"
+    assert masculine["sg_acc"] == "Kopten"
+    assert masculine["pl_nom"] == "Kopten"
+    assert feminine["pl_nom"] == "Koptinnen"
+
+    masculine, feminine = synthesize_gendered_pair("Hacktivist", "Hacktivistin")
+    assert masculine["sg_dat"] == "Hacktivisten"
+    assert masculine["pl_gen"] == "Hacktivisten"
+    assert feminine["sg_nom"] == "Hacktivistin"
+
+
+def test_synthesize_gendered_pair_never_guesses():
+    from app.nouns import synthesize_gendered_pair
+
+    # Umlaut and other irregular pairs are not derivable from the pair alone.
+    assert synthesize_gendered_pair("Arzt", "Ärztin") is None
+    assert synthesize_gendered_pair("Koch", "Köchin") is None
+    assert synthesize_gendered_pair("Kunde", "Kundin") is not None
+    assert synthesize_gendered_pair("Steuermann", "Steuerfrau") is None
+

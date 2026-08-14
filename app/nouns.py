@@ -22,6 +22,87 @@ from logging import Logger
 from german_nouns.lookup import Nouns as GermanNouns
 
 
+def _synthesized_noun_forms(
+    base: str, gender: str, singular: dict, plural: dict, male: str, female: str
+) -> dict:
+    return {
+        "gender_1": gender,
+        "sg_nom": singular["nom"],
+        "sg_acc": singular["acc"],
+        "sg_dat": singular["dat"],
+        "sg_gen": singular["gen"],
+        "pl_nom": plural["nom"],
+        "pl_acc": plural["acc"],
+        "pl_dat": plural["dat"],
+        "pl_gen": plural["gen"],
+        "collective_noun": None,
+        "collective_noun_2": None,
+        "sg_dat_2": None,
+        "sg_gen_2": None,
+        "base_form": base,
+        "female_form": female,
+        "male_form": male,
+    }
+
+
+def synthesize_gendered_pair(
+    male_form: str, female_form: str
+) -> tuple[dict, dict] | None:
+    """Declensions derived from a regular gendered pair "X~Xin".
+
+    Only for the gendered-pair path: there the pair itself is the evidence
+    that the derivation is regular. Never use this on arbitrary tokens -
+    synthesizing e.g. a gender for any -er/-e word would corrupt article
+    logic ("die Butter"). Returns (masculine, feminine) form dicts in the
+    shape fetch_declensions returns, or None when the pair matches no
+    known-regular pattern - never guess.
+    """
+    if male_form.endswith("er") and female_form == male_form + "in":
+        # Agent nouns and demonyms: Wiener/Wienerin, Temposünder ...
+        masculine = _synthesized_noun_forms(
+            male_form,
+            "masculine",
+            {"nom": male_form, "acc": male_form, "dat": male_form,
+             "gen": male_form + "s"},
+            {"nom": male_form, "acc": male_form, "dat": male_form + "n",
+             "gen": male_form},
+            male_form,
+            female_form,
+        )
+    else:
+        if male_form.endswith("e") and female_form == male_form[:-1] + "in":
+            # Weak masculine, n-declension: Kopte/Koptin, Guatemalteke ...
+            oblique = male_form + "n"
+        elif male_form.endswith(("ist", "ent", "ant")) and (
+            female_form == male_form + "in"
+        ):
+            # Weak masculine, en-declension: Hacktivist/Hacktivistin ...
+            oblique = male_form + "en"
+        else:
+            return None
+
+        masculine = _synthesized_noun_forms(
+            male_form,
+            "masculine",
+            {"nom": male_form, "acc": oblique, "dat": oblique, "gen": oblique},
+            {"nom": oblique, "acc": oblique, "dat": oblique, "gen": oblique},
+            male_form,
+            female_form,
+        )
+
+    feminine = _synthesized_noun_forms(
+        female_form,
+        "feminine",
+        {"nom": female_form, "acc": female_form, "dat": female_form,
+         "gen": female_form},
+        {"nom": female_form + "nen", "acc": female_form + "nen",
+         "dat": female_form + "nen", "gen": female_form + "nen"},
+        male_form,
+        female_form,
+    )
+    return masculine, feminine
+
+
 class Nouns:
     settings: Settings
     logger: Logger

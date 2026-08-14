@@ -13,7 +13,7 @@ from app.models import (
 from app.settings import Settings
 from app.db import Db
 from app.model import Model
-from app.nouns import Nouns
+from app.nouns import Nouns, synthesize_gendered_pair
 from app.verbs import Verbs
 from app.adjectives import Adjectives
 from app.categories import is_sub_category_enabled, make_category_advanced
@@ -967,23 +967,53 @@ class Alternatives:
                 male_forms = await self.nouns.german_noun_lookup(
                     male_form, None, prefix
                 )
-                if male_forms is None or target_form not in male_forms:
+                female_forms = (
+                    await self.nouns.german_noun_lookup(female_form, None, prefix)
+                    if female_form
+                    else None
+                )
+
+                # A row can be missing entirely, or present with the requested
+                # column NULL - both must count as missing, or the None flows
+                # into string concatenation below. For regular pairs the pair
+                # itself determines the declension, so synthesize before
+                # giving up.
+                if (
+                    male_forms is None
+                    or male_forms.get(target_form) is None
+                    or female_forms is None
+                    or female_forms.get(target_form) is None
+                ) and female_form:
+                    synthesized = synthesize_gendered_pair(male_form, female_form)
+                    if synthesized is not None:
+                        synthetic_male, synthetic_female = synthesized
+                        if prefix:
+                            for forms in (synthetic_male, synthetic_female):
+                                for key, value in forms.items():
+                                    if not key.startswith("gender") and value:
+                                        forms[key] = prefix + value
+                        if male_forms is None or male_forms.get(target_form) is None:
+                            male_forms = synthetic_male
+                        if (
+                            female_forms is None
+                            or female_forms.get(target_form) is None
+                        ):
+                            female_forms = synthetic_female
+
+                if male_forms is None or male_forms.get(target_form) is None:
                     male_forms = None
                     self.logger.error(
                         f"Declension '{target_form}' missing for '{word}'{token_debug}"
                     )
                     break
 
-                if female_form is None:
+                if not female_form:
                     self.logger.error(
                         f"Declension data missing for other form in '{word}'{token_debug}"
                     )
                     return [], False
 
-                female_forms = await self.nouns.german_noun_lookup(
-                    female_form, None, prefix
-                )
-                if female_forms is None or target_form not in female_forms:
+                if female_forms is None or female_forms.get(target_form) is None:
                     male_forms = True
                     self.logger.error(
                         f"Declension '{target_form}' missing for '{female_form}'{token_debug}"
