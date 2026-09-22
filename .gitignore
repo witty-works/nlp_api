@@ -9,6 +9,10 @@ training_data/en-GB
 
 analyze_rules/*
 
+# Benchmark corpora, fetched rather than vendored: the geschicktgendern subset
+# of diversifix is CC BY-NC-SA and must not enter the repository.
+.cache/
+
 __pycache__/
 *.py[cod]
 *$py.class
