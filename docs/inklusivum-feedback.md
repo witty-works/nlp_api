@@ -2,54 +2,31 @@
 
 Wir bauen eine Schreibhilfe, die Texte auf geschlechtergerechte Sprache prüft und Vorschläge macht. Das Inklusivum ist dort inzwischen eine der wählbaren Formen: Substantive, Artikel, Adjektive und Possessivformen werden automatisch gebildet, und Text, der bereits im Inklusivum geschrieben ist, wird als solcher erkannt und nicht mehr angemerkt.
 
-Grundlage sind ausschließlich die Seiten des Vereins, vor allem [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/) und [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/).
+Grundlage waren zunächst ausschließlich die Seiten des Vereins, vor allem [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/) und [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/). An einigen Stellen mussten wir Formen ableiten, weil wir sie dort nicht gefunden haben.
 
-An einigen Stellen mussten wir Formen aus dem übrigen System ableiten, weil wir sie dort nicht gefunden haben. Diese Stellen sind unten aufgeführt. Wir haben sie im Code als Annahmen markiert und würden sie gerne durch eine Auskunft ersetzen, bevor mehr darauf aufbaut.
+Inzwischen haben wir diese Stellen mit dem [Inklusivomaten](https://automat.geschlechtsneutral.net/) und seinem [Quellcode](https://github.com/LinusWemmer/gn_tool) abgeglichen. Alle unsere Annahmen haben sich dort bestätigt. Die Liste steht unten trotzdem, weil der Quellcode zeigt, was gebaut wurde, und nicht unbedingt, was der Verein empfiehlt — und weil die betreffenden Formen auf den Seiten weiterhin fehlen.
 
-## Formen, die wir abgeleitet haben
+## Abgeleitete Formen, die sich im Inklusivomaten bestätigt haben
 
-### 1. Genitiv Plural der Substantive
+Für uns sind diese Punkte damit geklärt. Wir nennen sie hier vor allem, falls die Seiten ergänzt werden sollen.
 
-Der Dativ Plural ist belegt (*den Schülernen*, *den Kundernen*). Für den Genitiv Plural haben wir nichts gefunden und nehmen an, dass er wie im übrigen Deutschen mit dem Nominativ Plural zusammenfällt, also *ders Schülerne*.
+1. **Genitiv Plural der Substantive.** Fällt mit dem Nominativ Plural zusammen (*der Schülerne*). Auf den Seiten ist nur der Dativ Plural belegt (*den Schülernen*).
+2. **Artikel im Plural.** Bleiben unverändert, auch im Genitiv: also *der Schülerne* und nicht *ders Schülerne*. Das ergibt sich aus dem Grundsatz, dass der Plural bereits geschlechtsneutral ist, steht aber an keiner Stelle ausdrücklich für den Genitiv.
+3. **Dativ von *ens* vor einem inklusivischen Substantiv.** *enserm*, nach dem ein-Paradigma. Vor einem gewöhnlichen Substantiv bleibt dagegen *ensem* (*an ensem Geburtstag*). Dass es hier zwei Formen gibt, ist also so gewollt.
+4. **Reflexivpronomen.** Bleibt *sich*.
+5. **Genitiv und Dativ der Ausnahmeformen.** Folgen der allgemeinen Regel, also Genitiv Singular *Prinzes*, Dativ Plural *Prinzernen*.
+6. **Schwache Deklination.** Entfällt vollständig: *den Studenten* wird zu *de Studente*.
+7. **Genitiv des alleinstehenden Artikelpronomens.** *einers*. Die leere Zelle in den Deklinationstabellen ist eine Lücke in der Tabelle, keine fehlende Form.
 
-Ist das richtig?
+## Zwei Stellen, die sich widersprechen
 
-### 2. Dativ von *ens* vor einem inklusivischen Substantiv
+### *deselben* statt *deselbe*
 
-Wenn das besessene Substantiv selbst inklusivisch ist, folgt *ens* dem ein-Paradigma; belegt ist der Genitiv (*ensers jüngeren Geschwisters*, *ensers ehemaligen Nachbares*). Für den Dativ nehmen wir analog *enserm* an.
+In der Aufzählung zu *derjenige*/*derselbe* steht als Grundform *deselbe*, in der Deklinationsreihe an erster Stelle aber *deselben* (*deselben/dersselben/dermselben/deselbe*). Der Inklusivomat bildet im Nominativ *deselbe*. Das sieht nach einem Tippfehler auf der Seite aus.
 
-Vor einem gewöhnlichen Substantiv ist der Dativ dagegen belegt (*an ensem Geburtstag*), sodass es hier zwei verschiedene Formen gibt. Ist das so gewollt?
+### *Sehr geehrte Damen und Herren*
 
-### 3. Reflexivpronomen
-
-Zum Reflexivpronomen haben wir nichts gefunden. *sich* ist im Deutschen bereits geschlechtsunabhängig, deshalb nehmen wir an, dass es unverändert bleibt.
-
-Trifft das zu, oder gibt es dazu eine Empfehlung, die wir übersehen haben?
-
-### 4. Genitiv und Dativ der Ausnahmeformen
-
-Die Ausnahmeseite nennt für Wörter wie *Prinze*, *Braute* oder *Hexere* Singular und Plural, wiederholt aber die allgemeinen Endungen nicht. Wir wenden sie weiterhin an, also Genitiv Singular *Prinzes* und Dativ Plural *Prinzernen*.
-
-Gilt das, oder gibt es Ausnahmen auch bei den Kasusendungen?
-
-### 5. Schwache Deklination (n-Deklination)
-
-*Student* wird zu *Studente*. Wir nehmen an, dass die schwache Deklination damit vollständig entfällt, der Akkusativ also *de Studente* lautet und nicht *de Studenten*, weil auf der Seite keine Ausnahme dafür genannt wird.
-
-Ist das so gemeint?
-
-### 6. Genitiv des alleinstehenden Artikelpronomens
-
-Die Deklinationstabellen führen das alleinstehende Artikelpronomen mit *einey*
-(Nominativ und Akkusativ) und *einerm* (Dativ); die Genitivzelle ist leer. Wir
-nehmen analog zur attributiven Form (*einers Schüleres*) auch alleinstehend
-*einers* an, etwa in „der Vorschlag einers von euch".
-
-Bedeutet die leere Zelle, dass die Form nicht vorgesehen ist, oder gilt *einers*?
-
-### 7. Vermutlicher Tippfehler bei *deselbe*
-
-In der Aufzählung zu *derjenige*/*derselbe* steht als Grundform *deselbe*, in der Deklinationsreihe an erster Stelle aber *deselben* (*deselben/dersselben/dermselben/deselbe*). Nach dem Muster von *dejenige* und nach der Analogie zu *dieselbe/derselben/derselben/dieselbe* würden wir im Nominativ *deselbe* erwarten.
+Die Seiten empfehlen *Sehr geehrtes Team von [Organisation]*. Der Inklusivomat schreibt *Sehr geehrte Leute*. Welche Form ist die empfohlene? Für ein Werkzeug, das genau einen Vorschlag anzeigt, ist das ein Unterschied.
 
 ## Was die Umsetzung erleichtern würde
 
@@ -62,7 +39,7 @@ Auf der Ausnahmeseite stehen zwei Gruppen, die sich vollständig als Regel besch
 - **Romanische Lehnwörter**: die Endung wird ersetzt, nicht ergänzt (*Alumnus*/*Alumna* → *Alumne*, *Ballerino* → *Ballerine*).
 - **Substantive auf *-erer***: das *-in* ersetzt das zweite *-er*, deshalb ist der gemeinsame Stamm kürzer (*Wanderer*/*Wanderin* → *Wandere*).
 
-Als Regel formuliert decken sie auch Wörter ab, die auf der Seite nicht stehen, etwa *Latino*, *Guerillero*, *Libero* oder *Filipino*. Vielleicht wäre es für Lesende hilfreich, diese beiden Gruppen ausdrücklich als Regel zu benennen.
+Als Regel formuliert decken sie auch Wörter ab, die auf der Seite nicht stehen. Der Inklusivomat führt die romanischen Lehnwörter als feste Liste (*Alumn-*, *Ballerin-*, *Emerit-*, *Filipin-*, *Gueriller-*, *Latin-*, *Liber-*, *Mafios-*, *Torer-*); als Regel gilt dasselbe Muster auch für Wörter außerhalb dieser Liste. Vielleicht wäre es für Lesende hilfreich, die beiden Gruppen ausdrücklich als Regel zu benennen.
 
 ### Formulierungen, bei denen sich der Satzbau ändert
 
@@ -70,9 +47,9 @@ An mehreren Stellen ersetzt das Inklusivum nicht ein Wort durch ein anderes, son
 
 - *Liebe Kollegin, lieber Kollege* wird zu einer einzigen Anrede.
 - *Kolleginnen und Kollegen* wird zu *Kollegerne*, die Aufzählung entfällt also.
-- *Sehr geehrte Damen und Herren* wird zu *Sehr geehrtes Team von …*.
+- *Sehr geehrte Damen und Herren* wird zu einer einzigen Formel.
 
-Für ein Werkzeug ist das ein anderer Fall als eine Wortersetzung, weil ein Teil des Satzes wegfällt und die Ersetzung sich nicht mehr einer einzelnen Textstelle zuordnen lässt. Wir zeigen solche Vorschläge derzeit nicht an, weil wir sie nicht verlässlich abgrenzen können.
+Für ein Werkzeug ist das ein anderer Fall als eine Wortersetzung, weil ein Teil des Satzes wegfällt und die Ersetzung sich nicht mehr einer einzelnen Textstelle zuordnen lässt. Der Inklusivomat löst das, indem er den ganzen Text umschreibt; wir zeigen einzelne Vorschläge an und müssen die Fundstelle deshalb über beide Glieder und die Konjunktion legen.
 
 Gibt es dazu eine Empfehlung, etwa eine Liste der häufigen Paarformeln mit ihrer inklusivischen Entsprechung? Das wäre für uns der direkteste Weg, diese Fälle sauber abzudecken, und vermutlich auch für Menschen hilfreich, die die Formeln im Alltag ersetzen wollen.
 
@@ -82,7 +59,7 @@ Verwandt damit: Für *Herr* und *Frau* empfiehlt die Seite *Person [Nachname]* o
 
 ### Maschinenlesbare Tabellen
 
-Die Deklinationstabellen und die Listen der bereits geschlechtsneutralen Personenwörter und der Ausnahmeformen mussten wir aus dem HTML herauslösen. Eine zusätzliche Fassung als CSV oder JSON, auch ohne Stabilitätsgarantie, würde solche Übernahmen deutlich verlässlicher machen und Übertragungsfehler vermeiden.
+Die Deklinationstabellen und die Listen der bereits geschlechtsneutralen Personenwörter und der Ausnahmeformen mussten wir aus dem HTML herauslösen. Im Inklusivomaten liegen dieselben Daten als Python-Listen vor. Eine zusätzliche Fassung als CSV oder JSON, auch ohne Stabilitätsgarantie, würde solche Übernahmen deutlich verlässlicher machen und Übertragungsfehler vermeiden.
 
 ### Empfohlen oder gleichwertig
 
@@ -94,7 +71,7 @@ Da sich Empfehlungen aus guten Gründen weiterentwickeln, wäre ein Hinweis auf 
 
 ### Bereits geschlechtsneutrale Personenwörter
 
-Wir führen dazu eine eigene Liste, weil unser Wörterbuch für einige dieser Wörter eine feminine Form kennt (*Gästin* zu *Gast*) und sie sonst gebeugt würden. Die Liste auf der Vereinsseite ist ausdrücklich nicht abschließend („u. a.“). Falls es dazu eine vollständigere Sammlung gibt, wäre sie für uns sehr nützlich.
+Wir führen dazu eine eigene Liste, weil unser Wörterbuch für einige dieser Wörter eine feminine Form kennt (*Gästin* zu *Gast*) und sie sonst gebeugt würden. Die Liste auf der Vereinsseite ist ausdrücklich nicht abschließend („u. a."). Falls es dazu eine vollständigere Sammlung gibt, wäre sie für uns sehr nützlich.
 
 ## Rückmeldung
 
