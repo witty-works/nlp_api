@@ -2,31 +2,40 @@
 
 Wir bauen eine Schreibhilfe, die Texte auf geschlechtergerechte Sprache prüft und Vorschläge macht. Das Inklusivum ist dort inzwischen eine der wählbaren Formen: Substantive, Artikel, Adjektive und Possessivformen werden automatisch gebildet, und Text, der bereits im Inklusivum geschrieben ist, wird als solcher erkannt und nicht mehr angemerkt.
 
-Grundlage waren zunächst ausschließlich die Seiten des Vereins, vor allem [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/) und [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/). An einigen Stellen mussten wir Formen ableiten, weil wir sie dort nicht gefunden haben.
+Grundlage waren zunächst [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/) und [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/). An einigen Stellen mussten wir Formen ableiten, weil wir sie dort nicht gefunden haben. Inzwischen haben wir diese Stellen mit dem [Inklusivomaten](https://automat.geschlechtsneutral.net/) und seinem [Quellcode](https://github.com/LinusWemmer/gn_tool) abgeglichen; alle unsere Annahmen bis auf eine haben sich dort bestätigt.
 
-Inzwischen haben wir diese Stellen mit dem [Inklusivomaten](https://automat.geschlechtsneutral.net/) und seinem [Quellcode](https://github.com/LinusWemmer/gn_tool) abgeglichen. Alle unsere Annahmen haben sich dort bestätigt. Die Liste steht unten trotzdem, weil der Quellcode zeigt, was gebaut wurde, und nicht unbedingt, was der Verein empfiehlt — und weil die betreffenden Formen auf den Seiten weiterhin fehlen.
+Dieses Dokument nennt die Stellen, an denen wir beim Umsetzen stehen geblieben sind. Es ist als Rückmeldung gedacht und nicht als Fehlerliste: das System ist ausführlich dokumentiert, und die meisten dieser Lücken fallen vermutlich nur auf, wenn man versucht, es vollständig in Code zu gießen.
 
-## Abgeleitete Formen, die sich im Inklusivomaten bestätigt haben
+## Wo die Dokumentation ergänzt werden könnte
 
-Für uns sind diese Punkte damit geklärt. Wir nennen sie hier vor allem, falls die Seiten ergänzt werden sollen.
+Nach Seite geordnet. Wo wir eine Form angenommen haben, steht sie dabei, damit erkennbar ist, ob wir richtig geraten haben.
 
-1. **Genitiv Plural der Substantive.** Fällt mit dem Nominativ Plural zusammen (*der Schülerne*). Auf den Seiten ist nur der Dativ Plural belegt (*den Schülernen*).
-2. **Artikel im Plural.** Bleiben unverändert, auch im Genitiv: also *der Schülerne* und nicht *ders Schülerne*. Das ergibt sich aus dem Grundsatz, dass der Plural bereits geschlechtsneutral ist, steht aber an keiner Stelle ausdrücklich für den Genitiv.
-3. **Dativ von *ens* vor einem inklusivischen Substantiv.** *enserm*, nach dem ein-Paradigma. Vor einem gewöhnlichen Substantiv bleibt dagegen *ensem* (*an ensem Geburtstag*). Dass es hier zwei Formen gibt, ist also so gewollt.
-4. **Reflexivpronomen.** Bleibt *sich*.
-5. **Genitiv und Dativ der Ausnahmeformen.** Folgen der allgemeinen Regel, also Genitiv Singular *Prinzes*, Dativ Plural *Prinzernen*.
-6. **Schwache Deklination.** Entfällt vollständig: *den Studenten* wird zu *de Studente*.
-7. **Genitiv des alleinstehenden Artikelpronomens.** *einers*. Die leere Zelle in den Deklinationstabellen ist eine Lücke in der Tabelle, keine fehlende Form.
+### Gesamtsystem
 
-## Zwei Stellen, die sich widersprechen
+1. **Genitiv Plural der Substantive.** Der Abschnitt zu den regelmäßigen Substantiven nennt Singular, Genitiv Singular (*einers Schüleres*), Plural und Dativ Plural (*den Schülernen*). Der Genitiv Plural fehlt. Wir nehmen an, dass er mit dem Nominativ Plural zusammenfällt, also *der Schülerne*.
+2. **Reflexivpronomen.** Kommt auf der Seite nicht vor. *sich* ist im Deutschen bereits geschlechtsunabhängig, deshalb nehmen wir an, dass es unverändert bleibt. Ein Halbsatz dazu würde die Frage erledigen.
+3. **Dativ von *ens* vor einem inklusivischen Substantiv.** Belegt ist der Genitiv (*ensers jüngeren Geschwisters*). Für den Dativ nehmen wir analog *enserm* an. Vor einem gewöhnlichen Substantiv bleibt es dagegen *ensem* (*an ensem Geburtstag*), es gibt hier also zwei verschiedene Formen. Dass das so gewollt ist, steht nirgends ausdrücklich.
+4. **Schwache Deklination.** *Student* → *Studente* steht als Beispiel, aber nicht, dass die n-Deklination damit vollständig entfällt. Wir nehmen an, dass der Akkusativ *de Studente* lautet und nicht *de Studenten*.
 
-### *deselben* statt *deselbe*
+### Deklinationstabellen
 
-In der Aufzählung zu *derjenige*/*derselbe* steht als Grundform *deselbe*, in der Deklinationsreihe an erster Stelle aber *deselben* (*deselben/dersselben/dermselben/deselbe*). Der Inklusivomat bildet im Nominativ *deselbe*. Das sieht nach einem Tippfehler auf der Seite aus.
+5. **Keine Tabelle für Substantive.** Personalpronomen, Artikel, Adjektive und die sonstigen Pronomen haben je eine Tabelle; das Wort *Substantiv* kommt auf der Seite gar nicht vor. Die Endungen stehen stattdessen im Fließtext des Gesamtsystems. Eine Substantivtabelle an dieser Stelle würde Punkt 1 miterledigen.
+6. **Kein Plural in den Tabellen.** Alle Reihen sind Singular. Gerade im Plural wäre eine Zeile hilfreich, weil dort Artikel, Adjektive und Pronomen unverändert bleiben — das ist die Information, die eine Pluralzeile auf einen Blick zeigen würde. Wir hatten zwischenzeitlich *ders Schülerne* angenommen, bis klar war, dass der Plural den gewöhnlichen Artikel behält: *der Schülerne*.
+7. **Personalpronomen ohne Genitivzeile.** Die Tabelle führt Nominativ, Possessivform, Dativ und Akkusativ. Die Genitivform *enser* steht nur im Fließtext des Gesamtsystems („Wir gedenken enser."). Eine Zeile in der Tabelle wäre konsistenter.
+8. **Artikelpronomen, Genitiv.** Die Zelle enthält „—", und zwar in allen vier Spalten. Wir haben das zunächst als Lücke in der Tabelle gelesen und analog zur attributiven Form *einers* angenommen. Dass der Strich bedeutet, dass die Form nicht vorgesehen ist, wurde uns erst durch den Vergleich der Spalten klar. Eine Fußnote dazu würde diesen Fehlschluss ausschließen.
+9. **Vermutlicher Tippfehler.** In der Aufzählung zu *derjenige*/*derselbe* steht als Grundform *deselbe*, in der Deklinationsreihe an erster Stelle aber *deselben*. Nach dem Muster von *dejenige* und nach der Analogie zu *dieselbe* würden wir im Nominativ *deselbe* erwarten; der Inklusivomat bildet ebenfalls *deselbe*.
 
-### *Sehr geehrte Damen und Herren*
+### Ausnahmeformen
 
-Die Seiten empfehlen *Sehr geehrtes Team von [Organisation]*. Der Inklusivomat schreibt *Sehr geehrte Leute*. Welche Form ist die empfohlene? Für ein Werkzeug, das genau einen Vorschlag anzeigt, ist das ein Unterschied.
+10. **Kasusendungen.** Für Wörter wie *Prinze*, *Braute* oder *Hexere* sind Singular und Plural genannt; das Wort *Genitiv* kommt auf der Seite nicht vor. Wir wenden die allgemeinen Endungen weiter an, also Genitiv Singular *Prinzes* und Dativ Plural *Prinzernen*. Ein Satz, dass die allgemeinen Regeln auch für die Ausnahmen gelten, würde das absichern.
+
+### Anredeformen
+
+11. **Der Inklusivomat weicht von der Seite ab.** Die Seite empfiehlt für *Sehr geehrte Damen und Herren* die Formen *Sehr geehrtes Team von [Organisationsname]*, *Sehr geehrtes [Organisationsname]-Team* oder *Guten Tag!*. Der Inklusivomat schreibt stattdessen *Sehr geehrte Leute*. Für ein Werkzeug, das genau einen Vorschlag anzeigt, ist damit offen, welche Form die empfohlene ist.
+
+### Seitenübergreifend
+
+12. **Querverweise aus dem Gesamtsystem.** Wir haben lange nur mit Gesamtsystem, Deklinationstabellen und Ausnahmeformen gearbeitet und dabei übersehen, dass es eigene Seiten zu [Anredeformen](https://geschlechtsneutral.net/geschlechtsneutrale-anredeformen/) und [Neologismen](https://geschlechtsneutral.net/neologismen/) gibt — beide beantworten Fragen, die wir uns selbst gestellt hatten. Ein Verweis an der passenden Stelle im Gesamtsystem („zu Anreden siehe …") würde solchen Umwegen vorbeugen. Das ist unser Versäumnis und keines der Seite; wir erwähnen es, weil andere Umsetzungen vermutlich denselben Weg nehmen.
 
 ## Was die Umsetzung erleichtern würde
 
@@ -39,23 +48,13 @@ Auf der Ausnahmeseite stehen zwei Gruppen, die sich vollständig als Regel besch
 - **Romanische Lehnwörter**: die Endung wird ersetzt, nicht ergänzt (*Alumnus*/*Alumna* → *Alumne*, *Ballerino* → *Ballerine*).
 - **Substantive auf *-erer***: das *-in* ersetzt das zweite *-er*, deshalb ist der gemeinsame Stamm kürzer (*Wanderer*/*Wanderin* → *Wandere*).
 
-Als Regel formuliert decken sie auch Wörter ab, die auf der Seite nicht stehen. Der Inklusivomat führt die romanischen Lehnwörter als feste Liste (*Alumn-*, *Ballerin-*, *Emerit-*, *Filipin-*, *Gueriller-*, *Latin-*, *Liber-*, *Mafios-*, *Torer-*); als Regel gilt dasselbe Muster auch für Wörter außerhalb dieser Liste. Vielleicht wäre es für Lesende hilfreich, die beiden Gruppen ausdrücklich als Regel zu benennen.
+Als Regel formuliert decken sie auch Wörter ab, die auf der Seite nicht stehen. Der Inklusivomat führt die romanischen Lehnwörter als feste Liste (*Alumn-*, *Ballerin-*, *Emerit-*, *Filipin-*, *Gueriller-*, *Latin-*, *Liber-*, *Mafios-*, *Torer-*); als Regel gilt dasselbe Muster auch darüber hinaus. Vielleicht wäre es für Lesende hilfreich, die beiden Gruppen ausdrücklich als Regel zu benennen.
 
-### Formulierungen, bei denen sich der Satzbau ändert
+### Paarformeln
 
-An mehreren Stellen ersetzt das Inklusivum nicht ein Wort durch ein anderes, sondern fasst zwei Formen zu einer zusammen:
+An mehreren Stellen ersetzt das Inklusivum nicht ein Wort durch ein anderes, sondern fasst zwei Formen zu einer zusammen: *Kolleginnen und Kollegen* wird zu *Kollegerne*, die Aufzählung entfällt also. Für ein Werkzeug ist das ein anderer Fall als eine Wortersetzung, weil ein Teil des Satzes wegfällt und sich die Ersetzung nicht mehr einer einzelnen Textstelle zuordnen lässt.
 
-- *Liebe Kollegin, lieber Kollege* wird zu einer einzigen Anrede.
-- *Kolleginnen und Kollegen* wird zu *Kollegerne*, die Aufzählung entfällt also.
-- *Sehr geehrte Damen und Herren* wird zu einer einzigen Formel.
-
-Für ein Werkzeug ist das ein anderer Fall als eine Wortersetzung, weil ein Teil des Satzes wegfällt und die Ersetzung sich nicht mehr einer einzelnen Textstelle zuordnen lässt. Der Inklusivomat löst das, indem er den ganzen Text umschreibt; wir zeigen einzelne Vorschläge an und müssen die Fundstelle deshalb über beide Glieder und die Konjunktion legen.
-
-Gibt es dazu eine Empfehlung, etwa eine Liste der häufigen Paarformeln mit ihrer inklusivischen Entsprechung? Das wäre für uns der direkteste Weg, diese Fälle sauber abzudecken, und vermutlich auch für Menschen hilfreich, die die Formeln im Alltag ersetzen wollen.
-
-### Anredeformen als Liste
-
-Verwandt damit: Für *Herr* und *Frau* empfiehlt die Seite *Person [Nachname]* oder den vollständigen Namen. Eine zusammenhängende Liste der Anredeformen mit ihren Entsprechungen, einschließlich *Sehr geehrte…*, *Liebe*/*Lieber* und der Formeln für unbekannte Empfangende, würde die Umsetzung erheblich vereinfachen.
+Eine Liste der häufigen Paarformeln mit ihrer inklusivischen Entsprechung wäre für uns der direkteste Weg, diese Fälle sauber abzudecken, und vermutlich auch für Menschen hilfreich, die die Formeln im Alltag ersetzen wollen. Für Anreden leistet die Anredeformen-Seite genau das bereits.
 
 ### Maschinenlesbare Tabellen
 
@@ -63,7 +62,7 @@ Die Deklinationstabellen und die Listen der bereits geschlechtsneutralen Persone
 
 ### Empfohlen oder gleichwertig
 
-An mehreren Stellen werden zwei Formen genannt, teils gleichwertig (*Wanderne* und *Wandererne*), teils mit einer Empfehlung (*Torererne* oder *Torerne*). Für ein Werkzeug, das genau einen Vorschlag anzeigt, ist der Unterschied wichtig. Es wäre hilfreich, wenn erkennbar wäre, welche Form die empfohlene ist.
+An mehreren Stellen werden zwei Formen genannt, teils gleichwertig (*Freunde* oder *Freundere*, *Wanderne* und *Wandererne*), teils mit einer Empfehlung (*Torererne* oder *Torerne*). Für ein Werkzeug, das genau einen Vorschlag anzeigt, ist der Unterschied wichtig. Es wäre hilfreich, wenn erkennbar wäre, welche Form die empfohlene ist.
 
 ### Änderungen nachvollziehbar machen
 
