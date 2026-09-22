@@ -1,4 +1,7 @@
-version: "3.9"
+# Defaults here are the local development setup. The deployment knobs are all
+# environment variables with defaults, so a host can override them in a .env
+# file without editing this file. See docs/deployment-sizing.md for what to
+# set them to.
 
 services:
   languagetool:
@@ -7,15 +10,55 @@ services:
     # change here. latest would drift the same way.
     image: erikvl87/languagetool:6.8
     container_name: lt
+    restart: unless-stopped
     ports:
       # Host side deliberately not 8010: that is a common default and a local
       # PHP server on ::1 shadowed it, so localhost resolved past the container.
-      - "8210:8010"
+      - "${LT_HOST_PORT:-8210}:8010"
     environment:
       # The default heap runs out part way through the test suite:
       # java.lang.OutOfMemoryError: Java heap space, and the container exits.
-      - Java_Xms=512m
-      - Java_Xmx=4g
+      # The JVM will happily fill whatever it is given, so the container limit
+      # below must stay above Java_Xmx with room for the JVM's own overhead.
+      - Java_Xms=${LT_HEAP_MIN:-512m}
+      - Java_Xmx=${LT_HEAP_MAX:-2g}
+    deploy:
+      resources:
+        limits:
+          memory: ${LT_MEM_LIMIT:-3g}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8010/v2/languages > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+  redis:
+    # API keys, user and organization config (config, false positives, term
+    # replacements). With no REDIS_HOST the app silently falls back to an
+    # in-process FakeStrictRedis, which is empty - the API then answers 200
+    # with zero findings for every request, because no user has a config. That
+    # failure is invisible in the logs, so treat Redis as required.
+    #
+    # Persisted, because without a dashboard this is the only copy of anything
+    # created through the /user/configs and /organization/configs endpoints.
+    # DEFAULT_API_KEY is rewritten on every start and so survives a loss here;
+    # configs posted to the API do not.
+    image: redis:7-alpine
+    container_name: nlp_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes:
+      - redis-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: ${REDIS_MEM_LIMIT:-512m}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   nlpapi:
     build:
@@ -24,29 +67,69 @@ services:
         # Bake the served revision into the image so /version can report it:
         # export GIT_REVISION=$(git rev-parse HEAD) before `docker compose build`.
         - GIT_REVISION=${GIT_REVISION:-}
+        # Build-time dimensions: which model wheels go into the image at all.
+        - SPACY_LANGS=${SPACY_LANGS:-en,de,fr}
+        - SPACY_MODEL_SIZE=${SPACY_MODEL_SIZE:-lg}
     container_name: nlp_api
+    restart: unless-stopped
     depends_on:
-      - languagetool
+      languagetool:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
-      # Container side is 8081: that is where the Dockerfile CMD binds gunicorn.
-      - "8080:8081"
+      # Container side is 8081: that is where the entrypoint binds gunicorn.
+      - "${API_HOST_PORT:-8080}:8081"
     environment:
       # Point API to LanguageTool service
       - LANGUAGETOOL_API=http://languagetool:8010/v2
-      # Enable local SetFit models if present in ./models
-      # - CONTEXT_CHECKER_LOCAL=true
+      # Without these the app uses an empty in-process fake (see redis above).
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_VERIFY_SSL=${REDIS_VERIFY_SSL:-False}
+      # Runtime dimensions. MODELS defaults to whatever the build installed
+      # (see docker-entrypoint.sh), so it only needs setting to load *fewer*
+      # languages than the image contains.
+      - MODELS=${MODELS:-}
+      - WORKERS=${WORKERS:-1}
+      # Enables the SetFit models under ./models. Off by default: they add
+      # roughly as much resident memory again as the spaCy models, and need
+      # the larger shm_size below.
+      - CONTEXT_CHECKER_LOCAL=${CONTEXT_CHECKER_LOCAL:-false}
+      # Running without the dashboard: the API mints its own key instead.
+      # Both must be set for the key to be written into Redis at startup;
+      # it is rewritten on every start, so it survives losing Redis.
+      - DEFAULT_API_KEY=${DEFAULT_API_KEY:-}
+      - DEFAULT_USER_EMAIL=${DEFAULT_USER_EMAIL:-}
+      # Give users that Redis has never heard of a usable config, rather than
+      # the empty one that produces zero findings.
+      - DEFAULT_USER_CONFIG_ENABLED=${DEFAULT_USER_CONFIG_ENABLED:-false}
+      - DEFAULT_CONFIG=${DEFAULT_CONFIG:-}
+      # Management endpoints (/user/configs, /organization/configs) are how
+      # config is created without a dashboard. Leave the auth on.
+      - MANAGEMENT_AUTH_ENABLED=${MANAGEMENT_AUTH_ENABLED:-True}
+    # The context checker calls torch's share_memory(), which moves the model
+    # into /dev/shm. Docker's default there is 64 MB, and a ~1 GB SetFit model
+    # overruns it: the process dies of SIGBUS (exit 135) during startup with no
+    # log line and OOMKilled=false, which reads like anything but a full
+    # /dev/shm. Harmless when the context checker is off.
+    shm_size: ${API_SHM_SIZE:-2gb}
+    deploy:
+      resources:
+        limits:
+          # Sized for the default build (three lg models, one worker, context
+          # checker off) with headroom. Raise before raising WORKERS.
+          memory: ${API_MEM_LIMIT:-6g}
     volumes:
       # The image does not COPY the rule database; the app reads
       # ./database/dump.sql (or db.sqlite3) relative to /code at startup.
-      - ./database:/code/database
-      # Mount local models folder if you want to use local SetFit models
+      - ./database:/code/database:ro
+      # SetFit weights are mounted rather than baked in, so the image is the
+      # same whether or not the context checker is enabled.
       - ./models:/code/models:ro
-    # If you prefer rebuilding on changes in local dev, uncomment next line
-    # develop:
-    #   watch:
-    #     - path: .
-    #       action: sync
-    #       target: /app
+
+volumes:
+  redis-data:
 
 networks:
   default:
