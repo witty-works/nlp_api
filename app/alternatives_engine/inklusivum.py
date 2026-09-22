@@ -389,9 +389,11 @@ def possessive_pair(tilde_word: str) -> str | None:
 PRONOMINAL = {
     "nominativ": "einey",
     "akkusativ": "einey",
-    # The genitive cell of the standalone table is empty on the
-    # Deklinationstabellen page; "einers" is our analogy to the attributive
-    # genitive. Open question in docs/inklusivum-feedback.md.
+    # Unsupported, and kept only until the reporting side stops asking for it:
+    # the Artikelpronomen table prints "—" in the genitive for every gender,
+    # not just this one, so the standalone genitive is not provided at all.
+    # The attested "einers" (die Tasche einers Schüleres) is the attributive
+    # article, a different slot. See docs/inklusivum.md.
     "genitiv": "einers",
     "dativ": "einerm",
 }

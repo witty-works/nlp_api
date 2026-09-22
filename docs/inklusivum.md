@@ -38,6 +38,8 @@ The Inklusivum is not a separator. It is a fourth grammatical gender with its ow
 
 Sources for every form are the association's own tables: [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/), [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/).
 
+Two further pages turned out to answer questions we had been treating as open, and are worth reading before assuming something is undocumented: [Anredeformen](https://geschlechtsneutral.net/geschlechtsneutrale-anredeformen/) covers salutations in full, and [Neologismen](https://geschlechtsneutral.net/neologismen/) covers kinship and other coined words. Neither is reachable from the three pages above except through the site menu, which is how we missed them.
+
 Where those pages are silent, the association's own tool is the second source: the [Inklusivomat](https://automat.geschlechtsneutral.net/) and its code at [LinusWemmer/gn_tool](https://github.com/LinusWemmer/gn_tool). It is a reference implementation rather than a ruling — it says what the system's authors built, not what the association has published — but its paradigm tables are explicit where the web pages leave cells empty. `lexicon.py` holds them at the top of the `Lexicon` class.
 
 ## What is implemented
@@ -80,7 +82,7 @@ Ordered by impact. These are gaps rather than defects, with one exception: the a
 
 ### 1. The relative pronoun genitive
 
-`dersen`, which differs from the article genitive `ders`. `Der Lehrer, dessen Buch fehlt` is in the `..._function_words` fixture and produces no finding on `dessen`. The reference implementation has a single-line rule for it (`neutralize_attributive_pronoun`), so the form is not in doubt; what is missing here is reaching it from a `dessen` or `deren` token.
+`dersen`, which differs from the article genitive `ders`. `Der Lehrer, dessen Buch fehlt` is in the `..._function_words` fixture and produces no finding on `dessen`. The form is not in doubt at all: it is in the Demonstrativ-/Relativpronomen table on the Deklinationstabellen page and spelled out in the Gesamtsystem prose (*De Studente, dersen Aufsatz ich benotet habe*). This is purely an implementation gap — what is missing is reaching it from a `dessen` or `deren` token.
 
 The pronominal `einey` is done, so this entry is now only about the relative pronoun. Possessive agreement is also handled: rather than looking up the possessed noun, the gendered form being replaced already agrees with it, so only the stem is swapped. That does not extend to the relative pronoun, which has no such source form.
 
@@ -90,7 +92,23 @@ The pronominal `einey` is done, so this entry is now only about the relative pro
 
 This is the one gap that is worse than nothing. With no address rule the generic gendered-denomination path still fires on the salutation, and in the `..._function_words` fixture it offers `Herr` → `Erwachseney` and `Frau` → `Partnere`. Those are not address forms at all, and `Partnere` reads as a claim about the person. Suppressing the generic path on a salutation is worth doing even before the real forms land.
 
-The reference implementation is a usable target: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute` rather than the `Team von …` the website suggests. Which of those two is the recommended form is now a question in [inklusivum-feedback.md](./inklusivum-feedback.md).
+The forms are not the hard part — the [Anredeformen](https://geschlechtsneutral.net/geschlechtsneutrale-anredeformen/) page specifies them, and it is more prescriptive than the general system pages:
+
+| Input | Recommended | Also offered |
+| --- | --- | --- |
+| `Herr`/`Frau [Nachname]` | `[Vorname] [Nachname]` | `Person [Nachname]` when the first name is unknown |
+| `Sehr geehrte(r) Herr/Frau X` | `Guten Tag, [Vorname] [Nachname]!` | `Sehr geehrtey X`, `Sehr geehrte Person X` |
+| `Sehr geehrte Damen und Herren` | `Sehr geehrtes Team von [Organisation]`, `Sehr geehrtes [Organisation]-Team` | `Guten Tag!` |
+| Addressing an audience | `Sehr geehrtes Publikum`, `Sehr geehrte Versammelte` | `Ich begrüße Sie herzlich!` |
+| `Liebe`/`Lieber [Vorname]` | `Liebey [Vorname]` | `Hallo`/`Hi [Vorname]!` |
+
+Note that the page prefers avoiding the formula over inflecting it — `Guten Tag, …` ahead of `Sehr geehrtey` — which is the opposite of what a mechanical ending swap would produce.
+
+The reference implementation takes the simpler route: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute`, which the page does not list at all. That divergence is raised in [inklusivum-feedback.md](./inklusivum-feedback.md).
+
+### 2b. Neologisms
+
+The [Neologismen](https://geschlechtsneutral.net/neologismen/) page covers kinship and other coined words — `Geschwister` for `Bruder`/`Schwester`, and the `Owa`/`Tonke`/`Couse`/`Nifte` series. We carry none of them: there are no kinship entries in `inklusivum_nouns.csv` or `inklusivum_neutral_nouns.csv`, so `ihrem Bruder` is left alone where the reference implementation gives `enserm Geschwister`. This is list data rather than a rule, so it is mostly a transcription job.
 
 ### 3. Exception lexicon breadth
 
@@ -124,7 +142,7 @@ These were inferred by analogy while the association's web pages were the only s
 - **The reflexive pronoun** — confirmed unchanged. `sich` appears in the reference implementation only as a guard, never as something rewritten.
 - **Genitive and dative singular of the exception nouns** — confirmed to follow the regular rule. The irregular nouns run through the same case branch as the derived ones, so the genitive singular is `+s`.
 - **The n-declension** — confirmed dropped. There is no weak-declension branch; *den Studenten* becomes *de Studente*.
-- **Genitive of the standalone article pronoun** — confirmed as `einers`. The empty cell on the Deklinationstabellen page is a gap in the table, not a missing form.
+- **Genitive of the standalone article pronoun** — not `einers`, and this one we got wrong. The Artikelpronomen table prints `—` in the genitive row for *all four* genders, not only the Inklusivum, so the dash says the standalone genitive is not provided at all rather than that the Inklusivum cell is unfilled. The `einers` that is attested (*die Tasche einers Schüleres*) is the attributive article, which the Gemischte Deklination table gives. `PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) is therefore unsupported; `eines` reaches it through `PRONOMINAL_FORMS`, so the safer behaviour is to report nothing in that slot.
 - **`deselben` in the nominative slot** — confirmed a typo on the website. The nominative is `deselbe`; every other case is the `der` article ending plus `selben`.
 
 ---
