@@ -101,7 +101,22 @@ Disk is image plus room for a second image during upgrades, the ~8 MB rule datab
 
 **CPU.** Not measured here, and it is the axis this document is weakest on. spaCy inference is CPU-bound and single-threaded per request, so throughput scales with workers until memory or cores run out; start at 4 vCPU for the middle column and measure against real traffic before committing. Budget one core per worker as a first approximation.
 
-**If you are unsure, take the middle column.** It serves all three languages, and `WORKERS` and `CONTEXT_CHECKER_LOCAL` can then be raised in place as long as the VM has the memory for it — neither needs a rebuild.
+### What we are deploying
+
+The middle column, with room to move: **three languages, `lg` models, 2 workers to start and up to 4, context checker off.** [.env.example](../.env.example) pins it; copy it to `.env` next to `compose.yml`.
+
+**Ask for 16 GB rather than 12.** The measured idle figure at 4 workers is 4.81 GiB and the whole stack fits in 12 GB, but 16 GB buys two things worth having up front: headroom for per-request working memory, which none of these idle numbers include, and the option to turn the context checker on later without resizing the VM (4 workers with it on is roughly 6.7 GiB, and the stack still fits). Growing a Proxmox VM's memory needs a reboot; asking for the larger number once does not.
+
+| | value |
+| --- | --- |
+| VM memory | **16 GB** |
+| VM disk | **30 GB** |
+| vCPU | **4 to start**, 6 if running 4 workers |
+| `API_MEM_LIMIT` | `8g` |
+| `LT_MEM_LIMIT` | `3g` (`LT_HEAP_MAX=2g`) |
+| `REDIS_MEM_LIMIT` | `512m` |
+
+`WORKERS` and `CONTEXT_CHECKER_LOCAL` are runtime settings, so both can be changed with a restart. `SPACY_LANGS` and `SPACY_MODEL_SIZE` are build args and need a rebuild — which is the argument for building all three languages now even if only German is served at first.
 
 ## Running without the dashboard
 
