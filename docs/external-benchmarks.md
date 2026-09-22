@@ -9,6 +9,29 @@ Run:
     TESTING=True MANAGEMENT_AUTH_ENABLED=False LANGUAGETOOL_API="" \
         pdm run python -m bin.external_eval --dict .cache/external-eval/german/unified.csv --lang de --limit 500
 
+## Datasets and provenance
+
+The corpora are fetched, never vendored: `.cache/` is gitignored, and the geschicktgendern subset is CC BY-NC-SA, so it must not enter the repository. That makes this section the only record of where the inputs came from - without it the measurements above are not reproducible.
+
+| Dataset | Source | Licence |
+| --- | --- | --- |
+| INCLURE (fr), `french/oscar_inclure_{train,test,validation}.csv` | [huggingface.co/datasets/PaulLerner/oscar_inclure](https://huggingface.co/datasets/PaulLerner/oscar_inclure), toolkit at [github.com/PaulLerner/inclure](https://github.com/PaulLerner/inclure) | CC0-1.0 per the dataset card (the BUCC paper itself is CC BY-NC 4.0) |
+| Grouin IFC (fr), `french/grouin_corpus/` | [github.com/grouin/corpus-francais-inclusif](https://github.com/grouin/corpus-francais-inclusif) at `25f3107` ("Corpus élections européennes 2024") | BSD-2 |
+| diversifix (de), `german/unified.csv` | [huggingface.co/datasets/diversifix/inclusive_words](https://huggingface.co/datasets/diversifix/inclusive_words), project at [github.com/diversifix/diversifix](https://github.com/diversifix/diversifix) | mixed, per the `source` column: `dereko` CC0, `geschicktgendern` CC BY-NC-SA 4.0, diversifix's own rows CC0 |
+| UD dev treebanks, `ud/*.conllu` | [UD_German-GSD](https://github.com/UniversalDependencies/UD_German-GSD), [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT), [UD_French-GSD](https://github.com/UniversalDependencies/UD_French-GSD) | per treebank, see each repository |
+
+The INCLURE splits are the dataset's own, and their row counts match (54,900 / 6,870 / 6,870). `unified.csv` is the diversifix export with a `source` column per row, which is what makes the per-row licence classing in the gap list possible.
+
+Two caveats on this table. The UD files were downloaded on 2026-08-12 from the default branch and carry no version marker, so the release they came from cannot be recovered - pin a tagged UD release when refetching, and record it here. The licence column states where each corpus's terms are published rather than restating them; check the source before redistributing anything derived from it.
+
+Automating this as `bin/fetch_external_eval.py` is the obvious next step, following the `lid.176.bin` precedent of a URL plus hash. Until then the fetch is manual and this table is the specification for it.
+
+### Derived files stay out too
+
+`de-gap-terms.csv` and the `*.json` result files are our own output, but they are not therefore unencumbered: the gap list is computed from the diversifix rows including the CC BY-NC-SA ones, so it inherits that restriction and carries a `license_class` column per row for exactly that reason. The result JSONs are regenerable from the commands above, and their conclusions are already in the tables below.
+
+Moving the gap list to the rule editor is a deliberate transfer under the same licence gate as the rest of the linguistic data, not something to settle with a commit.
+
 ## French - INCLURE test split, 800 pairs (BUCC 2024)
 
 | measure | result |
