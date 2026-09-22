@@ -9,7 +9,7 @@ Implementation notes and remaining work for the German [Inklusivum](https://gesc
 - [What is implemented](#what-is-implemented)
 - [The refactor this is still waiting on](#the-refactor-this-is-still-waiting-on)
 - [Remaining work](#remaining-work)
-- [Forms the sources do not settle](#forms-the-sources-do-not-settle)
+- [Forms the sources did not settle](#forms-the-sources-did-not-settle)
 
 ---
 
@@ -37,6 +37,8 @@ The Inklusivum is not a separator. It is a fourth grammatical gender with its ow
 | Tests | [tests/test_dee_generation.py](../tests/test_dee_generation.py) for the article data, [tests/test_inklusivum_nouns.py](../tests/test_inklusivum_nouns.py) for the paradigms, and the `tests/test_gender_ending/test_api_gender_ending_inklusivum*` fixtures end to end |
 
 Sources for every form are the association's own tables: [Gesamtsystem](https://geschlechtsneutral.net/gesamtsystem/), [Deklinationstabellen](https://geschlechtsneutral.net/deklinationstabellen/), [Ausnahmeformen](https://geschlechtsneutral.net/ausnahmeformen/).
+
+Where those pages are silent, the association's own tool is the second source: the [Inklusivomat](https://automat.geschlechtsneutral.net/) and its code at [LinusWemmer/gn_tool](https://github.com/LinusWemmer/gn_tool). It is a reference implementation rather than a ruling — it says what the system's authors built, not what the association has published — but its paradigm tables are explicit where the web pages leave cells empty. `lexicon.py` holds them at the top of the `Lexicon` class.
 
 ## What is implemented
 
@@ -74,17 +76,21 @@ It is not small. `alternatives.py` is around 1,400 lines shared by three languag
 
 ## Remaining work
 
-Ordered by impact. None of these produce wrong output any more; they are gaps.
+Ordered by impact. These are gaps rather than defects, with one exception: the address forms in §2, where the absence of a rule lets the generic path emit wrong suggestions.
 
-### 1. The remaining pronoun forms
+### 1. The relative pronoun genitive
 
-The relative pronoun genitive `dersen`, which differs from the article genitive `ders`, and the pronominal `einey` as distinct from the article `ein`.
+`dersen`, which differs from the article genitive `ders`. `Der Lehrer, dessen Buch fehlt` is in the `..._function_words` fixture and produces no finding on `dessen`. The reference implementation has a single-line rule for it (`neutralize_attributive_pronoun`), so the form is not in doubt; what is missing here is reaching it from a `dessen` or `deren` token.
 
-Possessive agreement is handled: rather than looking up the possessed noun, the gendered form being replaced already agrees with it, so only the stem is swapped. That does not extend to the relative pronoun, which has no such source form.
+The pronominal `einey` is done, so this entry is now only about the relative pronoun. Possessive agreement is also handled: rather than looking up the possessed noun, the gendered form being replaced already agrees with it, so only the stem is swapped. That does not extend to the relative pronoun, which has no such source form.
 
 ### 2. Address forms
 
 `Sehr geehrte` → `Sehr geehrtey`, `Liebe`/`Lieber` → `Liebey`, `Herr`/`Frau` → `Person [Nachname]`, and `Sehr geehrte Damen und Herren` → `Sehr geehrtes Team von [Organisation]`. None are implemented.
+
+This is the one gap that is worse than nothing. With no address rule the generic gendered-denomination path still fires on the salutation, and in the `..._function_words` fixture it offers `Herr` → `Erwachseney` and `Frau` → `Partnere`. Those are not address forms at all, and `Partnere` reads as a claim about the person. Suppressing the generic path on a salutation is worth doing even before the real forms land.
+
+The reference implementation is a usable target: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute` rather than the `Team von …` the website suggests. Which of those two is the recommended form is now a question in [inklusivum-feedback.md](./inklusivum-feedback.md).
 
 ### 3. Exception lexicon breadth
 
@@ -94,30 +100,36 @@ Prefer finding the rule over adding a row. Two classes that were listed word by 
 
 ### 4. Derivations
 
-`kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`.
+`kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`. Both are confirmed: the reference implementation produces exactly these, so the forms are settled and only the derivation is missing here.
 
-### 5. A correct suggestion that changes nothing drops the whole finding
+### 5. Pair formulas
+
+`Kolleginnen und Kollegen` → `Kollegerne`, where the whole coordination collapses into one word. We report the two conjuncts separately, which leaves the reader to delete the rest of the phrase by hand.
+
+[inklusivum-feedback.md](./inklusivum-feedback.md) records why this was left out: the replacement does not correspond to a single token, so it does not fit a suggestion anchored on one span. The reference implementation sidesteps that by rewriting whole text rather than offering findings, and marks the entire coordination as one selectable unit. Anything we do here needs a finding whose span covers both conjuncts and the conjunction.
+
+### 6. A correct suggestion that changes nothing drops the whole finding
 
 After an article, the Inklusivum form of `Vorgesetzte(r)` is `Vorgesetzte`, which is what the text already says. The suggestion is therefore registered as a false positive and the entire result disappears, taking the unrelated replacement suggestions (`Leitungsperson`, `Führungsperson`) with it.
 
 Only the article actually needs changing here, and that is now reported separately, so what is left is the loss of the replacement suggestions rather than the missing article. Reporting nothing is at least better than the previous behaviour, which offered the article-less `Vorgesetztey` after an article.
 
-## Forms the sources do not settle
+## Forms the sources did not settle
 
-Do not treat these as decided; they are inferred by analogy, and the code already depends on them. [inklusivum-feedback.md](./inklusivum-feedback.md) puts them to the association as questions, along with what would make the system easier to implement.
+These were inferred by analogy while the association's web pages were the only source, and the code depends on them. All of them are now confirmed against the reference implementation, so they are no longer assumptions — except where noted. [inklusivum-feedback.md](./inklusivum-feedback.md) keeps what is still worth putting to the association.
 
-Two were checked again against every page the site links to and are genuinely absent rather than missed: the genitive plural of nouns, and the reflexive pronoun. The dative plural is attested (*den Schülernen*), the genitive plural is not.
-
-- Genitive plural of nouns, assumed identical to the nominative plural by analogy with standard German syncretism.
-- Dative of `ens` before an Inklusivum noun (`enserm`?). Only the genitive is attested in the association's examples.
-- The reflexive pronoun. Never mentioned; `sich` is already gender invariant, so it is assumed unchanged.
-- Genitive and dative singular of the exception nouns, assumed to follow the regular `+s` rule since no override is given.
-- Whether the traditional n-declension is preserved (`Studente` vs `Studenten`). No exception is stated, so the uniform rule is assumed.
-- `deselben` appears in the nominative slot of the `derselbe` table where `deselbe` is expected, which looks like a typo in the source.
+- **Genitive plural of nouns** — confirmed as identical to the nominative plural. `lexicon.py` gives the plural `-rne` for every case but the dative, which takes `-rnen`. Our `apply_case` does the same.
+- **The article before a genitive plural** — we had this one wrong in prose. `neutralize_article` returns the input unchanged when the parse carries `Pl`, so it is *der Schülerne*, not *ders Schülerne*: in the plural the ordinary German article stays. The code was never wrong here, because the plural findings match the bare noun and prepend no article; only this document claimed otherwise. `test_api_gender_ending_inklusivum_plural` pins the behaviour.
+- **Dative of `ens` before an Inklusivum noun** — confirmed as `enserm`. `ens` follows the `ein` paradigm, whose dative ending is `-erm`. Before an ordinary noun the possessive keeps the ending it already had (*ensem Geburtstag*), so both forms are real and the distinction is by design. We already produce both.
+- **The reflexive pronoun** — confirmed unchanged. `sich` appears in the reference implementation only as a guard, never as something rewritten.
+- **Genitive and dative singular of the exception nouns** — confirmed to follow the regular rule. The irregular nouns run through the same case branch as the derived ones, so the genitive singular is `+s`.
+- **The n-declension** — confirmed dropped. There is no weak-declension branch; *den Studenten* becomes *de Studente*.
+- **Genitive of the standalone article pronoun** — confirmed as `einers`. The empty cell on the Deklinationstabellen page is a gap in the table, not a missing form.
+- **`deselben` in the nominative slot** — confirmed a typo on the website. The nominative is `deselbe`; every other case is the `der` article ending plus `selben`.
 
 ---
 
-## Logo instead of the sad-face icon (decided, not yet wired)
+## Logo instead of the sad-face icon (done)
 
 When the Inklusivum is the configured `german_gender_ending`, **all** gendered
 findings carry the Inklusivum logo in place of the emoji icon — the logo
@@ -125,20 +137,14 @@ signals "this suggestion is in your chosen system", which holds for every
 gendered suggestion under that config, not only for forms the Inklusivum
 engine generated.
 
-The plumbing already exists; the wiring is data plus one conditional:
+This is wired and visible in the snapshots: every `gender-orientation` finding
+under `de-e` carries `explanation.icon_image` pointing at
+`vgd-icon-bunt.svg`, and no finding in another category does. Older clients
+still fall back to the emoji `icon`.
 
-- The `Result` schema has `icon_image`, and the explanation assembly emits it
-  whenever category data carries `emoji_image` (the corporate-rules branding
-  path) - clients that render corporate icons render this too, and older
-  clients fall back to the emoji `icon`.
-- Dashboard: host the SVG in the regular asset pipeline and attach it as
-  `icon_image` to the *Inklusivum ending option* in the config-options data
-  (not to a subcategory - the same subcategories serve every ending style).
-- API: at result assembly, when the active config's ending is the Inklusivum
-  and the finding is a gendered one, pass that `icon_image` through.
-- Extension: QA that `icon_image` renders in the highlight UI and that the
-  CSP `img-src` allowlist covers the assets domain; fall back to an inline
-  `data:` SVG only if a rendering context forces it.
+What remains is client-side QA rather than API work: that `icon_image` renders
+in the extension's highlight UI, and that the CSP `img-src` allowlist covers
+the assets domain.
 
 ## Dashboard readiness
 
@@ -150,9 +156,8 @@ from this API's contract:
   (see the option key in `training_data/config_options.json`). The option
   labels/translations flow through the existing dashboard→`config_options.json`
   sync, which already carries the Inklusivum label.
-- **Logo asset + option metadata**: host the SVG and attach it as
-  `icon_image` to the ending option in that same synced data (see the logo
-  section above).
+- **Logo asset + option metadata**: done — the SVG is hosted and reaches
+  findings as `icon_image` (see the logo section above).
 - **Rendering of Inklusivum text**: anywhere the dashboard displays findings
   or alternatives (team analytics, demos), expect Inklusivum forms - `einey`,
   `ens` possessives, endings without a separator character - and the logo in
