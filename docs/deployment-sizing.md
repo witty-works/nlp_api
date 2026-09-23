@@ -139,6 +139,19 @@ Verified end to end: with only this, Redis holds a single `api_key:<key>` entry 
 
 returns `Der Lehrer → De Lehrere` and `dem Schüler → derm Schülere`.
 
+### Refusing anonymous requests
+
+By default an unauthenticated request is answered with `200` and an empty result set rather than refused — deliberate, so that a signed-out client keeps working instead of erroring. For a deployment where nothing should be free, set:
+
+    REQUIRE_API_KEY=True
+    PUBLIC_PATHS=["/health","/v2.0/categories"]
+
+Every other route then answers `401` without a credential, including `/version`, `/docs` and paths that do not exist — so the gate cannot be probed for which routes are there. `/health` stays open for monitoring and `/v2.0/categories` because a client needs it to render its UI before a key has been issued.
+
+Two things it deliberately does not refuse: CORS preflight, which carries no credentials by definition and would break browser clients, and any path named in `PUBLIC_PATHS`. Add `/slack/commands` there if Slack is enabled — it authenticates by signature and cannot send an API key.
+
+An SSO bearer token satisfies the gate as well as an `x-key` API key, so the browser extension and Word plugin keep working against a deployment that also has SSO configured.
+
 Four things that cost time to find, all of which fail quietly:
 
 - **The auth header is `x-key`**, not `Authorization` or `X-API-KEY`. A request with the wrong header name, or no key at all, still returns `200` — as an anonymous user with no config, so every response is `{"results": []}`. An empty result set is what a misauthenticated request looks like.

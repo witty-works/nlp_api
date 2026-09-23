@@ -108,6 +108,10 @@ services:
       # Management endpoints (/user/configs, /organization/configs) are how
       # config is created without a dashboard. Leave the auth on.
       - MANAGEMENT_AUTH_ENABLED=${MANAGEMENT_AUTH_ENABLED:-True}
+      # Refuse anything without a credential, rather than answering it with an
+      # empty result set. PUBLIC_PATHS is what stays open.
+      - REQUIRE_API_KEY=${REQUIRE_API_KEY:-False}
+      - PUBLIC_PATHS=${PUBLIC_PATHS:-["/health","/v2.0/categories"]}
     # The context checker calls torch's share_memory(), which moves the model
     # into /dev/shm. Docker's default there is 64 MB, and a ~1 GB SetFit model
     # overruns it: the process dies of SIGBUS (exit 135) during startup with no
