@@ -1,31 +1,11 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
     "results": [
-        {
-            "alternatives": [
-                {
-                    "text": "*in"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
-            "end": 88,
-            "explanation": {
-                "icon": "💯",
-                "long_text": "Konsistente Schreibweise ist vertrauenserweckender.&nbsp;<br /><br /><p>Korrigiere die Schreibweise oder passe die Einstellung der “Inklusive Geschlechter-Nennung” entsprechend der Präferenz in Witty an.</p>",
-                "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Inklusive Endung",
-            "proficiency_level": "unconscious_bias",
-            "start": 85,
-            "subcategory": "gendered_denominations_ending_advanced",
-            "text": "/in",
-            "text_id": "/in"
-        },
         {
             "alternatives": [
                 {

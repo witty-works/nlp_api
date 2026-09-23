@@ -592,14 +592,33 @@ class Config(BaseModel):
         # shape from ordinary nouns ("Liebe", "Woche"). Detecting it needs a
         # lexicon lookup against known gendered pairs, not a suffix pattern.
     }
+    # Article and pronoun forms, `die*der` as well as `jede*r` or a sentence
+    # opening `Ein*e`; whether one really is an article is decided against the
+    # article table (app/gender_format.py), not by this shape.
     _gendereddenom_ending_article = {
-        GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[a-zäöü]{3,7}_[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.STAR: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\*[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
+        GermanGenderEndingType.UNDERSCORE: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}_[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
+        GermanGenderEndingType.COLON: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}:[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
+        GermanGenderEndingType.SLASH: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
+        GermanGenderEndingType.SLASH_DASH: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/-?[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
-            r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
+        ),
+        GermanGenderEndingType.PARENTHESIS: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\([a-zäöü]{1,7}\)$"
+        ),
+        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\(-[a-zäöü]{1,7}\)$"
         ),
     }
     _gendereddenom_ending_word_type = {
@@ -972,6 +991,10 @@ class ResultOut(BaseModel):
     gravity: Optional[float] = None
     proficiency_level: Optional[str] = None
     source: Optional[ResultSource] = None
+    # Set on alerts safe to accept all at once: exactly one alternative, and
+    # accepting them in any order gives the same text. "gender_format" marks
+    # the switch to the configured gender format.
+    bulk: Optional[str] = None
 
     @staticmethod
     def factory(
@@ -1393,6 +1416,11 @@ class ResultsOut(BaseModel):
     gender_separator: Union[
         GermanGenderEndingType | FrenchGenderSeparatorType | None
     ] = None
+    # The `bulk` groups results of this request can carry, whether or not any
+    # does: ["gender_format"] where switching the gender format is supported
+    # for this language and config. Always sent, unlike an absent `bulk`, so a
+    # client can tell an API without bulk actions from a text without any.
+    bulk_actions: list[str] = Field(default_factory=list)
 
 
 class PrettyJSONResponse(Response):

@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "/-in",
     "language": "de",
     "limit_reached": false,
@@ -9,6 +12,7 @@
                     "text": "/-innen"
                 }
             ],
+            "bulk": "gender_format",
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 35,
@@ -32,6 +36,7 @@
                     "text": "/-in"
                 }
             ],
+            "bulk": "gender_format",
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 47,
@@ -55,6 +60,7 @@
                     "text": "die/der"
                 }
             ],
+            "bulk": "gender_format",
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 63,
@@ -78,6 +84,7 @@
                     "text": "/-in"
                 }
             ],
+            "bulk": "gender_format",
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 71,
