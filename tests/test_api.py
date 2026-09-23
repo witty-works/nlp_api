@@ -1857,6 +1857,47 @@ def test_rule_debug_gendered_declension_fallback():
         ]
 
 
+def test_rule_debug_gendered_declension_fallback_keeps_the_prefix_lowercase():
+    """A suffix rule on a compound is where synthesis meets a prefix.
+
+    The synthesized forms stay unprefixed so that add_german_prefix can join
+    them, because that is what lowercases the second half. Prefixing them
+    where they are built produced "CyberHacktivist", and the later call could
+    not undo it: it skips a word that already starts with the prefix.
+    """
+    with TestClient(app) as client:
+        request_data = {
+            "text": "Der Cyberhacktivist kam.",
+            "lang": "de",
+            "lemma": "Hacktivist",
+            "type": "suffix",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Hacktivist~Hacktivistin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        texts = [alt["text"] for alt in response_content[0]["alternatives"]]
+        assert texts == [
+            "Die*der Cyberhacktivist*in",
+            "Die/der Cyberhacktivistin/Cyberhacktivist",
+        ]
+        assert not any("CyberH" in text for text in texts)
+
+
 @pytest.mark.parametrize(
     "spacy_analysis_dir",
     get_dirs("tests/test_spacy_analysis"),

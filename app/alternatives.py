@@ -987,11 +987,13 @@ class Alternatives:
                     synthesized = synthesize_gendered_pair(male_form, female_form)
                     if synthesized is not None:
                         synthetic_male, synthetic_female = synthesized
-                        if prefix:
-                            for forms in (synthetic_male, synthetic_female):
-                                for key, value in forms.items():
-                                    if not key.startswith("gender") and value:
-                                        forms[key] = prefix + value
+                        # Deliberately unprefixed. Everything downstream adds
+                        # the prefix itself - add_german_prefix for the plain
+                        # forms, inklusivum_noun by taking it as an argument -
+                        # and add_german_prefix also lowercases the joint.
+                        # Prefixing here instead produced "CyberHacktivist",
+                        # which the later call could not repair because it
+                        # skips a word that already starts with the prefix.
                         if male_forms is None or male_forms.get(target_form) is None:
                             male_forms = synthetic_male
                         if (
