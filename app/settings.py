@@ -109,7 +109,28 @@ class Settings(BaseSettings):
     # Whether a request has to resolve to a user before any text is checked.
     # With it off the API answers anyone who can reach it, which is a deliberate
     # choice for a private deployment and a bad one for a public host.
+    #
+    # Note what this does *not* do: an unauthenticated request still gets a 200
+    # with an empty result set, so that a signed-out client keeps working
+    # instead of erroring. Use require_api_key below to refuse it outright.
     require_auth: bool = True
+
+    # Refuse anything that does not resolve to a user, rather than answering it
+    # emptily. Off by default so existing deployments keep the lenient
+    # behaviour; on, every route outside public_paths answers 401 without a
+    # credential.
+    #
+    # "API key" is the name because that is what a deployment without the
+    # dashboard uses (the `x-key` header, minted from DEFAULT_API_KEY), but
+    # anything fetch_user accepts satisfies it - an SSO bearer token does too,
+    # so browser extension and Word plugin clients keep working.
+    require_api_key: bool = False
+
+    # The routes that stay reachable without a credential when require_api_key
+    # is on. Kept as a setting rather than a constant so a deployment can open
+    # up a route it needs - /slack/commands, say, which authenticates itself by
+    # signature and would otherwise be unreachable for Slack.
+    public_paths: list[str] = ["/health", "/v2.0/categories"]
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a

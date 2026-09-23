@@ -2770,6 +2770,79 @@ def test_management_auth():
         assert context.redis.get_api_key_email("should-not-exist") is None
 
 
+def test_require_api_key():
+    """With the switch on, only the public paths answer without a credential."""
+    body = {"text": "Der Lehrer gibt dem Schüler den Stift."}
+
+    with TestClient(app) as client:
+        context.redis.set_api_key("gate-key", "default@gmail.com")
+        context.settings.require_api_key = True
+        try:
+            # The two routes a client needs before it has been given a key.
+            assert client.get("/health").status_code == 200
+            assert client.get("/v2.0/categories").status_code == 200
+
+            # Everything else is closed, including routes that merely describe
+            # the deployment rather than checking anything.
+            assert client.post("/v2.4/check", json=body).status_code == 401
+            assert client.get("/version").status_code == 401
+
+            # A key that resolves to nobody is no better than no key. The
+            # lenient path answers both of these with 200 and no results, so
+            # this is the difference the switch makes.
+            response = client.post(
+                "/v2.4/check", json=body, headers={"x-key": "not-a-key"}
+            )
+            assert response.status_code == 401
+
+            response = client.post(
+                "/v2.4/check", json=body, headers={"x-key": "gate-key"}
+            )
+            assert response.status_code == 200
+
+            # A path that does not exist is refused before it is routed, so
+            # the gate cannot be probed for which routes are there.
+            assert client.get("/no-such-route").status_code == 401
+
+            # Matching is exact: a path that merely starts with a public one
+            # is not itself public.
+            assert client.get("/health-internal").status_code == 401
+
+            # CORS preflight carries no credentials, so refusing it would break
+            # the browser clients before they send the real request.
+            response = client.options(
+                "/v2.4/check",
+                headers={
+                    "Origin": "https://example.test",
+                    "Access-Control-Request-Method": "POST",
+                },
+            )
+            assert response.status_code == 200
+        finally:
+            context.settings.require_api_key = False
+
+        # Off is the default, and leaves the lenient behaviour untouched: an
+        # unauthenticated check is answered, just with nothing in it.
+        response = client.post("/v2.4/check", json=body)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+
+def test_require_api_key_public_paths_are_configurable():
+    """A deployment can open a route that authenticates itself."""
+    with TestClient(app) as client:
+        context.settings.require_api_key = True
+        previous = context.settings.public_paths
+        context.settings.public_paths = ["/health", "/version"]
+        try:
+            assert client.get("/version").status_code == 200
+            # Dropped from the list, so no longer public.
+            assert client.get("/v2.0/categories").status_code == 401
+        finally:
+            context.settings.public_paths = previous
+            context.settings.require_api_key = False
+
+
 @pytest.fixture
 def llm_access():
     """Set the LLM access policy for one test and put it back afterwards."""

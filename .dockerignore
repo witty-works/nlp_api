@@ -1,0 +1,47 @@
+# The build context is uploaded to the daemon before anything runs, so the
+# large directories below matter even though the Dockerfile never COPYs them.
+# models/ alone is ~1.5 GB and .cache/ ~30 MB of benchmark corpora.
+
+.git
+.gitignore
+
+# Local virtualenvs and caches
+.venv
+venv-nlp-api/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.pdm-python
+.pdm.toml
+
+# Benchmark corpora (see docs/external-benchmarks.md) - licence-restricted
+.cache/
+
+# SetFit context-checker weights: mounted at runtime, never baked in, so that
+# the image stays the same whether or not the context checker is enabled.
+models/
+
+# The rule database is mounted, not copied (see compose.yml)
+database/
+
+# Test suite and coverage output
+tests/
+htmlcov/
+.coverage
+coverage.xml
+
+# Editor and OS noise
+.vscode
+.idea
+.DS_Store
+*Zone.Identifier
+
+# Docs and tooling that never affect the image
+docs/
+locales/
+analyze_rules/
+sonar-project.properties
+make-release
+.env
