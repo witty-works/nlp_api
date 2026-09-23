@@ -25,6 +25,7 @@ These are the main endpoints for checking and rephrasing text.
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
+| `/v1.0/write`    | POST   | Yes           | Write or change a text as a prompt says, then review it (requires `llm_alternatives`) |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
 | `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
 | `/v2.0/config-options` | GET | No        | List the values the enumerated `config` fields accept         |
@@ -57,6 +58,21 @@ curl -X 'POST' \
   }
 }'
 ```
+
+Example `/v1.0/write` request:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v1.0/write' \
+  -H 'x-key: your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "prompt": "Make it more formal.",
+  "text": "Hey guys, the chairman wants the numbers by Friday."
+}'
+```
+
+`/v1.0/write` is the client-facing counterpart of `/v1.0/prompt`, which is a management endpoint that names its user in the query string. It sends `prompt` and `text` to the LLM (an empty `text` asks for a new text from the prompt alone), checks the draft, and has the LLM apply Witty's alternatives to what the check flagged. The answer has the same shape as `/v1.0/prompt`: `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters and `text` to 4000. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
 
 Example `/v2.0/categories` request:
 
@@ -319,12 +335,12 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
 | `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
-| `/textarea`                   | GET    | No            | Page for checking text by hand, with the Witty editor and an API key field        |
+| `/textarea`                   | GET    | No            | Page for checking and rewriting text by hand, with the Witty editor, a prompt and an API key field |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
 served unguarded either way.
 
-`/textarea` checks as you type and underlines what the API flags. The key typed into its API key field stays in the page's memory and is sent only as the `x-key` header, so the page works with `REQUIRE_API_KEY=true`. The page and its script (`/textarea/witty-editor.js`) are in the default `PUBLIC_PATHS`; a deployment that sets `PUBLIC_PATHS` itself has to list them to keep the page.
+`/textarea` checks as you type and underlines what the API flags; a click on an underline opens the browser extension's popover, with LLM rewrites from `/v1.0/rephrase` where the key's user may use the LLM. Its prompt field, modelled on the dashboard's Witty GPT, sends the editor's text and the prompt to `/v1.0/write` and replaces the text with the reviewed result; one undo brings the previous text back. Below the editor it lists the issues found in the draft, linked to their explanations, and the edits the review made. For a local LLM, point `LLM_MODEL` at Ollama, e.g. `LLM_MODEL=ollama_chat/<model>` and `LLM_API_BASE=http://localhost:11434`; without a dashboard the key's user also needs `DEFAULT_USER_LLM_ALTERNATIVES=true`. The key typed into its API key field stays in the page's memory and is sent only as the `x-key` header, so the page works with `REQUIRE_API_KEY=true`. The page and its script (`/textarea/witty-editor.js`) are in the default `PUBLIC_PATHS`; a deployment that sets `PUBLIC_PATHS` itself has to list them to keep the page.
 
 The script is a vendored build of the editor component from the browser-extension repository (`packages/editor`). To update it:
 
