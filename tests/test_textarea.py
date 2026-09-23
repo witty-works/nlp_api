@@ -415,3 +415,48 @@ def test_pin_rewrites_only_the_pin():
         and getattr(node.targets[0], "id", None) in ("VERSION", "INTEGRITY")
     }
     assert pinned == {"VERSION": "2.0.2", "INTEGRITY": integrity}
+
+
+def test_script_is_revalidated_not_redownloaded(textarea):
+    """no-cache so a new install is picked up, an ETag so an unchanged one
+    costs a 304 rather than the whole script."""
+    with TestClient(app) as client:
+        response = client.get("/textarea/witty-editor.js")
+        etag = response.headers["etag"]
+        assert response.headers["cache-control"] == "no-cache"
+
+        again = client.get("/textarea/witty-editor.js", headers={"If-None-Match": etag})
+        assert again.status_code == 304
+        assert again.content == b""
+
+        # A reinstall changes the ETag, and the new script is sent.
+        textarea.write_text("window.WittyEditor = {mount() {}, v: 2};")
+        response = client.get(
+            "/textarea/witty-editor.js", headers={"If-None-Match": etag}
+        )
+        assert response.status_code == 200
+        assert response.headers["etag"] != etag
+
+
+def test_page_limits_match_the_api(textarea):
+    """The page refuses what /v1.0/write would, before sending it."""
+    from app.models import WRITE_PROMPT_MAX_LENGTH, WRITE_TEXT_MAX_LENGTH
+
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+
+    assert f'maxlength="{WRITE_PROMPT_MAX_LENGTH}"' in page
+    assert f"const TEXT_MAX = {WRITE_TEXT_MAX_LENGTH};" in page
+    assert "__" not in page.split("<script>")[1]
+
+
+def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
+    script = page_script()
+    # Ctrl/Cmd+Enter submits past a disabled button, so the handler checks.
+    assert "if (run.disabled || !prompt.value.trim()) return;" in script
+    # Typing during a run would be overwritten by the answer.
+    assert "editor.editor.setEditable(false);" in script
+    # The draft is checked with the editor's own settings.
+    assert "onSettingsChange(next)" in script
+    # The editor's own screen-reader hint is left alone.
+    assert "aria-describedby" not in script

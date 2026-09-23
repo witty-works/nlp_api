@@ -17,10 +17,12 @@ from pathlib import Path
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from starlette.responses import FileResponse, HTMLResponse
+from starlette.requests import Request
+from starlette.responses import FileResponse, HTMLResponse, Response
 
 from app.context import AppContext
 from app.dependencies import get_app_context
+from app.models import WRITE_PROMPT_MAX_LENGTH, WRITE_TEXT_MAX_LENGTH
 
 
 router = APIRouter()
@@ -165,6 +167,7 @@ PAGE = r"""<!doctype html>
         <textarea
           id="prompt"
           rows="3"
+          maxlength="__PROMPT_MAX__"
           placeholder="Make it shorter, or: Write a job ad for a nurse"
           aria-describedby="prompt-help"
         ></textarea>
@@ -180,8 +183,10 @@ PAGE = r"""<!doctype html>
       <section id="review" hidden>
         <h2>Issues Witty found in the draft</h2>
         <ul id="issues"></ul>
-        <h2>Edits from the follow-up prompt</h2>
-        <p id="edits"></p>
+        <div id="edits-block">
+          <h2>Edits from the follow-up prompt</h2>
+          <p id="edits"></p>
+        </div>
       </section>
       <section id="about">
         <h2>What you can use it for</h2>
@@ -206,12 +211,18 @@ PAGE = r"""<!doctype html>
     <script>
       const status = document.getElementById("status");
       const apiKey = document.getElementById("api-key");
+      let settings = {};
       const editor = WittyEditor.mount(document.getElementById("editor"), {
         // The popover's LLM rewrites (/v1.0/rephrase); the API still refuses
         // them for a key whose config does not allow LLM use.
         llmAlternatives: true,
         // Long enough for a local model through Ollama, not only a hosted one.
         llmTimeoutMs: 30000,
+        // The toolbar's settings, so a prompt's draft is checked the way the
+        // editor checks the text.
+        onSettingsChange(next) {
+          settings = next;
+        },
         onStatus(next) {
           status.textContent =
             next.state === "idle"
@@ -221,9 +232,6 @@ PAGE = r"""<!doctype html>
                 : "Checking failed: " + next.message;
         },
       });
-      document
-        .querySelector("#editor [contenteditable]")
-        ?.setAttribute("aria-describedby", "editor-help");
       apiKey.addEventListener("input", (event) => {
         editor.setApiKey(event.target.value);
       });
@@ -235,6 +243,9 @@ PAGE = r"""<!doctype html>
       const review = document.getElementById("review");
       const issues = document.getElementById("issues");
       const edits = document.getElementById("edits");
+      const editsBlock = document.getElementById("edits-block");
+      const PROMPT_MAX = __PROMPT_MAX__;
+      const TEXT_MAX = __TEXT_MAX__;
 
       // The dashboard's getColor, onto the editor's own underline classes.
       const tone = (alert) =>
@@ -314,58 +325,96 @@ PAGE = r"""<!doctype html>
         })),
       });
 
-      const failure = (status) =>
-        status === 401
-          ? "Enter a valid API key to run a prompt."
-          : status === 403
-            ? "This API key may not use the LLM."
-            : status === 422
-              ? "The language of the draft could not be determined."
-              : "The prompt failed (" + status + ").";
+      const failure = (status, body) => {
+        if (status === 401) return "Enter a valid API key to run a prompt.";
+        if (status === 403) return "This API key may not use the LLM.";
+        // FastAPI's validation errors are a list; the route's own 422 is not.
+        if (status === 422 && Array.isArray(body?.detail)) {
+          const field = body.detail[0]?.loc?.[1];
+          return field === "text"
+            ? "The text is too long to rewrite with a prompt."
+            : field === "prompt"
+              ? "The prompt is too long."
+              : "The request was not accepted (" + status + ").";
+        }
+        if (status === 422) return "The language of the draft could not be determined.";
+        return "The prompt failed (" + status + ").";
+      };
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!prompt.value.trim()) return;
+        // Also reached by Ctrl/Cmd+Enter, which a disabled button does not stop.
+        if (run.disabled || !prompt.value.trim()) return;
+
+        const text = editor.getText();
+        if (text.length > TEXT_MAX) {
+          writeStatus.textContent =
+            "The text is " + text.length + " characters long; a prompt can " +
+            "rewrite up to " + TEXT_MAX + ".";
+          return;
+        }
 
         // The last run's issues and edits no longer describe the text.
         review.hidden = true;
         issues.replaceChildren();
         edits.replaceChildren();
         run.disabled = true;
+        // The answer replaces the whole text, so typing meanwhile would be lost.
+        editor.editor.setEditable(false);
         writeStatus.textContent = "Writing…";
         try {
+          const config = settings.config || {};
           const response = await fetch("/v1.0/write", {
             method: "POST",
             headers: { "content-type": "application/json", "x-key": apiKey.value },
             body: JSON.stringify({
               prompt: prompt.value,
-              text: editor.getText(),
+              text,
+              ...(Object.keys(config).length && { config }),
             }),
           });
           if (!response.ok) {
-            writeStatus.textContent = failure(response.status);
+            const body = await response.json().catch(() => null);
+            writeStatus.textContent = failure(response.status, body);
             return;
           }
 
           const result = await response.json();
-          const text = result.reviewed_response || result.initial_response || "";
+          const replacement = result.reviewed_response || result.initial_response || "";
+          editor.editor.setEditable(true);
           // One transaction, so a single undo brings the previous text back.
-          editor.editor.commands.setContent(toDoc(text));
+          editor.editor.commands.setContent(toDoc(replacement));
 
-          // What led to the follow-up prompt and what it changed stay beside
-          // the editor, so the editor itself only ever holds the text.
-          issues.replaceChildren(...result.check_results.map(issue));
+          // What Witty found and what the revision changed stay beside the
+          // editor, so the editor itself only ever holds the text.
+          const found = result.check_results;
+          const revisable = found.filter((alert) => alert.alternatives?.length).length;
+          issues.replaceChildren(...found.map(issue));
           edits.replaceChildren(...(result.edits || []).map(edit));
-          review.hidden = !result.reviewed_response;
-          writeStatus.textContent =
-            (result.reviewed_response
-              ? "Replaced the text; Witty flagged " +
-                result.check_results.length +
-                " issue(s) in the draft and had them revised."
-              : "Replaced the text.") + " Undo with Ctrl+Z / ⌘Z.";
+          editsBlock.hidden = !result.edits?.length;
+          review.hidden = !found.length;
+
+          const parts = ["Replaced the text."];
+          if (found.length) {
+            parts.push(
+              "Witty flagged " + found.length + " issue(s) in the draft" +
+                (result.reviewed_response
+                  ? "; the " + revisable + " with alternatives were revised."
+                  : "; none had alternatives to revise with.")
+            );
+          }
+          if (result.limit_reached) {
+            parts.push(
+              "The draft is longer than Witty checks at once, so only its " +
+                "beginning was checked."
+            );
+          }
+          parts.push("Undo with Ctrl+Z / ⌘Z.");
+          writeStatus.textContent = parts.join(" ");
         } catch (error) {
           writeStatus.textContent = "The prompt failed: " + error.message;
         } finally {
+          editor.editor.setEditable(true);
           run.disabled = false;
         }
       });
@@ -401,12 +450,15 @@ MISSING_BUNDLE = """<!doctype html>
 
 def render_page(contact: str) -> str:
     """The page, pointing people without a key to the deployment's contact."""
+    page = PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH)).replace(
+        "__TEXT_MAX__", str(WRITE_TEXT_MAX_LENGTH)
+    )
     if not contact:
-        return PAGE.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
+        return page.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
 
     address = escape(contact)
     mailto = escape(f"mailto:{contact}?subject={quote('API key request')}")
-    return PAGE.replace(
+    return page.replace(
         "<!--key-request-->",
         ' No key yet? <a href="#get-a-key">Request one</a>.',
     ).replace(
@@ -445,8 +497,23 @@ def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse
     include_in_schema=False,
     dependencies=[Depends(textarea_enabled)],
 )
-def get_editor_bundle() -> FileResponse:
+def get_editor_bundle(request: Request) -> Response:
+    """The editor script, revalidated rather than downloaded on every visit.
+
+    no-cache keeps a reinstalled version from being served stale, and the ETag
+    lets a browser that has the current one get a 304 instead of ~1 MB again;
+    FileResponse sets an ETag but never answers a conditional request.
+    """
     if not EDITOR_BUNDLE.is_file():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    return FileResponse(EDITOR_BUNDLE, media_type="text/javascript")
+    stat = EDITOR_BUNDLE.stat()
+    headers = {
+        "ETag": f'"{stat.st_mtime_ns:x}-{stat.st_size:x}"',
+        # The security middleware keeps a Cache-Control the route set itself.
+        "Cache-Control": "no-cache",
+    }
+    if request.headers.get("if-none-match") == headers["ETag"]:
+        return Response(status_code=status.HTTP_304_NOT_MODIFIED, headers=headers)
+
+    return FileResponse(EDITOR_BUNDLE, media_type="text/javascript", headers=headers)
