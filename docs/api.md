@@ -319,10 +319,20 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
 | `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
-| `/textarea`                   | GET    | No            | Static HTML form for pasting text by hand during development                      |
+| `/textarea`                   | GET    | No            | Page for checking text by hand, with the Witty editor and an API key field        |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
 served unguarded either way.
+
+`/textarea` checks as you type and underlines what the API flags. The key typed into its API key field stays in the page's memory and is sent only as the `x-key` header, so the page works with `REQUIRE_API_KEY=true`. The page and its script (`/textarea/witty-editor.js`) are in the default `PUBLIC_PATHS`; a deployment that sets `PUBLIC_PATHS` itself has to list them to keep the page.
+
+The script is a vendored build of the editor component from the browser-extension repository (`packages/editor`). To update it:
+
+```bash
+# in browser-extension
+npm run build -w @witty-works/editor
+cp packages/editor/dist/witty-editor.js ../nlp_api-flexible/app/static/
+```
 
 Example health check:
 
