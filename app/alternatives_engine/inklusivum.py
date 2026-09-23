@@ -146,12 +146,39 @@ def plural(singular_form: str) -> str:
     return singular_form + "rne"
 
 
+# The umlaut is read off the feminine, which is only sound where both genders
+# umlaut in the plural - which is the condition the association states. These
+# are the words where they do not, so the feminine's umlaut says nothing about
+# the plural and carrying it over would be wrong. Matched as a suffix, so
+# compounds are covered too.
+NO_PLURAL_UMLAUT = (
+    # Only the feminine plural umlauts; the masculine is weak.
+    # die Bauern / die Bäuerinnen -> Bauerne, not Bäuerne.
+    "bauer",
+    "graf",
+    "sachse",
+    "schwabe",
+    "westfale",
+    "franke",
+    "franzose",
+    "narr",
+    # Only the masculine plural umlauts: die Herzöge / die Herzoginnen.
+    "herzog",
+    "general",
+    "bass",
+    "fuchs",
+)
+
+
 def _umlauted_stem(masculine: str, feminine: str) -> str | None:
     """Return the feminine's stem when it differs only by an umlaut.
 
     Arzt/Ärztin and Koch/Köchin carry the umlaut into the Inklusivum plural
     but not into the singular, so the two stems are kept apart.
     """
+    if masculine.lower().endswith(NO_PLURAL_UMLAUT):
+        return None
+
     if not feminine.endswith("in"):
         return None
 
@@ -389,9 +416,11 @@ def possessive_pair(tilde_word: str) -> str | None:
 PRONOMINAL = {
     "nominativ": "einey",
     "akkusativ": "einey",
-    # The genitive cell of the standalone table is empty on the
-    # Deklinationstabellen page; "einers" is our analogy to the attributive
-    # genitive. Open question in docs/inklusivum-feedback.md.
+    # Unsupported, and kept only until the reporting side stops asking for it:
+    # the Artikelpronomen table prints "—" in the genitive for every gender,
+    # not just this one, so the standalone genitive is not provided at all.
+    # The attested "einers" (die Tasche einers Schüleres) is the attributive
+    # article, a different slot. See docs/inklusivum.md.
     "genitiv": "einers",
     "dativ": "einerm",
 }
@@ -417,16 +446,25 @@ def is_possessive_form(word: str) -> bool:
 
 
 # The article-less adjective endings. -ers is left out on purpose: it is a
-# perfectly ordinary word ending ("anders", "besonders"), where these two are
-# effectively unique to this system.
+# perfectly ordinary word ending ("anders", "besonders"). These two are rare
+# enough in German to go by shape, which is not the same as unique - see the
+# caveat on the function.
 DISTINCTIVE_ADJECTIVE_ENDINGS = ("ey", "erm")
 
 
 def is_adjective_form(word: str) -> bool:
-    """Whether the word carries an ending only the Inklusivum uses.
+    """Whether the word carries an ending the Inklusivum uses.
 
-    Shape is enough here, unlike for nouns, because these endings do not
-    otherwise occur. Used to keep the spell checker off them.
+    Shape rather than a lexicon lookup, unlike for nouns. -ey is the weaker of
+    the two: the English loanwords German business writing borrows end in it
+    as well ("Jockey", "Hockey", "Whiskey", "Money"), and they match here.
+
+    What bounds that is the caller. This only runs on LanguageTool TYPOS
+    matches, and only when the Inklusivum is the configured ending, so a false
+    positive costs a misspelling in -ey going unreported rather than a wrong
+    suggestion. Requiring a lowercase word would rule the class out, since
+    German adjectives are lowercase and those are all nouns, but it would also
+    miss an Inklusivum adjective opening a sentence.
     """
     lowered = word.lower()
 
