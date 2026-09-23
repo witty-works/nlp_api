@@ -180,7 +180,13 @@ From the last Upsun invoice at full browser-extension usage (January 2025, 31 da
 | App memory | 20.9 GB |
 | Services | 0.2 CPU, 0.69 GB |
 
-That is the useful upper anchor: at its busiest the product ran at a few requests per second, which the 2 vCPU / 2 worker configuration above already covers with room to spare. The 21 GB of app memory reflects what the platform was provisioned with, not a measured working set — the same three models measure 3.9 GiB here.
+**Read the memory figure carefully — it is not a working set.** [.upsun/config.yaml](../.upsun/config.yaml) defines *two* applications, `app` and `languagetool`, both on the `HIGHER_MEMORY` profile, so the 20.9 GB covers the API and LanguageTool together. Redis is the separate `rediscache` service, which is the 0.69 GB line. And the figure is a monthly average over a schedule: cron jobs scaled instance counts up at 07:30 and down at 23:30 on weekdays, so the weekday peak allocation was higher than 20.9 GB and the nightly floor lower. Allocated instances × hours, in other words, not what one container needed.
+
+Whether the context checker was part of it cannot be settled from the repository. The build hook downloads only the fastText language model, not the SetFit weights, so if the context checker was running it was most likely the remote variant — in which case its cost sits wherever that service was hosted and is not in this invoice at all.
+
+What the invoice does establish is the **request volume**, and that is the useful anchor: at its busiest the product served a few requests per second, which 2 vCPU and 2 workers cover several times over. It also shows the shape of the old deployment — several scaled instances of two apps — against the single instance being sized here.
+
+One practice worth carrying over: the Upsun gunicorn ran with `--max-requests` and `--max-requests-jitter`, recycling workers to bound the slow growth of a long-lived spaCy process. [docker-entrypoint.sh](../docker-entrypoint.sh) now does the same, defaulting to 2000 requests with 200 jitter. With `--preload` the replacement worker is forked from the master, which still holds the models, so a recycle costs nothing measurable.
 
 ### What we are deploying
 
@@ -200,7 +206,9 @@ The working set is about 5 GB: 3.93 GiB for the API at two workers, ~50 MB for R
 | `LANGUAGETOOL_API` | empty — the profile is not started |
 | `LT_MEM_LIMIT` | `3g` (`LT_HEAP_MAX=2g`), when it is |
 
-**Take 12 GB instead if LanguageTool or the context checker are likely within the year.** Either one is a restart away but needs memory that is not in the 8 GB: LanguageTool costs 3 GB, the context checker 1.9 GB. Growing a Proxmox VM's memory needs a reboot, so the question is whether a later reboot is cheaper than the idle capacity. Neither needs more CPU.
+**Take 12 GB and 4 vCPU instead if LanguageTool is likely within the year.** It costs 3 GB, and unlike the context checker it also wants CPU of its own: it is a JVM that `config.properties` gives `maxCheckThreads=4`, and every checked request makes a call into it, so it competes with the workers rather than sitting idle beside them. The context checker is the cheaper addition on that axis — 1.9 GB and no extra cores, since it runs inside the same workers.
+
+Growing a Proxmox VM needs a reboot, so the question is whether a later reboot is cheaper than carrying idle capacity now.
 
 What can be changed later with only a restart: `WORKERS`, `CONTEXT_CHECKER_LOCAL`, `REQUIRE_API_KEY`, and starting the LanguageTool profile. What needs a rebuild: `SPACY_LANGS` and `SPACY_MODEL_SIZE` — which is the argument for building all three languages now even if only German is served at first.
 
