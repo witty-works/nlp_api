@@ -141,6 +141,41 @@ def test_page_structure_for_assistive_technology():
     assert 'hidden(" (opens in a new tab)")' in script
 
 
+def test_page_explains_itself_and_where_to_get_a_key(textarea):
+    """What a first-time visitor needs: what it is for, how the key is
+    handled, and whom to ask for one."""
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+
+    assert '<a href="https://witty.works">Witty Works</a>' in page
+    assert "What you can use it for" in page
+    assert '<a href="#get-a-key">Request one</a>' in page
+    assert (
+        '<a href="mailto:api@witty.works?subject=API%20key%20request">'
+        "api@witty.works</a>"
+    ) in page
+    # The hints are tied to their fields for screen readers.
+    for hint in ("api-key-help", "prompt-help"):
+        assert f'aria-describedby="{hint}"' in page
+        assert f'id="{hint}"' in page
+
+
+def test_the_contact_is_the_deployments(textarea, monkeypatch):
+    """A self-hosted page names its own contact, or none."""
+    monkeypatch.setattr(context.settings, "textarea_contact", 'keys@example.org"><b>')
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+    assert "api@witty.works" not in page
+    assert "keys@example.org&quot;&gt;&lt;b&gt;" in page
+    assert "<b>" not in page
+
+    monkeypatch.setattr(context.settings, "textarea_contact", "")
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+    assert "get-a-key" not in page
+    assert "mailto:" not in page
+
+
 def page_script() -> str:
     return PAGE.split("<script>")[1].split("</script>")[0]
 
@@ -148,7 +183,7 @@ def page_script() -> str:
 def test_the_key_goes_only_into_x_key():
     """The key is typed into a password field and sent as a header, and the
     page itself keeps it nowhere else."""
-    field = re.search(r'<input id="api-key"[^>]*>', PAGE).group(0)
+    field = re.search(r'<input\s[^>]*id="api-key"[^>]*>', PAGE).group(0)
     assert 'type="password"' in field
     assert 'autocomplete="off"' in field
     assert "value=" not in field

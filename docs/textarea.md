@@ -6,6 +6,8 @@ It is **off by default**. A deployment that does not turn it on serves no page (
 
 ## What it does
 
+The page explains itself to a first-time visitor: what Witty checks, how the key is handled, what the page can be used for, and whom to ask for a key. That contact is `TEXTAREA_CONTACT`, `api@witty.works` by default; a deployment that hands out its own keys sets its own address, or an empty value to leave the section out.
+
 - **Checks as you type.** The editor sends the text to `/v2.4/check` and underlines what comes back. A click on an underline, or `Alt+Shift+W`, opens the extension's popover with the explanation and alternatives, and LLM rewrites of the sentence from `/v1.0/rephrase` where the key's user may use the LLM.
 - **Rewrites by prompt.** The prompt field sends the editor's text and the prompt to [`/v1.0/write`](./api.md#core-endpoints): the LLM writes a draft, the draft is checked, and the LLM applies Witty's alternatives to what was flagged. The editor gets the result as one change, so one undo brings the previous text back. Below the editor the page lists the issues found in the draft, linked to their explanations, and the edits the review made.
 

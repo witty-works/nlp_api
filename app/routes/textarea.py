@@ -12,7 +12,9 @@ repository: `bin/fetch_editor.py` installs the pinned version of its npm package
 docs/textarea.md.
 """
 
+from html import escape
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from starlette.responses import FileResponse, HTMLResponse
@@ -30,7 +32,7 @@ PAGE = r"""<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Witty check</title>
+    <title>Witty: check and write inclusive text</title>
     <style>
       body {
         font: 16px/1.5 system-ui, sans-serif;
@@ -68,6 +70,27 @@ PAGE = r"""<!doctype html>
       }
       #editor:focus-within {
         border-color: #4a7bd0;
+      }
+      .lead {
+        font-size: 1.125rem;
+      }
+      .help {
+        display: block;
+        color: #555;
+        font-size: 0.875rem;
+        margin: 0.25rem 0 0;
+      }
+      #write h2,
+      #about h2 {
+        font-size: 1.125rem;
+        margin: 2rem 0 0.5rem;
+      }
+      footer {
+        border-top: 1px solid #ddd;
+        margin-top: 3rem;
+        padding-top: 1rem;
+        color: #555;
+        font-size: 0.875rem;
       }
       #status,
       #write-status {
@@ -109,20 +132,48 @@ PAGE = r"""<!doctype html>
   </head>
   <body>
     <main>
-      <h1>Check text</h1>
+      <h1>Check and write inclusive text</h1>
+      <p class="lead">
+        Witty points out language that can exclude or put off readers, such as
+        gendered job titles, stereotypes or jargon, and suggests what to write
+        instead. Type or paste a text below and it is checked as you type.
+      </p>
       <p>
         <label for="api-key">API key</label>
-        <input id="api-key" type="password" autocomplete="off" spellcheck="false" />
+        <input
+          id="api-key"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="api-key-help"
+        />
+        <span id="api-key-help" class="help">
+          Needed to check text. It stays in this page and is only sent with its
+          requests to this server; it is not saved.<!--key-request-->
+        </span>
       </p>
       <div id="editor"></div>
+      <p id="editor-help" class="help">
+        Underlined words have a suggestion. Click one, or move the cursor onto it
+        and press Alt+Shift+W, to see why it was flagged and what to write
+        instead.
+      </p>
       <p id="status" role="status" aria-live="polite"></p>
       <form id="write">
+        <h2>Write or rewrite with a prompt</h2>
         <label for="prompt">Prompt</label>
         <textarea
           id="prompt"
           rows="3"
           placeholder="Make it shorter, or: Write a job ad for a nurse"
+          aria-describedby="prompt-help"
         ></textarea>
+        <span id="prompt-help" class="help">
+          Describe a new text, or how to change the one above. A language model
+          writes a draft, Witty checks it, and the model revises what Witty
+          flagged. The result replaces the text above; undo brings the previous
+          one back.
+        </span>
         <button type="submit">Run</button>
         <p id="write-status" role="status" aria-live="polite"></p>
       </form>
@@ -132,7 +183,25 @@ PAGE = r"""<!doctype html>
         <h2>Edits from the follow-up prompt</h2>
         <p id="edits"></p>
       </section>
+      <section id="about">
+        <h2>What you can use it for</h2>
+        <ul>
+          <li>Checking job ads and role descriptions before they go out</li>
+          <li>Reviewing website, marketing and product copy</li>
+          <li>Writing internal communication such as announcements and newsletters</li>
+          <li>Drafting new texts with the prompt, inclusive from the first version</li>
+          <li>Trying Witty on your own texts before building on its API</li>
+        </ul>
+        <!--key-contact-->
+      </section>
     </main>
+    <footer>
+      <p>
+        Witty is made by <a href="https://witty.works">Witty Works</a>. Texts you
+        check are sent to this server; texts you rewrite with a prompt also go to
+        the language model it uses.
+      </p>
+    </footer>
     <script src="/textarea/witty-editor.js"></script>
     <script>
       const status = document.getElementById("status");
@@ -152,6 +221,9 @@ PAGE = r"""<!doctype html>
                 : "Checking failed: " + next.message;
         },
       });
+      document
+        .querySelector("#editor [contenteditable]")
+        ?.setAttribute("aria-describedby", "editor-help");
       apiKey.addEventListener("input", (event) => {
         editor.setApiKey(event.target.value);
       });
@@ -327,6 +399,26 @@ MISSING_BUNDLE = """<!doctype html>
 </html>"""
 
 
+def render_page(contact: str) -> str:
+    """The page, pointing people without a key to the deployment's contact."""
+    if not contact:
+        return PAGE.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
+
+    address = escape(contact)
+    mailto = escape(f"mailto:{contact}?subject={quote('API key request')}")
+    return PAGE.replace(
+        "<!--key-request-->",
+        ' No key yet? <a href="#get-a-key">Request one</a>.',
+    ).replace(
+        "<!--key-contact-->",
+        f"""<h2 id="get-a-key">Getting an API key</h2>
+        <p>
+          Write to <a href="{mailto}">{address}</a> and tell us what you would
+          like to use it for.
+        </p>""",
+    )
+
+
 def textarea_enabled(context: AppContext = Depends(get_app_context)) -> None:
     """A 404 unless the deployment asked for the page, as for any other path."""
     if not context.settings.textarea_enabled:
@@ -338,14 +430,14 @@ def textarea_enabled(context: AppContext = Depends(get_app_context)) -> None:
     include_in_schema=False,
     dependencies=[Depends(textarea_enabled)],
 )
-def get_textarea() -> HTMLResponse:
+def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse:
     if not EDITOR_BUNDLE.is_file():
         return HTMLResponse(
             content=MISSING_BUNDLE,
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
         )
 
-    return HTMLResponse(content=PAGE)
+    return HTMLResponse(content=render_page(context.settings.textarea_contact))
 
 
 @router.get(
