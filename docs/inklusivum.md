@@ -81,7 +81,7 @@ It is not small. `alternatives.py` is around 1,400 lines shared by three languag
 
 ## Remaining work
 
-Ordered by impact. These are gaps rather than defects, with one exception: the address forms in §2, where the absence of a rule lets the generic path emit wrong suggestions.
+Ordered by impact. Most are gaps, but two emit wrong output rather than nothing: the address forms in §2, where the absence of a rule lets the generic path answer for it, and the standalone genitive pronoun in §8.
 
 ### 1. The relative pronoun genitive
 
@@ -109,31 +109,39 @@ Note that the page prefers avoiding the formula over inflecting it — `Guten Ta
 
 The reference implementation takes the simpler route: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute`, which the page does not list at all. That divergence is raised in [inklusivum-feedback.md](./inklusivum-feedback.md).
 
-### 2b. Neologisms
+### 3. Neologisms
 
 The [Neologismen](https://geschlechtsneutral.net/neologismen/) page covers kinship and other coined words — `Geschwister` for `Bruder`/`Schwester`, and the `Owa`/`Tonke`/`Couse`/`Nifte` series. We carry none of them: there are no kinship entries in `inklusivum_nouns.csv` or `inklusivum_neutral_nouns.csv`, so `ihrem Bruder` is left alone where the reference implementation gives `enserm Geschwister`. This is list data rather than a rule, so it is mostly a transcription job.
 
-### 3. Exception lexicon breadth
+### 4. Exception lexicon breadth
 
 `inklusivum_nouns.csv` is down to the pairs no rule can derive: unrelated roots, a stem taken from the feminine, the `-mann`/`-frau` compounds, and one entry that pins a recommended plural where the rules give the also accepted short form.
 
 Prefer finding the rule over adding a row. Two classes that were listed word by word turned out to be systematic, and deriving them covers vocabulary the exception page does not mention at all. What remains there is worth reading with that in mind, and it is the page the association marks as least reviewed, so additions are lower confidence than the core system either way.
 
-### 4. Derivations
+### 5. Derivations
 
 `kaufmännisch` → `kaufleutisch`, `Studentenschaft` → `Studenterneschaft`. Both are confirmed: the reference implementation produces exactly these, so the forms are settled and only the derivation is missing here.
 
-### 5. Pair formulas
+### 6. Pair formulas
 
 `Kolleginnen und Kollegen` → `Kollegerne`, where the whole coordination collapses into one word. We report the two conjuncts separately, which leaves the reader to delete the rest of the phrase by hand.
 
 [inklusivum-feedback.md](./inklusivum-feedback.md) records why this was left out: the replacement does not correspond to a single token, so it does not fit a suggestion anchored on one span. The reference implementation sidesteps that by rewriting whole text rather than offering findings, and marks the entire coordination as one selectable unit. Anything we do here needs a finding whose span covers both conjuncts and the conjunction.
 
-### 6. A correct suggestion that changes nothing drops the whole finding
+### 7. A correct suggestion that changes nothing drops the whole finding
 
 After an article, the Inklusivum form of `Vorgesetzte(r)` is `Vorgesetzte`, which is what the text already says. The suggestion is therefore registered as a false positive and the entire result disappears, taking the unrelated replacement suggestions (`Leitungsperson`, `Führungsperson`) with it.
 
 Only the article actually needs changing here, and that is now reported separately, so what is left is the loss of the replacement suggestions rather than the missing article. Reporting nothing is at least better than the previous behaviour, which offered the article-less `Vorgesetztey` after an article.
+
+### 8. The standalone genitive pronoun is a form the system does not have
+
+`PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) holds `einers`, and there is no such form. The Artikelpronomen table on the Deklinationstabellen page prints `—` in the genitive row for **all four** genders, not only the Inklusivum, which makes the dash a statement that the standalone genitive is not provided rather than a cell nobody filled in. The `einers` that *is* attested — *die Tasche einers Schüleres* — is the attributive article, a different slot, and the Gemischte Deklination table gives it there.
+
+So this is the second entry in this list that emits wrong output rather than nothing. It is last because it is also the least likely to fire: reaching it needs `eines` tagged `PRON` with `Case=Gen`, and a standalone genitive pronoun is close to extinct in modern German ("der Vorschlag eines von euch"). No fixture produces it, which is why it has never shown up in a snapshot.
+
+The fix is to report nothing in that slot rather than to invent a form — a guard where `RuleCheck.inklusivum_articles` builds the pronominal suggestion, not a change to the table, since the table is also read for the cases that do exist. Left undone deliberately: it is a behaviour change on a path no test covers, so it wants its own fixture proving the finding disappears rather than being folded into a documentation pass.
 
 ## Forms the sources did not settle
 
@@ -145,7 +153,7 @@ These were inferred by analogy while the association's web pages were the only s
 - **The reflexive pronoun** — confirmed unchanged. `sich` appears in the reference implementation only as a guard, never as something rewritten.
 - **Genitive and dative singular of the exception nouns** — confirmed to follow the regular rule. The irregular nouns run through the same case branch as the derived ones, so the genitive singular is `+s`.
 - **The n-declension** — confirmed dropped. There is no weak-declension branch; *den Studenten* becomes *de Studente*.
-- **Genitive of the standalone article pronoun** — not `einers`, and this one we got wrong. The Artikelpronomen table prints `—` in the genitive row for *all four* genders, not only the Inklusivum, so the dash says the standalone genitive is not provided at all rather than that the Inklusivum cell is unfilled. The `einers` that is attested (*die Tasche einers Schüleres*) is the attributive article, which the Gemischte Deklination table gives. `PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) is therefore unsupported; `eines` reaches it through `PRONOMINAL_FORMS`, so the safer behaviour is to report nothing in that slot.
+- **Genitive of the standalone article pronoun** — not `einers`, and this one we got wrong. The Artikelpronomen table prints `—` in the genitive row for *all four* genders, not only the Inklusivum, so the dash says the standalone genitive is not provided at all rather than that the Inklusivum cell is unfilled. The `einers` that is attested (*die Tasche einers Schüleres*) is the attributive article, which the Gemischte Deklination table gives. `PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) is therefore unsupported; `eines` reaches it through `PRONOMINAL_FORMS`, so the safer behaviour is to report nothing in that slot. Tracked as §8 of Remaining work.
 - **`deselben` in the nominative slot** — confirmed a typo on the website. The nominative is `deselbe`; every other case is the `der` article ending plus `selben`.
 
 ---
