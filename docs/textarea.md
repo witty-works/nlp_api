@@ -77,7 +77,7 @@ and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied 
 
 ## Accessibility
 
-The page's own markup (landmark, labels, live regions for the check and prompt status, the issue list and the edits, with the struck-through and inserted words read out as "removed" and "added") is checked with axe (WCAG 2.2 AA and best practice). With editor 2.0.0 there are no findings on the empty page, with the popover open, or after a prompt run. The editor, its toolbar and popover are the component's, and are tested in its repository.
+The page's own markup (landmark, labels, live regions for the check and prompt status, the issue list and the edits, with the struck-through and inserted words read out as "removed" and "added") is checked with axe (WCAG 2.2 AA and best practice). With editor 2.0.1 there are no findings on the empty page, with the popover open, or after a prompt run. The editor, its toolbar and popover are the component's, and are tested in its repository.
 
 ## Updating the editor
 
