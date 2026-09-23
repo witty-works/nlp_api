@@ -45,6 +45,13 @@ def _synthesized_noun_forms(
     }
 
 
+# Masculines in -er whose plural is weak (-n) rather than identical to the
+# singular. The gendered pair cannot distinguish them from the agent nouns,
+# because both take a plain -in: Bayer/Bayerin looks exactly like
+# Wiener/Wienerin. Matched as a suffix so compounds are covered.
+_WEAK_ER_NOUNS = ("bayer", "pommer")
+
+
 def synthesize_gendered_pair(
     male_form: str, female_form: str
 ) -> tuple[dict, dict] | None:
@@ -57,8 +64,16 @@ def synthesize_gendered_pair(
     shape fetch_declensions returns, or None when the pair matches no
     known-regular pattern - never guess.
     """
+    if male_form.lower().endswith(_WEAK_ER_NOUNS):
+        # The -er rule below would give these the wrong plural, and the pair
+        # does not reveal it: "der Bayer" pluralises weakly to "die Bayern"
+        # where "der Wiener" gives "die Wiener", yet both form the feminine
+        # with a plain -in. Refuse rather than guess.
+        return None
+
     if male_form.endswith("er") and female_form == male_form + "in":
-        # Agent nouns and demonyms: Wiener/Wienerin, Temposünder ...
+        # Agent nouns, and the demonyms that decline like them:
+        # Wiener/Wienerin, Temposünder ...
         masculine = _synthesized_noun_forms(
             male_form,
             "masculine",

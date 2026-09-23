@@ -312,3 +312,18 @@ def test_synthesize_gendered_pair_never_guesses():
     assert synthesize_gendered_pair("Kunde", "Kundin") is not None
     assert synthesize_gendered_pair("Steuermann", "Steuerfrau") is None
 
+
+def test_synthesize_gendered_pair_refuses_weak_er_plurals():
+    """Bayer/Bayerin looks exactly like Wiener/Wienerin but pluralises weakly.
+
+    "die Bayern" against "die Wiener", with nothing in the pair to tell them
+    apart, so the -er rule would invent "die Bayer".
+    """
+    from app.nouns import synthesize_gendered_pair
+
+    assert synthesize_gendered_pair("Bayer", "Bayerin") is None
+    assert synthesize_gendered_pair("Pommer", "Pommerin") is None
+    # Compounds inherit the refusal, and the agent nouns are unaffected.
+    assert synthesize_gendered_pair("Altbayer", "Altbayerin") is None
+    assert synthesize_gendered_pair("Wiener", "Wienerin") is not None
+
