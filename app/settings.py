@@ -129,8 +129,15 @@ class Settings(BaseSettings):
     # The routes that stay reachable without a credential when require_api_key
     # is on. Kept as a setting rather than a constant so a deployment can open
     # up a route it needs - /slack/commands, say, which authenticates itself by
-    # signature and would otherwise be unreachable for Slack.
-    public_paths: list[str] = ["/health", "/v2.0/categories"]
+    # signature and would otherwise be unreachable for Slack. The /textarea page
+    # and its script are static and ask for a key themselves, so they have to
+    # load without one.
+    public_paths: list[str] = [
+        "/health",
+        "/v2.0/categories",
+        "/textarea",
+        "/textarea/witty-editor.js",
+    ]
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a

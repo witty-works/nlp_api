@@ -2911,6 +2911,8 @@ def test_require_api_key():
             # The two routes a client needs before it has been given a key.
             assert client.get("/health").status_code == 200
             assert client.get("/v2.0/categories").status_code == 200
+            # And the page that asks for one.
+            assert client.get("/textarea").status_code == 200
 
             # Everything else is closed, including routes that merely describe
             # the deployment rather than checking anything.
