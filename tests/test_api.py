@@ -3316,6 +3316,20 @@ async def test_llm_model_override(llm_calls):
     assert "aws_access_key_id" not in llm_calls[0]
 
 
+def test_config_options_accept_a_language_code():
+    """`de` as well as `de-DE`: a client that only knows the language gets
+    the translated labels instead of a 422."""
+    with TestClient(app) as client:
+        for locale in ("de", "de-CH"):
+            response = client.get("/v2.0/config-options", params={"locale": locale})
+            assert response.status_code == 200
+            labels = response.json()["options"]["german_gender_ending"]["labels"]
+            assert labels["de-e"].startswith("Inklusivum, z.B.")
+
+        assert client.get("/v2.0/categories", params={"locale": "fr"}).status_code == 200
+        assert client.get("/v2.0/config-options", params={"locale": "xx"}).status_code == 422
+
+
 def test_config_options():
     """Every reported value is one a check request is allowed to send."""
     with TestClient(app) as client:

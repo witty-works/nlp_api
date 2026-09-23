@@ -19,6 +19,7 @@ from app.models import (
     Config,
     ConfigOptionsOut,
     ErrorMessage,
+    LangType,
     LangVariantType,
     LangWithAutoType,
     ResultConf,
@@ -77,7 +78,7 @@ async def post_auth_2_0(
 @router.get("/v2.0/categories", response_model=CategoriesOut)
 async def get_categories_2_0(
     response: Response,
-    locale: LangVariantType = LangVariantType.enUS,
+    locale: LangVariantType | LangType = LangVariantType.enUS,
     context: AppContext = Depends(get_app_context),
 ):
     """The category keys a client may put in `config.disabled_categories`.
@@ -113,7 +114,7 @@ CONFIG_OPTION_FIELDS = (
 @router.get("/v2.0/config-options", response_model=ConfigOptionsOut)
 async def get_config_options_2_0(
     response: Response,
-    locale: LangVariantType = LangVariantType.enUS,
+    locale: LangVariantType | LangType = LangVariantType.enUS,
 ):
     """The values `config.german_gender_ending` and its siblings accept.
 
