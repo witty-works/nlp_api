@@ -62,6 +62,10 @@ SOURCES = {
 
 DEFAULT_DEST = Path(__file__).resolve().parent.parent / "app" / "static"
 
+# Seconds without progress before a download gives up, so a stalled registry
+# fails a Docker build instead of hanging it.
+TIMEOUT = 60
+
 # Where a version has to come from before --pin accepts it: built by this
 # workflow in this repository, from the tag named after the version.
 PROVENANCE_REPOSITORY = "https://github.com/witty-works/browser-extension"
@@ -117,7 +121,7 @@ def download(
         )
 
     opener = opener or urllib.request.urlopen
-    with opener(tarball_url(package, version)) as response:
+    with opener(tarball_url(package, version), timeout=TIMEOUT) as response:
         data = response.read()
 
     verify(data, integrity)

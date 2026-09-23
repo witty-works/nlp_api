@@ -241,7 +241,9 @@ def fake_registry(data: bytes):
     requested = []
 
     @contextmanager
-    def opener(url):
+    def opener(url, timeout):
+        # Always bounded, so a stalled registry cannot hang a Docker build.
+        assert timeout
         requested.append(url)
         yield io.BytesIO(data)
 
