@@ -153,23 +153,54 @@ Three points on the curve, all **without LanguageTool** — add 3 GB to any of t
 
 Disk is image plus room for a second image during upgrades, the ~8 MB rule database, the 126 MB language-detection model, and 1.5 GB of SetFit weights in the last column.
 
-**CPU.** Not measured here, and it is the axis this document is weakest on. spaCy inference is CPU-bound and single-threaded per request, so throughput scales with workers until memory or cores run out; start at 4 vCPU for the middle column and measure against real traffic before committing. Budget one core per worker as a first approximation.
+### CPU
+
+Measured on the three-language image, German text, LanguageTool off. Latency is per request; the burst is eight concurrent requests.
+
+| vCPU / workers | 300-char paragraph | 8 concurrent | resident |
+| --- | --- | --- | --- |
+| 2 / 1 | 243 ms | 4.0 req/s | 3.47 GiB |
+| 2 / 2 | 243 ms | 7.6 req/s | 3.93 GiB |
+| 4 / 2 | 252 ms | 7.5 req/s | 4.08 GiB |
+
+A 38-character sentence costs 36 ms, so cost scales with text length rather than being a fixed overhead — the browser extension's short as-you-type checks are much cheaper than the paragraph figure suggests.
+
+Two things follow. **Two workers roughly double throughput**, because each request is CPU-bound and single-threaded, so one worker leaves a core idle. And **the fourth vCPU buys nothing at two workers** — 7.5 against 7.6 req/s is noise. Workers, not cores, are the knob; add cores only when adding workers.
+
+Idle CPU is 0.55%, so an instance that is merely up costs nothing.
+
+### What production actually used
+
+From the last Upsun invoice at full browser-extension usage (January 2025, 31 days):
+
+| | |
+| --- | --- |
+| Requests | 2.79 M for the month — **1.0 req/s** flat, ~**3.5 req/s** if concentrated into business hours |
+| App CPU | 3.99 |
+| App memory | 20.9 GB |
+| Services | 0.2 CPU, 0.69 GB |
+
+That is the useful upper anchor: at its busiest the product ran at a few requests per second, which the 2 vCPU / 2 worker configuration above already covers with room to spare. The 21 GB of app memory reflects what the platform was provisioned with, not a measured working set — the same three models measure 3.9 GiB here.
 
 ### What we are deploying
 
 The middle column, with room to move: **three languages, `lg` models, 2 workers to start and up to 4, context checker off, LanguageTool prepared but not running.** [.env.example](../.env.example) pins it; copy it to `.env` next to `compose.yml`.
 
-**Ask for 16 GB.** What is being deployed needs about 8, and even with LanguageTool running it is 11. The larger number is for what happens next: every option deliberately left off here — LanguageTool, the context checker, more workers — costs memory, and all three are runtime switches that need no rebuild. 16 GB means turning any of them on is a restart rather than a change request. Growing a Proxmox VM's memory needs a reboot and a ticket; asking for the larger number once does not.
+**Ask for 8 GB and 2 vCPU.** Expected usage is low, and the measurements say low usage costs almost nothing here: the memory is the models, which load whether or not anyone sends a request, and 2 vCPU with 2 workers already serves 7.6 paragraph-requests per second — twice what production handled at its busiest. Idle CPU is 0.55%.
+
+The working set is about 5 GB: 3.93 GiB for the API at two workers, ~50 MB for Redis, and roughly a gigabyte for the host and Docker. 8 GB leaves headroom without paying for capacity that traffic will not use.
 
 | | value |
 | --- | --- |
-| VM memory | **16 GB** (8 GB is the working set; the rest is headroom for the switches below) |
+| VM memory | **8 GB** (~5 GB working set) |
 | VM disk | **30 GB** |
-| vCPU | **4 to start**, 6 if running 4 workers |
-| `API_MEM_LIMIT` | `8g` |
+| vCPU | **2** |
+| `API_MEM_LIMIT` | `6g` |
 | `REDIS_MEM_LIMIT` | `512m` |
 | `LANGUAGETOOL_API` | empty — the profile is not started |
 | `LT_MEM_LIMIT` | `3g` (`LT_HEAP_MAX=2g`), when it is |
+
+**Take 12 GB instead if LanguageTool or the context checker are likely within the year.** Either one is a restart away but needs memory that is not in the 8 GB: LanguageTool costs 3 GB, the context checker 1.9 GB. Growing a Proxmox VM's memory needs a reboot, so the question is whether a later reboot is cheaper than the idle capacity. Neither needs more CPU.
 
 What can be changed later with only a restart: `WORKERS`, `CONTEXT_CHECKER_LOCAL`, `REQUIRE_API_KEY`, and starting the LanguageTool profile. What needs a rebuild: `SPACY_LANGS` and `SPACY_MODEL_SIZE` — which is the argument for building all three languages now even if only German is served at first.
 
