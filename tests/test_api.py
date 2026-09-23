@@ -2908,9 +2908,10 @@ def test_require_api_key():
         context.redis.set_api_key("gate-key", "default@gmail.com")
         context.settings.require_api_key = True
         try:
-            # The two routes a client needs before it has been given a key.
+            # The routes a client needs before it has been given a key.
             assert client.get("/health").status_code == 200
             assert client.get("/v2.0/categories").status_code == 200
+            assert client.get("/v2.0/config-options").status_code == 200
             # And the page that asks for one.
             assert client.get("/textarea").status_code == 200
 

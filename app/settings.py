@@ -129,12 +129,14 @@ class Settings(BaseSettings):
     # The routes that stay reachable without a credential when require_api_key
     # is on. Kept as a setting rather than a constant so a deployment can open
     # up a route it needs - /slack/commands, say, which authenticates itself by
-    # signature and would otherwise be unreachable for Slack. The /textarea page
-    # and its script are static and ask for a key themselves, so they have to
-    # load without one.
+    # signature and would otherwise be unreachable for Slack. The category list
+    # and the config options are the same for everyone and let an options page
+    # render before a key has been entered. The /textarea page and its script
+    # are static and ask for a key themselves, so they have to load without one.
     public_paths: list[str] = [
         "/health",
         "/v2.0/categories",
+        "/v2.0/config-options",
         "/textarea",
         "/textarea/witty-editor.js",
     ]
