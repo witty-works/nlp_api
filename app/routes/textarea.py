@@ -211,18 +211,16 @@ PAGE = r"""<!doctype html>
     <script>
       const status = document.getElementById("status");
       const apiKey = document.getElementById("api-key");
-      let settings = {};
       const editor = WittyEditor.mount(document.getElementById("editor"), {
+        // Long texts are checked in requests of this API's size.
+        maxRequestLength: __CHECK_MAX__,
+        // The visible help below the editor, after the editor's own hint.
+        describedBy: "editor-help",
         // The popover's LLM rewrites (/v1.0/rephrase); the API still refuses
         // them for a key whose config does not allow LLM use.
         llmAlternatives: true,
         // Long enough for a local model through Ollama, not only a hosted one.
         llmTimeoutMs: 30000,
-        // The toolbar's settings, so a prompt's draft is checked the way the
-        // editor checks the text.
-        onSettingsChange(next) {
-          settings = next;
-        },
         onStatus(next) {
           status.textContent =
             next.state === "idle"
@@ -363,7 +361,9 @@ PAGE = r"""<!doctype html>
         editor.editor.setEditable(false);
         writeStatus.textContent = "Writing…";
         try {
-          const config = settings.config || {};
+          // The toolbar's settings, so the draft is checked the way the editor
+          // checks the text.
+          const config = editor.getSettings().config || {};
           const response = await fetch("/v1.0/write", {
             method: "POST",
             headers: { "content-type": "application/json", "x-key": apiKey.value },
@@ -448,10 +448,12 @@ MISSING_BUNDLE = """<!doctype html>
 </html>"""
 
 
-def render_page(contact: str) -> str:
+def render_page(contact: str, check_max: int) -> str:
     """The page, pointing people without a key to the deployment's contact."""
-    page = PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH)).replace(
-        "__TEXT_MAX__", str(WRITE_TEXT_MAX_LENGTH)
+    page = (
+        PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH))
+        .replace("__TEXT_MAX__", str(WRITE_TEXT_MAX_LENGTH))
+        .replace("__CHECK_MAX__", str(check_max))
     )
     if not contact:
         return page.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
@@ -489,7 +491,11 @@ def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
         )
 
-    return HTMLResponse(content=render_page(context.settings.textarea_contact))
+    return HTMLResponse(
+        content=render_page(
+            context.settings.textarea_contact, context.settings.text_max_length
+        )
+    )
 
 
 @router.get(

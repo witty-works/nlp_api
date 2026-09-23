@@ -447,6 +447,8 @@ def test_page_limits_match_the_api(textarea):
 
     assert f'maxlength="{WRITE_PROMPT_MAX_LENGTH}"' in page
     assert f"const TEXT_MAX = {WRITE_TEXT_MAX_LENGTH};" in page
+    # The editor splits long texts into requests the API checks whole.
+    assert f"maxRequestLength: {context.settings.text_max_length}," in page
     assert "__" not in page.split("<script>")[1]
 
 
@@ -457,6 +459,7 @@ def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     # Typing during a run would be overwritten by the answer.
     assert "editor.editor.setEditable(false);" in script
     # The draft is checked with the editor's own settings.
-    assert "onSettingsChange(next)" in script
-    # The editor's own screen-reader hint is left alone.
+    assert "editor.getSettings().config" in script
+    # The help text is added to the editor's own hint, not put in its place.
+    assert 'describedBy: "editor-help"' in script
     assert "aria-describedby" not in script
