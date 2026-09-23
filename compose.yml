@@ -5,10 +5,26 @@
 
 services:
   languagetool:
-    # Pinned: the cloud API moved from 6.8 to 6.9-SNAPSHOT and stopped
-    # reporting COMMA_COMPOUND_SENTENCE, which changed test output with no
-    # change here. latest would drift the same way.
-    image: erikvl87/languagetool:6.8
+    # Not started by default. Bring it up with:
+    #     docker compose --profile languagetool up -d
+    # and set LANGUAGETOOL_API in .env to point at it. Off, the API simply
+    # returns no spelling or grammar findings; see docs/deployment-sizing.md.
+    profiles: ["languagetool"]
+    # Built, not pulled. The stock image does not carry this project's ignore
+    # lists, so it reports spelling errors on vocabulary the product uses
+    # deliberately, and it does not apply the disabledRuleIds in
+    # languagetool/config.properties - several of which are LanguageTool's own
+    # gendered-language rules that collide with ours. The same is true of the
+    # hosted service, which is why LANGUAGETOOL_API defaults to empty.
+    #
+    # LT_VERSION pins the base image. 6.8 is the newest published tag; the
+    # version is pinned rather than floating because LanguageTool retunes
+    # rules between releases and this project filters its output by rule id.
+    build:
+      context: ./languagetool
+      args:
+        - LT_VERSION=${LT_VERSION:-6.8}
+    image: nlp-languagetool:${LT_VERSION:-6.8}
     container_name: lt
     restart: unless-stopped
     ports:
@@ -73,16 +89,23 @@ services:
     container_name: nlp_api
     restart: unless-stopped
     depends_on:
+      # required: false so the API still starts when the languagetool profile
+      # is not active, while keeping the ordering when it is.
       languagetool:
         condition: service_healthy
+        required: false
       redis:
         condition: service_healthy
     ports:
       # Container side is 8081: that is where the entrypoint binds gunicorn.
       - "${API_HOST_PORT:-8080}:8081"
     environment:
-      # Point API to LanguageTool service
-      - LANGUAGETOOL_API=http://languagetool:8010/v2
+      # Empty by default, and deliberately so: the *code* default is
+      # LanguageTool's hosted API, so leaving this unset would send the text
+      # being checked to a third party. Empty means no spelling or grammar
+      # findings and no outbound call. To run it locally, start the
+      # languagetool profile and set this to http://languagetool:8010/v2
+      - LANGUAGETOOL_API=${LANGUAGETOOL_API-}
       # Without these the app uses an empty in-process fake (see redis above).
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}

@@ -9,8 +9,8 @@ The short version: the resident memory is almost entirely spaCy word vectors, so
 | Container | Image | Why it is there |
 | --- | --- | --- |
 | `nlpapi` | built from this repo | the API itself |
-| `languagetool` | `erikvl87/languagetool:6.8` | spell and grammar checking; pinned, see the comment in [compose.yml](../compose.yml) |
-| `redis` | `redis:7-alpine` | user and organization config, written by the dashboard |
+| `redis` | `redis:7-alpine` | API keys, user and organization config |
+| `languagetool` | built from [languagetool/](../languagetool/) | spell and grammar checking; **not started by default**, see below |
 
 Plus two mounts into `nlpapi`:
 
@@ -18,6 +18,54 @@ Plus two mounts into `nlpapi`:
 - `./models` (read-only) — SetFit context-checker weights, ~1.5 GB, only read when the context checker is on.
 
 **Redis is not optional.** With no `REDIS_HOST` the app falls back to an in-process `FakeStrictRedis`, which is empty. Nothing errors: the API answers `200` with `{"results": []}` for every request, because no user has a config. This is easy to mistake for "the rules are broken" — it cost time while writing this document. The compose file wires it up so a fresh `docker compose up` does not land in that state.
+
+## LanguageTool: prepared, off for now
+
+LanguageTool is a second engine alongside the product's own rules. It is wired into `compose.yml` behind a profile so it is one command away, but nothing starts it and `LANGUAGETOOL_API` is empty.
+
+**The setting's default is a third-party service, not "off".** `languagetool_api` defaults to `https://api.languagetoolplus.com/v2` in [app/settings.py](../app/settings.py), so a deployment that simply never mentions LanguageTool sends the text being checked to LanguageTool's hosted API. That is the wrong default for an on-premise install and the reason `compose.yml` sets the variable to empty explicitly rather than leaving it unset. Empty is the only value that means no spell checking *and* no outbound call.
+
+**The hosted service is also wrong on correctness grounds, not only privacy.** It cannot carry this project's ignore lists, so it reports spelling errors on vocabulary the product uses deliberately, and it does not apply the `disabledRuleIds` in [languagetool/config.properties](../languagetool/config.properties) — several of which (`GLEICHBEHANDLUNG`, `ERSTSEMESTERIN`, `MAEDCHENNAME`, `PUTZFRAU`) are LanguageTool's own gendered-language rules, which overlap with the product's. Measured against the stock 6.8 image with a word taken from `de_ignore.txt`:
+
+| | `"Die ARIA-Initiative ist wichtig."` |
+| --- | --- |
+| stock image | 1 typo match, `GERMAN_SPELLER_RULE` |
+| image built from `languagetool/` | none |
+
+So the container must be **built**, not pulled. `compose.yml` does that; the ignore lists are appended to LanguageTool's own (245,266 lines for German afterwards, of which 1,082 are ours), so both survive.
+
+**Updating LanguageTool is one variable.** `LT_VERSION` in `.env` is the base image tag that [languagetool/Dockerfile](../languagetool/Dockerfile) builds on, so an update keeps the ignore lists and config:
+
+    LT_VERSION=6.9
+    docker compose --profile languagetool build
+
+6.8 is the newest published tag as of 2026-09 and is what the Dockerfile now defaults to. It previously hardcoded 6.2 (2023-12-07), so enabling LanguageTool means a six-release jump: run the test suite and adjudicate the snapshot diff before trusting it, because LanguageTool retunes rules between releases and this project filters its output by rule and category id.
+
+**One discrepancy with the Upsun deployment,** worth knowing if the two are ever compared: the Upsun build hook *overwrites* `ignore.txt` with ours (`cp`), where the Dockerfile *appends* (`>>`). Overwriting discards LanguageTool's own ~244,000 German entries, so Upsun will report far more spelling errors than this deployment does. Upsun also pins 6.3 where the Dockerfile pinned 6.2. Appending is the behaviour to keep.
+
+**What you lose while it is off.** The whole `orthography` category — typos and punctuation — plus the style, plain-language and anglicism subcategories that are derived from LanguageTool's own rule categories. On the fixture `"Ich gehe noch schnell ueber die Strasse!!!"` those are the three findings `ueber → über`, `Strasse → Straße` and `!!! → !`. The gendered-language rules, which are the product, come from this repo and are unaffected: a check of `"Der Lehrer gibt dem Schüler den Stift."` returns the same two findings either way — verified by running it with the variable set and empty.
+
+Degradation is clean rather than an error: `apply_languagetool_rules` returns an empty list when the variable is empty, so requests succeed with fewer findings.
+
+**What it costs when you turn it on.**
+
+| | |
+| --- | --- |
+| Memory | ~1.5 GiB resident at `Java_Xmx=2g`, measured while running the test suite |
+| `LT_MEM_LIMIT` | `3g` — the container limit has to clear the heap plus JVM overhead |
+| Disk | ~1 GB image |
+| VM | **add 3 GB** to the figures below |
+
+The JVM grows to fill whatever heap it is given, so `Java_Xmx` is the real knob and the container limit follows it. An earlier `4g` setting here was over-provisioned: `2g` runs the full suite.
+
+To turn it on:
+
+    docker compose --profile languagetool build
+    docker compose --profile languagetool up -d
+
+and set `LANGUAGETOOL_API=http://languagetool:8010/v2` in `.env`. The API side needs no rebuild; the LanguageTool image does, because it is built from this repo rather than pulled.
+
+One caveat for later: LanguageTool serves 60 languages and loads them lazily, so the resident figure above reflects the languages actually exercised. Serving a lot of English and French traffic as well as German may push it higher; re-measure before trusting `3g` under real load.
 
 ## The four dimensions
 
@@ -85,16 +133,16 @@ For the rest of the stack: LanguageTool sits at about 1.5 GiB with `Java_Xmx=2g`
 
 ## Recommended configurations
 
-Three points on the curve. "VM" is what to ask for, including room for the host, page cache and the usual headroom over the measured idle figures.
+Three points on the curve, all **without LanguageTool** — add 3 GB to any of them to run it. "VM" is what to ask for, including room for the host, page cache and the usual headroom over the measured idle figures.
 
 | | German only | All three languages | All three + context checker |
 | --- | --- | --- | --- |
 | `SPACY_LANGS` | `de` | `en,de,fr` | `en,de,fr` |
 | `WORKERS` | 2 | 2 | 4 |
 | `API_MEM_LIMIT` | `4g` | `6g` | `10g` |
-| `LT_MEM_LIMIT` | `3g` | `3g` | `3g` |
 | measured API idle | ~2.3 GiB | 3.94 GiB | ~6.7 GiB |
-| **VM memory** | **8 GB** | **12 GB** | **16 GB** |
+| **VM memory** | **6 GB** | **8 GB** | **12 GB** |
+| **with LanguageTool** | 9 GB | 11 GB | 15 GB |
 | VM disk | 25 GB | 30 GB | 35 GB |
 
 Disk is image plus room for a second image during upgrades, the ~8 MB rule database, the 126 MB language-detection model, and 1.5 GB of SetFit weights in the last column.
@@ -103,20 +151,21 @@ Disk is image plus room for a second image during upgrades, the ~8 MB rule datab
 
 ### What we are deploying
 
-The middle column, with room to move: **three languages, `lg` models, 2 workers to start and up to 4, context checker off.** [.env.example](../.env.example) pins it; copy it to `.env` next to `compose.yml`.
+The middle column, with room to move: **three languages, `lg` models, 2 workers to start and up to 4, context checker off, LanguageTool prepared but not running.** [.env.example](../.env.example) pins it; copy it to `.env` next to `compose.yml`.
 
-**Ask for 16 GB rather than 12.** The measured idle figure at 4 workers is 4.81 GiB and the whole stack fits in 12 GB, but 16 GB buys two things worth having up front: headroom for per-request working memory, which none of these idle numbers include, and the option to turn the context checker on later without resizing the VM (4 workers with it on is roughly 6.7 GiB, and the stack still fits). Growing a Proxmox VM's memory needs a reboot; asking for the larger number once does not.
+**Ask for 16 GB.** What is being deployed needs about 8, and even with LanguageTool running it is 11. The larger number is for what happens next: every option deliberately left off here — LanguageTool, the context checker, more workers — costs memory, and all three are runtime switches that need no rebuild. 16 GB means turning any of them on is a restart rather than a change request. Growing a Proxmox VM's memory needs a reboot and a ticket; asking for the larger number once does not.
 
 | | value |
 | --- | --- |
-| VM memory | **16 GB** |
+| VM memory | **16 GB** (8 GB is the working set; the rest is headroom for the switches below) |
 | VM disk | **30 GB** |
 | vCPU | **4 to start**, 6 if running 4 workers |
 | `API_MEM_LIMIT` | `8g` |
-| `LT_MEM_LIMIT` | `3g` (`LT_HEAP_MAX=2g`) |
 | `REDIS_MEM_LIMIT` | `512m` |
+| `LANGUAGETOOL_API` | empty — the profile is not started |
+| `LT_MEM_LIMIT` | `3g` (`LT_HEAP_MAX=2g`), when it is |
 
-`WORKERS` and `CONTEXT_CHECKER_LOCAL` are runtime settings, so both can be changed with a restart. `SPACY_LANGS` and `SPACY_MODEL_SIZE` are build args and need a rebuild — which is the argument for building all three languages now even if only German is served at first.
+What can be changed later with only a restart: `WORKERS`, `CONTEXT_CHECKER_LOCAL`, `REQUIRE_API_KEY`, and starting the LanguageTool profile. What needs a rebuild: `SPACY_LANGS` and `SPACY_MODEL_SIZE` — which is the argument for building all three languages now even if only German is served at first.
 
 ## Running without the dashboard
 
@@ -168,8 +217,6 @@ Four things that cost time to find, all of which fail quietly:
 **Two files are gitignored and must be provisioned separately.** `training_data/lid.176.bin` (126 MB, fastText language detection) and the rule database under `database/`. The Dockerfile copies the first from the build context, so the image is only correct if that file is present at build time; the second is mounted at runtime. Neither is in the repository.
 
 **Startup is slow and that is normal.** Loading the models takes roughly 10–20 s per container before the first request can be served, longer with the context checker on. The `HEALTHCHECK` in the Dockerfile has `--start-period=120s` for that reason; shortening it makes Docker kill containers that are still coming up. The same applies to any load balancer in front: give it a slow-start or readiness delay, or a rolling restart will take the service down.
-
-**LanguageTool heap.** `Java_Xmx` is the knob, and the JVM will grow to fill whatever it is given. `2g` is enough to run the full test suite; the container was using 1.5 GiB of its 2.5 GiB limit while doing so. The container limit has to stay above the heap with room for the JVM's own overhead, which is what `LT_MEM_LIMIT` defaults to. An earlier `4g` setting here was over-provisioned rather than required.
 
 **Logging.** The app logs its full settings object at `DEBUG`, including secrets (Slack bot token, AWS secret key). Do not run production at `DEBUG`.
 
