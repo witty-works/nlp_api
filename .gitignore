@@ -38,3 +38,4 @@ subcategories.csv
 .pdm-python
 
 models/context_aware_model/
+.cache/
