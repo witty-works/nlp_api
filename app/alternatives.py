@@ -1069,7 +1069,12 @@ class Alternatives:
                 )
 
                 if is_neutral:
-                    lemma = prefix + male_form
+                    # Not `prefix + male_form`: that mis-capitalises the join
+                    # ("CyberHacktivist") and doubles the prefix when the noun
+                    # lookup fell back to the head word and already applied it
+                    # ("CyberCyberhacktivist"). add_german_prefix handles both,
+                    # and leaves a hyphenated prefix capitalised as it should.
+                    lemma = utils.add_german_prefix(male_form, prefix)
                 elif separator == INKLUSIVUM_SEPARATOR:
                     lemma = self.inklusivum_noun(
                         male_forms,
