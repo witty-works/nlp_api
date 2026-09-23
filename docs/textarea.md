@@ -81,4 +81,15 @@ The page's own markup (landmark, labels, live regions for the check and prompt s
 
 ## Updating the editor
 
-When a new version of `@witty-works/editor` is published, update `VERSION` and `INTEGRITY` in [bin/fetch_editor.py](../bin/fetch_editor.py) together, taking the integrity from the registry (`npm view @witty-works/editor@<version> dist.integrity`, or `https://registry.npmjs.org/@witty-works/editor/<version>`), install it and check the page against it. The page uses the component's `mount()` handle (`setApiKey`, `getText`, `editor`) and its `onStatus` callback; a release that changes those needs the page changed with it.
+Moving to a new version of `@witty-works/editor` is the one step that uses npm, and only on the maintainer's machine:
+
+```bash
+python bin/fetch_editor.py --pin 2.0.2
+python bin/fetch_editor.py
+```
+
+`--pin` installs that version into a throwaway npm project (with `--ignore-scripts`, so nothing from the package runs) and has `npm audit signatures` verify its registry signature and its provenance. It then requires the provenance to name the browser-extension repository's `.github/workflows/publish-editor.yaml`, run from the tag named after the version, and only then writes the version and the integrity npm verified into `bin/fetch_editor.py`. A version published any other way, for instance from a leaked token, is refused. The second command installs it; check the page against it before committing the new pin.
+
+The pin is what protects every later install: the download is checked against the integrity in the script, which changes only through a reviewed commit. That is why installs need no npm.
+
+The page uses the component's `mount()` handle (`setApiKey`, `getText`, `editor`) and its `onStatus` callback; a release that changes those needs the page changed with it.

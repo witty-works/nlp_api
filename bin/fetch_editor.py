@@ -9,6 +9,15 @@ pinned npm release or from a local build:
     python bin/fetch_editor.py                          # the pinned release
     python bin/fetch_editor.py --build ~/browser-extension   # a local checkout
 
+Moving the pin to a new version is the one step that needs npm:
+
+    python bin/fetch_editor.py --pin 2.0.2
+
+installs that version into a throwaway npm project, has `npm audit signatures`
+verify its registry signature and provenance, checks the provenance names the
+browser-extension repository's publish workflow and the version's own tag, and
+only then writes the version and its integrity into this file.
+
 Only the standard library, and no npm: it downloads the package tarball from
 the registry and checks it against the integrity npm published for it, so it
 runs in the Docker build (--build-arg TEXTAREA=true) without adding anything to
@@ -19,10 +28,13 @@ import argparse
 import base64
 import hashlib
 import io
+import json
+import re
 import shutil
 import subprocess
 import sys
 import tarfile
+import tempfile
 import urllib.request
 from pathlib import Path
 
@@ -33,8 +45,8 @@ PACKAGE = "@witty-works/editor"
 # dist.integrity`. Update the two together.
 VERSION = "2.0.1"
 INTEGRITY = (
-    "sha512-vLrVbA166xphUIm/3WmVm0ow6HhT1ZwcTORfMoLHHmP6eVeP6sdiTdfyT3hvw/Wd3tjf"
-    "FuOoRdSzwmW2Vh5BeQ=="
+    "sha512-vLrVbA166xphUIm/3WmVm0ow6HhT1ZwcTORfMoLH"
+    "HmP6eVeP6sdiTdfyT3hvw/Wd3tjfFuOoRdSzwmW2Vh5BeQ=="
 )
 
 SCRIPT = "witty-editor.js"
@@ -49,6 +61,12 @@ SOURCES = {
 }
 
 DEFAULT_DEST = Path(__file__).resolve().parent.parent / "app" / "static"
+
+# Where a version has to come from before --pin accepts it: built by this
+# workflow in this repository, from the tag named after the version.
+PROVENANCE_REPOSITORY = "https://github.com/witty-works/browser-extension"
+PROVENANCE_WORKFLOW = ".github/workflows/publish-editor.yaml"
+SLSA_PROVENANCE = "https://slsa.dev/provenance/v1"
 
 
 class FetchError(Exception):
@@ -144,6 +162,104 @@ def build(checkout: Path, dest: Path) -> None:
         shutil.copyfile(notices, dest / NOTICES)
 
 
+def check_provenance(audit: dict, package: str, version: str) -> str:
+    """The commit a version was built from, if `npm audit signatures` verified
+    it and its provenance names the expected workflow and tag."""
+    if audit.get("invalid") or audit.get("missing"):
+        raise FetchError(
+            "npm audit signatures reports invalid or missing signatures: "
+            + json.dumps({k: audit.get(k) for k in ("invalid", "missing")})
+        )
+
+    entry = next(
+        (
+            item
+            for item in audit.get("verified", [])
+            if item.get("name") == package and item.get("version") == version
+        ),
+        None,
+    )
+    if entry is None:
+        raise FetchError(f"{package}@{version} is not among the verified packages")
+
+    statement = None
+    for bundle in entry.get("attestationBundles") or []:
+        if bundle.get("predicateType") == SLSA_PROVENANCE:
+            payload = bundle["bundle"]["dsseEnvelope"]["payload"]
+            statement = json.loads(base64.b64decode(payload))
+    if statement is None:
+        raise FetchError(f"{package}@{version} has no verified provenance")
+
+    build = statement["predicate"]["buildDefinition"]
+    workflow = build["externalParameters"]["workflow"]
+    expected = {
+        "repository": PROVENANCE_REPOSITORY,
+        "path": PROVENANCE_WORKFLOW,
+        "ref": f"refs/tags/{version}",
+    }
+    actual = {key: workflow.get(key) for key in expected}
+    if actual != expected:
+        raise FetchError(
+            f"{package}@{version} was built by {actual}, expected {expected}"
+        )
+
+    return build["resolvedDependencies"][0]["digest"]["gitCommit"]
+
+
+def rewrite_pin(source: str, version: str, integrity: str) -> str:
+    """This script's text with VERSION and INTEGRITY replaced."""
+    half = len(integrity) // 2
+    source, versions = re.subn(
+        r'^VERSION = "[^"]*"$', f'VERSION = "{version}"', source, flags=re.M
+    )
+    source, integrities = re.subn(
+        r"^INTEGRITY = \(\n.*?\n\)$",
+        f'INTEGRITY = (\n    "{integrity[:half]}"\n    "{integrity[half:]}"\n)',
+        source,
+        flags=re.M | re.S,
+    )
+    if versions != 1 or integrities != 1:
+        raise FetchError("could not find VERSION and INTEGRITY to rewrite")
+
+    return source
+
+
+def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
+    """Verify a version with npm and write it into this script."""
+    if shutil.which("npm") is None:
+        raise FetchError("--pin needs npm, to verify signatures and provenance")
+
+    with tempfile.TemporaryDirectory() as directory:
+        project = Path(directory)
+        (project / "package.json").write_text('{"name": "pin-check", "private": true}')
+
+        def npm(*args: str) -> str:
+            try:
+                return run(
+                    ["npm", *args], cwd=project, check=True, capture_output=True,
+                    text=True,
+                ).stdout
+            except subprocess.CalledProcessError as error:
+                reason = (error.stderr or error.stdout or "").strip().splitlines()
+                raise FetchError(
+                    f"npm {args[0]} failed: " + " ".join(reason[-3:])
+                ) from error
+
+        # --ignore-scripts: nothing from the package runs, here or anywhere.
+        npm(
+            "install", "--ignore-scripts", "--no-audit", "--no-fund",
+            "--save-exact", f"{PACKAGE}@{version}",
+        )
+        audit = npm("audit", "signatures", "--json", "--include-attestations")
+        commit = check_provenance(json.loads(audit), PACKAGE, version)
+
+        lock = json.loads((project / "package-lock.json").read_text())
+        integrity = lock["packages"][f"node_modules/{PACKAGE}"]["integrity"]
+
+    script.write_text(rewrite_pin(script.read_text(), version, integrity))
+    return integrity, commit
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument(
@@ -152,10 +268,24 @@ def main(argv: list[str] | None = None) -> int:
         metavar="CHECKOUT",
         help="build from this browser-extension checkout instead of downloading",
     )
+    parser.add_argument(
+        "--pin",
+        metavar="VERSION",
+        help="verify this version with npm and pin it in this script (needs npm)",
+    )
     parser.add_argument("--dest", type=Path, default=DEFAULT_DEST)
     args = parser.parse_args(argv)
 
     try:
+        if args.pin:
+            integrity, commit = pin(args.pin, Path(__file__).resolve())
+            print(
+                f"Pinned {PACKAGE}@{args.pin} ({integrity}), built by "
+                f"{PROVENANCE_WORKFLOW} from {commit}. Run this script again "
+                "to install it, and check the page against it."
+            )
+            return 0
+
         if args.build:
             build(args.build.expanduser(), args.dest)
             source = f"a build of {args.build}"

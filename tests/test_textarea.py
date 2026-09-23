@@ -6,10 +6,12 @@ here: that the page is opt-in, how it sits behind the key gate, what it serves
 without its script, and the page's own contract with the API.
 """
 
+import ast
 import base64
 import hashlib
 import importlib.util
 import io
+import json
 import re
 import tarfile
 from contextlib import contextmanager
@@ -284,3 +286,95 @@ def test_fetch_editor_is_pinned():
 
     assert re.fullmatch(r"\d+\.\d+\.\d+", fetch_editor.VERSION)
     assert fetch_editor.INTEGRITY.startswith("sha512-")
+
+
+def audit_result(repository, path, ref, predicate="https://slsa.dev/provenance/v1"):
+    """What `npm audit signatures --json --include-attestations` reports."""
+    statement = {
+        "predicate": {
+            "buildDefinition": {
+                "externalParameters": {
+                    "workflow": {"repository": repository, "path": path, "ref": ref}
+                },
+                "resolvedDependencies": [{"digest": {"gitCommit": "abc123"}}],
+            }
+        }
+    }
+    payload = base64.b64encode(json.dumps(statement).encode()).decode()
+
+    return {
+        "invalid": [],
+        "missing": [],
+        "verified": [
+            {
+                "name": "@witty-works/editor",
+                "version": "2.0.2",
+                "attestationBundles": [
+                    {
+                        "predicateType": predicate,
+                        "bundle": {"dsseEnvelope": {"payload": payload}},
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def test_pin_accepts_only_our_publish_workflow():
+    """Signed and attested is not enough: built by the browser-extension's
+    publish workflow, from the version's own tag."""
+    fetch_editor = load_fetch_editor()
+    repository = "https://github.com/witty-works/browser-extension"
+    workflow = ".github/workflows/publish-editor.yaml"
+
+    def check(audit):
+        return fetch_editor.check_provenance(audit, "@witty-works/editor", "2.0.2")
+
+    assert check(audit_result(repository, workflow, "refs/tags/2.0.2")) == "abc123"
+
+    for audit in (
+        audit_result("https://github.com/someone/fork", workflow, "refs/tags/2.0.2"),
+        audit_result(repository, ".github/workflows/other.yaml", "refs/tags/2.0.2"),
+        audit_result(repository, workflow, "refs/heads/main"),
+    ):
+        with pytest.raises(fetch_editor.FetchError, match="was built by"):
+            check(audit)
+
+    # A publish attestation alone, no provenance.
+    only_publish = audit_result(
+        repository, workflow, "refs/tags/2.0.2",
+        predicate="https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+    )
+    with pytest.raises(fetch_editor.FetchError, match="no verified provenance"):
+        check(only_publish)
+
+    failed = {**audit_result(repository, workflow, "refs/tags/2.0.2"), "invalid": [{}]}
+    with pytest.raises(fetch_editor.FetchError, match="invalid or missing"):
+        check(failed)
+
+
+def test_pin_rewrites_only_the_pin():
+    fetch_editor = load_fetch_editor()
+    source = (ROOT / "bin" / "fetch_editor.py").read_text()
+    integrity = "sha512-" + "A" * 86 + "=="
+
+    rewritten = fetch_editor.rewrite_pin(source, "2.0.2", integrity)
+    lines = [
+        line
+        for line in rewritten.splitlines()
+        if line not in source.splitlines()
+    ]
+    assert lines == [
+        'VERSION = "2.0.2"',
+        f'    "{integrity[:47]}"',
+        f'    "{integrity[47:]}"',
+    ]
+
+    # And what it wrote reads back as that pin.
+    pinned = {
+        node.targets[0].id: ast.literal_eval(node.value)
+        for node in ast.parse(rewritten).body
+        if isinstance(node, ast.Assign)
+        and getattr(node.targets[0], "id", None) in ("VERSION", "INTEGRITY")
+    }
+    assert pinned == {"VERSION": "2.0.2", "INTEGRITY": integrity}
