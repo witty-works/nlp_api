@@ -118,6 +118,14 @@ COPY ./app /code/app
 COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
+# The editor script for the /textarea page, only when asked for: the page is
+# off by default (TEXTAREA_ENABLED), and an image without it carries nothing of
+# it. Downloads the release pinned in bin/fetch_editor.py and checks its hash.
+ARG TEXTAREA=false
+COPY ./bin/fetch_editor.py /tmp/fetch_editor.py
+RUN if [ "$TEXTAREA" = "true" ]; then python /tmp/fetch_editor.py --dest /code/app/static; fi \
+    && rm /tmp/fetch_editor.py
+
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R appuser /code
 
 USER appuser

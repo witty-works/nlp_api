@@ -6,14 +6,18 @@ dashboard's Witty GPT, rewrites the text through /v1.0/write. Both authenticate
 with an API key entered on the page; the key stays in the page's memory and
 goes out only as the `x-key` header.
 
-`app/static/witty-editor.js` is a vendored build of the component from the
-browser-extension repository (`packages/editor`), see docs/api.md.
+Off unless TEXTAREA_ENABLED is set. The editor script is not part of this
+repository: `bin/fetch_editor.py` installs a pinned release of it (or a local
+build) as `app/static/witty-editor.js`, see docs/textarea.md.
 """
 
 from pathlib import Path
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, status
 from starlette.responses import FileResponse, HTMLResponse
+
+from app.context import AppContext
+from app.dependencies import get_app_context
 
 
 router = APIRouter()
@@ -279,11 +283,53 @@ PAGE = r"""<!doctype html>
 </html>"""
 
 
-@router.get("/textarea", include_in_schema=False)
+MISSING_BUNDLE = """<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Witty check</title>
+  </head>
+  <body>
+    <main>
+      <h1>The editor is not installed</h1>
+      <p>
+        TEXTAREA_ENABLED is on, but app/static/witty-editor.js is missing. Install
+        it with <code>python bin/fetch_editor.py</code>, or build the image with
+        <code>--build-arg TEXTAREA=true</code>. See docs/textarea.md.
+      </p>
+    </main>
+  </body>
+</html>"""
+
+
+def textarea_enabled(context: AppContext = Depends(get_app_context)) -> None:
+    """A 404 unless the deployment asked for the page, as for any other path."""
+    if not context.settings.textarea_enabled:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+
+@router.get(
+    "/textarea",
+    include_in_schema=False,
+    dependencies=[Depends(textarea_enabled)],
+)
 def get_textarea() -> HTMLResponse:
+    if not EDITOR_BUNDLE.is_file():
+        return HTMLResponse(
+            content=MISSING_BUNDLE,
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
     return HTMLResponse(content=PAGE)
 
 
-@router.get("/textarea/witty-editor.js", include_in_schema=False)
+@router.get(
+    "/textarea/witty-editor.js",
+    include_in_schema=False,
+    dependencies=[Depends(textarea_enabled)],
+)
 def get_editor_bundle() -> FileResponse:
+    if not EDITOR_BUNDLE.is_file():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
     return FileResponse(EDITOR_BUNDLE, media_type="text/javascript")

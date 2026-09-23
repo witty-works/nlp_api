@@ -85,7 +85,7 @@ async def require_api_key(request, call_next):
     # CORS preflight carries no credentials by definition, and answering it
     # with a 401 breaks the browser clients before they ever send the request.
     if request.method == "OPTIONS" or is_public_path(
-        request.url.path, context.settings.public_paths
+        request.url.path, context.settings.open_paths()
     ):
         return await call_next(request)
 

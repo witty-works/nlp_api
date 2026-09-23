@@ -84,10 +84,6 @@ def test_content_security_policy_is_sent_whole():
     "review_prompt_dir",
     get_dirs("tests/test_review_prompt"),
 )
-@pytest.mark.parametrize(
-    "review_prompt_dir",
-    get_dirs("tests/test_review_prompt"),
-)
 def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
@@ -2925,8 +2921,6 @@ def test_require_api_key():
             assert client.get("/health").status_code == 200
             assert client.get("/v2.0/categories").status_code == 200
             assert client.get("/v2.0/config-options").status_code == 200
-            # And the page that asks for one.
-            assert client.get("/textarea").status_code == 200
 
             # Everything else is closed, including routes that merely describe
             # the deployment rather than checking anything.
@@ -2986,35 +2980,6 @@ def test_require_api_key_public_paths_are_configurable():
             assert client.get("/v2.0/categories").status_code == 401
         finally:
             context.settings.public_paths = previous
-            context.settings.require_api_key = False
-
-
-def test_textarea_behind_require_api_key():
-    """The textarea page loads without a key and asks for one to check."""
-    body = {"text": "Hey guys, the chairman will be late."}
-
-    with TestClient(app) as client:
-        context.redis.set_api_key("textarea-key", "default@gmail.com")
-        context.settings.require_api_key = True
-        try:
-            response = client.get("/textarea")
-            assert response.status_code == 200
-            assert response.headers["content-type"].startswith("text/html")
-            assert 'type="password"' in response.text
-            assert '<script src="/textarea/witty-editor.js"></script>' in response.text
-
-            response = client.get("/textarea/witty-editor.js")
-            assert response.status_code == 200
-            assert response.headers["content-type"].startswith("text/javascript")
-            assert "WittyEditor" in response.text
-
-            # The page is open, the checks it makes are not.
-            assert client.post("/v2.4/check", json=body).status_code == 401
-            response = client.post(
-                "/v2.4/check", json=body, headers={"x-key": "textarea-key"}
-            )
-            assert response.status_code == 200
-        finally:
             context.settings.require_api_key = False
 
 
