@@ -1,5 +1,5 @@
 from pydantic import field_validator, BaseModel, Field
-from typing import Union, Optional, Annotated, Any
+from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
@@ -918,6 +918,15 @@ class RephraseRequestIn(BaseRequestIn):
     lang: LangType
 
 
+class WriteRequestIn(BaseRequestIn):
+    type: str = "write"
+    # What to do: "make it shorter", "write a job ad for a nurse", ...
+    prompt: Annotated[str, Len(min_length=1, max_length=1000)]
+    # The text to change. Empty means write a new one from the prompt alone.
+    text: Annotated[str, Len(max_length=4000)] = ""
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
 class CheckRequestIn(BaseRequestIn):
     type: str = "check"
     text: str
@@ -1354,11 +1363,18 @@ class RephrasesOut(BaseModel):
         return RephrasesOut(sentence=sentence, results=results)
 
 
+class EditOut(BaseModel):
+    op: Literal["equal", "insert", "delete"]
+    text: str
+
+
 class PromptOut(BaseModel):
     check_results: list[ResultOut]
     initial_response: Optional[str] = None
     limit_reached: bool
     reviewed_response: Optional[str] = None
+    # Word diff from initial_response to reviewed_response; /v1.0/write only.
+    edits: Optional[list[EditOut]] = None
 
 
 class ResultsOut(BaseModel):

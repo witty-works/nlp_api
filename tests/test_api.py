@@ -3120,6 +3120,84 @@ def test_llm_access_rephrase(llm_access, set_redis):
         assert response.status_code == 403
 
 
+def test_write(llm_access, set_redis, monkeypatch):
+    """A prompt rewrites the text, and the draft gets Witty's review."""
+    calls = []
+    replies = [
+        # The draft, quoted the way models like to answer.
+        '"The chairman will call the guys tomorrow."',
+        # The review of it, braces and all.
+        "The chair will call everyone tomorrow {as agreed}.",
+    ]
+
+    class Response:
+        def __init__(self, content):
+            message = type("Message", (), {"content": content})
+            self.choices = [type("Choice", (), {"message": message})]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response(replies[len(calls) - 1])
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    llm_access(LlmAccessType.USERS)
+    body = {"prompt": "Make it more formal.", "text": "Chairman calls guys tmrw."}
+    auth = {"X-TESTING-AUTH": "test@gmail.com"}
+
+    with TestClient(app) as client:
+        # Whoever the credential resolves to; without one there is nobody.
+        assert client.post("/v1.0/write", json=body).status_code == 401
+
+        response = client.post("/v1.0/write", json=body, headers=auth)
+        assert response.status_code == 200
+        result = response.json()
+
+        prompt = calls[0]["messages"][1]["content"]
+        assert "Make it more formal." in prompt
+        assert "Chairman calls guys tmrw." in prompt
+        # Room for a whole text rather than the 300 tokens of /v1.0/prompt.
+        assert calls[0]["max_tokens"] > 300
+
+        assert result["initial_response"] == "The chairman will call the guys tomorrow."
+        flagged = {alert["text"] for alert in result["check_results"]}
+        assert "chairman" in flagged
+        # The review goes back to the model, whose answer is taken as the text.
+        assert len(calls) == 2
+        assert "The chairman will call the guys tomorrow." in (
+            calls[1]["messages"][1]["content"]
+        )
+        assert result["reviewed_response"] == (
+            "The chair will call everyone tomorrow {as agreed}."
+        )
+
+        # A word diff from the draft to the review, as the dashboard shows it.
+        edits = result["edits"]
+        assert {"op": "delete", "text": "chairman"} in edits
+        assert {"op": "insert", "text": "chair"} in edits
+        assert "".join(e["text"] for e in edits if e["op"] != "insert") == (
+            result["initial_response"]
+        )
+        assert "".join(e["text"] for e in edits if e["op"] != "delete") == (
+            result["reviewed_response"]
+        )
+
+        # An empty editor is a request for a new text from the prompt alone.
+        calls.clear()
+        replies[0] = "Welcome, everyone."
+        response = client.post(
+            "/v1.0/write", json={"prompt": "Greet the team."}, headers=auth
+        )
+        assert response.status_code == 200
+        assert calls[0]["messages"][1]["content"].startswith("Greet the team.")
+
+        # The operator's policy still has the last word.
+        llm_access(LlmAccessType.DISABLED)
+        calls.clear()
+        response = client.post("/v1.0/write", json=body, headers=auth)
+        assert response.status_code == 403
+        assert calls == []
+
+
 @pytest.fixture
 def llm_calls(monkeypatch):
     """Capture what would have been sent to a provider, without calling one."""
