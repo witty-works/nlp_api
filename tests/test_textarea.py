@@ -6,10 +6,12 @@ here: that the page is opt-in, how it sits behind the key gate, what it serves
 without its script, and the page's own contract with the API.
 """
 
+import base64
 import hashlib
 import importlib.util
 import io
 import re
+import tarfile
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -182,33 +184,103 @@ def load_fetch_editor():
     return module
 
 
-def fake_opener(files: dict[str, bytes]):
+def tarball(files: dict[str, bytes]) -> bytes:
+    """An npm package tarball: everything under package/."""
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+        for name, data in files.items():
+            info = tarfile.TarInfo(f"package/{name}")
+            info.size = len(data)
+            archive.addfile(info, io.BytesIO(data))
+
+    return buffer.getvalue()
+
+
+def integrity(data: bytes) -> str:
+    return "sha512-" + base64.b64encode(hashlib.sha512(data).digest()).decode()
+
+
+def fake_registry(data: bytes):
+    requested = []
+
     @contextmanager
     def opener(url):
-        yield io.BytesIO(files[url.rsplit("/", 1)[1]])
+        requested.append(url)
+        yield io.BytesIO(data)
 
+    opener.requested = requested
     return opener
 
 
-def test_fetch_editor_installs_only_what_was_pinned(tmp_path):
+def test_fetch_editor_installs_the_pinned_package(tmp_path):
     fetch_editor = load_fetch_editor()
-    served = {"witty-editor.js": b"editor", "witty-editor.js.LICENSE.txt": b"notices"}
-    pins = {name: hashlib.sha256(data).hexdigest() for name, data in served.items()}
+    package = tarball(
+        {
+            "dist/witty-editor.js": b"editor",
+            "LICENSE": b"MIT",
+            "README.md": b"not installed",
+        }
+    )
+    registry = fake_registry(package)
 
-    fetch_editor.download("v1", pins, tmp_path, fake_opener(served))
+    fetch_editor.download(
+        "@witty-works/editor", "2.0.0", integrity(package), tmp_path, registry
+    )
+    assert registry.requested == [
+        "https://registry.npmjs.org/@witty-works/editor/-/editor-2.0.0.tgz"
+    ]
     assert (tmp_path / "witty-editor.js").read_bytes() == b"editor"
-    assert (tmp_path / "witty-editor.js.LICENSE.txt").read_bytes() == b"notices"
+    # The package's licence stands in for notices it does not ship yet.
+    assert (tmp_path / "witty-editor.js.LICENSE.txt").read_bytes() == b"MIT"
+    assert sorted(path.name for path in tmp_path.iterdir()) == [
+        "witty-editor.js",
+        "witty-editor.js.LICENSE.txt",
+    ]
 
-    # One file that does not match its pin, and nothing is written at all.
-    target = tmp_path / "second"
-    tampered = {**served, "witty-editor.js.LICENSE.txt": b"something else"}
+
+def test_fetch_editor_prefers_the_bundled_notices(tmp_path):
+    fetch_editor = load_fetch_editor()
+    package = tarball(
+        {
+            "dist/witty-editor.js": b"editor",
+            "dist/witty-editor.js.LICENSE.txt": b"all bundled notices",
+            "LICENSE": b"MIT",
+        }
+    )
+
+    fetch_editor.download(
+        "@witty-works/editor", "2.0.1", integrity(package), tmp_path,
+        fake_registry(package),
+    )
+    notices = tmp_path / "witty-editor.js.LICENSE.txt"
+    assert notices.read_bytes() == b"all bundled notices"
+
+
+def test_fetch_editor_refuses_anything_but_the_pin(tmp_path):
+    fetch_editor = load_fetch_editor()
+    package = tarball({"dist/witty-editor.js": b"editor", "LICENSE": b"MIT"})
+    tampered = tarball({"dist/witty-editor.js": b"something else", "LICENSE": b"MIT"})
+
     with pytest.raises(fetch_editor.FetchError, match="does not match"):
-        fetch_editor.download("v1", pins, target, fake_opener(tampered))
-    assert not target.exists()
+        fetch_editor.download(
+            "@witty-works/editor", "2.0.0", integrity(package), tmp_path,
+            fake_registry(tampered),
+        )
+    assert not any(tmp_path.iterdir())
+
+    # A package without the script is refused too, however it hashes.
+    empty = tarball({"LICENSE": b"MIT"})
+    with pytest.raises(fetch_editor.FetchError, match="dist/witty-editor.js"):
+        fetch_editor.download(
+            "@witty-works/editor", "2.0.0", integrity(empty), tmp_path,
+            fake_registry(empty),
+        )
+    assert not any(tmp_path.iterdir())
 
 
-def test_fetch_editor_refuses_without_a_pin(tmp_path):
+def test_fetch_editor_is_pinned():
+    """The script names an exact version and its sha512, not a range or tag."""
     fetch_editor = load_fetch_editor()
 
-    with pytest.raises(fetch_editor.FetchError, match="--build"):
-        fetch_editor.download("", fetch_editor.FILES, tmp_path, fake_opener({}))
+    assert re.fullmatch(r"\d+\.\d+\.\d+", fetch_editor.VERSION)
+    assert fetch_editor.INTEGRITY.startswith("sha512-")

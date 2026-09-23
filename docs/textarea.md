@@ -19,15 +19,13 @@ The editor itself is built and tested in the [browser-extension](https://github.
 python bin/fetch_editor.py
 ```
 
-This downloads the editor release pinned in [bin/fetch_editor.py](../bin/fetch_editor.py) from the browser-extension repository's GitHub releases, checks each file against its pinned SHA-256, and installs `witty-editor.js` and the licence notices of the code bundled into it (`witty-editor.js.LICENSE.txt`) into `app/static/`. Both are ignored by git. Only the Python standard library is needed.
+This downloads the version of [@witty-works/editor](https://www.npmjs.com/package/@witty-works/editor) pinned in [bin/fetch_editor.py](../bin/fetch_editor.py) from the npm registry, checks the tarball against the `sha512` integrity the registry published for that version, and installs the editor script (`witty-editor.js`) and its licence (`witty-editor.js.LICENSE.txt`) into `app/static/`. Both are ignored by git. It needs only the Python standard library, not npm or Node.js. The package is published with npm provenance: its page on npmjs.com links each version to the browser-extension commit and build it came from.
 
 To build from a checkout of the browser-extension repository instead, for instance to try an unreleased change (needs Node.js and `npm install` done there):
 
 ```bash
 python bin/fetch_editor.py --build ~/path/to/browser-extension
 ```
-
-Until the editor has its first release, no release is pinned and only `--build` works; the script says so.
 
 ### 2. Turn the page on
 
@@ -69,7 +67,7 @@ The image contains the editor script only when built with the `TEXTAREA` build a
 TEXTAREA=true docker compose build
 ```
 
-and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned release.
+and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned npm release.
 
 ## Security
 
@@ -79,8 +77,8 @@ and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied 
 
 ## Accessibility
 
-The page's own markup (landmark, labels, live regions for the check and prompt status, the issue list and the edits, with the struck-through and inserted words read out as "removed" and "added") is checked with axe and has no findings. The editor and its popover are the component's and are checked in its repository.
+The page's own markup (landmark, labels, live regions for the check and prompt status, the issue list and the edits, with the struck-through and inserted words read out as "removed" and "added") is checked with axe (WCAG 2.2 AA and best practice). With editor 2.0.0 there are no findings on the empty page, with the popover open, or after a prompt run. The editor, its toolbar and popover are the component's, and are tested in its repository.
 
 ## Updating the editor
 
-When the browser-extension repository publishes a new editor release, update `RELEASE` and the two SHA-256 values in `FILES` in [bin/fetch_editor.py](../bin/fetch_editor.py), from the release's assets, and check the page against it. The page uses the component's `mount()` handle (`setApiKey`, `getText`, `editor`) and its `onStatus` callback; a release that changes those needs the page changed with it.
+When a new version of `@witty-works/editor` is published, update `VERSION` and `INTEGRITY` in [bin/fetch_editor.py](../bin/fetch_editor.py) together, taking the integrity from the registry (`npm view @witty-works/editor@<version> dist.integrity`, or `https://registry.npmjs.org/@witty-works/editor/<version>`), install it and check the page against it. The page uses the component's `mount()` handle (`setApiKey`, `getText`, `editor`) and its `onStatus` callback; a release that changes those needs the page changed with it.

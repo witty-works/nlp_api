@@ -7,8 +7,9 @@ with an API key entered on the page; the key stays in the page's memory and
 goes out only as the `x-key` header.
 
 Off unless TEXTAREA_ENABLED is set. The editor script is not part of this
-repository: `bin/fetch_editor.py` installs a pinned release of it (or a local
-build) as `app/static/witty-editor.js`, see docs/textarea.md.
+repository: `bin/fetch_editor.py` installs the pinned version of its npm package
+(@witty-works/editor), or a local build, as `app/static/witty-editor.js`, see
+docs/textarea.md.
 """
 
 from pathlib import Path

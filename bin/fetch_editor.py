@@ -1,33 +1,51 @@
 """Install the editor script the /textarea page loads.
 
-The page (TEXTAREA_ENABLED) embeds Witty's editor component, which is built in
-the browser-extension repository (`packages/editor`) and not kept in this one.
-This puts it at app/static/witty-editor.js, together with the licence notices
-of the code bundled into it, either from a pinned release or from a local build:
+The page (TEXTAREA_ENABLED) embeds Witty's editor component, published on npm
+as @witty-works/editor and built in the browser-extension repository
+(`packages/editor`). It is not kept in this repository. This puts it at
+app/static/witty-editor.js, with its licence next to it, either from the
+pinned npm release or from a local build:
 
     python bin/fetch_editor.py                          # the pinned release
     python bin/fetch_editor.py --build ~/browser-extension   # a local checkout
 
-Only the standard library, so it runs in the Docker build (--build-arg
-TEXTAREA=true) without adding anything to the image. See docs/textarea.md.
+Only the standard library, and no npm: it downloads the package tarball from
+the registry and checks it against the integrity npm published for it, so it
+runs in the Docker build (--build-arg TEXTAREA=true) without adding anything to
+the image. See docs/textarea.md.
 """
 
 import argparse
+import base64
 import hashlib
+import io
 import shutil
 import subprocess
 import sys
+import tarfile
 import urllib.request
 from pathlib import Path
 
-REPOSITORY = "witty-works/browser-extension"
+PACKAGE = "@witty-works/editor"
 
-# The editor release this version of the page is written against, and the
-# SHA-256 of each file in it. Update together, from the release's assets.
-RELEASE = ""
-FILES = {
-    "witty-editor.js": "",
-    "witty-editor.js.LICENSE.txt": "",
+# The release this version of the page is written against, and its integrity
+# as the registry publishes it: `npm view @witty-works/editor@<version>
+# dist.integrity`. Update the two together.
+VERSION = "2.0.0"
+INTEGRITY = (
+    "sha512-lHThLBxB3YLQIFli/3ytKdsBZftaSKOKUcTYsF4WSWCG7g5LsqscrpvPhFb4iBQqfEj6"
+    "YGlelBRpO3eOMZZKWg=="
+)
+
+SCRIPT = "witty-editor.js"
+NOTICES = "witty-editor.js.LICENSE.txt"
+
+# Where each file is taken from inside the package, in order of preference:
+# the notices of everything bundled into the script where the package ships
+# them, the package's own licence otherwise.
+SOURCES = {
+    SCRIPT: ["package/dist/witty-editor.js"],
+    NOTICES: ["package/dist/witty-editor.js.LICENSE.txt", "package/LICENSE"],
 }
 
 DEFAULT_DEST = Path(__file__).resolve().parent.parent / "app" / "static"
@@ -37,57 +55,93 @@ class FetchError(Exception):
     pass
 
 
-def release_url(release: str, name: str) -> str:
-    return f"https://github.com/{REPOSITORY}/releases/download/{release}/{name}"
+def tarball_url(package: str, version: str) -> str:
+    name = package.rsplit("/", 1)[-1]
+    return f"https://registry.npmjs.org/{package}/-/{name}-{version}.tgz"
 
 
-def verify(name: str, data: bytes, expected: str) -> None:
-    """Refuse anything but the exact file that was pinned."""
-    actual = hashlib.sha256(data).hexdigest()
+def verify(data: bytes, integrity: str) -> None:
+    """Refuse anything but the exact tarball that was pinned."""
+    algorithm, _, expected = integrity.partition("-")
+    if algorithm != "sha512" or not expected:
+        raise FetchError(f"unsupported integrity {integrity!r}, expected sha512-…")
+
+    actual = base64.b64encode(hashlib.sha512(data).digest()).decode()
     if actual != expected:
         raise FetchError(
-            f"{name}: SHA-256 {actual} does not match the pinned {expected}"
+            f"the tarball's integrity sha512-{actual} does not match the pinned "
+            f"{integrity}"
         )
 
 
-def download(release: str, files: dict[str, str], dest: Path, opener=None) -> None:
-    if not release or not all(files.values()):
+def unpack(data: bytes) -> dict[str, bytes]:
+    """The files the page needs, read by exact name and never extracted as a
+    tree, so nothing in the archive decides where anything is written."""
+    files = {}
+    with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as archive:
+        names = set(archive.getnames())
+        for target, candidates in SOURCES.items():
+            source = next((name for name in candidates if name in names), None)
+            if source is None:
+                raise FetchError(f"the package has none of {', '.join(candidates)}")
+            files[target] = archive.extractfile(source).read()
+
+    return files
+
+
+def download(
+    package: str, version: str, integrity: str, dest: Path, opener=None
+) -> None:
+    if not version or not integrity:
         raise FetchError(
-            "No editor release is pinned in bin/fetch_editor.py yet; build one "
-            "with --build <browser-extension checkout> instead."
+            "No editor release is pinned in bin/fetch_editor.py; build one with "
+            "--build <browser-extension checkout> instead."
         )
 
     opener = opener or urllib.request.urlopen
-    fetched = {}
-    for name, expected in files.items():
-        with opener(release_url(release, name)) as response:
-            data = response.read()
-        verify(name, data, expected)
-        fetched[name] = data
+    with opener(tarball_url(package, version)) as response:
+        data = response.read()
 
-    # Only once every file checked out, so a failed run leaves nothing half
+    verify(data, integrity)
+    files = unpack(data)
+
+    # Only once the tarball checked out, so a failed run leaves nothing half
     # installed.
     dest.mkdir(parents=True, exist_ok=True)
-    for name, data in fetched.items():
-        (dest / name).write_bytes(data)
+    for name, content in files.items():
+        (dest / name).write_bytes(content)
 
 
 def build(checkout: Path, dest: Path) -> None:
     """Build packages/editor in a browser-extension checkout and copy it here."""
     subprocess.run(
-        ["npm", "run", "build", "-w", "@witty-works/editor"], cwd=checkout, check=True
+        ["npm", "run", "build", "-w", PACKAGE], cwd=checkout, check=True
     )
 
-    dist = checkout / "packages" / "editor" / "dist"
+    editor = checkout / "packages" / "editor"
+    script = editor / "dist" / SCRIPT
+    if not script.is_file():
+        raise FetchError(f"{script} was not built")
+
+    notices = next(
+        (
+            path
+            for path in (
+                editor / "dist" / NOTICES,
+                editor / "LICENSE",
+                checkout / "LICENSE",
+            )
+            if path.is_file()
+        ),
+        None,
+    )
+
     dest.mkdir(parents=True, exist_ok=True)
-    for name in FILES:
-        source = dist / name
-        if source.is_file():
-            shutil.copyfile(source, dest / name)
-        elif name == "witty-editor.js":
-            raise FetchError(f"{source} was not built")
-        else:
-            print(f"warning: {source} missing, not copied", file=sys.stderr)
+    shutil.copyfile(script, dest / SCRIPT)
+    if notices is None:
+        print("warning: no licence file found to copy", file=sys.stderr)
+    else:
+        shutil.copyfile(notices, dest / NOTICES)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -106,9 +160,9 @@ def main(argv: list[str] | None = None) -> int:
             build(args.build.expanduser(), args.dest)
             source = f"a build of {args.build}"
         else:
-            download(RELEASE, FILES, args.dest)
-            source = f"release {RELEASE}"
-    except (FetchError, OSError, subprocess.CalledProcessError) as error:
+            download(PACKAGE, VERSION, INTEGRITY, args.dest)
+            source = f"{PACKAGE}@{VERSION}"
+    except (FetchError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
 
