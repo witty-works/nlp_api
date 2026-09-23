@@ -6,6 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType, LlmAccessType
 from platformshconfig import Config
 
+# The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
+TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js")
+
 
 class Settings(BaseSettings):
     """Load environment variables into Python objects using Pydantic."""
@@ -129,8 +132,31 @@ class Settings(BaseSettings):
     # The routes that stay reachable without a credential when require_api_key
     # is on. Kept as a setting rather than a constant so a deployment can open
     # up a route it needs - /slack/commands, say, which authenticates itself by
-    # signature and would otherwise be unreachable for Slack.
-    public_paths: list[str] = ["/health", "/v2.0/categories"]
+    # signature and would otherwise be unreachable for Slack. The category list
+    # and the config options are the same for everyone and let an options page
+    # render before a key has been entered.
+    public_paths: list[str] = [
+        "/health",
+        "/v2.0/categories",
+        "/v2.0/config-options",
+    ]
+
+    # The /textarea page: Witty's editor and a prompt, for checking and
+    # rewriting text by hand with an API key. Off by default, so a deployment
+    # serves no page it did not ask for. When on, the page and its script are
+    # public without listing them in PUBLIC_PATHS: they are static and ask for
+    # a key themselves, and every check they make is gated as usual.
+    textarea_enabled: bool = False
+    # Where the page sends people who need a key: a mailto link under "Getting
+    # an API key". Empty leaves the section out.
+    textarea_contact: str = "api@witty.works"
+
+    def open_paths(self) -> list[str]:
+        """The paths the require_api_key gate lets through without a key."""
+        if not self.textarea_enabled:
+            return self.public_paths
+
+        return [*self.public_paths, *TEXTAREA_PATHS]
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a

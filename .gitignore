@@ -38,3 +38,7 @@ subcategories.csv
 .pdm-python
 
 models/context_aware_model/
+
+# The editor script for /textarea, installed by bin/fetch_editor.py
+/app/static/witty-editor.js
+/app/static/witty-editor.js.LICENSE.txt

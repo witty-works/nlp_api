@@ -86,6 +86,8 @@ services:
         # Build-time dimensions: which model wheels go into the image at all.
         - SPACY_LANGS=${SPACY_LANGS:-en,de,fr}
         - SPACY_MODEL_SIZE=${SPACY_MODEL_SIZE:-lg}
+        # The /textarea page's editor script; pair with TEXTAREA_ENABLED=true.
+        - TEXTAREA=${TEXTAREA:-false}
     container_name: nlp_api
     restart: unless-stopped
     depends_on:

@@ -25,6 +25,7 @@ These are the main endpoints for checking and rephrasing text.
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
+| `/v1.0/write`    | POST   | Yes           | Write or change a text as a prompt says, then review it (requires `llm_alternatives`) |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
 | `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
 | `/v2.0/config-options` | GET | No        | List the values the enumerated `config` fields accept         |
@@ -57,6 +58,21 @@ curl -X 'POST' \
   }
 }'
 ```
+
+Example `/v1.0/write` request:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v1.0/write' \
+  -H 'x-key: your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "prompt": "Make it more formal.",
+  "text": "Hey guys, the chairman wants the numbers by Friday."
+}'
+```
+
+`/v1.0/write` is the client-facing counterpart of `/v1.0/prompt`, which is a management endpoint that names its user in the query string. It sends `prompt` and `text` to the LLM (an empty `text` asks for a new text from the prompt alone), checks the draft, and has the LLM apply Witty's alternatives to what the check flagged. The answer has the same shape as `/v1.0/prompt`: `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters and `text` to 4000. Witty checks only the first `TEXT_MAX_LENGTH` characters of the draft (1000 by default), so the model is asked to stay within that, and `limit_reached` says when the draft was longer and only partly reviewed. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
 
 Example `/v2.0/categories` request:
 
@@ -319,10 +335,12 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
 | `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
-| `/textarea`                   | GET    | No            | Static HTML form for pasting text by hand during development                      |
+| `/textarea`                   | GET    | No            | Opt-in page for checking and rewriting text by hand, see [textarea.md](./textarea.md) |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
 served unguarded either way.
+
+`/textarea` is off unless `TEXTAREA_ENABLED=true`; its editor script is installed separately. Setup, the LLM it can use and how its key is handled are in [textarea.md](./textarea.md).
 
 Example health check:
 

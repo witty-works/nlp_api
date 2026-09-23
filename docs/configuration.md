@@ -19,6 +19,7 @@
   - [AWS Bedrock](#aws-bedrock)
   - [Who may spend the LLM budget](#who-may-spend-the-llm-budget)
 - [Slack](#slack)
+- [Textarea page](#textarea-page)
 - [Authentication](#authentication)
 - [Platform.sh](#platformsh)
 - [Optional profiling (Blackfire)](#optional-profiling-blackfire)
@@ -565,6 +566,17 @@ Notes
 
 - If `SLACK_ENABLED=false` (default), no Slack code is initialized and the Slack routes are not included.
 - With `SLACK_ENABLED=true` but empty Slack credentials, the app uses a local/dev Slack client for testing (no external calls).
+
+## Textarea page
+
+Opt-in page for checking and rewriting text by hand with an API key: Witty's editor and a prompt. Setup, including installing the editor script, is in [textarea.md](./textarea.md).
+
+| Variable         | Default | Description                                                                                          |
+| ---------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| TEXTAREA_ENABLED | false   | Serve `/textarea`. Opens it and its script without a key behind `REQUIRE_API_KEY`; checks stay gated. |
+| TEXTAREA_CONTACT | api@witty.works | Where the page tells visitors to request an API key (a mailto link). Empty leaves the section out. |
+
+The editor script is installed separately: `python bin/fetch_editor.py`, or `--build-arg TEXTAREA=true` (`TEXTAREA=true docker compose build`) for the image.
 
 ## Authentication
 

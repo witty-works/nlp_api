@@ -48,6 +48,7 @@ class Prompt:
         system_prompt: str | None = None,
         model: str | None = None,
         temperature: float | None = None,
+        max_tokens: int = 300,
     ):
         """Handle LLM prompt generation and response.
 
@@ -56,6 +57,7 @@ class Prompt:
             system_prompt: Optional system prompt (defaults to inclusive language guidelines)
             model: LiteLLM model identifier, e.g. `openai/gpt-4o` (defaults to settings)
             temperature: LLM temperature parameter (defaults to 0.1)
+            max_tokens: Maximum number of tokens the LLM generates
 
         Returns:
             The complete LLM response as a string
@@ -88,7 +90,7 @@ class Prompt:
         response = await litellm.acompletion(
             model=model,
             messages=messages,
-            max_tokens=300,  # Maximum number of tokens the LLM generates
+            max_tokens=max_tokens,
             temperature=temperature,  # Controls randomness (lower = more predictable)
             top_p=1,  # Nucleus sampling parameter
             **self._credentials(model),

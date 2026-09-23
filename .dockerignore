@@ -45,3 +45,8 @@ analyze_rules/
 sonar-project.properties
 make-release
 .env
+
+# A locally installed editor script (bin/fetch_editor.py); an image gets one
+# only through --build-arg TEXTAREA=true.
+app/static/witty-editor.js
+app/static/witty-editor.js.LICENSE.txt

@@ -238,9 +238,9 @@ returns `Der Lehrer → De Lehrere` and `dem Schüler → derm Schülere`.
 By default an unauthenticated request is answered with `200` and an empty result set rather than refused — deliberate, so that a signed-out client keeps working instead of erroring. For a deployment where nothing should be free, set:
 
     REQUIRE_API_KEY=True
-    PUBLIC_PATHS=["/health","/v2.0/categories"]
+    PUBLIC_PATHS=["/health","/v2.0/categories","/v2.0/config-options"]
 
-Every other route then answers `401` without a credential, including `/version`, `/docs` and paths that do not exist — so the gate cannot be probed for which routes are there. `/health` stays open for monitoring and `/v2.0/categories` because a client needs it to render its UI before a key has been issued.
+Every other route then answers `401` without a credential, including `/version`, `/docs` and paths that do not exist — so the gate cannot be probed for which routes are there. `/health` stays open for monitoring, and `/v2.0/categories` and `/v2.0/config-options` because a client needs them to render its UI before a key has been issued. The [`/textarea` page](./textarea.md) is not listed: it is off by default, and `TEXTAREA_ENABLED=true` opens its two paths by itself.
 
 Two things it deliberately does not refuse: CORS preflight, which carries no credentials by definition and would break browser clients, and any path named in `PUBLIC_PATHS`. Add `/slack/commands` there if Slack is enabled — it authenticates by signature and cannot send an API key.
 
