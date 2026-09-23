@@ -41,7 +41,13 @@ So the container must be **built**, not pulled. `compose.yml` does that; the ign
 
 6.8 is the newest published tag as of 2026-09 and is what the Dockerfile now defaults to. It previously hardcoded 6.2 (2023-12-07), so enabling LanguageTool means a six-release jump: run the test suite and adjudicate the snapshot diff before trusting it, because LanguageTool retunes rules between releases and this project filters its output by rule and category id.
 
-**One discrepancy with the Upsun deployment,** worth knowing if the two are ever compared: the Upsun build hook *overwrites* `ignore.txt` with ours (`cp`), where the Dockerfile *appends* (`>>`). Overwriting discards LanguageTool's own ~244,000 German entries, so Upsun will report far more spelling errors than this deployment does. Upsun also pins 6.3 where the Dockerfile pinned 6.2. Appending is the behaviour to keep.
+**Appending is what rides LanguageTool's own updates — keep it.** The `>>` in the Dockerfile appends our list to the *base image's* `ignore.txt`, and every build starts from a fresh base. So a new LanguageTool release brings its new ignore list and ours goes on top; nothing accumulates, because the merge happens at build time and is never committed. `de_ignore.txt` holds only our own 1,081 words.
+
+The Upsun build hook does the opposite — it *overwrites* `ignore.txt` with ours (`cp`), discarding LanguageTool's ~244,000 German entries. That is the variant that cannot ride updates, and it should report noticeably more spelling errors. Upsun also pins 6.3 where the Dockerfile pinned 6.2, so the two have been drifting.
+
+Redundancy between the two lists is not a problem in practice. Against 6.8, only **10 of our 1,081 German entries and 8 of our 430 English ones** are words LanguageTool now ships itself. Pruning them is optional housekeeping, not maintenance the update depends on — worth a look when bumping `LT_VERSION`, not worth automating at 1%.
+
+The `# Old words (added by LT):` marker at the end of both files comes from the generation script that used to live in `bin/analyze_rules.py` and now lives in the rule editor. It separates generated entries from ones to preserve across a regeneration; both tails are currently empty.
 
 **What you lose while it is off.** The whole `orthography` category — typos and punctuation — plus the style, plain-language and anglicism subcategories that are derived from LanguageTool's own rule categories. On the fixture `"Ich gehe noch schnell ueber die Strasse!!!"` those are the three findings `ueber → über`, `Strasse → Straße` and `!!! → !`. The gendered-language rules, which are the product, come from this repo and are unaffected: a check of `"Der Lehrer gibt dem Schüler den Stift."` returns the same two findings either way — verified by running it with the variable set and empty.
 
