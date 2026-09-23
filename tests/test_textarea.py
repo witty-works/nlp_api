@@ -116,6 +116,27 @@ def test_csp_lets_the_page_run(textarea):
     assert {"data:", "www.witty.works"} <= set(directives["img-src"])
 
 
+def test_page_structure_for_assistive_technology():
+    """What axe and a screen reader need from the page's own markup; the
+    editor and its popover are checked where they are built."""
+    assert '<html lang="en">' in PAGE
+    assert PAGE.count("<main>") == 1
+
+    # Every field has a visible label pointing at it.
+    for field in re.findall(r"<(?:input|textarea|select)\b[^>]*>", PAGE):
+        field_id = re.search(r'id="([^"]+)"', field).group(1)
+        assert f'<label for="{field_id}">' in PAGE, field_id
+
+    # Results are announced rather than only drawn.
+    for region in ("status", "write-status"):
+        assert f'<p id="{region}" role="status" aria-live="polite">' in PAGE
+
+    # Strike-through and colour are spoken as words, new tabs are announced.
+    script = page_script()
+    assert 'hidden(op === "insert" ? "added: " : "removed: ")' in script
+    assert 'hidden(" (opens in a new tab)")' in script
+
+
 def page_script() -> str:
     return PAGE.split("<script>")[1].split("</script>")[0]
 

@@ -88,6 +88,17 @@ PAGE = r"""<!doctype html>
       del {
         color: #a33;
       }
+      #issues .witty-alert {
+        cursor: auto;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
       ins {
         color: #262;
         text-decoration: none;
@@ -96,29 +107,31 @@ PAGE = r"""<!doctype html>
     </style>
   </head>
   <body>
-    <h1>Check text</h1>
-    <p>
-      <label for="api-key">API key</label>
-      <input id="api-key" type="password" autocomplete="off" spellcheck="false" />
-    </p>
-    <div id="editor"></div>
-    <p id="status" role="status" aria-live="polite"></p>
-    <form id="write">
-      <label for="prompt">Prompt</label>
-      <textarea
-        id="prompt"
-        rows="3"
-        placeholder="Make it shorter, or: Write a job ad for a nurse"
-      ></textarea>
-      <button type="submit">Run</button>
-      <p id="write-status" role="status" aria-live="polite"></p>
-    </form>
-    <section id="review" hidden>
-      <h2>Issues Witty found in the draft</h2>
-      <ul id="issues"></ul>
-      <h2>Edits from the follow-up prompt</h2>
-      <p id="edits"></p>
-    </section>
+    <main>
+      <h1>Check text</h1>
+      <p>
+        <label for="api-key">API key</label>
+        <input id="api-key" type="password" autocomplete="off" spellcheck="false" />
+      </p>
+      <div id="editor"></div>
+      <p id="status" role="status" aria-live="polite"></p>
+      <form id="write">
+        <label for="prompt">Prompt</label>
+        <textarea
+          id="prompt"
+          rows="3"
+          placeholder="Make it shorter, or: Write a job ad for a nurse"
+        ></textarea>
+        <button type="submit">Run</button>
+        <p id="write-status" role="status" aria-live="polite"></p>
+      </form>
+      <section id="review" hidden>
+        <h2>Issues Witty found in the draft</h2>
+        <ul id="issues"></ul>
+        <h2>Edits from the follow-up prompt</h2>
+        <p id="edits"></p>
+      </section>
+    </main>
     <script src="/textarea/witty-editor.js"></script>
     <script>
       const status = document.getElementById("status");
@@ -162,6 +175,14 @@ PAGE = r"""<!doctype html>
                 ? "style"
                 : "bias";
 
+      // Read out, not shown: what colour and strike-through say on screen.
+      const hidden = (text) => {
+        const span = document.createElement("span");
+        span.className = "visually-hidden";
+        span.textContent = text;
+        return span;
+      };
+
       // Only a web link becomes an href; anything else stays text.
       const webUrl = (url) => {
         try {
@@ -188,7 +209,10 @@ PAGE = r"""<!doctype html>
           link.href = url;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          link.textContent = (alert.label || "").split(":").pop().trim() || "More";
+          link.append(
+            (alert.label || "").split(":").pop().trim() || "More",
+            hidden(" (opens in a new tab)")
+          );
           item.append(" (", link, ")");
         }
         return item;
@@ -198,7 +222,7 @@ PAGE = r"""<!doctype html>
       const edit = ({ op, text }) => {
         if (op === "equal") return document.createTextNode(text);
         const node = document.createElement(op === "insert" ? "ins" : "del");
-        node.textContent = text;
+        node.append(hidden(op === "insert" ? "added: " : "removed: "), text);
         return node;
       };
 
