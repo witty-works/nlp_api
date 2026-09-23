@@ -2975,6 +2975,35 @@ def test_require_api_key_public_paths_are_configurable():
             context.settings.require_api_key = False
 
 
+def test_textarea_behind_require_api_key():
+    """The textarea page loads without a key and asks for one to check."""
+    body = {"text": "Hey guys, the chairman will be late."}
+
+    with TestClient(app) as client:
+        context.redis.set_api_key("textarea-key", "default@gmail.com")
+        context.settings.require_api_key = True
+        try:
+            response = client.get("/textarea")
+            assert response.status_code == 200
+            assert response.headers["content-type"].startswith("text/html")
+            assert 'type="password"' in response.text
+            assert '<script src="/textarea/witty-editor.js"></script>' in response.text
+
+            response = client.get("/textarea/witty-editor.js")
+            assert response.status_code == 200
+            assert response.headers["content-type"].startswith("text/javascript")
+            assert "WittyEditor" in response.text
+
+            # The page is open, the checks it makes are not.
+            assert client.post("/v2.4/check", json=body).status_code == 401
+            response = client.post(
+                "/v2.4/check", json=body, headers={"x-key": "textarea-key"}
+            )
+            assert response.status_code == 200
+        finally:
+            context.settings.require_api_key = False
+
+
 @pytest.fixture
 def llm_access():
     """Set the LLM access policy for one test and put it back afterwards."""
