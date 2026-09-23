@@ -91,6 +91,30 @@ def test_umlaut_does_not_leak_into_the_singular():
     assert "ö" not in inklusivum.noun("Koch", "Köchin", "sg_nom")
 
 
+# The association carries the umlaut into the plural only where both the
+# masculine and the feminine plural have it. Reading it off the feminine alone
+# is wrong for these, because there only one of the two does: "die Bauern" has
+# no umlaut even though "die Bäuerinnen" does.
+NO_UMLAUT_IN_PLURAL = [
+    ("Bauer", "Bäuerin", "Bauerne"),
+    ("Graf", "Gräfin", "Graferne"),
+    ("Narr", "Närrin", "Narrne"),
+    ("Fuchs", "Füchsin", "Fuchserne"),
+]
+
+
+@pytest.mark.parametrize("masculine,feminine,expected_pl", NO_UMLAUT_IN_PLURAL)
+def test_feminine_umlaut_alone_does_not_umlaut_the_plural(
+    masculine, feminine, expected_pl
+):
+    assert inklusivum.noun(masculine, feminine, "pl_nom") == expected_pl
+
+
+def test_no_plural_umlaut_matches_compounds():
+    """The list is matched as a suffix, so compounds inherit the exception."""
+    assert inklusivum.noun("Grossbauer", "Grossbäuerin", "pl_nom") == "Grossbauerne"
+
+
 @pytest.mark.parametrize(
     "masculine,expected_sg,expected_pl",
     [

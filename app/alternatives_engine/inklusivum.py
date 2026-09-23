@@ -146,12 +146,39 @@ def plural(singular_form: str) -> str:
     return singular_form + "rne"
 
 
+# The umlaut is read off the feminine, which is only sound where both genders
+# umlaut in the plural - which is the condition the association states. These
+# are the words where they do not, so the feminine's umlaut says nothing about
+# the plural and carrying it over would be wrong. Matched as a suffix, so
+# compounds are covered too.
+NO_PLURAL_UMLAUT = (
+    # Only the feminine plural umlauts; the masculine is weak.
+    # die Bauern / die Bäuerinnen -> Bauerne, not Bäuerne.
+    "bauer",
+    "graf",
+    "sachse",
+    "schwabe",
+    "westfale",
+    "franke",
+    "franzose",
+    "narr",
+    # Only the masculine plural umlauts: die Herzöge / die Herzoginnen.
+    "herzog",
+    "general",
+    "bass",
+    "fuchs",
+)
+
+
 def _umlauted_stem(masculine: str, feminine: str) -> str | None:
     """Return the feminine's stem when it differs only by an umlaut.
 
     Arzt/Ärztin and Koch/Köchin carry the umlaut into the Inklusivum plural
     but not into the singular, so the two stems are kept apart.
     """
+    if masculine.lower().endswith(NO_PLURAL_UMLAUT):
+        return None
+
     if not feminine.endswith("in"):
         return None
 
