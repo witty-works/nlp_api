@@ -335,20 +335,12 @@ These endpoints provide health checks and utility functions. Most do not require
 | `/`                           | GET    | No            | Root endpoint. In dev, redirects to `/docs`. In prod, returns API info            |
 | `/docs`                       | GET    | Optional\*    | Interactive Swagger UI documentation                                              |
 | `/openapi.json`               | GET    | No            | OpenAPI schema JSON                                                               |
-| `/textarea`                   | GET    | No            | Page for checking and rewriting text by hand, with the Witty editor, a prompt and an API key field |
+| `/textarea`                   | GET    | No            | Opt-in page for checking and rewriting text by hand, see [textarea.md](./textarea.md) |
 
 \* Requires HTTP Basic auth if `API_DOCS_AUTH_ENABLED=true`. `/openapi.json` is
 served unguarded either way.
 
-`/textarea` checks as you type and underlines what the API flags; a click on an underline opens the browser extension's popover, with LLM rewrites from `/v1.0/rephrase` where the key's user may use the LLM. Its prompt field, modelled on the dashboard's Witty GPT, sends the editor's text and the prompt to `/v1.0/write` and replaces the text with the reviewed result; one undo brings the previous text back. Below the editor it lists the issues found in the draft, linked to their explanations, and the edits the review made. For a local LLM, point `LLM_MODEL` at Ollama, e.g. `LLM_MODEL=ollama_chat/<model>` and `LLM_API_BASE=http://localhost:11434`; without a dashboard the key's user also needs `DEFAULT_USER_LLM_ALTERNATIVES=true`. The key typed into its API key field stays in the page's memory and is sent only as the `x-key` header, so the page works with `REQUIRE_API_KEY=true`. The page and its script (`/textarea/witty-editor.js`) are in the default `PUBLIC_PATHS`; a deployment that sets `PUBLIC_PATHS` itself has to list them to keep the page.
-
-The script is a vendored build of the editor component from the browser-extension repository (`packages/editor`). To update it:
-
-```bash
-# in browser-extension
-npm run build -w @witty-works/editor
-cp packages/editor/dist/witty-editor.js ../nlp_api-flexible/app/static/
-```
+`/textarea` is off unless `TEXTAREA_ENABLED=true`; its editor script is installed separately. Setup, the LLM it can use and how its key is handled are in [textarea.md](./textarea.md).
 
 Example health check:
 
