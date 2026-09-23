@@ -57,7 +57,9 @@ Where those pages are silent, the association's own tool is the second source: t
 - **The article for words that take no ending**, so `Der Gast` is offered as `De Gast`. Nothing else reports these, since the noun is not gendered and no denomination rule matches it.
 - **Attributive adjectives**, where the noun is being rewritten: `als guter Arzte` becomes `als gutey Arzte`. Most need no change even then, because after an article the endings are the ordinary German ones.
 - **Explanations** naming the rule behind an article or adjective suggestion, linking into the association's page at the section that covers it.
-- **Detection**, so text already written in the Inklusivum is neither reported by the gendered denomination rules nor by the spell checker. Nouns are confirmed against the lexicon; articles and possessives are closed sets; the article-less adjective endings `-ey` and `-erm` are distinctive enough to go by shape, where `-ers` is not ("anders", "besonders").
+- **Detection**, so text already written in the Inklusivum is neither reported by the gendered denomination rules nor by the spell checker. Nouns are confirmed against the lexicon; articles and possessives are closed sets; the article-less adjective endings `-ey` and `-erm` go by shape, where `-ers` does not ("anders", "besonders").
+
+  `-ey` is less distinctive than that suggests. `is_adjective_form` accepts any word of more than four letters ending in it, which takes in the English loanwords German business writing is full of — `Jockey`, `Hockey`, `Whiskey`, `Disney`, `Money` all match. The consequence is bounded: the check only runs on LanguageTool `TYPOS` matches under the Inklusivum ending, so the cost is a misspelling ending in `-ey` going unreported, not a wrong suggestion. Requiring the word to be lowercase would exclude the whole class, since German adjectives are lowercase and these are all nouns, at the price of missing an Inklusivum adjective that opens a sentence.
 
 ## The refactor this is still waiting on
 

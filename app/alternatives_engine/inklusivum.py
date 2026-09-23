@@ -446,16 +446,25 @@ def is_possessive_form(word: str) -> bool:
 
 
 # The article-less adjective endings. -ers is left out on purpose: it is a
-# perfectly ordinary word ending ("anders", "besonders"), where these two are
-# effectively unique to this system.
+# perfectly ordinary word ending ("anders", "besonders"). These two are rare
+# enough in German to go by shape, which is not the same as unique - see the
+# caveat on the function.
 DISTINCTIVE_ADJECTIVE_ENDINGS = ("ey", "erm")
 
 
 def is_adjective_form(word: str) -> bool:
-    """Whether the word carries an ending only the Inklusivum uses.
+    """Whether the word carries an ending the Inklusivum uses.
 
-    Shape is enough here, unlike for nouns, because these endings do not
-    otherwise occur. Used to keep the spell checker off them.
+    Shape rather than a lexicon lookup, unlike for nouns. -ey is the weaker of
+    the two: the English loanwords German business writing borrows end in it
+    as well ("Jockey", "Hockey", "Whiskey", "Money"), and they match here.
+
+    What bounds that is the caller. This only runs on LanguageTool TYPOS
+    matches, and only when the Inklusivum is the configured ending, so a false
+    positive costs a misspelling in -ey going unreported rather than a wrong
+    suggestion. Requiring a lowercase word would rule the class out, since
+    German adjectives are lowercase and those are all nouns, but it would also
+    miss an Inklusivum adjective opening a sentence.
     """
     lowered = word.lower()
 
