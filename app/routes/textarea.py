@@ -1,9 +1,10 @@
 """Textarea route: a page for checking text by hand against this API.
 
 The page embeds Witty's editor component, which checks as you type through
-/v2.4/check and underlines what it flags. It authenticates with an API key
-entered on the page; the key stays in the page's memory and goes out only as
-the `x-key` header.
+/v2.4/check and underlines what it flags. Below it a prompt, as in the
+dashboard's Witty GPT, rewrites the text through /v1.0/write. Both authenticate
+with an API key entered on the page; the key stays in the page's memory and
+goes out only as the `x-key` header.
 
 `app/static/witty-editor.js` is a vendored build of the component from the
 browser-extension repository (`packages/editor`), see docs/api.md.
@@ -14,11 +15,12 @@ from pathlib import Path
 from fastapi import APIRouter
 from starlette.responses import FileResponse, HTMLResponse
 
+
 router = APIRouter()
 
 EDITOR_BUNDLE = Path(__file__).resolve().parent.parent / "static" / "witty-editor.js"
 
-PAGE = """<!doctype html>
+PAGE = r"""<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -36,11 +38,22 @@ PAGE = """<!doctype html>
         font-weight: 600;
         margin-bottom: 0.25rem;
       }
-      input {
+      input,
+      textarea {
         font: inherit;
         width: 100%;
         max-width: 24rem;
         padding: 0.25rem 0.5rem;
+        box-sizing: border-box;
+      }
+      textarea {
+        max-width: none;
+        resize: vertical;
+      }
+      button {
+        font: inherit;
+        margin-top: 0.5rem;
+        padding: 0.25rem 1rem;
       }
       #editor {
         border: 1px solid #bbb;
@@ -51,9 +64,30 @@ PAGE = """<!doctype html>
       #editor:focus-within {
         border-color: #4a7bd0;
       }
-      #status {
+      #status,
+      #write-status {
         color: #555;
         font-size: 0.875rem;
+      }
+      #write {
+        margin-top: 2rem;
+      }
+      #review h2 {
+        font-size: 1rem;
+        margin: 1.5rem 0 0.5rem;
+      }
+      #edits {
+        white-space: pre-wrap;
+        border-left: 3px solid #ddd;
+        padding-left: 0.75rem;
+      }
+      del {
+        color: #a33;
+      }
+      ins {
+        color: #262;
+        text-decoration: none;
+        background: #e6f4e6;
       }
     </style>
   </head>
@@ -65,10 +99,32 @@ PAGE = """<!doctype html>
     </p>
     <div id="editor"></div>
     <p id="status" role="status" aria-live="polite"></p>
+    <form id="write">
+      <label for="prompt">Prompt</label>
+      <textarea
+        id="prompt"
+        rows="3"
+        placeholder="Make it shorter, or: Write a job ad for a nurse"
+      ></textarea>
+      <button type="submit">Run</button>
+      <p id="write-status" role="status" aria-live="polite"></p>
+    </form>
+    <section id="review" hidden>
+      <h2>Issues Witty found in the draft</h2>
+      <ul id="issues"></ul>
+      <h2>Edits from the follow-up prompt</h2>
+      <p id="edits"></p>
+    </section>
     <script src="/textarea/witty-editor.js"></script>
     <script>
       const status = document.getElementById("status");
+      const apiKey = document.getElementById("api-key");
       const editor = WittyEditor.mount(document.getElementById("editor"), {
+        // The popover's LLM rewrites (/v1.0/rephrase); the API still refuses
+        // them for a key whose config does not allow LLM use.
+        llmAlternatives: true,
+        // Long enough for a local model through Ollama, not only a hosted one.
+        llmTimeoutMs: 30000,
         onStatus(next) {
           status.textContent =
             next.state === "idle"
@@ -78,8 +134,145 @@ PAGE = """<!doctype html>
                 : "Checking failed: " + next.message;
         },
       });
-      document.getElementById("api-key").addEventListener("input", (event) => {
+      apiKey.addEventListener("input", (event) => {
         editor.setApiKey(event.target.value);
+      });
+
+      const form = document.getElementById("write");
+      const prompt = document.getElementById("prompt");
+      const run = form.querySelector("button");
+      const writeStatus = document.getElementById("write-status");
+      const review = document.getElementById("review");
+      const issues = document.getElementById("issues");
+      const edits = document.getElementById("edits");
+
+      // The dashboard's getColor, onto the editor's own underline classes.
+      const tone = (alert) =>
+        alert.subcategory === "corporate_rules"
+          ? "corporate"
+          : !alert.gravity
+            ? "inclusive"
+            : alert.gravity < 1.5
+              ? "severe"
+              : alert.gravity > 2.5
+                ? "style"
+                : "bias";
+
+      // Only a web link becomes an href; anything else stays text.
+      const webUrl = (url) => {
+        try {
+          const parsed = new URL(url);
+          return /^https?:$/.test(parsed.protocol) ? parsed.href : null;
+        } catch {
+          return null;
+        }
+      };
+
+      // As the dashboard lists them: the flagged words underlined in their
+      // colour, the explanation, and a link named after the subcategory.
+      const issue = (alert) => {
+        const item = document.createElement("li");
+        const flagged = document.createElement("span");
+        flagged.className = "witty-alert witty-alert--" + tone(alert);
+        flagged.textContent = alert.text;
+        item.append(flagged);
+        if (alert.explanation?.text) item.append(" – " + alert.explanation.text);
+
+        const url = webUrl(alert.explanation?.url);
+        if (url) {
+          const link = document.createElement("a");
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = (alert.label || "").split(":").pop().trim() || "More";
+          item.append(" (", link, ")");
+        }
+        return item;
+      };
+
+      // The word diff comes from the API; only its text is put on the page.
+      const edit = ({ op, text }) => {
+        if (op === "equal") return document.createTextNode(text);
+        const node = document.createElement(op === "insert" ? "ins" : "del");
+        node.textContent = text;
+        return node;
+      };
+
+      // Plain text to editor JSON rather than HTML, so nothing the model
+      // writes is ever parsed as markup.
+      const toDoc = (text) => ({
+        type: "doc",
+        content: text.split(/\n{2,}/).map((paragraph) => ({
+          type: "paragraph",
+          content: paragraph
+            .split("\n")
+            .flatMap((line, i) => [
+              ...(i ? [{ type: "hardBreak" }] : []),
+              ...(line ? [{ type: "text", text: line }] : []),
+            ]),
+        })),
+      });
+
+      const failure = (status) =>
+        status === 401
+          ? "Enter a valid API key to run a prompt."
+          : status === 403
+            ? "This API key may not use the LLM."
+            : status === 422
+              ? "The language of the draft could not be determined."
+              : "The prompt failed (" + status + ").";
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!prompt.value.trim()) return;
+
+        // The last run's issues and edits no longer describe the text.
+        review.hidden = true;
+        issues.replaceChildren();
+        edits.replaceChildren();
+        run.disabled = true;
+        writeStatus.textContent = "Writing…";
+        try {
+          const response = await fetch("/v1.0/write", {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-key": apiKey.value },
+            body: JSON.stringify({
+              prompt: prompt.value,
+              text: editor.getText(),
+            }),
+          });
+          if (!response.ok) {
+            writeStatus.textContent = failure(response.status);
+            return;
+          }
+
+          const result = await response.json();
+          const text = result.reviewed_response || result.initial_response || "";
+          // One transaction, so a single undo brings the previous text back.
+          editor.editor.commands.setContent(toDoc(text));
+
+          // What led to the follow-up prompt and what it changed stay beside
+          // the editor, so the editor itself only ever holds the text.
+          issues.replaceChildren(...result.check_results.map(issue));
+          edits.replaceChildren(...(result.edits || []).map(edit));
+          review.hidden = !result.reviewed_response;
+          writeStatus.textContent =
+            (result.reviewed_response
+              ? "Replaced the text; Witty flagged " +
+                result.check_results.length +
+                " issue(s) in the draft and had them revised."
+              : "Replaced the text.") + " Undo with Ctrl+Z / ⌘Z.";
+        } catch (error) {
+          writeStatus.textContent = "The prompt failed: " + error.message;
+        } finally {
+          run.disabled = false;
+        }
+      });
+
+      prompt.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+          form.requestSubmit();
+        }
       });
     </script>
   </body>
