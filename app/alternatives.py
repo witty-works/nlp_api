@@ -13,7 +13,7 @@ from app.models import (
 from app.settings import Settings
 from app.db import Db
 from app.model import Model
-from app.nouns import Nouns
+from app.nouns import Nouns, synthesize_gendered_pair
 from app.verbs import Verbs
 from app.adjectives import Adjectives
 from app.categories import is_sub_category_enabled, make_category_advanced
@@ -967,23 +967,55 @@ class Alternatives:
                 male_forms = await self.nouns.german_noun_lookup(
                     male_form, None, prefix
                 )
-                if male_forms is None or target_form not in male_forms:
+                female_forms = (
+                    await self.nouns.german_noun_lookup(female_form, None, prefix)
+                    if female_form
+                    else None
+                )
+
+                # A row can be missing entirely, or present with the requested
+                # column NULL - both must count as missing, or the None flows
+                # into string concatenation below. For regular pairs the pair
+                # itself determines the declension, so synthesize before
+                # giving up.
+                if (
+                    male_forms is None
+                    or male_forms.get(target_form) is None
+                    or female_forms is None
+                    or female_forms.get(target_form) is None
+                ) and female_form:
+                    synthesized = synthesize_gendered_pair(male_form, female_form)
+                    if synthesized is not None:
+                        synthetic_male, synthetic_female = synthesized
+                        # Deliberately unprefixed. Everything downstream adds
+                        # the prefix itself - add_german_prefix for the plain
+                        # forms, inklusivum_noun by taking it as an argument -
+                        # and add_german_prefix also lowercases the joint.
+                        # Prefixing here instead produced "CyberHacktivist",
+                        # which the later call could not repair because it
+                        # skips a word that already starts with the prefix.
+                        if male_forms is None or male_forms.get(target_form) is None:
+                            male_forms = synthetic_male
+                        if (
+                            female_forms is None
+                            or female_forms.get(target_form) is None
+                        ):
+                            female_forms = synthetic_female
+
+                if male_forms is None or male_forms.get(target_form) is None:
                     male_forms = None
                     self.logger.error(
                         f"Declension '{target_form}' missing for '{word}'{token_debug}"
                     )
                     break
 
-                if female_form is None:
+                if not female_form:
                     self.logger.error(
                         f"Declension data missing for other form in '{word}'{token_debug}"
                     )
                     return [], False
 
-                female_forms = await self.nouns.german_noun_lookup(
-                    female_form, None, prefix
-                )
-                if female_forms is None or target_form not in female_forms:
+                if female_forms is None or female_forms.get(target_form) is None:
                     male_forms = True
                     self.logger.error(
                         f"Declension '{target_form}' missing for '{female_form}'{token_debug}"
@@ -1037,7 +1069,12 @@ class Alternatives:
                 )
 
                 if is_neutral:
-                    lemma = prefix + male_form
+                    # Not `prefix + male_form`: that mis-capitalises the join
+                    # ("CyberHacktivist") and doubles the prefix when the noun
+                    # lookup fell back to the head word and already applied it
+                    # ("CyberCyberhacktivist"). add_german_prefix handles both,
+                    # and leaves a hyphenated prefix capitalised as it should.
+                    lemma = utils.add_german_prefix(male_form, prefix)
                 elif separator == INKLUSIVUM_SEPARATOR:
                     lemma = self.inklusivum_noun(
                         male_forms,
