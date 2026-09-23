@@ -71,6 +71,19 @@ def test_health():
         assert response.status_code == 200
 
 
+def test_content_security_policy_is_sent_whole():
+    """Every directive reaches the header, not only the last one configured."""
+    with TestClient(app) as client:
+        csp = client.get("/health").headers["content-security-policy"]
+
+    directives = {part.split()[0] for part in csp.split(";") if part.strip()}
+    assert {"default-src", "script-src", "style-src", "img-src"} <= directives
+
+
+@pytest.mark.parametrize(
+    "review_prompt_dir",
+    get_dirs("tests/test_review_prompt"),
+)
 @pytest.mark.parametrize(
     "review_prompt_dir",
     get_dirs("tests/test_review_prompt"),

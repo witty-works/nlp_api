@@ -11,12 +11,18 @@ from app.auth_service import fetch_user
 # Security headers configuration
 # Allow Swagger UI assets from jsdelivr and inline scripts/styles used by the
 # generated Swagger HTML. Keep default-src restrictive and explicitly allow
-# script-src and style-src for docs to render.
+# script-src and style-src for docs to render. One method per directive: `set`
+# replaces the whole policy, so chaining it sent only the last directive.
 csp = (
     secure.ContentSecurityPolicy()
-    .set("default-src 'self' cdn.jsdelivr.net")
-    .set("script-src 'self' 'unsafe-inline' cdn.jsdelivr.net")
-    .set("style-src 'self' 'unsafe-inline' cdn.jsdelivr.net")
+    .default_src("'self'", "cdn.jsdelivr.net")
+    .script_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
+    .style_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
+    # Swagger's inline icons and favicon, and in the /textarea editor's popover
+    # its logo (inline) and the learning-bite pictures it links from witty.works.
+    .img_src(
+        "'self'", "data:", "cdn.jsdelivr.net", "fastapi.tiangolo.com", "www.witty.works"
+    )
 )
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
