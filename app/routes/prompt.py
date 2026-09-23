@@ -5,6 +5,7 @@ Handles LLM prompt processing and review functionality.
 
 import difflib
 import json
+import logging
 import re
 from typing import Union
 
@@ -244,18 +245,27 @@ async def post_write(
         response.status_code = status.HTTP_403_FORBIDDEN
         return Result.factory("LLM use not enabled on user")
 
-    context.redis.store_metrics(request, configs, REPHRASE_API_VERSION, "prompt")
+    context.redis.store_metrics(request, configs, REPHRASE_API_VERSION, "write")
 
+    # Witty checks this much of a text at once, so a longer draft would only be
+    # reviewed in part; the model is asked to stay inside it, and a draft that
+    # does not is reported through `limit_reached`.
+    length = (
+        f" Keep the result under {context.settings.text_max_length} characters."
+    )
     if write_request_in.text.strip():
         user_prompt = (
             "Apply the instruction to the text below. Respond with the complete"
             " revised text only, in the language of the text unless the"
-            " instruction asks for another, and keep its paragraph breaks.\n\n"
+            " instruction asks for another, and keep its paragraph breaks."
+            f"{length}\n\n"
             f"Instruction:\n{write_request_in.prompt}\n\n"
             f"Text:\n{write_request_in.text}"
         )
     else:
-        user_prompt = f"{write_request_in.prompt}\n\nRespond with the text only."
+        user_prompt = (
+            f"{write_request_in.prompt}\n\nRespond with the text only.{length}"
+        )
 
     try:
         draft = plain_response(
@@ -273,6 +283,9 @@ async def post_write(
             check_request_in, configs, context, WRITE_MAX_TOKENS
         )
     except Exception:
+        # The caller gets nothing specific, the operator the whole story: a
+        # wrong LLM_API_BASE or an expired provider key ends up here.
+        logging.getLogger("nlp_api").exception("/v1.0/write failed")
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return Result.factory("An error occurred")
 

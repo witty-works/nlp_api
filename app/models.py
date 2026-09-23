@@ -108,6 +108,8 @@ class MetricsType(str, Enum):
     REPHRASE_HOST = "rephrase_host"
     PROMPT_COUNTS = "prompt_counts"
     PROMPT_HOST = "prompt_host"
+    WRITE_COUNTS = "write_counts"
+    WRITE_HOST = "write_host"
 
 
 class LlmAccessType(str, Enum):
@@ -918,12 +920,16 @@ class RephraseRequestIn(BaseRequestIn):
     lang: LangType
 
 
+WRITE_PROMPT_MAX_LENGTH = 1000
+WRITE_TEXT_MAX_LENGTH = 4000
+
+
 class WriteRequestIn(BaseRequestIn):
     type: str = "write"
     # What to do: "make it shorter", "write a job ad for a nurse", ...
-    prompt: Annotated[str, Len(min_length=1, max_length=1000)]
+    prompt: Annotated[str, Len(min_length=1, max_length=WRITE_PROMPT_MAX_LENGTH)]
     # The text to change. Empty means write a new one from the prompt alone.
-    text: Annotated[str, Len(max_length=4000)] = ""
+    text: Annotated[str, Len(max_length=WRITE_TEXT_MAX_LENGTH)] = ""
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
 
 

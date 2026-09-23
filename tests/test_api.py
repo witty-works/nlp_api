@@ -3134,8 +3134,10 @@ def test_write(llm_access, set_redis, monkeypatch):
         prompt = calls[0]["messages"][1]["content"]
         assert "Make it more formal." in prompt
         assert "Chairman calls guys tmrw." in prompt
-        # Room for a whole text rather than the 300 tokens of /v1.0/prompt.
+        # Room for a whole text rather than the 300 tokens of /v1.0/prompt,
+        # and asked to stay within what Witty checks at once.
         assert calls[0]["max_tokens"] > 300
+        assert f"under {context.settings.text_max_length} characters" in prompt
 
         assert result["initial_response"] == "The chairman will call the guys tomorrow."
         flagged = {alert["text"] for alert in result["check_results"]}
@@ -3175,6 +3177,44 @@ def test_write(llm_access, set_redis, monkeypatch):
         response = client.post("/v1.0/write", json=body, headers=auth)
         assert response.status_code == 403
         assert calls == []
+
+
+def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog):
+    """A provider error is a generic 500 for the caller and a traceback for
+    the operator."""
+
+    async def acompletion(**kwargs):
+        raise ConnectionError("provider unreachable")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client, caplog.at_level(logging.ERROR, "nlp_api"):
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Greet the team."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 500
+    assert "provider unreachable" not in response.text
+    assert "/v1.0/write failed" in caplog.text
+    assert "provider unreachable" in caplog.text
+
+
+def test_prompt_and_write_metrics_are_counted(monkeypatch):
+    """Each has its own counter; the prompt one used to be dropped."""
+    from starlette.requests import Request
+
+    monkeypatch.setattr(context.settings, "log_metrics", True)
+    request = Request({"type": "http", "headers": []})
+    configs = {"id": "metrics-user"}
+
+    for endpoint in ("prompt", "write"):
+        before = int(context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0)
+        context.redis.store_metrics(request, configs, "1.0", endpoint)
+        after = int(context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user"))
+        assert after == before + 1
 
 
 @pytest.fixture
