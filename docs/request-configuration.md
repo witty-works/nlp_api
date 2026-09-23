@@ -199,6 +199,21 @@ Support is currently limited to nouns and their articles.
 - `"inclusive_gender"` - Show only gender-inclusive alternatives (e.g., "firefighter" instead of "fireman")
 - `"binary_gender"` - Show only binary gender alternatives (e.g., "fireman/firewoman")
 
+#### Switching a text's gender format
+
+A text written in one German gender format and checked with another configured gets one alert per form that differs, in subcategory `gendered_denominations_ending_advanced`. Each such alert carries `"bulk": "gender_format"` and exactly one alternative, the same form in the configured format, and they never overlap, so accepting all of them switches the text. Accepted one by one they are ordinary alerts.
+
+- Converted between all eight separator formats, both ways: nouns (`Lehrer*innen`, `Angestellte*r`), article and pronoun pairs in either order and in title case (`der*die`, `Der*Die`), determiners (`jede*r`, `Ein*e`), and compounds with the marker inside (`Mitarbeiter*innengespräch`, `Lehrer*innen-Team`; read from `*`, `_` and `:`, whose compounds stay one token). Binnen-I writes endings other than `in`/`innen` with a slash (`Angestellte/r`).
+- Only person nouns (stem plus feminine ending is a known noun) and forms from the article table are touched: `Podcasts/in`, `Klasse/n`, `und/oder` stay as written.
+- Not covered: the Inklusivum (`de-e`) in either direction, see [inklusivum.md](./inklusivum.md#remaining-work), and French separators.
+- A config that forces `german_gender_ending` overrules the requested one; `gender_separator` in the response is the format that applied. A forced `gendered_roles_format` of `binary_gender` or `none` means no such alerts at all.
+- `bulk_actions` in the check response lists the `bulk` groups this request can return, whether or not any result does: `["gender_format"]` for German with a separator format, inclusive roles and the subcategory enabled, `[]` otherwise (Inklusivum, French, English, binary roles). It is always sent, so a client can tell an API without bulk actions from a text without any; `bulk` on a result is left out when it has none. Both are first in the release after 2.4.8.
+
+#### Results that are not issues
+
+- A result with `gravity` null and no alternatives is positive feedback: the text already does it right, for instance a gendered form in the configured format (`Lehrer:innen` under `:in`, subcategory `d_and_i`). There is nothing to accept; clients show it as a confirmation, not an issue.
+- An alternative with `"remove": true` and no `text` suggests deleting the flagged words (a filler such as "auch"). Accepting it removes them.
+
 ### Category and Alternative Settings
 
 | Field                           | Type             | Default |
