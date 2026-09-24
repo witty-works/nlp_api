@@ -126,7 +126,9 @@ class Settings(BaseSettings):
     # "API key" is the name because that is what a deployment without the
     # dashboard uses (the `x-key` header, minted from DEFAULT_API_KEY), but
     # anything fetch_user accepts satisfies it - an SSO bearer token does too,
-    # so browser extension and Word plugin clients keep working.
+    # so browser extension and Word plugin clients keep working. An endpoint
+    # that asks for a username and password (management, docs) needs no key
+    # on top while that password is asked for.
     require_api_key: bool = False
 
     # The routes that stay reachable without a credential when require_api_key

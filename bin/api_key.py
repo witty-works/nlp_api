@@ -9,6 +9,12 @@ the same Redis and applies the same HMAC hashing.
     pdm run python -m bin.api_key list
     pdm run python -m bin.api_key delete <key>
 
+Or into a local API key file, synced to the API with bin/sync_api_keys.py
+(see app/api_keys.py) rather than written to Redis:
+
+    pdm run python -m bin.api_key create user@example.com --file api_keys.yaml \
+        --note "Jane Doe (ACME), HR pilot until 2026-12"
+
 Deleting needs the key itself rather than the email: when API_KEY_HMAC_KEY is
 set the stored entry is a one-way hash, so the plaintext cannot be recovered
 from Redis. `list` prints the stored entries and the email each maps to.
@@ -17,6 +23,8 @@ from Redis. `list` prints the stored entries and the email each maps to.
 import argparse
 import secrets
 import sys
+
+from app.api_keys import ApiKeyEntry, parse
 
 from app.redis import Redis
 from app.settings import get_settings
@@ -38,6 +46,53 @@ def create(redis: Redis, args) -> int:
             "from Redis when API_KEY_HMAC_KEY is set.",
             file=sys.stderr,
         )
+
+    return 0
+
+
+def create_in_file(args) -> int:
+    """Append an entry for a new key to the local API key file, keeping the
+    rest of it (and its comments) as written."""
+    try:
+        with open(args.file, encoding="utf-8") as f:
+            before = f.read()
+    except FileNotFoundError:
+        before = ""
+
+    api_key = args.api_key or secrets.token_urlsafe(32)
+    note = "".join(f"# {line}\n" for line in (args.note or args.email).splitlines())
+    try:
+        entries = parse(before)
+        entry = ApiKeyEntry(email=args.email, key=api_key)
+    except ValueError as e:
+        print(f"error: {args.file}: {e}", file=sys.stderr)
+        return 1
+
+    if any(e.email == entry.email and (e.config or e.force) for e in entries):
+        print(
+            f"error: {entry.email} has a config in {args.file}; add the key by "
+            "hand with the same config",
+            file=sys.stderr,
+        )
+        return 1
+    if any(e.key == api_key for e in entries):
+        print("error: that API key already exists", file=sys.stderr)
+        return 1
+
+    text = f"{note}- email: {entry.email}\n  key: {api_key}\n"
+    if before and not before.endswith("\n\n"):
+        text = ("\n" if before.endswith("\n") else "\n\n") + text
+    parse(before + text)
+
+    with open(args.file, "a", encoding="utf-8") as f:
+        f.write(text)
+
+    print(api_key)
+    print(
+        f"\nAdded {entry.email} to {args.file}. It takes effect with the next "
+        "bin/sync_api_keys.py.",
+        file=sys.stderr,
+    )
 
     return 0
 
@@ -78,6 +133,16 @@ def parse_args():
         help="use this key instead of generating one",
         default=None,
     )
+    create_parser.add_argument(
+        "--file",
+        help="add it to this local API key file instead of Redis",
+        default=None,
+    )
+    create_parser.add_argument(
+        "--note",
+        help="who the key is for, written as the entry's comment (with --file)",
+        default=None,
+    )
     create_parser.set_defaults(handler=create)
 
     list_parser = commands.add_parser("list", help="list stored keys")
@@ -92,6 +157,9 @@ def parse_args():
 
 def main() -> int:
     args = parse_args()
+    if args.command == "create" and args.file:
+        return create_in_file(args)
+
     settings = get_settings()
 
     if not settings.redis_host:

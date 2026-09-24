@@ -26,8 +26,13 @@ from app.models import (
     Client,
 )
 from app.version_validators import client_version
-from app.config_manager import fetch_configs_for_request, fetch_result_conf
+from app.config_manager import (
+    fetch_configs_for_request,
+    fetch_result_conf,
+    llm_alternatives_allowed,
+)
 from app.auth_service import fetch_user
+from app.api_keys import ApiKeysIn, SyncResult, sync
 
 router = APIRouter()
 
@@ -190,3 +195,67 @@ async def delete_api_key(
     username: str = Depends(fetch_management_username),
 ):
     context.redis.delete_api_key(api_key)
+
+
+@router.put(
+    "/api_keys",
+    response_model=SyncResult,
+    responses={409: {"model": ErrorMessage}, 422: {"model": ErrorMessage}},
+)
+async def put_api_keys(
+    api_keys_in: ApiKeysIn,
+    dry_run: bool = False,
+    context: AppContext = Depends(get_app_context),
+    username: str = Depends(fetch_management_username),
+):
+    """Make the synced API keys match the local key file (see app/api_keys.py
+    and bin/sync_api_keys.py): add new keys, revoke the ones this endpoint
+    synced before that are no longer listed, and replace each email's config.
+    Keys minted any other way are left alone. With `dry_run`, only report
+    what would change. The response names emails, never keys."""
+    try:
+        result = sync(context.redis, api_keys_in.entries, dry_run)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        )
+
+    if result.conflicts:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Keys already in use for other emails, nothing synced: "
+            + ", ".join(sorted(set(result.conflicts))),
+        )
+
+    result.warnings = sync_warnings(api_keys_in, context)
+
+    return result
+
+
+def sync_warnings(api_keys_in: ApiKeysIn, context: AppContext) -> list[str]:
+    """What the sync writes but the API will not act on."""
+    warnings = []
+    seen = set()
+    for entry in api_keys_in.entries:
+        if entry.email in seen:
+            continue
+        seen.add(entry.email)
+
+        if (entry.config or entry.force) and context.redis.db.exists(
+            context.redis.get_user_id(entry.email)
+        ):
+            warnings.append(
+                f"{entry.email}: config ignored, a config synced from the "
+                "dashboard for this email wins"
+            )
+
+        wants_llm = entry.force.get(
+            "llm_alternatives", entry.config.get("llm_alternatives")
+        )
+        if wants_llm and not llm_alternatives_allowed(context.settings, entry.email):
+            warnings.append(
+                f"{entry.email}: llm_alternatives has no effect, LLM_ACCESS "
+                "(or LLM_ALLOWED_USERS) does not allow it"
+            )
+
+    return warnings

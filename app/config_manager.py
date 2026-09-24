@@ -6,6 +6,7 @@ from typing import Optional
 
 from fastapi import HTTPException
 
+from app.api_keys import KeyConfig, key_config
 from app.context import AppContext
 from app.settings import Settings
 from app.text_utils import parse_word_type
@@ -88,7 +89,9 @@ def parse_term_replacements(
     return term_replacements
 
 
-def build_default_user_configs(email: str, settings: Settings) -> dict:
+def build_default_user_configs(
+    email: str, settings: Settings, entry: Optional[KeyConfig] = None
+) -> dict:
     """Configuration for a user nobody ever synced into Redis.
 
     A deployment without the dashboard has no `SyncUserToNlpApi` job, so an
@@ -115,6 +118,21 @@ def build_default_user_configs(email: str, settings: Settings) -> dict:
         "force_categories": [],
     }
 
+    # A synced API key's config (app/api_keys.py): its `config` as suggestions, so clients reading
+    # /v2.0/auth show them as the defaults, its `force` as forces. Disabled
+    # categories are forced the way the dashboard forces them, per category.
+    key_defaults = {}
+    if entry is not None:
+        key_defaults = dict(entry.config)
+        for field, value in entry.config.items():
+            config[field] = {"value": value, "status": "suggestion"}
+        for field, value in entry.force.items():
+            if field == "disabled_categories":
+                for category in value:
+                    config["categories"][category] = {"value": False, "status": "force"}
+            else:
+                config[field] = {"value": value, "status": "force"}
+
     configs = {
         # Stable and non-identifying: this ends up in the metrics hashes, which
         # the dashboard deployment fills with pseudonymous ids as well.
@@ -133,6 +151,10 @@ def build_default_user_configs(email: str, settings: Settings) -> dict:
     configs["config_hash"] = hashlib.md5(
         json.dumps(configs, sort_keys=True).encode("utf-8"), usedforsecurity=False
     ).hexdigest()
+    # Not part of the hash: what the server fills in for a request that does
+    # not set these fields itself, which the stored config cannot say (a
+    # suggestion there is only reported to clients).
+    configs["key_defaults"] = key_defaults
 
     return configs
 
@@ -146,10 +168,16 @@ async def fetch_user_organization_configs(
         # Only the request path substitutes defaults. The management endpoints
         # keep reporting a 404 so "no config is stored for this email" stays
         # distinguishable from "the stored config happens to be the default".
-        if not (allow_default and context.settings.default_user_config_enabled):
+        if not allow_default:
             raise
 
-        configs = build_default_user_configs(email, context.settings)
+        # A dashboard-synced config wins. Without one, a user of a synced API
+        # key gets its config, and anyone else the deployment's defaults.
+        entry = key_config(context.redis, email)
+        if entry is None and not context.settings.default_user_config_enabled:
+            raise
+
+        configs = build_default_user_configs(email, context.settings, entry)
 
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
@@ -331,6 +359,8 @@ def apply_default_config(request_in: BaseRequestIn, context: AppContext) -> None
 async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email: Optional[str], context: AppContext
 ) -> dict:
+    # What the request set itself, before any default is filled in.
+    sent = set(request_in.config.model_fields_set)
     apply_default_config(request_in, context)
 
     request_in.config.__setattr__(
@@ -357,6 +387,11 @@ async def fetch_configs_for_request(
             pass
 
     if configs:
+        # An API key's defaults take the place of the deployment's, and a
+        # force in any config still wins over both.
+        for field, value in configs.get("key_defaults", {}).items():
+            if field not in sent:
+                setattr(request_in.config, field, value)
         apply_configs(request_in, configs["config"])
 
         if "organization_config" in configs:

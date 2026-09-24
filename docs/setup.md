@@ -260,6 +260,65 @@ before it was set keep working: lookups fall back to the plaintext entry.
 Revoking then needs the key itself rather than the email, because the plaintext
 cannot be recovered from Redis.
 
+### From a local file
+
+For a few dozen keys handed out by hand, keep them in a YAML file on your own
+machine and sync it to the API. Who each key is for goes in a comment, and a key
+can come with its own config (see [api_keys.example.yaml](../api_keys.example.yaml)):
+
+```yaml
+# Jane Doe (ACME), HR pilot until 2026-12
+- email: jane@acme.example
+  key: replace-with-a-minted-key-0000000000000
+  config:                   # optional: what a request gets where it says nothing
+    german_gender_ending: ":in"
+    disabled_categories: [plain_language]
+  force:                    # optional: what a request gets whatever it says
+    french_gender_separator: "·"
+```
+
+```bash
+# mint a key: appends an entry with the note as its comment, prints the key
+pdm run python -m bin.api_key create jane@acme.example --file api_keys.yaml \
+    --note "Jane Doe (ACME), HR pilot until 2026-12"
+
+# make the API match the file: shows what changes and asks first
+NLP_API_USERNAME=… NLP_API_PASSWORD=… \
+    pdm run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
+```
+
+- **The sync makes the server match the file** through `PUT /api_keys`: new
+  keys are added, keys an earlier sync added that are no longer listed are
+  revoked, and each email's config is replaced. Revoke a key by deleting its
+  entry and syncing. Keys minted any other way (the dashboard, `bin/api_key.py`
+  without `--file`, `DEFAULT_API_KEY`) are left alone, and a sync that would
+  take one of them over for another email is refused as a whole.
+- **It needs the management credentials** (`API_DOCS_USERNAME` /
+  `API_DOCS_PASSWORD` on the server, `MANAGEMENT_AUTH_ENABLED` on). With
+  `REQUIRE_API_KEY` on it needs no key on top, like every endpoint that asks
+  for a username and password; with management auth off it checks nothing,
+  and the key gate stays in front of it.
+- **The file holds the keys themselves** — the server needs each one once and
+  may keep only an HMAC of it (`API_KEY_HMAC_KEY`). Keep it on your machine:
+  `api_keys.yaml` is in `.gitignore`, and the script sends it over https only
+  (plain http to localhost for testing).
+- **The email is who the key is for.** The rest of the API knows a user by it:
+  their config, and the pseudonymous id in the metrics. It need not be a
+  mailbox, but it has to be one per owner. Several keys may share one (while
+  rotating a key, say) if their `config` and `force` agree. Synced users need
+  no `DEFAULT_USER_CONFIG_ENABLED`.
+- **`config` and `force`** take the fields of a request's `config` and are
+  checked before anything is sent, so a typo fails locally. `config` fills in
+  what a request does not set, instead of `DEFAULT_CONFIG`, and clients reading
+  `/v2.0/auth` show it as the defaults; `force` applies whatever the request
+  says. A config synced from the dashboard for the same email wins over both.
+  `alternatives_max_count` is the deployment's limit, not a key's, and is
+  refused.
+- **The sync says what will not take effect**, before and after syncing: a
+  config for an email the dashboard also has a config for, and
+  `llm_alternatives` for a user `LLM_ACCESS` / `LLM_ALLOWED_USERS` does not let
+  spend the LLM budget.
+
 The `/api_key` HTTP endpoints do the same thing, but they are only protected
 when `API_DOCS_AUTH_ENABLED` is `"true"` — with it unset, anyone who can reach
 the API can mint a key for any email. Turn it on for any deployment that is

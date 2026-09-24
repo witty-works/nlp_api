@@ -4,8 +4,11 @@ import secure
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
+from starlette.routing import Match
 
 from app.auth_service import fetch_user
+from app.dependencies import fetch_current_username, fetch_management_username
 
 
 # Security headers configuration
@@ -67,6 +70,36 @@ def is_public_path(path: str, public_paths) -> bool:
     return any(entry.rstrip("/") == candidate for entry in public_paths)
 
 
+def _depends_on(dependant, call) -> bool:
+    return any(
+        dependency.call is call or _depends_on(dependency, call)
+        for dependency in dependant.dependencies
+    )
+
+
+def is_password_protected(request, settings) -> bool:
+    """Whether the request's route asks for a username and password of its
+    own: the management endpoints behind MANAGEMENT_AUTH_ENABLED, the docs
+    and development helpers behind API_DOCS_AUTH_ENABLED. Only while that
+    switch is on, since with it off they check nothing."""
+    guards = []
+    if settings.management_auth_enabled:
+        guards.append(fetch_management_username)
+    if settings.api_docs_auth_enabled:
+        guards.append(fetch_current_username)
+    if not guards:
+        return False
+
+    for route in request.app.routes:
+        if not isinstance(route, APIRoute):
+            continue
+        match, _ = route.matches(request.scope)
+        if match == Match.FULL:
+            return any(_depends_on(route.dependant, guard) for guard in guards)
+
+    return False
+
+
 async def require_api_key(request, call_next):
     """Refuse requests that do not resolve to a user.
 
@@ -84,8 +117,12 @@ async def require_api_key(request, call_next):
 
     # CORS preflight carries no credentials by definition, and answering it
     # with a 401 breaks the browser clients before they ever send the request.
-    if request.method == "OPTIONS" or is_public_path(
-        request.url.path, context.settings.open_paths()
+    # Nor does an endpoint that asks for a username and password: it checks
+    # those itself, and a key on top would only lock out whoever manages it.
+    if (
+        request.method == "OPTIONS"
+        or is_public_path(request.url.path, context.settings.open_paths())
+        or is_password_protected(request, context.settings)
     ):
         return await call_next(request)
 
