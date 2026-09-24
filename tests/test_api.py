@@ -3265,6 +3265,23 @@ def test_prompt_and_write_metrics_are_counted(monkeypatch):
         assert after == before + 1
 
 
+def test_auth_reports_llm_suggestions_the_server_refuses(set_redis, monkeypatch):
+    """A client reading /v2.0/auth learns that AI suggestions would be refused
+    (LLM_ACCESS, LLM_ALLOWED_USERS, no model), so it need not offer them."""
+
+    def llm_alternatives():
+        with TestClient(app) as client:
+            response = client.post(
+                "/v2.0/auth", headers={"X-TESTING-AUTH": "default@gmail.com"}
+            )
+        return response.json()["config"].get("llm_alternatives")
+
+    assert llm_alternatives() != {"value": False, "status": "force"}
+
+    monkeypatch.setattr(context.settings, "llm_access", LlmAccessType.DISABLED)
+    assert llm_alternatives() == {"value": False, "status": "force"}
+
+
 @pytest.fixture
 def llm_calls(monkeypatch):
     """Capture what would have been sent to a provider, without calling one."""
