@@ -522,3 +522,46 @@ def test_french_doublets_are_left_alone_for_binary_forms(set_redis):  # noqa: F8
 
     assert response.json()["results"] == []
 
+
+SWITCH_TEXTS = {
+    "de": (
+        "german_gender_ending",
+        list(FORMATS),
+        "Willkommen liebe Schüler und Schülerinnen. "
+        "Der Lehrer gibt den Schülern die Hefte, jede/-r Kolleg/in hilft.",
+    ),
+    "fr": (
+        "french_gender_separator",
+        FRENCH_FORMATS,
+        "Les enseignantes et les enseignants saluent un.e acteur.rice. Il est acteur.",
+    ),
+}
+
+
+@pytest.mark.parametrize(
+    "lang,target",
+    [(lang, target) for lang, (_, fmts, _) in SWITCH_TEXTS.items() for target in fmts],
+    ids=str,
+)
+def test_a_switched_text_has_nothing_left_to_switch(
+    set_redis, lang, target  # noqa: F811
+):
+    """What the switch writes (converted forms, gendered masculines, joined
+    pairs) is what the target format reads back as its own, in both languages:
+    a second switch changes nothing."""
+    field, _, text = SWITCH_TEXTS[lang]
+
+    def bulk(client, text):
+        response = client.post(
+            "/v2.4/check",
+            json={"text": text, "lang": lang, "config": {field: target}},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        return [
+            r for r in response.json()["results"] if r.get("bulk") == "gender_format"
+        ]
+
+    with TestClient(app) as client:
+        switched = accept_all(text, bulk(client, text))
+        assert switched != text
+        assert bulk(client, switched) == []
