@@ -29,7 +29,7 @@ import base64
 import hashlib
 import io
 import json
-import re
+import os
 import shutil
 import subprocess
 import sys
@@ -41,13 +41,21 @@ from pathlib import Path
 PACKAGE = "@witty-works/editor"
 
 # The release this version of the page is written against, and its integrity
-# as the registry publishes it: `npm view @witty-works/editor@<version>
-# dist.integrity`. Update the two together.
-VERSION = "2.6.0"
-INTEGRITY = (
-    "sha512-x/H/N80x+5MmgQR4VHWrusXP6JKXiowqbiayv95g"
-    "QzmrF2Cl567Ht1lrqt57d1Q/6D8MkrDRCc8Ib+Tir39Rog=="
-)
+# as the registry publishes it, in bin/editor-pin.json. Data rather than code,
+# so --pin rewrites a JSON file instead of this script.
+PIN_FILE = Path(__file__).resolve().parent / "editor-pin.json"
+
+
+def load_pin(path: Path = PIN_FILE) -> tuple[str, str]:
+    try:
+        pinned = json.loads(path.read_text())
+        return pinned["version"], pinned["integrity"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return "", ""
+
+
+VERSION, INTEGRITY = load_pin()
+
 
 SCRIPT = "witty-editor.js"
 NOTICES = "witty-editor.js.LICENSE.txt"
@@ -75,6 +83,24 @@ SLSA_PROVENANCE = "https://slsa.dev/provenance/v1"
 
 class FetchError(Exception):
     pass
+
+
+def install_atomically(dest: Path, files: dict[str, bytes]) -> None:
+    """Write every file under a temporary name first, then move them all into
+    place, so an interrupted run leaves the previous install whole rather than
+    a new script beside an old licence."""
+    dest.mkdir(parents=True, exist_ok=True)
+    staged = []
+    try:
+        for name, content in files.items():
+            temporary = dest / f".{name}.partial"
+            temporary.write_bytes(content)
+            staged.append((temporary, dest / name))
+        for temporary, final in staged:
+            os.replace(temporary, final)
+    finally:
+        for temporary, _ in staged:
+            temporary.unlink(missing_ok=True)
 
 
 def tarball_url(package: str, version: str) -> str:
@@ -116,7 +142,7 @@ def download(
 ) -> None:
     if not version or not integrity:
         raise FetchError(
-            "No editor release is pinned in bin/fetch_editor.py; build one with "
+            "No editor release is pinned in bin/editor-pin.json; build one with "
             "--build <browser-extension checkout> instead."
         )
 
@@ -129,16 +155,12 @@ def download(
 
     # Only once the tarball checked out, so a failed run leaves nothing half
     # installed.
-    dest.mkdir(parents=True, exist_ok=True)
-    for name, content in files.items():
-        (dest / name).write_bytes(content)
+    install_atomically(dest, files)
 
 
 def build(checkout: Path, dest: Path) -> None:
     """Build packages/editor in a browser-extension checkout and copy it here."""
-    subprocess.run(
-        ["npm", "run", "build", "-w", PACKAGE], cwd=checkout, check=True
-    )
+    subprocess.run(["npm", "run", "build", "-w", PACKAGE], cwd=checkout, check=True)
 
     editor = checkout / "packages" / "editor"
     script = editor / "dist" / SCRIPT
@@ -158,17 +180,28 @@ def build(checkout: Path, dest: Path) -> None:
         None,
     )
 
-    dest.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(script, dest / SCRIPT)
+    files = {SCRIPT: script.read_bytes()}
     if notices is None:
         print("warning: no licence file found to copy", file=sys.stderr)
     else:
-        shutil.copyfile(notices, dest / NOTICES)
+        files[NOTICES] = notices.read_bytes()
+    install_atomically(dest, files)
 
 
 def check_provenance(audit: dict, package: str, version: str) -> str:
     """The commit a version was built from, if `npm audit signatures` verified
-    it and its provenance names the expected workflow and tag."""
+    it and its provenance names the expected workflow and tag. An answer in a
+    shape npm did not use before is refused, not a traceback."""
+    try:
+        return _check_provenance(audit, package, version)
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError) as error:
+        raise FetchError(
+            f"unexpected npm audit signatures output ({type(error).__name__}:"
+            f" {error}); check the attestations by hand"
+        ) from None
+
+
+def _check_provenance(audit: dict, package: str, version: str) -> str:
     if audit.get("invalid") or audit.get("missing"):
         raise FetchError(
             "npm audit signatures reports invalid or missing signatures: "
@@ -210,26 +243,15 @@ def check_provenance(audit: dict, package: str, version: str) -> str:
     return build["resolvedDependencies"][0]["digest"]["gitCommit"]
 
 
-def rewrite_pin(source: str, version: str, integrity: str) -> str:
-    """This script's text with VERSION and INTEGRITY replaced."""
-    half = len(integrity) // 2
-    source, versions = re.subn(
-        r'^VERSION = "[^"]*"$', f'VERSION = "{version}"', source, flags=re.M
+def write_pin(version: str, integrity: str, path: Path = PIN_FILE) -> None:
+    """Record a verified version in the pin file."""
+    path.write_text(
+        json.dumps({"version": version, "integrity": integrity}, indent=2) + "\n"
     )
-    source, integrities = re.subn(
-        r"^INTEGRITY = \(\n.*?\n\)$",
-        f'INTEGRITY = (\n    "{integrity[:half]}"\n    "{integrity[half:]}"\n)',
-        source,
-        flags=re.M | re.S,
-    )
-    if versions != 1 or integrities != 1:
-        raise FetchError("could not find VERSION and INTEGRITY to rewrite")
-
-    return source
 
 
-def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
-    """Verify a version with npm and write it into this script."""
+def pin(version: str, pin_file: Path, run=subprocess.run) -> tuple[str, str]:
+    """Verify a version with npm and write it into the pin file."""
     if shutil.which("npm") is None:
         raise FetchError("--pin needs npm, to verify signatures and provenance")
 
@@ -240,7 +262,10 @@ def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
         def npm(*args: str) -> str:
             try:
                 return run(
-                    ["npm", *args], cwd=project, check=True, capture_output=True,
+                    ["npm", *args],
+                    cwd=project,
+                    check=True,
+                    capture_output=True,
                     text=True,
                 ).stdout
             except subprocess.CalledProcessError as error:
@@ -253,8 +278,13 @@ def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
         # --prefer-online: a version published minutes ago is not in npm's
         # cached metadata yet.
         npm(
-            "install", "--ignore-scripts", "--no-audit", "--no-fund",
-            "--prefer-online", "--save-exact", f"{PACKAGE}@{version}",
+            "install",
+            "--ignore-scripts",
+            "--no-audit",
+            "--no-fund",
+            "--prefer-online",
+            "--save-exact",
+            f"{PACKAGE}@{version}",
         )
         audit = npm("audit", "signatures", "--json", "--include-attestations")
         commit = check_provenance(json.loads(audit), PACKAGE, version)
@@ -262,7 +292,7 @@ def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
         lock = json.loads((project / "package-lock.json").read_text())
         integrity = lock["packages"][f"node_modules/{PACKAGE}"]["integrity"]
 
-    script.write_text(rewrite_pin(script.read_text(), version, integrity))
+    write_pin(version, integrity, pin_file)
     return integrity, commit
 
 
@@ -277,14 +307,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--pin",
         metavar="VERSION",
-        help="verify this version with npm and pin it in this script (needs npm)",
+        help="verify this version with npm and pin it in bin/editor-pin.json (needs npm)",
     )
     parser.add_argument("--dest", type=Path, default=DEFAULT_DEST)
     args = parser.parse_args(argv)
 
     try:
         if args.pin:
-            integrity, commit = pin(args.pin, Path(__file__).resolve())
+            integrity, commit = pin(args.pin, PIN_FILE)
             print(
                 f"Pinned {PACKAGE}@{args.pin} ({integrity}), built by "
                 f"{PROVENANCE_WORKFLOW} from {commit}. Run this script again "
@@ -298,7 +328,12 @@ def main(argv: list[str] | None = None) -> int:
         else:
             download(PACKAGE, VERSION, INTEGRITY, args.dest)
             source = f"{PACKAGE}@{VERSION}"
-    except (FetchError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
+    except (
+        FetchError,
+        OSError,
+        tarfile.TarError,
+        subprocess.CalledProcessError,
+    ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
 

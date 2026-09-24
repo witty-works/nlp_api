@@ -6,7 +6,6 @@ here: that the page is opt-in, how it sits behind the key gate, what it serves
 without its script, and the page's own contract with the API.
 """
 
-import ast
 import base64
 import hashlib
 import importlib.util
@@ -333,9 +332,8 @@ def test_fetch_editor_refuses_anything_but_the_pin(tmp_path):
 
 
 def test_fetch_editor_is_pinned():
-    """The script names an exact version and its sha512, not a range or tag."""
+    """The pin file names an exact version and its sha512, not a range or tag."""
     fetch_editor = load_fetch_editor()
-
     assert re.fullmatch(r"\d+\.\d+\.\d+", fetch_editor.VERSION)
     assert fetch_editor.INTEGRITY.startswith("sha512-")
 
@@ -407,27 +405,61 @@ def test_pin_accepts_only_our_publish_workflow():
         check(failed)
 
 
-def test_pin_rewrites_only_the_pin():
+def test_pin_writes_the_pin_file(tmp_path):
     fetch_editor = load_fetch_editor()
-    source = (ROOT / "bin" / "fetch_editor.py").read_text()
+    path = tmp_path / "editor-pin.json"
     integrity = "sha512-" + "A" * 86 + "=="
 
-    rewritten = fetch_editor.rewrite_pin(source, "2.0.2", integrity)
-    lines = [line for line in rewritten.splitlines() if line not in source.splitlines()]
-    assert lines == [
-        'VERSION = "2.0.2"',
-        f'    "{integrity[:47]}"',
-        f'    "{integrity[47:]}"',
-    ]
+    fetch_editor.write_pin("2.0.2", integrity, path)
 
-    # And what it wrote reads back as that pin.
-    pinned = {
-        node.targets[0].id: ast.literal_eval(node.value)
-        for node in ast.parse(rewritten).body
-        if isinstance(node, ast.Assign)
-        and getattr(node.targets[0], "id", None) in ("VERSION", "INTEGRITY")
-    }
-    assert pinned == {"VERSION": "2.0.2", "INTEGRITY": integrity}
+    assert fetch_editor.load_pin(path) == ("2.0.2", integrity)
+
+
+def test_an_unexpected_audit_answer_is_an_error_not_a_traceback():
+    fetch_editor = load_fetch_editor()
+    audit = audit_result(
+        "https://github.com/witty-works/browser-extension",
+        ".github/workflows/publish-editor.yaml",
+        "refs/tags/2.0.2",
+    )
+    del audit["verified"][0]["attestationBundles"][0]["bundle"]["dsseEnvelope"]
+
+    with pytest.raises(fetch_editor.FetchError, match="unexpected npm audit"):
+        fetch_editor.check_provenance(audit, "@witty-works/editor", "2.0.2")
+
+
+def test_an_interrupted_install_leaves_the_previous_one_whole(tmp_path):
+    """Files are written aside first and moved into place together."""
+    fetch_editor = load_fetch_editor()
+    (tmp_path / "witty-editor.js").write_bytes(b"old script")
+    (tmp_path / "witty-editor.js.LICENSE.txt").write_bytes(b"old notices")
+
+    class Interrupted(Exception):
+        pass
+
+    real_replace = fetch_editor.os.replace
+
+    def replace_then_fail(source, target):
+        raise Interrupted
+
+    fetch_editor.os.replace = replace_then_fail
+    try:
+        with pytest.raises(Interrupted):
+            fetch_editor.install_atomically(
+                tmp_path,
+                {
+                    "witty-editor.js": b"new script",
+                    "witty-editor.js.LICENSE.txt": b"new",
+                },
+            )
+    finally:
+        fetch_editor.os.replace = real_replace
+
+    assert (tmp_path / "witty-editor.js").read_bytes() == b"old script"
+    assert sorted(p.name for p in tmp_path.iterdir()) == [
+        "witty-editor.js",
+        "witty-editor.js.LICENSE.txt",
+    ]
 
 
 def test_script_is_revalidated_not_redownloaded(textarea):
