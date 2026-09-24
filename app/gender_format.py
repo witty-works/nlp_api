@@ -263,8 +263,10 @@ def mark_masculines_for_bulk(results: list, text: str) -> None:
         if index is None:
             continue
 
-        is_pair = result.subcategory == "gendered_denominations_ending_advanced"
         role = (result.subcategory or "").removesuffix("_advanced")
+        # A pair formula comes as `gendered_denominations_ending`, or with the
+        # `_advanced` suffix when binary forms are also suggested.
+        is_pair = role == "gendered_denominations_ending"
         if not is_pair and role not in _ROLE_SUBCATEGORIES:
             continue
         last_word = result.text.split()[-1] if result.text.split() else ""

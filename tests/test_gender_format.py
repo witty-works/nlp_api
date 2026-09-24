@@ -344,14 +344,17 @@ def test_the_switch_also_genders_generic_masculines(set_redis):  # noqa: F811
     formula the rules recognise, replaced as a whole. What names a particular
     person, or starts a pair formula the rules did not recognise, is not."""
 
-    def bulk(text):
+    def bulk(text, roles="both"):
         with TestClient(app) as client:
             response = client.post(
                 "/v2.4/check",
                 json={
                     "text": text,
                     "lang": "de",
-                    "config": {"german_gender_ending": ":in"},
+                    "config": {
+                        "german_gender_ending": ":in",
+                        "gendered_roles_format": roles,
+                    },
                 },
                 headers={"X-TESTING-AUTH": "default@gmail.com"},
             )
@@ -367,6 +370,11 @@ def test_the_switch_also_genders_generic_masculines(set_redis):  # noqa: F811
 
     text, alerts = bulk("Willkommen liebe Schüler und Schülerinnen.")
     assert accept_all(text, alerts) == "Willkommen liebe Schüler:innen."
+
+    # With inclusive roles only, as a client asks for the switch, the pair
+    # comes without the `_advanced` suffix and belongs to the switch as well.
+    text, alerts = bulk("Die Schüler und Schülerinnen warten.", "inclusive_gender")
+    assert accept_all(text, alerts) == "Die Schüler:innen warten."
 
     # A particular woman, an address form, and a pair formula with a typo in
     # its second half (gendering the first half would leave a pair of forms).

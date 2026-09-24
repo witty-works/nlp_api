@@ -21,6 +21,8 @@
                     "text": "Bewerbungen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 36,
