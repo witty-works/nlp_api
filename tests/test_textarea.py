@@ -195,7 +195,7 @@ def test_the_key_goes_only_into_x_key():
     # Read from the field for each request and passed on as the header; the
     # editor component gets it through setApiKey.
     assert '"x-key": apiKey.value' in script
-    assert "editor.setApiKey(event.target.value)" in script
+    assert "editor.setApiKey(apiKey.value)" in script
 
 
 def test_the_page_calls_routes_that_exist():
@@ -462,7 +462,8 @@ def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     # Ctrl/Cmd+Enter submits past a disabled button, so the handler checks.
     assert "if (run.disabled || !prompt.value.trim()) return;" in script
     # Typing during a run would be overwritten by the answer.
-    assert "editor.editor.setEditable(false);" in script
+    assert "editor.editor.setEditable(keyValid && !running);" in script
+    assert "running = true;" in script
     # The draft is checked with the editor's own settings.
     assert "editor.getSettings().config" in script
     # The help text is added to the editor's own hint, not put in its place.
@@ -489,3 +490,50 @@ def test_imprint_link_is_the_deployments(textarea, monkeypatch):
         page = client.get("/textarea").text
         assert "Imprint" not in page
         assert "javascript:" not in page
+
+
+def test_ai_suggestions_are_off_until_ticked():
+    """Each AI suggestion is an LLM request, so the editor starts without
+    them; the page's own checkbox turns them on, kept in step with the
+    editor's settings panel, and only for a key the server lets use the LLM."""
+    script = page_script()
+
+    assert "llmAlternatives: false" in script
+    assert "editor.updateSettings({ llmAlternatives: aiSuggestions.checked })" in script
+    assert "aiSuggestions.checked = next.llmAlternatives" in script
+    # The server reports a refused LLM as forced off.
+    assert 'fetch("/v2.0/auth"' in script
+    assert 'setting?.status === "force" && setting.value === false' in script
+
+    box = re.search(r'<input\s[^>]*id="ai-suggestions"[^>]*>', PAGE).group(0)
+    assert 'type="checkbox"' in box
+    assert "disabled" in box
+
+
+def test_nothing_can_be_typed_or_run_without_a_working_key():
+    """The editor, the prompt and its button stay disabled until /v2.0/auth
+    accepts the key, and are disabled again when it is changed to one that
+    does not work."""
+    script = page_script()
+
+    assert "prompt.disabled = !keyValid;" in script
+    assert "run.disabled = !keyValid || running;" in script
+    assert "aiSuggestions.disabled = !(keyValid && llmAllowed);" in script
+    # Applied once before any key is checked, so the page starts disabled.
+    startup = "// Disabled until a key is checked and works.\n      applyInputState();"
+    assert script.index(startup) > script.index("const TEXT_MAX")
+
+
+def test_a_missing_key_is_said_where_it_cannot_be_missed(textarea):
+    """The introduction says a key is needed, and a notice above the editor
+    says so until a working one is entered, with where to get one."""
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+
+    assert "Using it needs an API key." in page
+    notice = re.search(r'<p id="key-required".*?</p>', page, re.S).group(0)
+    assert "Enter your API key above to use this" in notice
+    assert 'href="#get-a-key"' in notice
+
+    script = page_script()
+    assert "keyRequired.hidden = keyValid;" in script

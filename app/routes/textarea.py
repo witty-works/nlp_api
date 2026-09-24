@@ -60,6 +60,20 @@ PAGE = r"""<!doctype html>
         max-width: none;
         resize: vertical;
       }
+      /* A checkbox and its label side by side, unlike the text fields. */
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .checkbox input {
+        width: auto;
+        margin: 0;
+      }
+      .checkbox label {
+        margin: 0;
+      }
       button {
         font: inherit;
         margin-top: 0.5rem;
@@ -76,6 +90,13 @@ PAGE = r"""<!doctype html>
       }
       .lead {
         font-size: 1.125rem;
+      }
+      /* Hard to miss: nothing on the page works without a key. */
+      .notice {
+        margin: 1rem 0 0;
+        padding: 0.5rem 0.75rem;
+        border-left: 4px solid #b54708;
+        background: #fff4e5;
       }
       .help {
         display: block;
@@ -140,6 +161,12 @@ PAGE = r"""<!doctype html>
         Witty points out language that can exclude or put off readers, such as
         gendered job titles, stereotypes or jargon, and suggests what to write
         instead. Type or paste a text below and it is checked as you type.
+        Using it needs an API key.
+      </p>
+      <p class="help">
+        What you type in the editor is sent to this server to be checked, and
+        for AI suggestions and prompts also to the language model it uses.
+        Don't enter anything confidential.
       </p>
       <p>
         <label for="api-key">API key</label>
@@ -152,8 +179,12 @@ PAGE = r"""<!doctype html>
         />
         <span id="api-key-help" class="help">
           Needed to check text. It stays in this page and is only sent with its
-          requests to this server; it is not saved.<!--key-request-->
+          requests to this server; it is not saved.
         </span>
+      </p>
+      <p id="key-required" class="notice" role="status">
+        <span id="key-required-text">Enter your API key above to use this
+        page.</span><!--key-request-->
       </p>
       <div id="editor"></div>
       <p id="editor-help" class="help">
@@ -161,6 +192,23 @@ PAGE = r"""<!doctype html>
         and press Alt+Shift+W, to see why it was flagged and what to write
         instead.
       </p>
+      <div>
+        <span class="checkbox">
+          <input
+            id="ai-suggestions"
+            type="checkbox"
+            disabled
+            aria-describedby="ai-suggestions-help"
+          />
+          <label for="ai-suggestions">AI suggestions</label>
+        </span>
+        <span id="ai-suggestions-help" class="help">
+          A language model fits each alternative into your sentence, adjusting
+          articles, endings and verbs so the result stays grammatically
+          correct.
+          <span id="ai-suggestions-note"></span>
+        </span>
+      </div>
       <p id="status" role="status" aria-live="polite"></p>
       <form id="write">
         <h2>Write or rewrite with a prompt</h2>
@@ -203,9 +251,7 @@ PAGE = r"""<!doctype html>
     </main>
     <footer>
       <p>
-        Witty is made by <a href="https://witty.works">Witty Works</a>. Texts you
-        check are sent to this server; texts you rewrite with a prompt also go to
-        the language model it uses.
+        Witty is made by <a href="https://witty.works">Witty Works</a>.
       </p>
       <!--imprint-->
     </footer>
@@ -213,14 +259,16 @@ PAGE = r"""<!doctype html>
     <script>
       const status = document.getElementById("status");
       const apiKey = document.getElementById("api-key");
+      const aiSuggestions = document.getElementById("ai-suggestions");
+      const aiNote = document.getElementById("ai-suggestions-note");
       const editor = WittyEditor.mount(document.getElementById("editor"), {
         // Long texts are checked in requests of this API's size.
         maxRequestLength: __CHECK_MAX__,
         // The visible help below the editor, after the editor's own hint.
         describedBy: "editor-help",
-        // The popover's LLM rewrites (/v1.0/rephrase); the API still refuses
-        // them for a key whose config does not allow LLM use.
-        llmAlternatives: true,
+        // The popover's LLM rewrites (/v1.0/rephrase): each one is an LLM
+        // request, so they are off until the "AI suggestions" box is ticked.
+        llmAlternatives: false,
         // Long enough for a local model through Ollama, not only a hosted one.
         llmTimeoutMs: 30000,
         onStatus(next) {
@@ -231,10 +279,80 @@ PAGE = r"""<!doctype html>
                 ? "Enter a valid API key to check the text."
                 : "Checking failed: " + next.message;
         },
+        // The editor's own settings panel has the same switch; both follow it.
+        onSettingsChange(next) {
+          aiSuggestions.checked = next.llmAlternatives;
+        },
       });
-      apiKey.addEventListener("input", (event) => {
-        editor.setApiKey(event.target.value);
+
+      aiSuggestions.addEventListener("change", () => {
+        editor.updateSettings({ llmAlternatives: aiSuggestions.checked });
       });
+
+      // Nothing can be typed or run until the key is known to work; while a
+      // prompt runs, the editor stays still because the answer replaces it.
+      const keyRequired = document.getElementById("key-required");
+      const keyRequiredText = document.getElementById("key-required-text");
+      let keyValid = false;
+      let llmAllowed = false;
+      let running = false;
+      function applyInputState() {
+        editor.editor.setEditable(keyValid && !running);
+        prompt.disabled = !keyValid;
+        run.disabled = !keyValid || running;
+        aiSuggestions.disabled = !(keyValid && llmAllowed);
+        if (aiSuggestions.disabled && aiSuggestions.checked) {
+          editor.updateSettings({ llmAlternatives: false });
+        }
+        keyRequired.hidden = keyValid;
+        keyRequiredText.textContent = apiKey.value
+          ? "This API key doesn't work. Check it for typos."
+          : "Enter your API key above to use this page.";
+        aiNote.textContent =
+          keyValid && !llmAllowed ? "Not available with this API key." : "";
+      }
+
+      // Whether the key works, and whether it may use the language model:
+      // /v2.0/auth reports llm_alternatives as forced off where the server
+      // would refuse it.
+      let keyCheck = 0;
+      async function checkApiKey() {
+        const current = ++keyCheck;
+        let valid = false;
+        let llm = false;
+        if (apiKey.value) {
+          try {
+            const response = await fetch("/v2.0/auth", {
+              method: "POST",
+              headers: { "x-key": apiKey.value },
+            });
+            if (response.ok) {
+              valid = true;
+              const setting = (await response.json()).config?.llm_alternatives;
+              llm = !(setting?.status === "force" && setting.value === false);
+            }
+          } catch {
+            valid = false;
+          }
+        }
+        if (current !== keyCheck) return;
+
+        keyValid = valid;
+        llmAllowed = llm;
+        applyInputState();
+      }
+
+      let keyCheckTimer;
+      function useApiKey(delay) {
+        editor.setApiKey(apiKey.value);
+        clearTimeout(keyCheckTimer);
+        keyCheckTimer = setTimeout(checkApiKey, delay);
+      }
+      apiKey.addEventListener("input", () => useApiKey(500));
+      // A browser restoring the field on reload, or a password manager filling
+      // it, sets the value without an input event.
+      apiKey.addEventListener("change", () => useApiKey(0));
+      if (apiKey.value) useApiKey(0);
 
       const form = document.getElementById("write");
       const prompt = document.getElementById("prompt");
@@ -246,6 +364,8 @@ PAGE = r"""<!doctype html>
       const editsBlock = document.getElementById("edits-block");
       const PROMPT_MAX = __PROMPT_MAX__;
       const TEXT_MAX = __TEXT_MAX__;
+      // Disabled until a key is checked and works.
+      applyInputState();
 
       // The dashboard's getColor, onto the editor's own underline classes.
       const tone = (alert) =>
@@ -358,9 +478,9 @@ PAGE = r"""<!doctype html>
         review.hidden = true;
         issues.replaceChildren();
         edits.replaceChildren();
-        run.disabled = true;
         // The answer replaces the whole text, so typing meanwhile would be lost.
-        editor.editor.setEditable(false);
+        running = true;
+        applyInputState();
         writeStatus.textContent = "Writing…";
         try {
           // The toolbar's settings, so the draft is checked the way the editor
@@ -383,7 +503,8 @@ PAGE = r"""<!doctype html>
 
           const result = await response.json();
           const replacement = result.reviewed_response || result.initial_response || "";
-          editor.editor.setEditable(true);
+          running = false;
+          applyInputState();
           // One transaction, so a single undo brings the previous text back.
           editor.editor.commands.setContent(toDoc(replacement));
 
@@ -416,8 +537,8 @@ PAGE = r"""<!doctype html>
         } catch (error) {
           writeStatus.textContent = "The prompt failed: " + error.message;
         } finally {
-          editor.editor.setEditable(true);
-          run.disabled = false;
+          running = false;
+          applyInputState();
         }
       });
 

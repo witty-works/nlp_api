@@ -468,9 +468,13 @@ async def fetch_configs_for_request(
                 )
             )
 
-    # Last, so that it overrules both the client and any synced config.
+    # Last, so that it overrules both the client and any synced config. The
+    # config reported back (/v2.0/auth) says so too, so a client need not offer
+    # LLM suggestions the server will refuse.
     if not llm_alternatives_allowed(context.settings, user_email):
         request_in.config.__setattr__("llm_alternatives", False)
+        if isinstance(configs.get("config"), dict):
+            configs["config"]["llm_alternatives"] = {"value": False, "status": "force"}
 
     return configs
 
