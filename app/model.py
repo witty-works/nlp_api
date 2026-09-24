@@ -391,7 +391,11 @@ class Model:
         if lang == LangType.DE:
             infixes = [
                 # handle 'Kund:in' as one word
-                r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA) if ":<>=" in infix else infix
+                (
+                    r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA)
+                    if ":<>=" in infix
+                    else infix
+                )
                 for infix in German.Defaults.infixes
             ]
             suffixes = German.Defaults.suffixes
@@ -502,6 +506,7 @@ class Model:
                 patterns=[[{"TEXT": {"REGEX": r"^\w+[:*·](in|innen)$"}}]],
                 attrs={"POS": "NOUN", "TAG": "NN"},
             )
+            model.add_pipe("german_article_agreement", last=True)
 
         self.models[lang] = model
         self.locks[lang] = asyncio.Lock()
@@ -678,6 +683,56 @@ def custom_lemmatizer(lang):
 @French.factory("custom_lemmatizer_factory")
 def custom_lemmatizer_factory(nlp, name):
     return custom_lemmatizer(nlp.lang)
+
+
+def is_genitive_attachment(token: Token) -> bool:
+    """Whether a German noun phrase is a genitive attribute or the object of a
+    preposition, the places where `der` opens a genitive plural: `das Buch der
+    Lehrer`, `wegen der Lehrer`. A conjunct is where the phrase it is
+    coordinated with is: `die Meinung der Lehrer und der Schüler`."""
+    while token.dep_ == "cj" and token.head is not token:
+        token = token.head
+        if token.dep_ == "cd" and token.head is not token:
+            token = token.head
+
+    return token.dep_ == "ag" or token.head.pos_ == "ADP"
+
+
+@German.component("german_article_agreement")
+def german_article_agreement(doc: Doc) -> Doc:
+    """Give a masculine noun the case and number of the `der` before it.
+
+    `der Lehrer` is a nominative singular or a genitive plural. After a
+    coordination with a plural verb ("Die Lehrer*innen und der Lehrer treffen
+    …") the tagger reads it as a genitive plural, sometimes even with the
+    article tagged as a nominative singular. Everything downstream reads the noun, so the
+    article went missing from the suggestion and the noun came out plural
+    (`der Lehrerne`). Only where the noun phrase is not attached as a
+    genitive does the article's reading win.
+    """
+    for token in doc:
+        if token.pos_ != "NOUN" or token.i == 0:
+            continue
+
+        article = doc[token.i - 1]
+        while article.pos_ == "ADJ" and article.i > 0:
+            article = doc[article.i - 1]
+        if article.lower_ != "der":
+            continue
+
+        # A masculine noun: after `der`, a feminine one is a dative singular
+        # and a neuter one only ever a genitive plural.
+        if (
+            token.morph.get("Gender") == ["Masc"]
+            and token.morph.get("Case") == ["Gen"]
+            and token.morph.get("Number") == ["Plur"]
+            and not is_genitive_attachment(token)
+        ):
+            features = token.morph.to_dict()
+            features.update(Case="Nom", Number="Sing")
+            token.set_morph(features)
+
+    return doc
 
 
 class TokenLemmatizer:

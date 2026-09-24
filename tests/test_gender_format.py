@@ -641,3 +641,44 @@ def test_an_inklusivum_text_is_not_half_switched_out_of_it(set_redis):  # noqa: 
             )
             results = response.json()["results"]
             assert [r["text"] for r in results if r.get("bulk")] == []
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Die Lehrer*innen und der Lehrer treffen die Schüler:innen.",
+            "Die Lehrerne und de Lehrere treffen die Schülerne.",
+        ),
+        ("Die Eltern und der Lehrer sprechen.", "Die Eltern und de Lehrere sprechen."),
+        # Genitive plurals stay plural.
+        ("Das Buch der Lehrer liegt hier.", "Das Buch der Lehrerne liegt hier."),
+        ("Wegen der Lehrer fällt es aus.", "Wegen der Lehrerne fällt es aus."),
+        (
+            "Die Meinung der Lehrer und der Schüler zählt.",
+            "Die Meinung der Lehrerne und der Schülerne zählt.",
+        ),
+    ],
+)
+def test_der_before_a_masculine_is_singular_unless_genitive(
+    set_redis, text, expected  # noqa: F811
+):
+    """`der Lehrer` after a coordination with a plural verb was read as a
+    genitive plural, so the switch wrote `der Lehrerne`, leaving the article
+    out of the alert."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": text,
+                "lang": "de",
+                "config": {
+                    "german_gender_ending": "de-e",
+                    "gendered_roles_format": "inclusive_gender",
+                },
+            },
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        alerts = [r for r in response.json()["results"] if r.get("bulk")]
+
+    assert accept_all(text, alerts) == expected
