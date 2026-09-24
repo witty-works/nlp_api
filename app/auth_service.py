@@ -341,6 +341,11 @@ def fetch_email_from_claims(claims: dict) -> str:
 async def fetch_user(
     request: Request, settings: Settings, redis: Redis, http: Http
 ) -> str | None:
+    # Already resolved for this request by the key gate (require_api_key).
+    resolved = getattr(request.state, "resolved_user", None)
+    if resolved is not None:
+        return resolved
+
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
