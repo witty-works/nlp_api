@@ -47,6 +47,8 @@ def report(result: dict, dry_run: bool) -> bool:
     print(f"  = {len(result['unchanged'])} keys unchanged")
     if result["configs"]:
         print(f"  config for: {', '.join(result['configs'])}")
+    for warning in result.get("warnings", []):
+        print(f"  ! {warning}")
 
     return bool(result["added"] or result["revoked"])
 

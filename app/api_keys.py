@@ -39,10 +39,19 @@ SYNCED_KEYS = "api_keys_synced"
 KEY_CONFIGS = "api_key_configs"
 
 
+# Config fields a key may not set: the deployment's limits, not a user's
+# preferences.
+NOT_PER_KEY = {"alternatives_max_count": "the deployment's ALTERNATIVES_MAX_COUNT"}
+
+
 def _checked_config(fields: dict[str, Any], name: str) -> dict[str, Any]:
     unknown = sorted(set(fields) - set(Config.model_fields))
     if unknown:
         raise ValueError(f"{name} has no such config option: {', '.join(unknown)}")
+    blocked = sorted(set(fields) & set(NOT_PER_KEY))
+    if blocked:
+        field = blocked[0]
+        raise ValueError(f"{name} cannot set {field}: it is {NOT_PER_KEY[field]}")
     # Validated as a request's config would be, so a typo in a value fails
     # before it is sent rather than on the first request that uses it. A
     # request's config takes any category name, where a typo would silently
@@ -145,6 +154,8 @@ class SyncResult(BaseModel):
     unchanged: list[str] = []
     configs: list[str] = []
     conflicts: list[str] = []
+    # What is synced but will not take effect, for the sync to show.
+    warnings: list[str] = []
 
 
 def sync(redis, entries: list[ApiKeyEntry], dry_run: bool = False) -> SyncResult:

@@ -312,6 +312,12 @@ NLP_API_USERNAME=… NLP_API_PASSWORD=… \
   what a request does not set, instead of `DEFAULT_CONFIG`, and clients reading
   `/v2.0/auth` show it as the defaults; `force` applies whatever the request
   says. A config synced from the dashboard for the same email wins over both.
+  `alternatives_max_count` is the deployment's limit, not a key's, and is
+  refused.
+- **The sync says what will not take effect**, before and after syncing: a
+  config for an email the dashboard also has a config for, and
+  `llm_alternatives` for a user `LLM_ACCESS` / `LLM_ALLOWED_USERS` does not let
+  spend the LLM budget.
 
 The `/api_key` HTTP endpoints do the same thing, but they are only protected
 when `API_DOCS_AUTH_ENABLED` is `"true"` — with it unset, anyone who can reach

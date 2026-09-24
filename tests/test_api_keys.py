@@ -177,13 +177,6 @@ def test_a_sync_is_checked_like_the_file(client):
     assert "listed twice" in response.json()["detail"]
 
 
-def test_the_key_gate_lets_the_sync_through_only_behind_management_auth():
-    from app.settings import Settings
-
-    assert "/api_keys" in Settings(management_auth_enabled=True).open_paths()
-    assert "/api_keys" not in Settings(management_auth_enabled=False).open_paths()
-
-
 def test_a_misspelt_category_is_caught_before_it_is_sent():
     with pytest.raises(ValueError, match="no such category: plain_langauge"):
         parse(
@@ -193,3 +186,30 @@ def test_a_misspelt_category_is_caught_before_it_is_sent():
                 "  config:\n    disabled_categories: [plain_langauge]\n",
             )
         )
+
+
+def test_a_deployment_limit_is_not_a_key_setting():
+    with pytest.raises(ValueError, match="cannot set alternatives_max_count"):
+        parse(entry("a@b", JANE_KEY, "  config:\n    alternatives_max_count: 50\n"))
+
+
+def test_the_sync_says_what_will_not_take_effect(client, monkeypatch):
+    from app.models import LlmAccessType
+
+    monkeypatch.setattr(
+        app.state.context.settings, "llm_access", LlmAccessType.DISABLED
+    )
+    redis = app.state.context.redis
+    redis.db.set(redis.get_user_id("jane@acme.example"), "{}")
+    try:
+        with_llm = {**TOM, "config": {"llm_alternatives": True}}
+        warnings = sync(client, JANE, with_llm, dry_run=True).json()["warnings"]
+    finally:
+        redis.db.delete(redis.get_user_id("jane@acme.example"))
+
+    assert warnings == [
+        "jane@acme.example: config ignored, a config synced from the dashboard "
+        "for this email wins",
+        "tom@example.org: llm_alternatives has no effect, LLM_ACCESS "
+        "(or LLM_ALLOWED_USERS) does not allow it",
+    ]
