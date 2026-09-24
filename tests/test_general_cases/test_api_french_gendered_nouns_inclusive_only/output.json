@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -30,6 +32,8 @@
                     "text": "Les corps enseignant"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 1,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
             "end": 15,
@@ -80,6 +84,8 @@
                     "text": "La·le professeur"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 1,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
             "end": 40,
@@ -129,6 +135,8 @@
                     "text": "Les corps enseignant"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 1,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
             "end": 65,
@@ -199,6 +207,8 @@
                     "text": "un·e peintre"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
             "end": 110,

@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -28,6 +30,8 @@
                     "text": "Les personnes invitée"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 2,
             "category": "gender-orientation",
             "context": "Les visiteurs apprécient le charme vieillot de ce village.",
             "end": 13,

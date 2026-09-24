@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -249,6 +251,8 @@
                     "text": "directeur ou directrice"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 3,
             "category": "gender-orientation",
             "context": "ommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le meilleur",
             "end": 131,

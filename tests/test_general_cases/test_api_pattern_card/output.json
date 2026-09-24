@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -67,6 +69,8 @@
                     "text": "Le candidat ou la candidate"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 2,
             "category": "gender-orientation",
             "context": "Nous cherchons une personne de plus de <NUMBER> ans. Le candidat idéal doit avoir entre trois ou cinq ans d’expérience et être capable de travailler sous pression.",
             "end": 58,
