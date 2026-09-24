@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "de-e",
     "language": "de",
     "limit_reached": false,
@@ -22,6 +24,8 @@
                     "text": "Lehrkräfte"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
             "end": 10,
@@ -71,6 +75,8 @@
                     "text": "Untersuchungen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
             "end": 39,
@@ -183,6 +189,8 @@
                     "text": "Studierende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
             "end": 67,
@@ -229,6 +237,8 @@
                     "text": "Team"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
             "end": 89,

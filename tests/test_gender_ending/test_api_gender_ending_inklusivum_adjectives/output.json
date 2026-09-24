@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "de-e",
     "language": "de",
     "limit_reached": false,
@@ -80,6 +82,8 @@
                     "text": "Unser Azubi"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Angestellte und der Vorgesetzte sprachen mit dem Flüchtling. Unser Lehrling wurde Facharbeiter. Der neue Mitarbeiter traf die Ärztin.",
             "end": 79,
@@ -123,6 +127,8 @@
                     "text": "Facharbeit"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Die Angestellte und der Vorgesetzte sprachen mit dem Flüchtling. Unser Lehrling wurde Facharbeiter. Der neue Mitarbeiter traf die Ärztin.",
             "end": 98,
@@ -176,6 +182,8 @@
                     "text": "Personal"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "tellte und der Vorgesetzte sprachen mit dem Flüchtling. Unser Lehrling wurde Facharbeiter. Der neue Mitarbeiter traf die Ärztin.",
             "end": 120,

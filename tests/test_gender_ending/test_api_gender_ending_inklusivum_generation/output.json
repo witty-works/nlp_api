@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "de-e",
     "language": "de",
     "limit_reached": false,
@@ -48,6 +50,8 @@
                     "text": "Lehrkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte",
             "end": 16,
@@ -193,6 +197,8 @@
                     "text": "seinem Teammitglied"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Der nette Lehrer kam. Sein Buch liegt da. Ihre Vorlesungen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
             "end": 99,
@@ -242,6 +248,8 @@
                     "text": "Untersuchung"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "ngen sind gut. Ich sprach mit seinem Kollegen. Der Vorgesetzte und die Angestellte kamen. Als guter Arzt weiß er das. Jeder Gast ist willkommen.",
             "end": 158,

@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "de-e",
     "language": "de",
     "limit_reached": false,
@@ -22,6 +24,8 @@
                     "text": "Die Lehrkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Der Lehrer, dessen Buch fehlt, kam. Nicht jeder mag das. Kennt das einer von euch? Sehr geehrte Damen und Herr",
             "end": 10,
@@ -228,6 +232,8 @@
                     "text": "Teammitglied"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "icht jeder mag das. Kennt das einer von euch? Sehr geehrte Damen und Herren. Liebe Kollegin, lieber Kollege. Die Studierenden kamen. Der beste Lehrer gewann. Herr Müller sprach mit Frau Meier. Jemand hat ang",
             "end": 144,
@@ -307,6 +313,8 @@
                     "text": "Lehrkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "h? Sehr geehrte Damen und Herren. Liebe Kollegin, lieber Kollege. Die Studierenden kamen. Der beste Lehrer gewann. Herr Müller sprach mit Frau Meier. Jemand hat angerufen. Er selbst hat sich geirrt.",
             "end": 186,
