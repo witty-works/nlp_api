@@ -112,53 +112,28 @@
         {
             "alternatives": [
                 {
-                    "text": "Les profs"
-                },
-                {
-                    "female_form": "Les professeuses",
                     "gender_role": "inclusive_gender",
-                    "male_form": "Les professeurs",
                     "text": "Les professeur·ses"
-                },
-                {
-                    "collective_noun": true,
-                    "text": "Le professorat"
-                },
-                {
-                    "female_form": "Les enseignantes",
-                    "gender_role": "inclusive_gender",
-                    "male_form": "Les enseignants",
-                    "text": "Les enseignant·es"
-                },
-                {
-                    "collective_noun": true,
-                    "text": "Les corps enseignant"
                 }
             ],
             "bulk": "gender_format",
-            "bulk_alternative": 1,
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre.",
-            "end": 65,
+            "end": 81,
             "explanation": {
-                "icon": "💡",
-                "image_url": {
-                    "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
-                    "height": 409,
-                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
-                    "width": 810
-                },
-                "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
-                "text": "Fait généralement penser à des hommes",
-                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/masculin-générique?reducedView=true"
+                "icon": "💯",
+                "long_text": "Terminaisons genrées",
+                "text": "Orthographe incohérente des terminaisons genrées",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/terminaisons-genrées?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Genre + Orientation sexuelle: Masculin générique",
+            "label": "Genre + Orientation sexuelle: Terminaisons genrées",
             "proficiency_level": "unconscious_bias",
             "start": 50,
-            "subcategory": "function",
-            "text": "Les professeurs",
-            "text_id": "professeur"
+            "subcategory": "gendered_denominations_ending",
+            "text": "Les professeurs et professeuses",
+            "text_id": "french_doublet"
         },
         {
             "alternatives": [

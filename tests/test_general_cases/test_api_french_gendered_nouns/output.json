@@ -117,6 +117,32 @@
         {
             "alternatives": [
                 {
+                    "gender_role": "inclusive_gender",
+                    "text": "Les professeur·ses"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
+            "end": 81,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Terminaisons genrées",
+                "text": "Orthographe incohérente des terminaisons genrées",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/terminaisons-genrées?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Terminaisons genrées",
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "Les professeurs et professeuses",
+            "text_id": "french_doublet"
+        },
+        {
+            "alternatives": [
+                {
                     "female_form": "Elle",
                     "gender_role": "inclusive_gender",
                     "male_form": "Il",

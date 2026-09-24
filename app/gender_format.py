@@ -396,3 +396,52 @@ def convert_french(
     written_suffix = rest[: len(suffix)]
 
     return render_french(stem, written_suffix, plural, target)
+
+
+# Articles a French doublet can start with. `les`, `des`, `aux` and `l'` serve
+# both nouns, so the second one may leave it out (`les enseignants et
+# enseignantes`); `le`/`la` and `un`/`une` have to be repeated.
+FRENCH_DOUBLET_ARTICLES = {"le", "la", "l'", "l’", "les", "un", "une", "des", "aux"}
+_FRENCH_SHARED_ARTICLES = {"les", "des", "aux", "l'", "l’"}
+
+
+def french_doublet(
+    tokens, index: int, conjunctions: set[str], articles_map: dict
+) -> tuple[int | None, int, int | None, int] | None:
+    """The token positions of a doublet starting at `index`, as (first article,
+    first noun, second article, second noun) with None for a missing article:
+    `les enseignants et les enseignantes`, `le directeur ou la directrice`,
+    `enseignantes et enseignants`. Only the shape: whether the nouns are the
+    two genders of one role is for the caller to look up."""
+
+    def article(i: int) -> str | None:
+        word = tokens[i].text.lower() if i < len(tokens) else ""
+        return word if word in FRENCH_DOUBLET_ARTICLES else None
+
+    first_article = index if article(index) else None
+    if first_article is None and index > 0 and article(index - 1):
+        # Checked from the article, where the doublet starts.
+        return None
+    first = index + (first_article is not None)
+    if first + 2 >= len(tokens) or tokens[first + 1].text.lower() not in conjunctions:
+        return None
+
+    second_article = first + 2 if article(first + 2) else None
+    second = first + 2 + (second_article is not None)
+    if second >= len(tokens) or not tokens[second].is_alpha:
+        return None
+    if not tokens[first].is_alpha:
+        return None
+
+    one, other = (
+        tokens[first_article].text.lower() if first_article is not None else None,
+        tokens[second_article].text.lower() if second_article is not None else None,
+    )
+    if one is None and other is not None:
+        return None
+    if other is None and one is not None and one not in _FRENCH_SHARED_ARTICLES:
+        return None
+    if other is not None and other != one and articles_map.get(one) != other:
+        return None
+
+    return first_article, first, second_article, second

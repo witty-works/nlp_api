@@ -384,7 +384,6 @@ def test_the_switch_also_genders_generic_masculines(set_redis):  # noqa: F811
     assert alerts == []
 
 
-
 # --- French -------------------------------------------------------------------
 
 
@@ -467,3 +466,59 @@ def test_the_french_switch_also_genders_roles(set_redis):  # noqa: F811
         alerts = french_bulk(client, text, "·")
 
     assert accept_all(text, alerts) == "Il est acteur·rice."
+
+
+@pytest.mark.parametrize(
+    "text,fmt,expected",
+    [
+        (
+            "Les enseignantes et les enseignants sont prêts.",
+            "·",
+            "Les enseignant·es sont prêts.",
+        ),
+        (
+            "Bonjour aux enseignants et enseignantes.",
+            "·s",
+            "Bonjour aux enseignant·e·s.",
+        ),
+        ("Le directeur ou la directrice signe.", "/", "La/le directeur/rice signe."),
+        ("Un acteur et une actrice.", ".", "Un.e acteur.rice."),
+        ("L'étudiant ou l'étudiante.", "·", "L'étudiant·e."),
+    ],
+)
+def test_the_french_switch_joins_doublets(set_redis, text, fmt, expected):  # noqa: F811
+    """The French counterpart of a German pair formula: both genders of one
+    role, written out, become one inclusive form."""
+    with TestClient(app) as client:
+        alerts = french_bulk(client, text, fmt)
+
+    assert accept_all(text, alerts) == expected
+
+
+def test_french_doublets_need_one_role_in_both_genders(set_redis):  # noqa: F811
+    with TestClient(app) as client:
+        alerts = french_bulk(
+            client,
+            "Les enseignants et les directrices. Le directeur et directrice.",
+            "·",
+        )
+
+    # Two roles: only the masculine is gendered, as it would be on its own.
+    # A singular article that isn't repeated leaves the doublet's shape open.
+    assert [alert["text"] for alert in alerts] == ["Les enseignants"]
+
+
+def test_french_doublets_are_left_alone_for_binary_forms(set_redis):  # noqa: F811
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": "Les enseignantes et les enseignants sont prêts.",
+                "lang": "fr",
+                "config": {"gendered_roles_format": "binary_gender"},
+            },
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+
+    assert response.json()["results"] == []
+
