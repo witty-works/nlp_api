@@ -489,3 +489,21 @@ def test_imprint_link_is_the_deployments(textarea, monkeypatch):
         page = client.get("/textarea").text
         assert "Imprint" not in page
         assert "javascript:" not in page
+
+
+def test_ai_suggestions_are_off_until_ticked():
+    """Each AI suggestion is an LLM request, so the editor starts without
+    them; the page's own checkbox turns them on, kept in step with the
+    editor's settings panel, and only for a key the server lets use the LLM."""
+    script = page_script()
+
+    assert "llmAlternatives: false" in script
+    assert "editor.updateSettings({ llmAlternatives: aiSuggestions.checked })" in script
+    assert "aiSuggestions.checked = next.llmAlternatives" in script
+    # The server reports a refused LLM as forced off.
+    assert 'fetch("/v2.0/auth"' in script
+    assert 'setting?.status === "force" && setting.value === false' in script
+
+    box = re.search(r'<input\s[^>]*id="ai-suggestions"[^>]*>', PAGE).group(0)
+    assert 'type="checkbox"' in box
+    assert "disabled" in box

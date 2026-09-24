@@ -161,6 +161,21 @@ PAGE = r"""<!doctype html>
         and press Alt+Shift+W, to see why it was flagged and what to write
         instead.
       </p>
+      <p>
+        <input
+          id="ai-suggestions"
+          type="checkbox"
+          disabled
+          aria-describedby="ai-suggestions-help"
+        />
+        <label for="ai-suggestions">AI suggestions</label>
+        <span id="ai-suggestions-help" class="help">
+          Also offer whole sentences rewritten by a language model when you open
+          a suggestion. The sentence is then sent to the language model this
+          server uses.
+          <span id="ai-suggestions-note">Enter an API key to use them.</span>
+        </span>
+      </p>
       <p id="status" role="status" aria-live="polite"></p>
       <form id="write">
         <h2>Write or rewrite with a prompt</h2>
@@ -204,8 +219,9 @@ PAGE = r"""<!doctype html>
     <footer>
       <p>
         Witty is made by <a href="https://witty.works">Witty Works</a>. Texts you
-        check are sent to this server; texts you rewrite with a prompt also go to
-        the language model it uses.
+        check are sent to this server; texts you rewrite with a prompt, and
+        sentences you ask AI suggestions for, also go to the language model it
+        uses.
       </p>
       <!--imprint-->
     </footer>
@@ -213,14 +229,16 @@ PAGE = r"""<!doctype html>
     <script>
       const status = document.getElementById("status");
       const apiKey = document.getElementById("api-key");
+      const aiSuggestions = document.getElementById("ai-suggestions");
+      const aiNote = document.getElementById("ai-suggestions-note");
       const editor = WittyEditor.mount(document.getElementById("editor"), {
         // Long texts are checked in requests of this API's size.
         maxRequestLength: __CHECK_MAX__,
         // The visible help below the editor, after the editor's own hint.
         describedBy: "editor-help",
-        // The popover's LLM rewrites (/v1.0/rephrase); the API still refuses
-        // them for a key whose config does not allow LLM use.
-        llmAlternatives: true,
+        // The popover's LLM rewrites (/v1.0/rephrase): each one is an LLM
+        // request, so they are off until the "AI suggestions" box is ticked.
+        llmAlternatives: false,
         // Long enough for a local model through Ollama, not only a hosted one.
         llmTimeoutMs: 30000,
         onStatus(next) {
@@ -231,9 +249,54 @@ PAGE = r"""<!doctype html>
                 ? "Enter a valid API key to check the text."
                 : "Checking failed: " + next.message;
         },
+        // The editor's own settings panel has the same switch; both follow it.
+        onSettingsChange(next) {
+          aiSuggestions.checked = next.llmAlternatives;
+        },
       });
+
+      aiSuggestions.addEventListener("change", () => {
+        editor.updateSettings({ llmAlternatives: aiSuggestions.checked });
+      });
+
+      // Whether this key may use the language model at all: /v2.0/auth reports
+      // llm_alternatives as forced off where the server would refuse it.
+      let aiCheck = 0;
+      async function checkAiSuggestions() {
+        const current = ++aiCheck;
+        const allowed = await (async () => {
+          if (!apiKey.value) return null;
+          try {
+            const response = await fetch("/v2.0/auth", {
+              method: "POST",
+              headers: { "x-key": apiKey.value },
+            });
+            if (!response.ok) return null;
+            const setting = (await response.json()).config?.llm_alternatives;
+            return !(setting?.status === "force" && setting.value === false);
+          } catch {
+            return null;
+          }
+        })();
+        if (current !== aiCheck) return;
+
+        aiSuggestions.disabled = allowed !== true;
+        if (allowed !== true && aiSuggestions.checked) {
+          editor.updateSettings({ llmAlternatives: false });
+        }
+        aiNote.textContent =
+          allowed === true
+            ? ""
+            : allowed === false
+              ? "Not available with this API key."
+              : "Enter a valid API key to use them.";
+      }
+
+      let aiCheckTimer;
       apiKey.addEventListener("input", (event) => {
         editor.setApiKey(event.target.value);
+        clearTimeout(aiCheckTimer);
+        aiCheckTimer = setTimeout(checkAiSuggestions, 500);
       });
 
       const form = document.getElementById("write");
