@@ -79,7 +79,7 @@ def add_article(lang: LangType, text: str, article: str, separator: str) -> str:
     if (
         lang == LangType.FR
         and (article.endswith("le") or article == "la")
-        and text[0] in ["a", "e", "i", "o", "u", "h"]
+        and text[0].lower() in "aeiouhàâäéèêëîïôöùûü"
     ):
         return "l'" + text
 
