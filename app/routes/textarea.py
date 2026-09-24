@@ -155,6 +155,11 @@ PAGE = r"""<!doctype html>
         gendered job titles, stereotypes or jargon, and suggests what to write
         instead. Type or paste a text below and it is checked as you type.
       </p>
+      <p class="help">
+        What you type in the editor is sent to this server to be checked, and
+        for AI suggestions and prompts also to the language model it uses.
+        Don't enter anything confidential.
+      </p>
       <p>
         <label for="api-key">API key</label>
         <input
@@ -186,10 +191,10 @@ PAGE = r"""<!doctype html>
           <label for="ai-suggestions">AI suggestions</label>
         </span>
         <span id="ai-suggestions-help" class="help">
-          Also offer whole sentences rewritten by a language model when you open
-          a suggestion. The sentence is then sent to the language model this
-          server uses.
-          <span id="ai-suggestions-note">Enter an API key to use them.</span>
+          A language model fits each alternative into your sentence, adjusting
+          articles, endings and verbs so the result stays grammatically
+          correct.
+          <span id="ai-suggestions-note"></span>
         </span>
       </div>
       <p id="status" role="status" aria-live="polite"></p>
@@ -234,10 +239,7 @@ PAGE = r"""<!doctype html>
     </main>
     <footer>
       <p>
-        Witty is made by <a href="https://witty.works">Witty Works</a>. Texts you
-        check are sent to this server; texts you rewrite with a prompt, and
-        sentences you ask AI suggestions for, also go to the language model it
-        uses.
+        Witty is made by <a href="https://witty.works">Witty Works</a>.
       </p>
       <!--imprint-->
     </footer>
@@ -301,11 +303,7 @@ PAGE = r"""<!doctype html>
           editor.updateSettings({ llmAlternatives: false });
         }
         aiNote.textContent =
-          allowed === true
-            ? ""
-            : allowed === false
-              ? "Not available with this API key."
-              : "Enter a valid API key to use them.";
+          allowed === false ? "Not available with this API key." : "";
       }
 
       let aiCheckTimer;
