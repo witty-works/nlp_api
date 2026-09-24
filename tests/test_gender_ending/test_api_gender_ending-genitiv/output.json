@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -21,6 +24,8 @@
                     "text": "dem Asset-Datenschutzmanagement"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wir arbeiten mit dem Asset-Datenschutzbeauftragten.",
             "end": 50,

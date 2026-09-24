@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -27,6 +30,8 @@
                     "text": "Werkstattleitungen-"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. I",
             "end": 8,
@@ -72,6 +77,8 @@
                     "text": "Lesepublikum-"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranch",
             "end": 40,
@@ -95,6 +102,31 @@
             "subcategory": "function",
             "text": "Leser-",
             "text_id": "Leser"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "*innenbrief"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranche miterleben",
+            "end": 66,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Konsistente Schreibweise ist vertrauenserweckender.&nbsp;<br /><br /><p>Korrigiere die Schreibweise oder passe die Einstellung der “Inklusive Geschlechter-Nennung” entsprechend der Präferenz in Witty an.</p>",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
+            "start": 55,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": ":innenbrief",
+            "text_id": ":incompound"
         },
         {
             "alternatives": [],

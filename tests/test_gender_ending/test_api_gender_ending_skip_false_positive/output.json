@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -18,6 +21,8 @@
                     "text": "Bewerbungen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 36,
@@ -34,6 +39,31 @@
             "subcategory": "gendered_denominations_ending",
             "text": "Bewerberinnen und Bewerber",
             "text_id": "Bewerber"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "eine*n"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
+            "end": 59,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Konsistente Schreibweise ist vertrauenserweckender.&nbsp;<br /><br /><p>Korrigiere die Schreibweise oder passe die Einstellung der “Inklusive Geschlechter-Nennung” entsprechend der Präferenz in Witty an.</p>",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
+            "start": 53,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "eine/n",
+            "text_id": "/inarticle"
         },
         {
             "alternatives": [
@@ -60,6 +90,8 @@
                     "url": "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 77,
@@ -109,6 +141,8 @@
                     "url": "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 87,
@@ -158,6 +192,8 @@
                     "url": "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 97,

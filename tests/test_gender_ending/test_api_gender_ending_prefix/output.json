@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -27,6 +30,8 @@
                     "text": "Technik"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Als Technikingenieur und Technikexperte.",
             "end": 20,
@@ -75,6 +80,8 @@
                     "text": "Technikfachkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Als Technikingenieur und Technikexperte.",
             "end": 39,

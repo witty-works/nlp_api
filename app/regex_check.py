@@ -1,5 +1,11 @@
 from app.models import Config, Client, LangType, Rule, Alternative, ResultOut, Language
 from app.categories import is_sub_category_enabled
+from app.gender_format import (
+    convert_form,
+    feminine_form,
+    noun_ending,
+    render_noun_ending,
+)
 from app.helper import upperfirst
 from app.nouns import Nouns
 from app.settings import Settings
@@ -149,32 +155,48 @@ class RegexCheck:
                         continue
 
             elif subcategory == "gendered_denominations_ending_advanced":
-                if check_text.islower():
-                    if (
-                        connector_string == "/"
-                        and tokens[token_index - 1].text.islower()
-                    ):
-                        text = tokens[token_index - 1].text + text
+                # The same form in the configured format, written by
+                # app/gender_format.py so every mismatch has exactly one
+                # alternative and accepting them all is a format switch.
+                target = config.german_gender_ending
+                if rule.id.endswith("article"):
+                    # An article or pronoun: `die*der`, `Der/die`, `jede*r`;
+                    # the article table decides, so `Klasse/n` is left alone.
+                    form, form_start = text, start
+                    if rule.word_types[0] is not None:
+                        # Split into tokens (`die / der`, `jede ( r )`): the
+                        # alert covers the whole form, not only "/der".
+                        first = token_index + rule.word_types[0]
+                        if 0 <= first < token_index:
+                            form, form_start = check_text, tokens[first].idx
 
-                    text_split = text.split(connector_string)
+                    converted = convert_form(
+                        form,
+                        target,
+                        self.static_rules[LangType.DE]["inclusive_article_forms"],
+                        self.static_rules[LangType.DE]["articles"],
+                    )
+                    # Unknown, or already written the configured way.
+                    if converted is None or converted == form:
+                        continue
+
+                    text, start = form, form_start
+                else:
+                    # A noun ending: `*innen`, `/in`, `Innen`, `(innen)`, `*r`,
+                    # on a word that is a person noun (Lehrerin, Angestellter),
+                    # so a switch leaves `Podcasts/in` alone.
+                    feminine = feminine_form(check_text)
                     if (
-                        text_split[0]
-                        not in self.static_rules[LangType.DE]["feminine_articles"]
-                        or text_split[1]
-                        not in self.static_rules[LangType.DE]["masculine_articles"]
+                        feminine is not None
+                        and await self.nouns.german_noun_lookup(feminine) is None
                     ):
                         continue
 
-                    alternatives = [
-                        Alternative(
-                            text.replace(
-                                connector_string, config.german_gender_ending[0]
-                            )
-                        )
-                    ]
-                # Kundinnen -> Kund*innen
-                elif text.lower().endswith("innen") or text.lower().endswith("innen)"):
-                    alternatives = [Alternative(alternatives[0].lemma + "nen")]
+                    converted = render_noun_ending(noun_ending(text), target)
+                    if converted is None or converted == text:
+                        continue
+
+                alternatives = [Alternative(converted)]
             elif subcategory.startswith("gender_specific_abbreviation"):
                 has_advanced = is_sub_category_enabled(
                     config.disabled_categories, "gender_specific_abbreviation_advanced"
@@ -318,25 +340,27 @@ class RegexCheck:
 
             skip_token = start_token + 1
 
-            list_full.append(
-                ResultOut.factory(
-                    config,
-                    client,
-                    language,
-                    text,
-                    rule.text_id,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            result = ResultOut.factory(
+                config,
+                client,
+                language,
+                text,
+                rule.text_id,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
+            if subcategory == "gendered_denominations_ending_advanced":
+                result.bulk = "gender_format"
+                result.bulk_alternative = 0
+            list_full.append(result)
 
             return skip_token
 

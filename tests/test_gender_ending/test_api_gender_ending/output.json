@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -112,6 +115,8 @@
                     "text": "*in"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen). Du übst die Funktion des Sicherheitsche",
             "end": 20,
@@ -196,6 +201,8 @@
                     "text": "Personal"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen). Du übst die Funktion des Sicherheitschefs.",
             "end": 53,
@@ -263,6 +270,8 @@
                     "text": "*innen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen). Du übst die Funktion des Sicherheitschefs.",
             "end": 79,
@@ -301,6 +310,8 @@
                     "text": "der*des Sicherheitschef*in"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 4,
             "category": "gender-orientation",
             "context": "e ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen). Du übst die Funktion des Sicherheitschefs.",
             "end": 122,

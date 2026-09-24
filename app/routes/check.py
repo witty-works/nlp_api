@@ -24,6 +24,7 @@ from app.config_manager import (
 )
 from app.language_processor import fetch_text, apply_language_rules
 from app.auth_service import fetch_user
+from app.gender_format import bulk_actions
 
 router = APIRouter()
 
@@ -122,6 +123,7 @@ async def check(
             notifications=notifications,
             has_consented_to_mailing=has_consented_to_mailing,
             gender_separator=check_request_in.config.get_gender_separator(lang),
+            bulk_actions=bulk_actions(lang, check_request_in.config),
         )
 
     context.redis.store_response_log(

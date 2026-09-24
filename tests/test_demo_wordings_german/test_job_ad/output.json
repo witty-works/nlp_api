@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -67,6 +70,8 @@
                     "text": "Projektlead"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollege",
             "end": 33,
@@ -310,6 +315,8 @@
                     "text": "Team"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 134,

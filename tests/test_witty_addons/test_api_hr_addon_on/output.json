@@ -1,4 +1,5 @@
 {
+    "bulk_actions": [],
     "config_changed": true,
     "gender_separator": "In",
     "has_consented_to_mailing": true,

@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -153,6 +156,8 @@
                     "text": "Immobilien-Asset-Management"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "äcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
             "end": 125,

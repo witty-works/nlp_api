@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -27,6 +30,8 @@
                     "text": "die Arbeitgeberin"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
             "end": 19,

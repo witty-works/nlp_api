@@ -21,6 +21,7 @@ from app.models import (
 )
 from app.categories import is_sub_category_enabled
 from app.helper import is_valid_text
+from app.gender_format import COMPOUND_PATTERNS, gendered_form_end
 from app.text_utils import german_lemmatization
 
 
@@ -54,6 +55,39 @@ def check_continue(
         return False
 
     return True
+
+
+def on_gendered_form(
+    list_full: list,
+    found: int,
+    tokens: Doc,
+    token_index: int,
+    form_end: int,
+    text: str,
+    new_token_index: int,
+) -> int:
+    """What the rules found on the start of a split gendered form.
+
+    `Lehrer` in `Lehrer/innen` is not masculine, so alerts offering to gender
+    it are dropped. Anything else (`Chef/in` as leadership language) still
+    applies, widened to the whole form so accepting `Leitungsperson` replaces
+    `Chef/in` and not only `Chef`. The loop goes on at the next token either
+    way, so the form's own ending is still checked.
+    """
+    end = tokens[form_end].idx + len(tokens[form_end].text)
+    kept = []
+    for result in list_full[found:]:
+        if any(alternative.gender_role for alternative in result.alternatives or []):
+            continue
+        if result.start == tokens[token_index].idx or result.end == tokens[
+            token_index
+        ].idx + len(tokens[token_index].text):
+            result.end = end
+            result.text = text[result.start : end]
+        kept.append(result)
+    list_full[found:] = kept
+
+    return new_token_index if kept else token_index
 
 
 def is_bullet_point(line: str) -> bool:
@@ -163,15 +197,35 @@ async def german_gender_endings(
 
             endings.append(ending)
 
-            if (
-                # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
-                key != GermanGenderEndingType.SLASH_DASH
-                # only check if relevant regexp is defined
-                and key in config._gendereddenom_ending_article
-            ):
-                word_types = (
-                    (-1, 2, key[0]) if key.startswith("/") else (None, None, key[0])
+            # Compounds with the marker inside: `Mitarbeiter*innengespräch`,
+            # `Lehrer*innen-Team`. Only the infix formats keep them in one
+            # token, so only they are read; every format can be written.
+            if key in COMPOUND_PATTERNS:
+                endings.append(
+                    Rule(
+                        key + "compound",
+                        LangType.DE,
+                        COMPOUND_PATTERNS[key],
+                        None,
+                        config._gendereddenom_ending_word_type[key],
+                        subcategory,
+                    )
                 )
+
+            # Articles and pronouns in every format, `jede/-r` and `jede(r)`
+            # too: a bulk switch has to convert them along with the nouns.
+            if key in config._gendereddenom_ending_article:
+                # Tokenised like the nouns in the same format, except that a
+                # plain slash splits a pair into three tokens (`die / der`)
+                # while `jede/-r` stays one.
+                if key.startswith("("):
+                    word_types = config._gendereddenom_ending_word_type[key]
+                elif key == GermanGenderEndingType.SLASH_DASH:
+                    word_types = (None, None, "/")
+                elif key.startswith("/"):
+                    word_types = (-1, 2, "/")
+                else:
+                    word_types = (None, None, key[0])
 
                 ending = Rule(
                     key + "article",
@@ -311,7 +365,15 @@ async def witty_rules(
                 continue
 
         valid_text = is_valid_text(language.lang, token.text)
+        # `Lehrer` in `Lehrer/innen` is the start of a gendered form: what the
+        # rules say about it is filtered and widened to the whole form.
+        form_end = (
+            gendered_form_end(tokens, token_index)
+            if language.lang == LangType.DE
+            else None
+        )
         if valid_text:
+            found = len(list_full)
             new_token_index = await context.rule_check.handle(
                 config,
                 client,
@@ -324,6 +386,16 @@ async def witty_rules(
                 None,
                 false_positive_matcher,
             )
+            if form_end is not None:
+                new_token_index = on_gendered_form(
+                    list_full,
+                    found,
+                    tokens,
+                    token_index,
+                    form_end,
+                    text,
+                    new_token_index,
+                )
 
             if check_continue(
                 list_full, token_index, new_token_index, tokens, "rule_check", context
@@ -331,6 +403,7 @@ async def witty_rules(
                 continue
 
             if language.lang == LangType.DE:
+                found = len(list_full)
                 new_token_index = await context.rule_check.handle(
                     config,
                     client,
@@ -344,6 +417,16 @@ async def witty_rules(
                     false_positive_matcher,
                     True,
                 )
+                if form_end is not None:
+                    new_token_index = on_gendered_form(
+                        list_full,
+                        found,
+                        tokens,
+                        token_index,
+                        form_end,
+                        text,
+                        new_token_index,
+                    )
 
                 if check_continue(
                     list_full,

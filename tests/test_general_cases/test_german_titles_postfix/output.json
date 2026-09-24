@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -27,6 +30,8 @@
                     "text": "Unsere Untersuchung"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Ka",
             "end": 14,
@@ -75,6 +80,8 @@
                     "text": "Untersuchungen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhu",
             "end": 36,
@@ -114,6 +121,8 @@
                     "text": "Jüdinnen und Juden"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. E",
             "end": 74,
@@ -378,6 +387,8 @@
                     "text": "Eine Technik"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "n. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitunterzeichnet?",
             "end": 186,
@@ -426,6 +437,8 @@
                     "text": "Eine Elektrotechnik"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "ure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitunterzeichnet?",
             "end": 217,

@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -26,6 +29,8 @@
                     "text": "Klientel"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 11,
@@ -74,6 +79,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 37,
@@ -116,6 +123,8 @@
                     "text": "Ausbildende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 75,

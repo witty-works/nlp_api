@@ -43,10 +43,10 @@ PACKAGE = "@witty-works/editor"
 # The release this version of the page is written against, and its integrity
 # as the registry publishes it: `npm view @witty-works/editor@<version>
 # dist.integrity`. Update the two together.
-VERSION = "2.1.0"
+VERSION = "2.3.0"
 INTEGRITY = (
-    "sha512-xbamgA2JgUvHwndIl+wksC7wr3R+efTRevaqtI4a"
-    "+JQkzrbOCs33Udczboa1bFgt8udZZIstxs6lji4jT02+Gg=="
+    "sha512-RH+uBVloBK1UdWIddubsqPet4yN9uPO5NoaGoPdY"
+    "4ObfLpFOVEQmH3ZjVFT/0W7Pc6DQ9dZRoDzKxsl2ftpXSw=="
 )
 
 SCRIPT = "witty-editor.js"
@@ -250,9 +250,11 @@ def pin(version: str, script: Path, run=subprocess.run) -> tuple[str, str]:
                 ) from error
 
         # --ignore-scripts: nothing from the package runs, here or anywhere.
+        # --prefer-online: a version published minutes ago is not in npm's
+        # cached metadata yet.
         npm(
             "install", "--ignore-scripts", "--no-audit", "--no-fund",
-            "--save-exact", f"{PACKAGE}@{version}",
+            "--prefer-online", "--save-exact", f"{PACKAGE}@{version}",
         )
         audit = npm("audit", "signatures", "--json", "--include-attestations")
         commit = check_provenance(json.loads(audit), PACKAGE, version)
