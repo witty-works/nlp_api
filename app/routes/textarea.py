@@ -172,6 +172,8 @@ PAGE = r"""<!doctype html>
         <span id="api-key-help" class="help">
           Needed to check text. It stays in this page and is only sent with its
           requests to this server; it is not saved.<!--key-request-->
+          <span id="api-key-state">The editor and the prompt start working once
+          a valid key is entered.</span>
         </span>
       </p>
       <div id="editor"></div>
@@ -277,40 +279,62 @@ PAGE = r"""<!doctype html>
         editor.updateSettings({ llmAlternatives: aiSuggestions.checked });
       });
 
-      // Whether this key may use the language model at all: /v2.0/auth reports
-      // llm_alternatives as forced off where the server would refuse it.
-      let aiCheck = 0;
-      async function checkAiSuggestions() {
-        const current = ++aiCheck;
-        const allowed = await (async () => {
-          if (!apiKey.value) return null;
+      // Nothing can be typed or run until the key is known to work; while a
+      // prompt runs, the editor stays still because the answer replaces it.
+      const keyState = document.getElementById("api-key-state");
+      let keyValid = false;
+      let llmAllowed = false;
+      let running = false;
+      function applyInputState() {
+        editor.editor.setEditable(keyValid && !running);
+        prompt.disabled = !keyValid;
+        run.disabled = !keyValid || running;
+        aiSuggestions.disabled = !(keyValid && llmAllowed);
+        if (aiSuggestions.disabled && aiSuggestions.checked) {
+          editor.updateSettings({ llmAlternatives: false });
+        }
+        keyState.textContent = keyValid
+          ? ""
+          : "The editor and the prompt start working once a valid key is entered.";
+        aiNote.textContent =
+          keyValid && !llmAllowed ? "Not available with this API key." : "";
+      }
+
+      // Whether the key works, and whether it may use the language model:
+      // /v2.0/auth reports llm_alternatives as forced off where the server
+      // would refuse it.
+      let keyCheck = 0;
+      async function checkApiKey() {
+        const current = ++keyCheck;
+        let valid = false;
+        let llm = false;
+        if (apiKey.value) {
           try {
             const response = await fetch("/v2.0/auth", {
               method: "POST",
               headers: { "x-key": apiKey.value },
             });
-            if (!response.ok) return null;
-            const setting = (await response.json()).config?.llm_alternatives;
-            return !(setting?.status === "force" && setting.value === false);
+            if (response.ok) {
+              valid = true;
+              const setting = (await response.json()).config?.llm_alternatives;
+              llm = !(setting?.status === "force" && setting.value === false);
+            }
           } catch {
-            return null;
+            valid = false;
           }
-        })();
-        if (current !== aiCheck) return;
-
-        aiSuggestions.disabled = allowed !== true;
-        if (allowed !== true && aiSuggestions.checked) {
-          editor.updateSettings({ llmAlternatives: false });
         }
-        aiNote.textContent =
-          allowed === false ? "Not available with this API key." : "";
+        if (current !== keyCheck) return;
+
+        keyValid = valid;
+        llmAllowed = llm;
+        applyInputState();
       }
 
-      let aiCheckTimer;
+      let keyCheckTimer;
       function useApiKey(delay) {
         editor.setApiKey(apiKey.value);
-        clearTimeout(aiCheckTimer);
-        aiCheckTimer = setTimeout(checkAiSuggestions, delay);
+        clearTimeout(keyCheckTimer);
+        keyCheckTimer = setTimeout(checkApiKey, delay);
       }
       apiKey.addEventListener("input", () => useApiKey(500));
       // A browser restoring the field on reload, or a password manager filling
@@ -328,6 +352,8 @@ PAGE = r"""<!doctype html>
       const editsBlock = document.getElementById("edits-block");
       const PROMPT_MAX = __PROMPT_MAX__;
       const TEXT_MAX = __TEXT_MAX__;
+      // Disabled until a key is checked and works.
+      applyInputState();
 
       // The dashboard's getColor, onto the editor's own underline classes.
       const tone = (alert) =>
@@ -440,9 +466,9 @@ PAGE = r"""<!doctype html>
         review.hidden = true;
         issues.replaceChildren();
         edits.replaceChildren();
-        run.disabled = true;
         // The answer replaces the whole text, so typing meanwhile would be lost.
-        editor.editor.setEditable(false);
+        running = true;
+        applyInputState();
         writeStatus.textContent = "Writing…";
         try {
           // The toolbar's settings, so the draft is checked the way the editor
@@ -465,7 +491,8 @@ PAGE = r"""<!doctype html>
 
           const result = await response.json();
           const replacement = result.reviewed_response || result.initial_response || "";
-          editor.editor.setEditable(true);
+          running = false;
+          applyInputState();
           // One transaction, so a single undo brings the previous text back.
           editor.editor.commands.setContent(toDoc(replacement));
 
@@ -498,8 +525,8 @@ PAGE = r"""<!doctype html>
         } catch (error) {
           writeStatus.textContent = "The prompt failed: " + error.message;
         } finally {
-          editor.editor.setEditable(true);
-          run.disabled = false;
+          running = false;
+          applyInputState();
         }
       });
 

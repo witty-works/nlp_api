@@ -462,7 +462,8 @@ def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     # Ctrl/Cmd+Enter submits past a disabled button, so the handler checks.
     assert "if (run.disabled || !prompt.value.trim()) return;" in script
     # Typing during a run would be overwritten by the answer.
-    assert "editor.editor.setEditable(false);" in script
+    assert "editor.editor.setEditable(keyValid && !running);" in script
+    assert "running = true;" in script
     # The draft is checked with the editor's own settings.
     assert "editor.getSettings().config" in script
     # The help text is added to the editor's own hint, not put in its place.
@@ -507,3 +508,17 @@ def test_ai_suggestions_are_off_until_ticked():
     box = re.search(r'<input\s[^>]*id="ai-suggestions"[^>]*>', PAGE).group(0)
     assert 'type="checkbox"' in box
     assert "disabled" in box
+
+
+def test_nothing_can_be_typed_or_run_without_a_working_key():
+    """The editor, the prompt and its button stay disabled until /v2.0/auth
+    accepts the key, and are disabled again when it is changed to one that
+    does not work."""
+    script = page_script()
+
+    assert "prompt.disabled = !keyValid;" in script
+    assert "run.disabled = !keyValid || running;" in script
+    assert "aiSuggestions.disabled = !(keyValid && llmAllowed);" in script
+    # Applied once before any key is checked, so the page starts disabled.
+    startup = "// Disabled until a key is checked and works.\n      applyInputState();"
+    assert script.index(startup) > script.index("const TEXT_MAX")
