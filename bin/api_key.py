@@ -21,8 +21,11 @@ from Redis. `list` prints the stored entries and the email each maps to.
 """
 
 import argparse
+import os
 import secrets
 import sys
+
+import yaml
 
 from app.api_keys import ApiKeyEntry, parse
 
@@ -79,12 +82,22 @@ def create_in_file(args) -> int:
         print("error: that API key already exists", file=sys.stderr)
         return 1
 
-    text = f"{note}- email: {entry.email}\n  key: {api_key}\n"
+    # Dumped, not formatted by hand, so an email with YAML characters in it
+    # is quoted rather than breaking the file.
+    text = note + yaml.safe_dump(
+        [{"email": entry.email, "key": api_key}], sort_keys=False, allow_unicode=True
+    )
     if before and not before.endswith("\n\n"):
         text = ("\n" if before.endswith("\n") else "\n\n") + text
-    parse(before + text)
+    try:
+        parse(before + text)
+    except ValueError as e:
+        print(f"error: {args.file}: {e}", file=sys.stderr)
+        return 1
 
-    with open(args.file, "a", encoding="utf-8") as f:
+    # The file holds keys: only its owner may read it, even when it is new.
+    descriptor = os.open(args.file, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+    with os.fdopen(descriptor, "a", encoding="utf-8") as f:
         f.write(text)
 
     print(api_key)

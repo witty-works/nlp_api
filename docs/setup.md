@@ -291,8 +291,13 @@ NLP_API_USERNAME=… NLP_API_PASSWORD=… \
   keys are added, keys an earlier sync added that are no longer listed are
   revoked, and each email's config is replaced. Revoke a key by deleting its
   entry and syncing. Keys minted any other way (the dashboard, `bin/api_key.py`
-  without `--file`, `DEFAULT_API_KEY`) are left alone, and a sync that would
-  take one of them over for another email is refused as a whole.
+  without `--file`, `DEFAULT_API_KEY`) are left alone: listed for the same
+  email they are reported as unmanaged and never revoked by a sync, and a sync
+  that would take one over for another email is refused as a whole. A key
+  that moves to another email is reported as moved. An empty file is refused,
+  since it would revoke every synced key, unless `--allow-empty` is given.
+  Reads and writes are one Redis transaction, so two syncs at once cannot
+  leave a revoked key working.
 - **It needs the management credentials** (`API_DOCS_USERNAME` /
   `API_DOCS_PASSWORD` on the server, `MANAGEMENT_AUTH_ENABLED` on). With
   `REQUIRE_API_KEY` on it needs no key on top, like every endpoint that asks

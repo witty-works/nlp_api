@@ -25,10 +25,15 @@ import urllib.request
 from app.api_keys import parse
 
 
-def put(url: str, auth: str, entries: list, dry_run: bool) -> dict:
+def put(
+    url: str, auth: str, entries: list, dry_run: bool, allow_empty: bool = False
+) -> dict:
     body = json.dumps({"entries": entries}).encode("utf-8")
+    query = urllib.parse.urlencode(
+        {"dry_run": str(dry_run).lower(), "allow_empty": str(allow_empty).lower()}
+    )
     request = urllib.request.Request(
-        f"{url.rstrip('/')}/api_keys" + ("?dry_run=true" if dry_run else ""),
+        f"{url.rstrip('/')}/api_keys?{query}",
         data=body,
         method="PUT",
         headers={"Content-Type": "application/json", "Authorization": auth},
@@ -44,13 +49,17 @@ def report(result: dict, dry_run: bool) -> bool:
         print(f"  + {email}: key {will}added")
     for email in result["revoked"]:
         print(f"  - {email}: key {will}revoked")
+    for move in result.get("moved", []):
+        print(f"  ~ key {will}moved: {move}")
+    for email in result.get("unmanaged", []):
+        print(f"  ! {email}: key was not added by a sync, left as it is")
     print(f"  = {len(result['unchanged'])} keys unchanged")
     if result["configs"]:
         print(f"  config for: {', '.join(result['configs'])}")
     for warning in result.get("warnings", []):
         print(f"  ! {warning}")
 
-    return bool(result["added"] or result["revoked"])
+    return bool(result["added"] or result["revoked"] or result.get("moved"))
 
 
 def main() -> int:
@@ -60,6 +69,11 @@ def main() -> int:
         "--url", default=os.environ.get("NLP_API_URL"), help="the API's base URL"
     )
     parser.add_argument("--yes", action="store_true", help="sync without asking first")
+    parser.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="sync an empty file, which revokes every synced key",
+    )
     args = parser.parse_args()
 
     if not args.url:
@@ -84,7 +98,7 @@ def main() -> int:
     payload = [entry.model_dump() for entry in entries]
 
     try:
-        planned = put(args.url, auth, payload, dry_run=True)
+        planned = put(args.url, auth, payload, True, args.allow_empty)
         print(f"{len(entries)} keys in {args.file}:")
         changes = report(planned, dry_run=True)
         if not changes and not planned["configs"]:
@@ -93,7 +107,7 @@ def main() -> int:
             print("Nothing synced.")
             return 1
 
-        report(put(args.url, auth, payload, dry_run=False), dry_run=False)
+        report(put(args.url, auth, payload, False, args.allow_empty), dry_run=False)
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", "replace")
         print(f"error: {e.code} {detail}", file=sys.stderr)
