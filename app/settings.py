@@ -126,7 +126,9 @@ class Settings(BaseSettings):
     # "API key" is the name because that is what a deployment without the
     # dashboard uses (the `x-key` header, minted from DEFAULT_API_KEY), but
     # anything fetch_user accepts satisfies it - an SSO bearer token does too,
-    # so browser extension and Word plugin clients keep working.
+    # so browser extension and Word plugin clients keep working. An endpoint
+    # that asks for a username and password (management, docs) needs no key
+    # on top while that password is asked for.
     require_api_key: bool = False
 
     # The routes that stay reachable without a credential when require_api_key
@@ -156,16 +158,10 @@ class Settings(BaseSettings):
 
     def open_paths(self) -> list[str]:
         """The paths the require_api_key gate lets through without a key."""
-        paths = [*self.public_paths]
-        if self.textarea_enabled:
-            paths += TEXTAREA_PATHS
-        # The key sync authenticates itself with the management credentials,
-        # and is how keys get there in the first place. Only while those are
-        # asked for: without them it would be open to anyone.
-        if self.management_auth_enabled:
-            paths.append("/api_keys")
+        if not self.textarea_enabled:
+            return self.public_paths
 
-        return paths
+        return [*self.public_paths, *TEXTAREA_PATHS]
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a

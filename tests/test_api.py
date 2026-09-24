@@ -1919,9 +1919,7 @@ def test_spacy_analysis(spacy_analysis_dir, snapshot):
     token diffs instead of only opaque end-to-end rule changes.
     """
     with TestClient(app) as client:
-        input_json = json.loads(
-            spacy_analysis_dir.joinpath("input.json").read_text()
-        )
+        input_json = json.loads(spacy_analysis_dir.joinpath("input.json").read_text())
         response = client.get("/debug/spacy", params=input_json)
         assert response.status_code == 200
         # output must be string
@@ -2968,6 +2966,47 @@ def test_require_api_key():
         assert response.json()["results"] == []
 
 
+def test_require_api_key_leaves_password_protected_routes_to_their_password():
+    """An endpoint that asks for a username and password needs no key on top,
+    while that password is asked for."""
+    login = {"Authorization": "Basic " + base64.b64encode(b"admin:secret").decode()}
+    settings = context.settings
+    previous = (settings.api_docs_username, settings.api_docs_password)
+
+    with TestClient(app) as client:
+        settings.require_api_key = True
+        settings.management_auth_enabled = True
+        settings.api_docs_username, settings.api_docs_password = "admin", "secret"
+        try:
+            # With the login: through, without a key.
+            response = client.get(
+                "/user/configs?email=nobody@example.org", headers=login
+            )
+            assert response.status_code == 404
+            response = client.put("/api_keys", json={"entries": []}, headers=login)
+            assert response.status_code == 200
+
+            # Without it: the route's own refusal, not the key gate's.
+            response = client.get("/user/configs?email=nobody@example.org")
+            assert response.status_code == 401
+            assert response.headers["WWW-Authenticate"] == "Basic"
+
+            # Everything else still needs a key, login or not.
+            response = client.post("/v2.4/check", json={"text": "Hallo"}, headers=login)
+            assert response.status_code == 401
+
+            # With management auth off those routes check nothing, so the
+            # key gate stays in front of them.
+            settings.management_auth_enabled = False
+            response = client.get("/user/configs?email=nobody@example.org")
+            assert response.status_code == 401
+            assert "x-key" in response.json()["detail"]
+        finally:
+            settings.require_api_key = False
+            settings.management_auth_enabled = False
+            settings.api_docs_username, settings.api_docs_password = previous
+
+
 def test_require_api_key_public_paths_are_configurable():
     """A deployment can open a route that authenticates itself."""
     with TestClient(app) as client:
@@ -3211,7 +3250,9 @@ def test_prompt_and_write_metrics_are_counted(monkeypatch):
     configs = {"id": "metrics-user"}
 
     for endpoint in ("prompt", "write"):
-        before = int(context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0)
+        before = int(
+            context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0
+        )
         context.redis.store_metrics(request, configs, "1.0", endpoint)
         after = int(context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user"))
         assert after == before + 1
@@ -3326,8 +3367,13 @@ def test_config_options_accept_a_language_code():
             labels = response.json()["options"]["german_gender_ending"]["labels"]
             assert labels["de-e"].startswith("Inklusivum, z.B.")
 
-        assert client.get("/v2.0/categories", params={"locale": "fr"}).status_code == 200
-        assert client.get("/v2.0/config-options", params={"locale": "xx"}).status_code == 422
+        assert (
+            client.get("/v2.0/categories", params={"locale": "fr"}).status_code == 200
+        )
+        assert (
+            client.get("/v2.0/config-options", params={"locale": "xx"}).status_code
+            == 422
+        )
 
 
 def test_config_options():

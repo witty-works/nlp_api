@@ -295,8 +295,9 @@ NLP_API_USERNAME=… NLP_API_PASSWORD=… \
   take one of them over for another email is refused as a whole.
 - **It needs the management credentials** (`API_DOCS_USERNAME` /
   `API_DOCS_PASSWORD` on the server, `MANAGEMENT_AUTH_ENABLED` on). With
-  `REQUIRE_API_KEY` on, `/api_keys` stays reachable without a key because it
-  authenticates itself with those; with management auth off it is closed.
+  `REQUIRE_API_KEY` on it needs no key on top, like every endpoint that asks
+  for a username and password; with management auth off it checks nothing,
+  and the key gate stays in front of it.
 - **The file holds the keys themselves** — the server needs each one once and
   may keep only an HMAC of it (`API_KEY_HMAC_KEY`). Keep it on your machine:
   `api_keys.yaml` is in `.gitignore`, and the script sends it over https only
