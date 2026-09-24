@@ -7,6 +7,7 @@ from app.models import (
 from app.alternatives import Alternatives
 from app.prompt import Prompt
 import json
+import logging
 
 
 lang_map = {
@@ -228,10 +229,18 @@ class LlmAlternatives:
 
         # `model` is a debug-only override; it is None for every other caller,
         # and Prompt falls back to the configured one.
-        result = await self.prompt.handle(
+        answer = await self.prompt.handle(
             user_prompt, system_prompt, rephrase_request_in.model
         )
-        result = self.prompt.parse_json(result)
+        parsed = self.prompt.parse_json(answer)
+        # Anything but an object of sentences is no rephrasing: prose, a
+        # reasoning model cut off mid-thought, a list. Keep only the strings.
+        if not isinstance(parsed, dict):
+            logging.getLogger("nlp_api").warning(
+                "LLM rephrasing was not a JSON object: %r", str(answer)[:200]
+            )
+            parsed = {}
+        result = {key: value for key, value in parsed.items() if isinstance(value, str)}
 
         separator, noun_separator, separate_gender_plural = (
             Config.get_gender_separators(rephrase_request_in.gender_separator)
