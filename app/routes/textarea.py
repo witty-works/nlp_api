@@ -91,6 +91,13 @@ PAGE = r"""<!doctype html>
       .lead {
         font-size: 1.125rem;
       }
+      /* Hard to miss: nothing on the page works without a key. */
+      .notice {
+        margin: 1rem 0 0;
+        padding: 0.5rem 0.75rem;
+        border-left: 4px solid #b54708;
+        background: #fff4e5;
+      }
       .help {
         display: block;
         color: #555;
@@ -154,6 +161,7 @@ PAGE = r"""<!doctype html>
         Witty points out language that can exclude or put off readers, such as
         gendered job titles, stereotypes or jargon, and suggests what to write
         instead. Type or paste a text below and it is checked as you type.
+        Using it needs an API key.
       </p>
       <p class="help">
         What you type in the editor is sent to this server to be checked, and
@@ -171,10 +179,12 @@ PAGE = r"""<!doctype html>
         />
         <span id="api-key-help" class="help">
           Needed to check text. It stays in this page and is only sent with its
-          requests to this server; it is not saved.<!--key-request-->
-          <span id="api-key-state">The editor and the prompt start working once
-          a valid key is entered.</span>
+          requests to this server; it is not saved.
         </span>
+      </p>
+      <p id="key-required" class="notice" role="status">
+        <span id="key-required-text">Enter your API key above to use this
+        page.</span><!--key-request-->
       </p>
       <div id="editor"></div>
       <p id="editor-help" class="help">
@@ -281,7 +291,8 @@ PAGE = r"""<!doctype html>
 
       // Nothing can be typed or run until the key is known to work; while a
       // prompt runs, the editor stays still because the answer replaces it.
-      const keyState = document.getElementById("api-key-state");
+      const keyRequired = document.getElementById("key-required");
+      const keyRequiredText = document.getElementById("key-required-text");
       let keyValid = false;
       let llmAllowed = false;
       let running = false;
@@ -293,9 +304,10 @@ PAGE = r"""<!doctype html>
         if (aiSuggestions.disabled && aiSuggestions.checked) {
           editor.updateSettings({ llmAlternatives: false });
         }
-        keyState.textContent = keyValid
-          ? ""
-          : "The editor and the prompt start working once a valid key is entered.";
+        keyRequired.hidden = keyValid;
+        keyRequiredText.textContent = apiKey.value
+          ? "This API key doesn't work. Check it for typos."
+          : "Enter your API key above to use this page.";
         aiNote.textContent =
           keyValid && !llmAllowed ? "Not available with this API key." : "";
       }

@@ -522,3 +522,18 @@ def test_nothing_can_be_typed_or_run_without_a_working_key():
     # Applied once before any key is checked, so the page starts disabled.
     startup = "// Disabled until a key is checked and works.\n      applyInputState();"
     assert script.index(startup) > script.index("const TEXT_MAX")
+
+
+def test_a_missing_key_is_said_where_it_cannot_be_missed(textarea):
+    """The introduction says a key is needed, and a notice above the editor
+    says so until a working one is entered, with where to get one."""
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+
+    assert "Using it needs an API key." in page
+    notice = re.search(r'<p id="key-required".*?</p>', page, re.S).group(0)
+    assert "Enter your API key above to use this" in notice
+    assert 'href="#get-a-key"' in notice
+
+    script = page_script()
+    assert "keyRequired.hidden = keyValid;" in script
