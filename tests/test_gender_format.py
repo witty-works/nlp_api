@@ -14,6 +14,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.gender_format import (
+    convert_french,
+    render_french,
     convert_form,
     is_gendered_stem,
     noun_ending,
@@ -328,12 +330,12 @@ def test_bulk_actions_say_what_a_client_can_offer(set_redis):  # noqa: F811
         assert bulk_actions("Das ist gut.", "de", {"german_gender_ending": ":in"}) == [
             "gender_format"
         ]
-        # Not (yet) for the Inklusivum, French or English.
+        # Not (yet) for the Inklusivum, nor for English; French has it.
         assert (
             bulk_actions("Die Lehrer*innen.", "de", {"german_gender_ending": "de-e"})
             == []
         )
-        assert bulk_actions("Les enseignant·e·s.", "fr", {}) == []
+        assert bulk_actions("Les enseignant·e·s.", "fr", {}) == ["gender_format"]
         assert bulk_actions("The chairman.", "en", {}) == []
         # Nor where the account forces binary roles.
         assert bulk_actions("Die Lehrer:innen.", "de", {}, "test@gmail.com") == []
@@ -380,3 +382,88 @@ def test_the_switch_also_genders_generic_masculines(set_redis):  # noqa: F811
     # its second half (gendering the first half would leave a pair of forms).
     _, alerts = bulk("Die Lehrerin Frau Meier grüßt die Schüler und Schüllerinnen.")
     assert alerts == []
+
+
+
+# --- French -------------------------------------------------------------------
+
+
+FRENCH_FORMATS = ["·", "·s", ".", ".s", "/", "/s"]
+
+
+def french_sentence(fmt):
+    """An article pair, an article with an ending, singular nouns with a
+    `rice` suffix, a plural noun and a plural adjective ending a sentence."""
+
+    def n(stem, suffix, plural=False):
+        return render_french(stem, suffix, plural, fmt)
+
+    sep = fmt[0]
+    return (
+        f"La{sep}le {n('directeur', 'rice')} et un{sep}e {n('acteur', 'rice')} "
+        f"disent que les {n('enseignant', 'e', True)} sont {n('prêt', 'e', True)}."
+    )
+
+
+def french_bulk(client, text, fmt):
+    response = client.post(
+        "/v2.4/check",
+        json={"text": text, "lang": "fr", "config": {"french_gender_separator": fmt}},
+        headers={"X-TESTING-AUTH": "default@gmail.com"},
+    )
+    assert response.status_code == 200
+
+    return [r for r in response.json()["results"] if r.get("bulk") == "gender_format"]
+
+
+@pytest.mark.parametrize(
+    "source,target", list(itertools.permutations(FRENCH_FORMATS, 2)), ids=str
+)
+def test_switching_french_formats_round_trips(set_redis, source, target):  # noqa: F811
+    with TestClient(app) as client:
+        alerts = french_bulk(client, french_sentence(source), target)
+        spans = sorted((alert["start"], alert["end"]) for alert in alerts)
+        assert all(end <= start for (_, end), (start, _) in zip(spans, spans[1:]))
+
+        converted = accept_all(french_sentence(source), alerts)
+        assert converted == french_sentence(target)
+        assert accept_all(converted, french_bulk(client, converted, source)) == (
+            french_sentence(source)
+        )
+
+
+def test_convert_french_moves_the_plural():
+    masculine, feminine = {"le", "un"}, {"la", "une"}
+
+    def convert(text, target):
+        return convert_french(text, target, masculine, feminine, lambda word: True)
+
+    assert convert("chercheur.ses", "·s") == "chercheur·se·s"
+    assert convert("enseignant/e/s", "·") == "enseignant·es"
+    assert convert("un.e", "/") == "un/e"
+    assert convert("Le·la", ".") == "Le.la"
+    # Not a feminine suffix, too short a stem, mixed separators.
+    assert convert("site.fr", "·") is None
+    assert convert("p.ex", "·") is None
+    assert convert("enseignant.e/s", "·") is None
+
+
+def test_french_look_alikes_are_left_alone(set_redis):  # noqa: F811
+    with TestClient(app) as client:
+        alerts = french_bulk(
+            client,
+            "Voir site.fr, p.ex. la page 3.5, etc. et le/la responsable.",
+            "·",
+        )
+
+    assert [alert["text"] for alert in alerts] == ["le/la"]
+
+
+def test_the_french_switch_also_genders_roles(set_redis):  # noqa: F811
+    """As in German: a role in the generic masculine joins the switch with its
+    inclusive alternative in the configured format; a pronoun does not."""
+    with TestClient(app) as client:
+        text = "Il est acteur."
+        alerts = french_bulk(client, text, "·")
+
+    assert accept_all(text, alerts) == "Il est acteur·rice."

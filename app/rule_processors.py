@@ -21,7 +21,7 @@ from app.models import (
 )
 from app.categories import is_sub_category_enabled
 from app.helper import is_valid_text
-from app.gender_format import COMPOUND_PATTERNS, gendered_form_end
+from app.gender_format import COMPOUND_PATTERNS, convert_french, gendered_form_end
 from app.text_utils import german_lemmatization
 
 
@@ -55,6 +55,82 @@ def check_continue(
         return False
 
     return True
+
+
+async def french_gender_endings(
+    config: Config,
+    client: Client,
+    tokens: Doc,
+    offsets: dict,
+    language: Language,
+    text: str,
+    token_index: int,
+    list_full: list,
+    context: AppContext,
+) -> int:
+    """French inclusive forms written in another `french_gender_separator`
+    format: `enseignant.e.s` under `·` gets `enseignant·es`. Marked as part of
+    the gender format switch, like the German mismatches."""
+    subcategory = "gendered_denominations_ending_advanced"
+    if not (
+        is_sub_category_enabled(config.disabled_categories, subcategory)
+        and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
+    ):
+        return token_index
+
+    token = tokens[token_index]
+    form, last = token.text, token_index
+    if not re.search("[·./]", form):
+        # `enseignant / e / s`: a slash splits the form into tokens.
+        # At a sentence end the tokenizer keeps the full stop on the last part
+        # (`s.`); it is not part of the form.
+        while (
+            last + 2 < len(tokens)
+            and not tokens[last].whitespace_
+            and tokens[last].text[-1:] != "."
+            and tokens[last + 1].text == "/"
+            and not tokens[last + 1].whitespace_
+            and tokens[last + 2].text.removesuffix(".").isalpha()
+        ):
+            last += 2
+        if last == token_index:
+            return token_index
+        end = tokens[last].idx + len(tokens[last].text.removesuffix("."))
+        form = text[token.idx : end]
+
+    french = context.static_rules[LangType.FR]
+    converted = convert_french(
+        form,
+        config.french_gender_separator,
+        set(french["masculine_articles"]),
+        set(french["feminine_articles"]),
+        lambda word: not tokens.vocab[word].is_oov,
+    )
+    if converted is None:
+        return token_index
+    if converted == form:
+        # Already in the configured format: nothing to report, and nothing
+        # for the other rules either (a gendered form, not a masculine).
+        return last + 1
+
+    result = ResultOut.factory(
+        config,
+        client,
+        language,
+        form,
+        f"{config.french_gender_separator}french",
+        text,
+        offsets,
+        subcategory,
+        token.idx,
+        None,
+        [Alternative(converted)],
+    )
+    result.bulk = "gender_format"
+    result.bulk_alternative = 0
+    list_full.append(result)
+
+    return last + 1
 
 
 def on_gendered_form(
@@ -286,6 +362,26 @@ async def witty_rules(
 
         if language.lang == LangType.DE:
             token.lemma_ = await german_lemmatization(tokens, token_index, context)
+
+        # First, so the rules below never read `enseignant` in
+        # `enseignant/e/s` as a masculine noun of its own.
+        if language.lang == LangType.FR:
+            new_token_index = await french_gender_endings(
+                config,
+                client,
+                tokens,
+                offsets,
+                language,
+                text,
+                token_index,
+                list_full,
+                context,
+            )
+
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check", context
+            ):
+                continue
 
         if len(term_replacements):
             new_token_index = await context.rule_check.handle(

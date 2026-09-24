@@ -80,7 +80,7 @@ async def apply_language_rules(
 
     list_results = apply_false_positives(list_results, configs)
     if "gender_format" in bulk_actions(language.lang, config):
-        mark_masculines_for_bulk(list_results, text)
+        mark_masculines_for_bulk(list_results, text, language.lang)
 
     return list_results
 
