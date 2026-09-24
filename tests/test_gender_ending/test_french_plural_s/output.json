@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·s",
     "language": "fr",
     "limit_reached": false,

@@ -210,9 +210,11 @@ def bulk_actions(lang: str, config: Config) -> list[str]:
     Inklusivum yet), inclusive roles, and the mismatch subcategory enabled:
     the same conditions under which the rules produce its alerts.
     """
+    supported = (
+        lang == LangType.DE and config.german_gender_ending != Ending.INKLUSIVUM
+    ) or (lang == LangType.FR)
     if (
-        lang == LangType.DE
-        and config.german_gender_ending != Ending.INKLUSIVUM
+        supported
         and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
         and is_sub_category_enabled(
             config.disabled_categories, "gendered_denominations_ending_advanced"
@@ -235,7 +237,7 @@ _PAIR_TAIL = r"\s+(?:und|oder|bzw\.|sowie|&)\s+[\w-]*?in(?:nen)?\b"
 _ROLE_SUBCATEGORIES = {"titles", "function", "leadership"}
 
 
-def mark_masculines_for_bulk(results: list, text: str) -> None:
+def mark_masculines_for_bulk(results: list, text: str, lang: str = LangType.DE) -> None:
     """Add generic masculines and pair formulas to the gender format switch.
 
     Every role alert offering the gender-inclusive form in the configured
@@ -269,14 +271,177 @@ def mark_masculines_for_bulk(results: list, text: str) -> None:
         is_pair = role == "gendered_denominations_ending"
         if not is_pair and role not in _ROLE_SUBCATEGORIES:
             continue
-        last_word = result.text.split()[-1] if result.text.split() else ""
-        if not is_pair and re.search(r"in(?:nen)?$", last_word):
-            continue
-        if not is_pair and re.search(re.escape(result.text) + _PAIR_TAIL, text):
-            continue
+        # German feminine forms and unrecognised pair formulas; French
+        # feminines come as `gender_identity`, outside the role subcategories.
+        if lang == LangType.DE and not is_pair:
+            last_word = result.text.split()[-1] if result.text.split() else ""
+            if re.search(r"in(?:nen)?$", last_word):
+                continue
+            if re.search(re.escape(result.text) + _PAIR_TAIL, text):
+                continue
         if any(start < result.end and result.start < end for start, end in taken):
             continue
 
         result.bulk = "gender_format"
         result.bulk_alternative = index
         taken.append((result.start, result.end))
+
+
+# --- French -----------------------------------------------------------------
+#
+# French inclusive forms join a masculine word and a feminine suffix, and the
+# six `french_gender_separator` formats differ in the separator (`·`, `.`,
+# `/`) and in whether a plural `s` takes one of its own: `enseignant·es` or
+# `enseignant·e·s`. Articles come as pairs (`la·le`) or with an ending (`un·e`).
+
+_FR = "a-zàâäçéèêëîïôöùûüÿœæ"
+_FR_WORD = rf"[{_FR.upper()}{_FR}][{_FR}]*"
+
+# Feminine suffixes as inclusive writing uses them, longest first so `rice`
+# is not read as `e`.
+FRENCH_FEMININE_SUFFIXES = sorted(
+    [
+        "e",
+        "rice",
+        "trice",
+        "ice",
+        "euse",
+        "se",
+        "ne",
+        "le",
+        "te",
+        "ère",
+        "ière",
+        "esse",
+        "ve",
+        "ive",
+        "fe",
+        "enne",
+        "ienne",
+        "onne",
+        "ette",
+        "elle",
+        "eure",
+        "ale",
+    ],
+    key=len,
+    reverse=True,
+)
+
+
+def split_french_ending(ending: str) -> tuple[str, bool] | None:
+    """A feminine suffix and whether a plural `s` follows it: `es` gives
+    (`e`, True), `rices` (`rice`, True), `rice` (`rice`, False)."""
+    if ending in FRENCH_FEMININE_SUFFIXES:
+        return ending, False
+    if ending.endswith("s") and ending[:-1] in FRENCH_FEMININE_SUFFIXES:
+        return ending[:-1], True
+
+    return None
+
+
+def render_french(stem: str, suffix: str, plural: bool, target: str) -> str:
+    """A French inclusive form in a `french_gender_separator` format."""
+    separator = target[0]
+    if not plural:
+        return f"{stem}{separator}{suffix}"
+    if len(target) > 1:
+        # The `s` formats: enseignant·e·s
+        return f"{stem}{separator}{suffix}{separator}s"
+
+    return f"{stem}{separator}{suffix}s"
+
+
+def convert_french(
+    text: str,
+    target: str,
+    masculine_words: set[str],
+    feminine_words: set[str],
+    is_word,
+) -> str | None:
+    """A French inclusive form in the target format, or None when `text` is
+    not one: `enseignant.e.s` under `·` gives `enseignant·es`, `la/le` gives
+    `la·le`, `un.e` gives `un·e`. `is_word(stem)` confirms a masculine noun
+    or adjective, so `site.fr` or `p.ex` are left alone."""
+    match = re.fullmatch(
+        rf"({_FR_WORD})([·./])([{_FR}]+)(?:([·./])(s))?", text, flags=re.I
+    )
+    if match is None:
+        return None
+
+    stem, separator, rest, second, plural_s = match.groups()
+    if second is not None and second != separator:
+        return None
+
+    lower_stem, lower_rest = stem.lower(), rest.lower()
+
+    # An article pair (`la·le`) or an article with an ending (`un·e`).
+    if second is None:
+        words = {lower_stem, lower_rest}
+        if words & masculine_words and words & feminine_words and len(words) == 2:
+            return f"{stem}{target[0]}{rest}"
+        if lower_stem in masculine_words and lower_stem + lower_rest in feminine_words:
+            return f"{stem}{target[0]}{rest}"
+
+    # A noun or adjective: masculine word, feminine suffix, maybe a plural.
+    if second is not None:
+        parts = (lower_rest, True) if lower_rest in FRENCH_FEMININE_SUFFIXES else None
+    else:
+        parts = split_french_ending(lower_rest)
+    if parts is None or len(lower_stem) < 3 or not is_word(lower_stem):
+        return None
+
+    suffix, plural = parts
+    # Keep the writer's case of the suffix (it is lowercase in practice).
+    written_suffix = rest[: len(suffix)]
+
+    return render_french(stem, written_suffix, plural, target)
+
+
+# Articles a French doublet can start with. `les`, `des`, `aux` and `l'` serve
+# both nouns, so the second one may leave it out (`les enseignants et
+# enseignantes`); `le`/`la` and `un`/`une` have to be repeated.
+FRENCH_DOUBLET_ARTICLES = {"le", "la", "l'", "l’", "les", "un", "une", "des", "aux"}
+_FRENCH_SHARED_ARTICLES = {"les", "des", "aux", "l'", "l’"}
+
+
+def french_doublet(
+    tokens, index: int, conjunctions: set[str], articles_map: dict
+) -> tuple[int | None, int, int | None, int] | None:
+    """The token positions of a doublet starting at `index`, as (first article,
+    first noun, second article, second noun) with None for a missing article:
+    `les enseignants et les enseignantes`, `le directeur ou la directrice`,
+    `enseignantes et enseignants`. Only the shape: whether the nouns are the
+    two genders of one role is for the caller to look up."""
+
+    def article(i: int) -> str | None:
+        word = tokens[i].text.lower() if i < len(tokens) else ""
+        return word if word in FRENCH_DOUBLET_ARTICLES else None
+
+    first_article = index if article(index) else None
+    if first_article is None and index > 0 and article(index - 1):
+        # Checked from the article, where the doublet starts.
+        return None
+    first = index + (first_article is not None)
+    if first + 2 >= len(tokens) or tokens[first + 1].text.lower() not in conjunctions:
+        return None
+
+    second_article = first + 2 if article(first + 2) else None
+    second = first + 2 + (second_article is not None)
+    if second >= len(tokens) or not tokens[second].is_alpha:
+        return None
+    if not tokens[first].is_alpha:
+        return None
+
+    one, other = (
+        tokens[first_article].text.lower() if first_article is not None else None,
+        tokens[second_article].text.lower() if second_article is not None else None,
+    )
+    if one is None and other is not None:
+        return None
+    if other is None and one is not None and one not in _FRENCH_SHARED_ARTICLES:
+        return None
+    if other is not None and other != one and articles_map.get(one) != other:
+        return None
+
+    return first_article, first, second_article, second

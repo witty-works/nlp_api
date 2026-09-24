@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -57,6 +59,8 @@
                     "text": "un peintre ou une peintre"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Il est un peintre. C’est pourquoi nous avons de personnes performantes.",
             "end": 17,
