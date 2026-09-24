@@ -5,6 +5,7 @@
 - [Run all tests](#run-all-tests)
 - [Run last failing tests](#run-last-failing-tests)
 - [Update snapshot fixtures](#update-snapshot-fixtures)
+- [Rephrase tests against an LLM](#rephrase-tests-against-an-llm)
 
 ---
 
@@ -50,6 +51,23 @@ pdm run pytest --snapshot-update
 ```
 
 Make sure to review the changes if they are indeed intended before committing!
+
+---
+
+## Rephrase tests against an LLM
+
+`pytest.ini` sets `LLM_MODEL` to a placeholder nothing answers, so the tests of
+the LLM plumbing run everywhere (they replace the call itself), and the
+`tests/test_rephrase` snapshots are skipped. To run those, name a real model;
+the environment wins over `pytest.ini`:
+
+```bash
+LLM_MODEL=openai/<model> LLM_API_BASE=<base url> LLM_API_KEY=<key> \
+    pdm run pytest -k test_rephrase
+```
+
+The snapshots record one model's wording, so another model will differ in it;
+read the differences rather than updating them wholesale.
 
 ---
 
