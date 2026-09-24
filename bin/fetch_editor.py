@@ -43,10 +43,10 @@ PACKAGE = "@witty-works/editor"
 # The release this version of the page is written against, and its integrity
 # as the registry publishes it: `npm view @witty-works/editor@<version>
 # dist.integrity`. Update the two together.
-VERSION = "2.2.1"
+VERSION = "2.3.0"
 INTEGRITY = (
-    "sha512-HyOAsIPVFr5jepYXEFbY0xWF6EJuwkzbLuSTqQs8"
-    "SKRml9Uw5Pnbfd2jUjQwMjTyw2INNnmw+Qoyzki0srXNsg=="
+    "sha512-RH+uBVloBK1UdWIddubsqPet4yN9uPO5NoaGoPdY"
+    "4ObfLpFOVEQmH3ZjVFT/0W7Pc6DQ9dZRoDzKxsl2ftpXSw=="
 )
 
 SCRIPT = "witty-editor.js"
