@@ -53,6 +53,10 @@ def inclusive_alternative(
             return inklusivum_alternative(static_rules, lang, male_form, female_form)
 
         if male_form.lower() in static_rules[lang]["masculine_articles"]:
+            # At the start of a sentence both come capitalised; only the
+            # first part of the pair keeps it: `Die*der`, not `Die*Der`.
+            if female_form[:1].isupper():
+                male_form = male_form[:1].lower() + male_form[1:]
             return female_form + separator + male_form
 
         short_gender_star = True

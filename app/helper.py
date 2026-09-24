@@ -210,3 +210,14 @@ def utf16_offsets(text: str) -> dict | bool:
     offsets["utf16_chars"][final_offset] = len(text)
 
     return offsets if utf16offset else False
+
+
+def to_utf16(offsets: dict | bool, index: int) -> int:
+    """A position in the text as results report it: in UTF-16 code units once
+    the text has characters that take two (see utf16_offsets)."""
+    return offsets["chars"][index] if offsets else index
+
+
+def from_utf16(offsets: dict | bool, index: int) -> int:
+    """A result's UTF-16 position as a position in the Python string."""
+    return offsets["utf16_chars"].get(index, index) if offsets else index

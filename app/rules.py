@@ -769,10 +769,19 @@ def fetch_static_rules(langs: list[str]):
                 )
                 if article.inklusivum:
                     pair = tuple(sorted(article.inclusive.split("~")))
-                    static_rules[LangType.DE]["inklusivum_article_pairs"][pair] = (
-                        article.inklusivum,
-                        article.form,
-                    )
+                    pairs = static_rules[LangType.DE]["inklusivum_article_pairs"]
+                    known = pairs.get(pair)
+                    if known is None:
+                        pairs[pair] = (article.inklusivum, article.form)
+                    elif known[0] != article.inklusivum:
+                        raise ValueError(
+                            f"articles.csv: {'~'.join(pair)} has two Inklusivum"
+                            f" forms, {known[0]} and {article.inklusivum}"
+                        )
+                    elif known[1] != article.form:
+                        # Listed for several cases (`zur~zum`): the pair does
+                        # not tell the case, so the noun's own analysis does.
+                        pairs[pair] = (article.inklusivum, None)
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
             static_rules[LangType.DE]["articles"].append(article.feminine)
@@ -1890,6 +1899,15 @@ def fetch_static_rules(langs: list[str]):
             "Yo",
             "Sup",
             "Holler",
+        )
+
+    french = static_rules.get(LangType.FR)
+    if french and "masculine_articles" in french:
+        # Looked up per token by the French gender format rules.
+        french["masculine_article_words"] = frozenset(french["masculine_articles"])
+        french["feminine_article_words"] = frozenset(french["feminine_articles"])
+        french["noun_conjunction_words"] = frozenset(
+            conjunction.strip() for conjunction in french["noun_conjunction"].values()
         )
 
     return static_rules

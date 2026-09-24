@@ -7,6 +7,7 @@ configured format. Accepting all of them is the switch, so the round trips
 below are the contract a client's "switch the gender format" relies on.
 """
 
+import asyncio
 import itertools
 from types import SimpleNamespace
 
@@ -17,7 +18,7 @@ from app.gender_format import (
     convert_french,
     render_french,
     convert_form,
-    is_gendered_stem,
+    gendered_form_end,
     noun_ending,
     render_noun_ending,
     render_pair,
@@ -113,19 +114,23 @@ def test_convert_form_only_knows_the_article_table():
     assert convert("und/oder") is None
 
 
-def test_is_gendered_stem():
+def test_gendered_form_end():
+    """Where a form the tokenizer split ends, if the token starts one."""
+
     def tokens(*texts, spaced=()):
         return [
             SimpleNamespace(text=text, whitespace_=" " if i in spaced else "")
             for i, text in enumerate(texts)
         ]
 
-    assert is_gendered_stem(tokens("Lehrer", "/", "innen"), 0)
-    assert is_gendered_stem(tokens("Lehrer", "(", "innen", ")"), 0)
-    assert is_gendered_stem(tokens("ihre", "/", "n"), 0)
-    assert not is_gendered_stem(tokens("Lehrer", "/", "innen", spaced=(0,)), 0)
-    assert not is_gendered_stem(tokens("Montag", "/", "Dienstag"), 0)
-    assert not is_gendered_stem(tokens("Lehrer"), 0)
+    assert gendered_form_end(tokens("Lehrer", "/", "innen"), 0) == 2
+    assert gendered_form_end(tokens("Lehrer", "(", "innen", ")"), 0) == 3
+    assert gendered_form_end(tokens("ihre", "/", "n"), 0) == 2
+    # Every gender ending, from the one list (`nja` was missing here once).
+    assert gendered_form_end(tokens("Rom", "/", "nja"), 0) == 2
+    assert gendered_form_end(tokens("Lehrer", "/", "innen", spaced=(0,)), 0) is None
+    assert gendered_form_end(tokens("Montag", "/", "Dienstag"), 0) is None
+    assert gendered_form_end(tokens("Lehrer"), 0) is None
 
 
 # --- through the API ----------------------------------------------------------
@@ -660,6 +665,7 @@ def test_an_inklusivum_text_is_not_half_switched_out_of_it(set_redis):  # noqa: 
         ),
     ],
 )
+@pytest.mark.model_dependent
 def test_der_before_a_masculine_is_singular_unless_genitive(
     set_redis, text, expected  # noqa: F811
 ):
@@ -682,3 +688,39 @@ def test_der_before_a_masculine_is_singular_unless_genitive(
         alerts = [r for r in response.json()["results"] if r.get("bulk")]
 
     assert accept_all(text, alerts) == expected
+
+
+@pytest.mark.parametrize(
+    "masculine,feminine,expected",
+    [
+        (
+            "Der Lehrer gibt den Stift.",
+            "Die Lehrerin gibt den Stift.",
+            (
+                "Die*der Lehrer*in gibt den Stift.",
+                "Die/der Lehrerin/Lehrer gibt den Stift.",
+            ),
+        ),
+        (
+            "Heute gibt der Lehrer den Stift.",
+            "Heute gibt die Lehrerin den Stift.",
+            (
+                "Heute gibt die*der Lehrer*in den Stift.",
+                "Heute gibt die/der Lehrerin/Lehrer den Stift.",
+            ),
+        ),
+    ],
+)
+def test_an_article_pair_opening_a_sentence_has_one_capital(
+    masculine, feminine, expected
+):
+    """`Die*der`, not `Die*Der`: at a sentence start both articles come
+    capitalised, and only the pair's first part keeps it."""
+    with TestClient(app):
+        variants = asyncio.run(
+            app.state.context.alternatives.noun_alternatives(
+                "de", "*", "*", False, masculine, feminine
+            )
+        )[2]
+
+    assert (variants["inclusive_gender"], variants["binary_gender"]) == expected

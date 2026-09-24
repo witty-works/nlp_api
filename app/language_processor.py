@@ -1,6 +1,10 @@
 """Language processing functions for text analysis and rule application."""
 
-from app.gender_format import bulk_actions, mark_masculines_for_bulk
+from app.gender_format import (
+    BULK_GENDER_FORMAT,
+    bulk_actions,
+    mark_masculines_for_bulk,
+)
 from collections import defaultdict
 import json
 from app.context import AppContext
@@ -79,16 +83,24 @@ async def apply_language_rules(
     ) + await context_false_positives(language.lang, sentences, list_results, context)
 
     list_results = apply_false_positives(list_results, configs)
-    if "gender_format" in bulk_actions(language.lang, config):
+    if BULK_GENDER_FORMAT in bulk_actions(language.lang, config):
         inklusivum_words = set()
         if language.lang == LangType.DE:
+            # Each word once, and only what can be a noun: an Inklusivum noun
+            # is capitalised, and the lookup costs DB queries.
+            checked = set()
             for result in list_results:
                 if result.bulk or result.category != "gender-orientation":
                     continue
                 for word in result.text.split():
+                    if word in checked or not word[:1].isupper():
+                        continue
+                    checked.add(word)
                     if await context.rule_check.is_inklusivum_noun(word):
                         inklusivum_words.add(word)
-        mark_masculines_for_bulk(list_results, text, language.lang, inklusivum_words)
+        mark_masculines_for_bulk(
+            list_results, text, language.lang, inklusivum_words, offsets
+        )
 
     return list_results
 

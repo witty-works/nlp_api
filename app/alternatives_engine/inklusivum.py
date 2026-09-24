@@ -28,12 +28,24 @@ class Lexicon:
 
     @classmethod
     def from_static_rules(cls, static_rules: dict, lang) -> "Lexicon":
+        """Built once per rules dict: the static rules live as long as the
+        process, and this is asked for per token."""
         rules = (static_rules or {}).get(lang, {})
+        cached = _LEXICONS.get(id(rules))
+        if cached is not None and cached[0] is rules:
+            return cached[1]
 
-        return cls(
+        lexicon = cls(
             exceptions=rules.get("inklusivum_nouns") or {},
             neutral=frozenset(rules.get("inklusivum_neutral_nouns") or ()),
         )
+        # The rules dict is kept too, so its id cannot be reused by another.
+        _LEXICONS[id(rules)] = (rules, lexicon)
+
+        return lexicon
+
+
+_LEXICONS: dict[int, tuple[dict, Lexicon]] = {}
 
 
 UMLAUTS = {"ä": "a", "ö": "o", "ü": "u", "Ä": "A", "Ö": "O", "Ü": "U"}

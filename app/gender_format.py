@@ -15,46 +15,68 @@ with a separator in it is only taken for one when the table knows it.
 """
 
 import re
+from dataclasses import dataclass
 
 from app.categories import is_sub_category_enabled
-from app.models import Config, GermanGenderEndingType as Ending, LangType
+from app.helper import from_utf16
+from app.models import (
+    GENDER_ENDING_PARTS,
+    Config,
+    GermanGenderEndingType as Ending,
+    LangType,
+)
 
-# What joins the parts, per format, for noun endings.
+
+@dataclass(frozen=True)
+class FormatSpec:
+    """How one separator format writes a gendered form. Everything else about
+    the formats (the tables below, the mismatch rules) is derived from these,
+    so a format is described in one place."""
+
+    # What joins a noun and its ending (`Lehrer*innen`); None where the format
+    # marks it otherwise (Binnen-I, brackets).
+    noun_separator: str | None
+    # What joins an article or pronoun pair: the infix formats use their own
+    # separator, the others a slash (Die/der LehrerIn, die/der Lehrer(in)).
+    pair_separator: str
+    # Whether a compound with the marker inside stays one token
+    # (`Mitarbeiter*innengespräch`), so it can be read.
+    compounds_in_one_token: bool
+    # How the tokenizer splits an article pair in this format, as a rule's
+    # word_types: a plain slash makes three tokens (`die / der`).
+    article_word_types: tuple
+
+
+FORMATS = {
+    Ending.STAR: FormatSpec("*", "*", True, (None, None, "*")),
+    Ending.UNDERSCORE: FormatSpec("_", "_", True, (None, None, "_")),
+    Ending.COLON: FormatSpec(":", ":", True, (None, None, ":")),
+    Ending.SLASH: FormatSpec("/", "/", False, (-1, 2, "/")),
+    Ending.SLASH_DASH: FormatSpec("/-", "/", False, (None, None, "/")),
+    Ending.CAPITAL_LETTER: FormatSpec(None, "/", False, (None, None, "I")),
+    Ending.PARENTHESIS: FormatSpec(None, "/", False, (-1, 4, "(")),
+    Ending.PARENTHESIS_DASH: FormatSpec(None, "/", False, (-1, 2, ")")),
+}
+
 NOUN_SEPARATORS = {
-    Ending.STAR: "*",
-    Ending.UNDERSCORE: "_",
-    Ending.COLON: ":",
-    Ending.SLASH: "/",
-    Ending.SLASH_DASH: "/-",
+    ending: spec.noun_separator
+    for ending, spec in FORMATS.items()
+    if spec.noun_separator is not None
 }
-
-# Article and pronoun pairs: the three infix formats use their own separator,
-# the others write them with a slash (Die/der LehrerIn, die/der Lehrer(in)).
-PAIR_SEPARATORS = {
-    Ending.STAR: "*",
-    Ending.UNDERSCORE: "_",
-    Ending.COLON: ":",
-    Ending.SLASH: "/",
-    Ending.SLASH_DASH: "/",
-    Ending.CAPITAL_LETTER: "/",
-    Ending.PARENTHESIS: "/",
-    Ending.PARENTHESIS_DASH: "/",
-}
+PAIR_SEPARATORS = {ending: spec.pair_separator for ending, spec in FORMATS.items()}
 
 _ENDING_PREFIX = re.compile(r"^(?:/-|[*_:/]|\(-?)")
-_GENDER_PART = re.compile(r"^(innen|in|r|nja|ze|iza|eza)(.*)$", re.S)
+_GENDER_PART = re.compile(rf"^({'|'.join(GENDER_ENDING_PARTS)})(.*)$", re.S)
 
 # Compounds with the marker inside, for the formats that keep them in one
 # token: `Mitarbeiter*innengespräch`, `Lehrer:innen-Team`.
 COMPOUND_PATTERNS = {
     ending: re.compile(
-        rf"^[A-ZÄÖÜ][a-zäöüß]+{re.escape(separator)}innen(?:[a-zäöüß]+|-\w[\w-]*)$"
+        rf"^[A-ZÄÖÜ][a-zäöüß]+{re.escape(spec.noun_separator)}innen"
+        r"(?:[a-zäöüß]+|-\w[\w-]*)$"
     )
-    for ending, separator in (
-        (Ending.STAR, "*"),
-        (Ending.UNDERSCORE, "_"),
-        (Ending.COLON, ":"),
-    )
+    for ending, spec in FORMATS.items()
+    if spec.compounds_in_one_token
 }
 
 
@@ -170,7 +192,7 @@ def convert_form(
 # feminine ending (`Lehrer/innen`, `Angestellte(r)`); pronouns and articles
 # also short ones (`ihre/n`, `jede/-r`). A capitalised word before `/n` is a
 # plural hint (`Klasse/n`), not a gendered form.
-NOUN_GENDER_ENDINGS = {"in", "innen", "r"}
+NOUN_GENDER_ENDINGS = frozenset(GENDER_ENDING_PARTS)
 WORD_GENDER_ENDINGS = NOUN_GENDER_ENDINGS | {"e", "n", "s", "m", "er", "en", "em", "es"}
 
 
@@ -197,28 +219,73 @@ def gendered_form_end(tokens, index: int) -> int | None:
     return last
 
 
-def is_gendered_stem(tokens, index: int) -> bool:
-    """Whether the token is the first part of a split gendered form, and so
-    not a masculine word of its own."""
-    return gendered_form_end(tokens, index) is not None
+# What a mismatch rule reads (set as `rule.form_kind` where the rules are
+# built): a noun ending, an article or pronoun pair, a compound.
+FORM_NOUN = "noun"
+FORM_ARTICLE = "article"
+FORM_COMPOUND = "compound"
+
+
+def form_span(
+    rule,
+    tokens,
+    token_index: int,
+    check_text: str,
+    text: str,
+    start: int,
+    whole_word: bool,
+) -> tuple[str, int, int]:
+    """The written form a mismatch rule matched, where it starts, and its
+    first token. A form the tokenizer split (`die / der`, `jede ( r )`) starts
+    at the rule's first token; otherwise it is the match, or with
+    `whole_word` the whole token (the Inklusivum replaces the word, a
+    separator format only the ending)."""
+    offset = rule.word_types[0] if rule.word_types else None
+    if offset is not None and offset < 0 and token_index + offset >= 0:
+        first = token_index + offset
+        return check_text, tokens[first].idx, first
+    if whole_word:
+        return tokens[token_index].text, tokens[token_index].idx, token_index
+
+    return text, start, token_index
+
+
+# The `bulk` value of the alerts that make up the gender format switch, and
+# the subcategory of those that are a form written in another format.
+BULK_GENDER_FORMAT = "gender_format"
+MISMATCH_SUBCATEGORY = "gendered_denominations_ending_advanced"
+
+
+def format_switch_enabled(config: Config) -> bool:
+    """Whether a check with this config reports forms written in another
+    format (and so can switch the text): inclusive roles, and the mismatch
+    subcategory enabled."""
+    return Config.gendered_roles_format_inclusive(
+        config.gendered_roles_format
+    ) and is_sub_category_enabled(config.disabled_categories, MISMATCH_SUBCATEGORY)
+
+
+def mark_bulk(result, index: int) -> bool:
+    """Put `result` into the gender format switch, applying its alternative
+    at `index`. Only where that alternative exists: cleaning up alternatives
+    (duplicates of the text, the maximum count) may have dropped it, and an
+    index pointing at nothing would break a client applying the switch."""
+    alternatives = result.alternatives or []
+    if not 0 <= index < len(alternatives) or not alternatives[index].text:
+        return False
+
+    result.bulk = BULK_GENDER_FORMAT
+    result.bulk_alternative = index
+
+    return True
 
 
 def bulk_actions(lang: str, config: Config) -> list[str]:
-    """The `bulk` groups a check in this language with this config can return.
-
-    Switching the gender format needs German (any format, the Inklusivum too)
-    or French, inclusive roles, and the mismatch subcategory enabled:
-    the same conditions under which the rules produce its alerts.
-    """
-    supported = lang in (LangType.DE, LangType.FR)
-    if (
-        supported
-        and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
-        and is_sub_category_enabled(
-            config.disabled_categories, "gendered_denominations_ending_advanced"
-        )
-    ):
-        return ["gender_format"]
+    """The `bulk` groups a check in this language with this config can return:
+    the gender format switch for German (any format, the Inklusivum too) and
+    French, under the same conditions the rules produce its alerts."""
+    if lang in (LangType.DE, LangType.FR) and format_switch_enabled(config):
+        return [BULK_GENDER_FORMAT]
 
     return []
 
@@ -227,7 +294,15 @@ def bulk_actions(lang: str, config: Config) -> list[str]:
 # formula the rules did not recognise, most often because of a typo in the
 # second half (`Schüler und Schüllerinnen`): gendering the first half alone
 # would leave `Schüler:innen und Schüllerinnen`.
-_PAIR_TAIL = r"\s+(?:und|oder|bzw\.|sowie|&)\s+[\w-]*?in(?:nen)?\b"
+# The words that join a pair formula (`Schüler und Schülerinnen`) or two
+# coordinated nouns (`den Lehrer*innen und Kolleg*innen`).
+GERMAN_CONJUNCTIONS = ("und", "oder", "sowie", "bzw.", "&")
+_PAIR_TAIL = re.compile(
+    r"\s+(?:"
+    + "|".join(re.escape(word) for word in GERMAN_CONJUNCTIONS)
+    + r")\s+[\w-]*?in(?:nen)?\b"
+)
+_FEMININE_END = re.compile(r"in(?:nen)?$")
 
 # Roles written in the generic masculine: job titles, functions, leadership.
 # Address forms (`Frau Meier`), pronouns and identity terms name a particular
@@ -240,6 +315,7 @@ def mark_masculines_for_bulk(
     text: str,
     lang: str = LangType.DE,
     inklusivum_words: set[str] = frozenset(),
+    offsets: dict | bool = False,
 ) -> None:
     """Add generic masculines and pair formulas to the gender format switch.
 
@@ -280,19 +356,21 @@ def mark_masculines_for_bulk(
         # German feminine forms and unrecognised pair formulas; French
         # feminines come as `gender_identity`, outside the role subcategories.
         if lang == LangType.DE and not is_pair:
-            last_word = result.text.split()[-1] if result.text.split() else ""
-            if re.search(r"in(?:nen)?$", last_word):
+            words = result.text.split()
+            if words and _FEMININE_END.search(words[-1]):
                 continue
-            if re.search(re.escape(result.text) + _PAIR_TAIL, text):
+            # Right after this alert, not anywhere in the text: one
+            # unrecognised pair must not keep every other alert for the same
+            # word out of the switch.
+            if _PAIR_TAIL.match(text, from_utf16(offsets, result.end)):
                 continue
         if any(start < result.end and result.start < end for start, end in taken):
             continue
         if inklusivum_words.intersection(result.text.split()):
             continue
 
-        result.bulk = "gender_format"
-        result.bulk_alternative = index
-        taken.append((result.start, result.end))
+        if mark_bulk(result, index):
+            taken.append((result.start, result.end))
 
 
 # --- French -----------------------------------------------------------------
@@ -463,7 +541,6 @@ def french_doublet(
 # singular (-s) and the dative plural (-n) are marked, so that is what the case
 # has to decide.
 
-_CONJUNCTIONS = {"und", "oder", "sowie", "bzw.", "&"}
 _MORPH_CASES = {
     "Nom": "nominativ",
     "Acc": "akkusativ",
@@ -472,7 +549,7 @@ _MORPH_CASES = {
 }
 
 
-def inklusivum_article(form: str, articles: dict) -> tuple[str, str] | None:
+def inklusivum_pair(form: str, articles: dict) -> tuple[str, str] | None:
     """A separator pair in the Inklusivum, with the case the table gives it:
     `die*der` -> (`de`, `nominativ`), `Jede/r` -> (`Jedey`, `nominativ`)."""
     parts = split_form(form)
@@ -501,14 +578,14 @@ def inklusivum_target_form(
         written = before.text
         if stem > 2 and before.text.isalpha() and tokens[stem - 2].text == "/":
             written = tokens[stem - 3].text + "/" + before.text
-        paired = inklusivum_article(written, articles)
+        paired = inklusivum_pair(written, articles)
         if paired is not None:
             case = paired[1]
         elif before.text.lower() == "des":
             case = "genitiv"
         elif before.text.lower() == "den" and plural:
             case = "dativ"
-        elif before.text.lower() in _CONJUNCTIONS and stem >= 2:
+        elif before.text.lower() in GERMAN_CONJUNCTIONS and stem >= 2:
             # `den Lehrer*innen und Kolleg*innen`: the second of two
             # coordinated nouns takes the first one's case. The first form
             # may be split into tokens (`Lehrer(innen)`, `Lehrer/-innen`),
