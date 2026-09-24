@@ -1,6 +1,7 @@
 """What the rephrasing makes of an LLM answer it cannot use."""
 
 import asyncio
+import json
 
 import pytest
 
@@ -51,6 +52,41 @@ def test_only_sentences_are_kept():
         '{"Die Lehrkraft": "Die Lehrkraft gibt dem Schüler den Stift.",'
         ' "Die Lehrperson": ["not", "a", "sentence"]}'
     )
+
+    assert rephrase(answer) == {
+        "Die Lehrkraft": "Die Lehrkraft gibt dem Schüler den Stift."
+    }
+
+
+class Recording(Answering):
+    async def handle(self, user_prompt, *args, **kwargs):
+        self.user_prompt = user_prompt
+        return self.answer
+
+
+def test_the_code_swaps_the_words_in_and_marks_them():
+    """The model gets each sentence with the alternative already in place and
+    marked, so it knows which words to adapt: the replaced occurrence, not
+    another one like it."""
+    settings = Settings(llm_model="openai/test")
+    prompt = Recording(settings, "{}")
+    request = RephraseRequestIn(
+        sentence="When I am with the guys, I feel like one of the guys",
+        text="guys",
+        start=19,
+        lang="en",
+        alternatives=[{"text": "everyone"}],
+    )
+    asyncio.run(LlmAlternatives(settings, None, prompt).handle(request))
+
+    sent = json.loads(prompt.user_prompt)
+    assert sent["sentences"] == {
+        "everyone": "When I am with the ⟦everyone⟧, I feel like one of the guys"
+    }
+
+
+def test_marks_the_model_left_in_are_removed():
+    answer = '{"Die Lehrkraft": "⟦Die Lehrkraft⟧ gibt dem Schüler den Stift."}'
 
     assert rephrase(answer) == {
         "Die Lehrkraft": "Die Lehrkraft gibt dem Schüler den Stift."

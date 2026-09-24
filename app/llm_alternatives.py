@@ -31,7 +31,6 @@ class LlmAlternatives:
         self,
         rephrase_request_in: RephraseRequestIn,
     ):
-        placeholder = "|---|"
         sentence = rephrase_request_in.sentence
         alternatives = []
         collective_nouns = []
@@ -58,174 +57,45 @@ class LlmAlternatives:
 
         end = start + len(text)
 
-        # The updated prompt specifies that the assistant should only replace the word at the specified position
+        # The code puts each alternative in place of `text`; the model only
+        # makes it fit. Asking the model to do the replacement itself, as this
+        # used to, left more agreement errors with every model tried, and let
+        # it restyle the rest of the sentence.
+        # The swapped-in words are marked, so the model knows which words to
+        # adapt and which occurrence was replaced.
+        drafts = {
+            alternative: sentence[:start] + f"⟦{alternative}⟧" + sentence[end:]
+            for alternative in alternatives
+        }
+
         system_prompt = f"""
-        You are an expert in {lang} grammatical correctness.
-        Make sure that all grammatical and spelling mistakes present in 'sentence' are still present in each of the 'rephrasing' in the output.
-        Replace '{placeholder}' in 'sentence_with_placeholder' with each of the supplied items in 'alternatives'.
-        Before making the replacement ensure that the alternative matches the {lang} grammatical case (tense, pluralization etc.) of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
-        Do not make stylistic or other unnecessary changes in the output.
-        Change as little as necessary to make the output grammatically correct in {lang} like correcting the gender of the article to match the 'alternative' preceeding '{placeholder}' it.
-        For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response with key in the dictionary matching exactly each of the 'alternative' provided.
-        Leave double parenthesis unchanged.
+        You fix {lang} grammar after a word swap.
+        In each sentence of "sentences", the words in ⟦ ⟧ replaced the words
+        "{text}" of "original". They may be a base form: an infinitive, a
+        singular, a masculine or feminine form.
+        Rewrite each sentence so they fit, and remove the ⟦ ⟧:
+        - Give the words in ⟦ ⟧ the grammatical form "{text}" had in
+          "original": the same tense, person, number and case. If "{text}" is
+          past tense, they become past tense too.
+        - Make the words that depend on them agree with them: articles,
+          adjectives, pronouns referring to them, the verb.
+        - Change nothing else. Every other word stays exactly as it is, even
+          where it repeats "{text}" elsewhere in the sentence, and so do
+          spelling mistakes, gender-inclusive forms such as Kund*innen or
+          expert·es, and double parentheses.
+        An expression listed in "collective_nouns" names a group: keep it, and
+        make the words that depend on it agree with it.
+        Answer with a JSON object mapping each key of "sentences" to its
+        rewritten sentence, and nothing else.
         """
 
-        match rephrase_request_in.lang:
-            case LangType.DE:
-                system_prompt += f"""
-                    Make sure to not remove any useage of the Genderstar.
-                    To avoid gendered nouns when possible prefer plural over singular.
-                    For "alternatives" also listed under "collective_nouns" assume they contain a plural noun.
-
-                    For the following example:  
-                    {{
-                        "sentence": "Einhaltung von ethischen Prinzipien.",
-                        "sentence_with_placeholder": "Einhaltung von ethischen {placeholder}.",
-                        "text": "Prinzipien",
-                        "alternatives": [
-                            "Ethik",
-                            "Methode",
-                            "Wert",
-                            "Richtlinie",
-                            "Regel"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "Ethik": "Einhaltung von ethischen Ethiken.",
-                        "Methode": "Einhaltung von ethischen Methoden.",
-                        "Wert": "Einhaltung von ethischen Werte.",
-                        "Richtlinie": "Einhaltung von ethischen Richtlinien.",
-                        "Regel": "Einhaltung von ethischen Regeln."
-                    }}
-
-                    For the following example:
-                    {{
-                        "sentence": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
-                        "sentence_with_placeholder": "Wir arbeiten für unsere Kund*innen, für uns ist der {placeholder} im Zentrum",
-                        "text": "Kunden",
-                        "alternatives": [
-                            "der Kunde",
-                            "die Kundin",
-                            "die Kundschaft",
-                            "die Konsumenten"
-                        ],
-                        "collective_nouns": [
-                            "die Kundschaft",
-                            "die Konsumenten"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "der Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
-                        "die Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
-                        "die Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum",
-                        "die Konsumenten": "Wir arbeiten für unsere Kund*innen, für uns sind die Konsumenten im Zentrum"
-                    }}
-                    """
-            case LangType.FR:
-                system_prompt += f"""
-                    Make sure to not remove any useage of the point médian.
-                    For "alternatives" not listed under "collective_nouns" avoid gendered nouns when possible prefer plural over singular.
-
-                    For the following example:  
-                    {{
-                        "sentence": "Face à la concurrence, il était handicapé par son jeune âge.",
-                        "sentence_with_placeholder": "Face à la concurrence, il {placeholder} par son jeune âge.",
-                        "text": "était handicapé",
-                        "alternatives": [
-                            "être désavantagée",
-                            "être désavantagé"
-                            "être pénalisée",
-                            "être pénalisé"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "être désavantagée": "Face à la concurrence, elle était désavantagée par son jeune âge.",
-                        "être désavantagé": "Face à la concurrence, il était désavantagé par son jeune âge.",
-                        "être pénalisée": "Face à la concurrence, elle était pénalisée par son jeune âge.",
-                        "être pénalisé": "Face à la concurrence, il était pénalisé par son jeune âge."
-                    }}
-
-                    For the following example:
-                    {{
-                        "sentence": "Les beaux traducteurs sont compétent.",
-                        "sentence_with_placeholder": "Les {placeholder} sont compétent.",
-                        "text": "traducteurs",
-                        "alternatives": [
-                            "traducteur,
-                            "traductrice",
-                            "traduction"
-                        ],
-                        "collective_nouns": [
-                            "traduction"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "traducteur": "Les beaux traducteurs sont compétent.",
-                        "traductrice": "Les belles traductrices sont compétentes.",
-                        "traduction": "La beau traduction est compétente"
-                    }}
-                    """
-            # case LangType.EN:
-            case _:
-                system_prompt += f"""
-                    For the following example:  
-                    {{
-                        "sentence": "Wat he had done is amazing as he is the best.",
-                        "sentence_with_placeholder": "Wat {placeholder} has done is amazing as he is the best.",
-                        "text": "he",
-                        "alternatives": [
-                            "they",
-                            "he or she",
-                            "((given name))"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "they": "Wat they have done is amazing as he is the best.",
-                        "he or she": "Wat he or she have done is amazing as he is the best.",
-                        "((given name))": "Wat ((given name)) have done is amazing as he is the best."
-                    }}
-
-                    For the following example:
-                    {{
-                        "sentence": "We analyzed if this works",
-                        "sentence_with_placeholder": "We {placeholder} if this works",
-                        "text": "analyzed",
-                        "alternatives": [
-                            "closely examine"
-                        ]
-                    }}
-
-                    Format the output as follows making sure it is valid JSON:
-                    {{
-                        "closely examine": "We closely examined if this works"
-                    }}
-                    """
-        new_sentence_start = "" if start == 0 else sentence[0:start]
-        new_sentence_end = "" if end >= len(sentence) else sentence[end:]
-        sentence_with_placeholder = new_sentence_start + placeholder + new_sentence_end
-
         input_data = {
-            "sentence": sentence,
-            "sentence_with_placeholder": sentence_with_placeholder,
-            "text": text,
-            "alternatives": alternatives,
+            "original": sentence,
+            "sentences": drafts,
             "collective_nouns": collective_nouns,
         }
 
-        user_prompt = (
-            "Please process the following input into a valid JSON response:\n"
-            + json.dumps(input_data)
-        )
+        user_prompt = json.dumps(input_data, ensure_ascii=False)
 
         # `model` is a debug-only override; it is None for every other caller,
         # and Prompt falls back to the configured one.
@@ -240,7 +110,12 @@ class LlmAlternatives:
                 "LLM rephrasing was not a JSON object: %r", str(answer)[:200]
             )
             parsed = {}
-        result = {key: value for key, value in parsed.items() if isinstance(value, str)}
+        # A mark the model left in is not part of the sentence.
+        result = {
+            key: value.replace("⟦", "").replace("⟧", "")
+            for key, value in parsed.items()
+            if isinstance(value, str)
+        }
 
         separator, noun_separator, separate_gender_plural = (
             Config.get_gender_separators(rephrase_request_in.gender_separator)
@@ -252,9 +127,7 @@ class LlmAlternatives:
             if alternative_index in genderstar:
                 if (
                     alternative.male_form in result
-                    and placeholder not in result[alternative.male_form]
                     and alternative.female_form in result
-                    and placeholder not in result[alternative.female_form]
                 ):
                     alternative.male_form, alternative.female_form, rephrasings = (
                         await self.alternatives.noun_alternatives(
@@ -270,10 +143,7 @@ class LlmAlternatives:
                     gendered_role_format = genderstar[alternative_index]
                     if genderstar[alternative_index] in rephrasings:
                         results[alternative.text] = rephrasings[gendered_role_format]
-            elif (
-                alternative.text in result
-                and placeholder not in result[alternative.text]
-            ):
+            elif alternative.text in result:
                 results[alternative.text] = result[alternative.text]
 
         return results
