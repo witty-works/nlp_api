@@ -24,6 +24,8 @@
                     "text": "Management"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hier die Titel: Store Manager Watch Zürich und Store Managerin Berlin",
             "end": 29,

@@ -30,6 +30,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 34,

@@ -1,5 +1,6 @@
 """Language processing functions for text analysis and rule application."""
 
+from app.gender_format import bulk_actions, mark_masculines_for_bulk
 from collections import defaultdict
 import json
 from app.context import AppContext
@@ -77,7 +78,11 @@ async def apply_language_rules(
         config, client, language, text, ent_spans, offsets
     ) + await context_false_positives(language.lang, sentences, list_results, context)
 
-    return apply_false_positives(list_results, configs)
+    list_results = apply_false_positives(list_results, configs)
+    if "gender_format" in bulk_actions(language.lang, config):
+        mark_masculines_for_bulk(list_results, text)
+
+    return list_results
 
 
 def fetch_term_replacements(

@@ -82,6 +82,8 @@
                     "text": "Team"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefo",
             "end": 21,

@@ -30,6 +30,8 @@
                     "text": "Werkstattleitungen-"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. I",
             "end": 8,
@@ -75,6 +77,8 @@
                     "text": "Lesepublikum-"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranch",
             "end": 40,
@@ -106,6 +110,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranche miterleben",
             "end": 66,

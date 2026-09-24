@@ -63,6 +63,8 @@
                     "text": "das Management"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Sie ist die Beauftragte für dieses Thema.",
             "end": 23,

@@ -104,6 +104,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
             "end": 47,

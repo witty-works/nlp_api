@@ -221,3 +221,60 @@ def bulk_actions(lang: str, config: Config) -> list[str]:
         return ["gender_format"]
 
     return []
+
+
+# A masculine right before a coordinated feminine is the first half of a pair
+# formula the rules did not recognise, most often because of a typo in the
+# second half (`Schüler und Schüllerinnen`): gendering the first half alone
+# would leave `Schüler:innen und Schüllerinnen`.
+_PAIR_TAIL = r"\s+(?:und|oder|bzw\.|sowie|&)\s+[\w-]*?in(?:nen)?\b"
+
+# Roles written in the generic masculine: job titles, functions, leadership.
+# Address forms (`Frau Meier`), pronouns and identity terms name a particular
+# person and stay one-by-one.
+_ROLE_SUBCATEGORIES = {"titles", "function", "leadership"}
+
+
+def mark_masculines_for_bulk(results: list, text: str) -> None:
+    """Add generic masculines and pair formulas to the gender format switch.
+
+    Every role alert offering the gender-inclusive form in the configured
+    format (`Der Lehrer` -> `Die:der Lehrer:in`, `Schüler und Schülerinnen` ->
+    `Schüler:innen`) is marked with `bulk_alternative` pointing at it, so
+    "switch the gender format" also genders what was written in the generic
+    masculine. Left out: feminine forms (`Die Lehrerin`, often a particular
+    woman), a masculine that starts an unrecognised pair formula, and anything
+    overlapping an alert already in the switch.
+    """
+    taken = [(result.start, result.end) for result in results if result.bulk]
+
+    for result in sorted(results, key=lambda result: result.start):
+        if result.bulk or result.category != "gender-orientation":
+            continue
+
+        index = next(
+            (
+                i
+                for i, alternative in enumerate(result.alternatives or [])
+                if alternative.gender_role == "inclusive_gender" and alternative.text
+            ),
+            None,
+        )
+        if index is None:
+            continue
+
+        is_pair = result.subcategory == "gendered_denominations_ending_advanced"
+        role = (result.subcategory or "").removesuffix("_advanced")
+        if not is_pair and role not in _ROLE_SUBCATEGORIES:
+            continue
+        last_word = result.text.split()[-1] if result.text.split() else ""
+        if not is_pair and re.search(r"in(?:nen)?$", last_word):
+            continue
+        if not is_pair and re.search(re.escape(result.text) + _PAIR_TAIL, text):
+            continue
+        if any(start < result.end and result.start < end for start, end in taken):
+            continue
+
+        result.bulk = "gender_format"
+        result.bulk_alternative = index
+        taken.append((result.start, result.end))

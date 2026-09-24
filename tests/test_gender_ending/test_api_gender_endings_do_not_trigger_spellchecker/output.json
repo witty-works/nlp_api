@@ -13,6 +13,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 35,
@@ -37,6 +38,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 47,
@@ -61,6 +63,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 63,
@@ -85,6 +88,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 71,

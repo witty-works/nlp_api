@@ -34,6 +34,8 @@
                     "text": "eines Personal"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Dies ist das Ergebnis eines Mitarbeiters",
             "end": 40,

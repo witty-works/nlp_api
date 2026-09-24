@@ -32,6 +32,8 @@
                     "text": "ein Teammitglied"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunde",
             "end": 23,
@@ -77,6 +79,8 @@
                     "text": "Team"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studen",
             "end": 58,
@@ -150,6 +154,8 @@
                     "text": "ein Klientel"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ich habe einen Kollegen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Student",
             "end": 95,
@@ -224,6 +230,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "legen getroffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Koll",
             "end": 124,
@@ -266,6 +274,8 @@
                     "text": "Das Praktikum"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "troffen. Ich habe viele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen.",
             "end": 139,
@@ -318,6 +328,8 @@
                     "text": "eine Studi"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "ele Kollegen getroffen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten",
             "end": 161,
@@ -360,6 +372,8 @@
                     "text": "Das Praktikum"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "offen. Wir betreuen einen Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getro",
             "end": 176,
@@ -408,6 +422,8 @@
                     "text": "Studi"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Kunden. Wir betreuen mehrere Kunden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
             "end": 197,
@@ -479,6 +495,8 @@
                     "text": "Team"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "nden. Der Professor kennt einen Studenten. Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
             "end": 228,
@@ -555,6 +573,8 @@
                     "text": "Teammitglied"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Der Professor kennt alle Studenten. Ich habe viele nette Kollegen getroffen. Ich habe einen netten Kollegen getroffen.",
             "end": 270,

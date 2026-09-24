@@ -29,6 +29,8 @@
                     "text": "Klientel"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
             "end": 11,
@@ -77,6 +79,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
             "end": 37,

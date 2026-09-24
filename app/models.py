@@ -991,10 +991,12 @@ class ResultOut(BaseModel):
     gravity: Optional[float] = None
     proficiency_level: Optional[str] = None
     source: Optional[ResultSource] = None
-    # Set on alerts safe to accept all at once: exactly one alternative, and
-    # accepting them in any order gives the same text. "gender_format" marks
-    # the switch to the configured gender format.
+    # Set on alerts safe to accept all at once: accepting
+    # `alternatives[bulk_alternative]` of every one, in any order, gives the
+    # same text, and they never overlap. "gender_format" marks the switch to
+    # the configured gender format, generic masculines included.
     bulk: Optional[str] = None
+    bulk_alternative: Optional[int] = None
 
     @staticmethod
     def factory(

@@ -185,10 +185,11 @@ def mismatches(client, text, ending):
 
 
 def accept_all(text, alerts):
-    """What a client's bulk accept does: apply each alert's alternative."""
+    """What a client's bulk accept does: apply each alert's bulk alternative."""
     chars = list(text)
     for alert in sorted(alerts, key=lambda alert: -alert["start"]):
-        chars[alert["start"] : alert["end"]] = list(alert["alternatives"][0]["text"])
+        replacement = alert["alternatives"][alert["bulk_alternative"]]["text"]
+        chars[alert["start"] : alert["end"]] = list(replacement)
 
     return "".join(chars)
 
@@ -200,9 +201,9 @@ def test_switching_formats_round_trips(set_redis, source, target):  # noqa: F811
     with TestClient(app) as client:
         alerts = mismatches(client, FORMATS[source], target)
 
-        # The bulk contract: marked, one alternative each, no overlaps.
+        # The bulk contract: marked, pointing at an alternative, no overlaps.
         assert all(alert.get("bulk") == "gender_format" for alert in alerts)
-        assert all(len(alert["alternatives"]) == 1 for alert in alerts)
+        assert all(alert["bulk_alternative"] == 0 for alert in alerts)
         spans = sorted((alert["start"], alert["end"]) for alert in alerts)
         assert all(end <= start for (_, end), (start, _) in zip(spans, spans[1:]))
 
@@ -336,3 +337,38 @@ def test_bulk_actions_say_what_a_client_can_offer(set_redis):  # noqa: F811
         assert bulk_actions("The chairman.", "en", {}) == []
         # Nor where the account forces binary roles.
         assert bulk_actions("Die Lehrer:innen.", "de", {}, "test@gmail.com") == []
+
+
+def test_the_switch_also_genders_generic_masculines(set_redis):  # noqa: F811
+    """Roles in the generic masculine are part of the switch too, as is a pair
+    formula the rules recognise, replaced as a whole. What names a particular
+    person, or starts a pair formula the rules did not recognise, is not."""
+
+    def bulk(text):
+        with TestClient(app) as client:
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": text,
+                    "lang": "de",
+                    "config": {"german_gender_ending": ":in"},
+                },
+                headers={"X-TESTING-AUTH": "default@gmail.com"},
+            )
+        return text, [
+            result for result in response.json()["results"] if result.get("bulk")
+        ]
+
+    text, alerts = bulk("Der Lehrer gibt den Schülern die Hefte.")
+    assert (
+        accept_all(text, alerts)
+        == "Die:der Lehrer:in gibt den Schüler:innen die Hefte."
+    )
+
+    text, alerts = bulk("Willkommen liebe Schüler und Schülerinnen.")
+    assert accept_all(text, alerts) == "Willkommen liebe Schüler:innen."
+
+    # A particular woman, an address form, and a pair formula with a typo in
+    # its second half (gendering the first half would leave a pair of forms).
+    _, alerts = bulk("Die Lehrerin Frau Meier grüßt die Schüler und Schüllerinnen.")
+    assert alerts == []

@@ -13,6 +13,7 @@
                 }
             ],
             "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 59,
@@ -54,6 +55,8 @@
                     "text": "Fachkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 107,
@@ -102,6 +105,8 @@
                     "text": "Fachkraft"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 117,

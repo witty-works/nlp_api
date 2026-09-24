@@ -56,6 +56,8 @@
                     "text": "meine Untersuchung"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt und Bundesrat",
             "end": 32,
@@ -98,6 +100,8 @@
                     "text": "Bundesratsmitglied"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt und Bundesrat",
             "end": 80,

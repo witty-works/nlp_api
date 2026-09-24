@@ -63,6 +63,8 @@
                     "text": "Arbeiten"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
             "end": 105,
@@ -111,6 +113,8 @@
                     "text": "Personal"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
             "end": 118,
@@ -153,6 +157,8 @@
                     "text": "Lagerarbeiten"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "<URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
             "end": 136,
@@ -286,6 +292,8 @@
                     "text": "Personal"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "odcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
             "end": 172,

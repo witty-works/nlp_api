@@ -62,6 +62,8 @@
                     "text": "Programmierungen"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wir suchen Ninja Programmierer für unsere Kunden",
             "end": 30,
@@ -110,6 +112,8 @@
                     "text": "Auftraggebende"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Wir suchen Ninja Programmierer für unsere Kunden",
             "end": 48,

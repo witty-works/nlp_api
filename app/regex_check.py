@@ -359,6 +359,7 @@ class RegexCheck:
             )
             if subcategory == "gendered_denominations_ending_advanced":
                 result.bulk = "gender_format"
+                result.bulk_alternative = 0
             list_full.append(result)
 
             return skip_token
