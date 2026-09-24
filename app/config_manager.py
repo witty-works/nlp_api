@@ -131,7 +131,7 @@ def build_default_user_configs(email: str, settings: Settings) -> dict:
     # Same contract as the dashboard's hash: it only has to change when the
     # config does, so a client can tell whether its stored copy is stale.
     configs["config_hash"] = hashlib.md5(
-        json.dumps(configs, sort_keys=True).encode("utf-8")
+        json.dumps(configs, sort_keys=True).encode("utf-8"), usedforsecurity=False
     ).hexdigest()
 
     return configs

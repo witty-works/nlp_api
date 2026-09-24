@@ -60,7 +60,7 @@ NEIGHBOURS = {  # QWERTZ-ish adjacent keys, enough for realistic slips
 
 def _pick(text: str, salt: str, count: int) -> int:
     """Deterministic pseudo-random index so runs are reproducible."""
-    digest = hashlib.md5((salt + text).encode()).digest()
+    digest = hashlib.md5((salt + text).encode(), usedforsecurity=False).digest()
     return int.from_bytes(digest[:4], "big") % count if count else 0
 
 
