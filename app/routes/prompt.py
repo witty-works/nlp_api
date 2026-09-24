@@ -245,6 +245,14 @@ async def post_write(
     # reviewed in part; the model is asked to stay inside it, and a draft that
     # does not is reported through `limit_reached`.
     length = f" Keep the result under {context.settings.text_max_length} characters."
+    # A longer text could only come back shortened, which a request to fix
+    # its typos would not expect; refused instead.
+    if len(write_request_in.text) > context.settings.text_max_length:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory(
+            f"The text is longer than {context.settings.text_max_length}"
+            " characters, the most a prompt can rewrite"
+        )
     if write_request_in.text.strip():
         user_prompt = (
             "Apply the instruction to the text below. Respond with the complete"

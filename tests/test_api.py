@@ -3232,6 +3232,23 @@ def test_write(llm_access, set_redis, monkeypatch):
         assert calls == []
 
 
+def test_write_refuses_a_text_it_could_only_shorten(llm_access, set_redis):
+    """A prompt's result has to fit what Witty checks at once, so a longer text
+    would come back cut; it is refused instead, before any LLM call."""
+    llm_access(LlmAccessType.USERS)
+    too_long = "Die Lehrer kommen. " * (context.settings.text_max_length // 19 + 1)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Fix the typos.", "text": too_long},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert "longer than" in response.json()["detail"][0]["msg"]
+
+
 def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog):
     """A provider error is a generic 500 for the caller and a traceback for
     the operator."""
