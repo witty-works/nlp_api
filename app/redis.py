@@ -214,22 +214,28 @@ class Redis:
         # Fallback to plaintext lookup for backward compatibility
         return self.db.get("api_key:" + api_key)
 
+    def api_key_name(self, api_key: str) -> str:
+        """The Redis entry a key is stored under by set_api_key."""
+        return "api_key:" + (self._hash_api_key(api_key) or api_key)
+
     def set_api_key(
-        self, api_key: str, email: str, remove_plaintext: bool = False
+        self, api_key: str, email: str, remove_plaintext: bool = False, db=None
     ) -> None:
         """Store an API key mapping. If HMAC secret exists, store under hashed key.
 
-        If `remove_plaintext` is True, also remove the plaintext key.
+        If `remove_plaintext` is True, also remove the plaintext key. `db` is a
+        pipeline to write through instead of the connection.
         """
+        db = self.db if db is None else db
         hashed = self._hash_api_key(api_key)
         if hashed:
-            self.db.set("api_key:" + hashed, email)
+            db.set("api_key:" + hashed, email)
             if remove_plaintext:
-                self.db.delete("api_key:" + api_key)
+                db.delete("api_key:" + api_key)
             return
 
         # No secret configured: store plaintext
-        self.db.set("api_key:" + api_key, email)
+        db.set("api_key:" + api_key, email)
 
     def delete_api_key(self, api_key: str) -> None:
         """Delete an API key mapping. Attempts both hashed and plaintext keys."""

@@ -28,6 +28,7 @@ from app.models import (
 from app.version_validators import client_version
 from app.config_manager import fetch_configs_for_request, fetch_result_conf
 from app.auth_service import fetch_user
+from app.api_keys import ApiKeysIn, SyncResult, sync
 
 router = APIRouter()
 
@@ -190,3 +191,36 @@ async def delete_api_key(
     username: str = Depends(fetch_management_username),
 ):
     context.redis.delete_api_key(api_key)
+
+
+@router.put(
+    "/api_keys",
+    response_model=SyncResult,
+    responses={409: {"model": ErrorMessage}, 422: {"model": ErrorMessage}},
+)
+async def put_api_keys(
+    api_keys_in: ApiKeysIn,
+    dry_run: bool = False,
+    context: AppContext = Depends(get_app_context),
+    username: str = Depends(fetch_management_username),
+):
+    """Make the synced API keys match the local key file (see app/api_keys.py
+    and bin/sync_api_keys.py): add new keys, revoke the ones this endpoint
+    synced before that are no longer listed, and replace each email's config.
+    Keys minted any other way are left alone. With `dry_run`, only report
+    what would change. The response names emails, never keys."""
+    try:
+        result = sync(context.redis, api_keys_in.entries, dry_run)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        )
+
+    if result.conflicts:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Keys already in use for other emails, nothing synced: "
+            + ", ".join(sorted(set(result.conflicts))),
+        )
+
+    return result

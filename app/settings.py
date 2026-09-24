@@ -156,10 +156,16 @@ class Settings(BaseSettings):
 
     def open_paths(self) -> list[str]:
         """The paths the require_api_key gate lets through without a key."""
-        if not self.textarea_enabled:
-            return self.public_paths
+        paths = [*self.public_paths]
+        if self.textarea_enabled:
+            paths += TEXTAREA_PATHS
+        # The key sync authenticates itself with the management credentials,
+        # and is how keys get there in the first place. Only while those are
+        # asked for: without them it would be open to anyone.
+        if self.management_auth_enabled:
+            paths.append("/api_keys")
 
-        return [*self.public_paths, *TEXTAREA_PATHS]
+        return paths
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a
