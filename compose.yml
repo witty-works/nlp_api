@@ -101,6 +101,12 @@ services:
     ports:
       # Container side is 8081: that is where the entrypoint binds gunicorn.
       - "${API_HOST_PORT:-8080}:8081"
+    # Every other setting (TEXTAREA_ENABLED, LLM_*, MINIMUM_VERSION_*, …) comes
+    # from .env. The image leaves .env out (.dockerignore), so without this
+    # the container would never see them. The entries below win over it.
+    env_file:
+      - path: .env
+        required: false
     environment:
       # Empty by default, and deliberately so: the *code* default is
       # LanguageTool's hosted API, so leaving this unset would send the text
@@ -134,9 +140,9 @@ services:
       # config is created without a dashboard. Leave the auth on.
       - MANAGEMENT_AUTH_ENABLED=${MANAGEMENT_AUTH_ENABLED:-True}
       # Refuse anything without a credential, rather than answering it with an
-      # empty result set. PUBLIC_PATHS is what stays open.
+      # empty result set. PUBLIC_PATHS (from .env, else the code's default) is
+      # what stays open.
       - REQUIRE_API_KEY=${REQUIRE_API_KEY:-False}
-      - PUBLIC_PATHS=${PUBLIC_PATHS:-["/health","/v2.0/categories"]}
     # The context checker calls torch's share_memory(), which moves the model
     # into /dev/shm. Docker's default there is 64 MB, and a ~1 GB SetFit model
     # overruns it: the process dies of SIGBUS (exit 135) during startup with no
