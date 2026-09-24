@@ -330,11 +330,10 @@ def test_bulk_actions_say_what_a_client_can_offer(set_redis):  # noqa: F811
         assert bulk_actions("Das ist gut.", "de", {"german_gender_ending": ":in"}) == [
             "gender_format"
         ]
-        # Not (yet) for the Inklusivum, nor for English; French has it.
-        assert (
-            bulk_actions("Die Lehrer*innen.", "de", {"german_gender_ending": "de-e"})
-            == []
-        )
+        # Into the Inklusivum too, and French; not English.
+        assert bulk_actions(
+            "Die Lehrer*innen.", "de", {"german_gender_ending": "de-e"}
+        ) == ["gender_format"]
         assert bulk_actions("Les enseignant·e·s.", "fr", {}) == ["gender_format"]
         assert bulk_actions("The chairman.", "en", {}) == []
         # Nor where the account forces binary roles.
@@ -526,7 +525,7 @@ def test_french_doublets_are_left_alone_for_binary_forms(set_redis):  # noqa: F8
 SWITCH_TEXTS = {
     "de": (
         "german_gender_ending",
-        list(FORMATS),
+        [*FORMATS, "de-e"],
         "Willkommen liebe Schüler und Schülerinnen. "
         "Der Lehrer gibt den Schülern die Hefte, jede/-r Kolleg/in hilft.",
     ),
@@ -534,6 +533,42 @@ SWITCH_TEXTS = {
         "french_gender_separator",
         FRENCH_FORMATS,
         "Les enseignantes et les enseignants saluent un.e acteur.rice. Il est acteur.",
+    ),
+}
+
+# --- into the Inklusivum ---------------------------------------------------------
+
+
+def inklusivum_source(noun, pair, word):
+    """A nominative pair and singular noun, a dative plural after `den`, a
+    genitive pair, a determiner, and two coordinated plurals."""
+    return (
+        f"{pair('Die', 'der')} Lehrer{noun('in')} gibt den Schüler{noun('innen')} "
+        f"das Buch {pair('des', 'der')} Kolleg{noun('in')}. {word('Jede', 'r')} "
+        f"Mitarbeiter{noun('in')} dankt den Lehrer{noun('innen')} und "
+        f"Kolleg{noun('innen')}."
+    )
+
+
+INKLUSIVUM_TEXT = (
+    "De Lehrere gibt den Schülernen das Buch ders Kollegeres. Jedey Mitarbeitere "
+    "dankt den Lehrernen und Kollegernen."
+)
+
+INKLUSIVUM_SOURCES = {
+    "*in": inklusivum_source(*infix("*")),
+    ":in": inklusivum_source(*infix(":")),
+    "_in": inklusivum_source(*infix("_")),
+    "/in": inklusivum_source(*infix("/")),
+    "/-in": inklusivum_source(
+        *slash_pairs(lambda e: "/-" + e, lambda s, e: f"{s}/-{e}")
+    ),
+    "In": inklusivum_source(
+        *slash_pairs(lambda e: e[:1].upper() + e[1:], lambda s, e: f"{s}/{e}")
+    ),
+    "()": inklusivum_source(*slash_pairs(lambda e: f"({e})", lambda s, e: f"{s}({e})")),
+    "(-)": inklusivum_source(
+        *slash_pairs(lambda e: f"(-{e})", lambda s, e: f"{s}(-{e})")
     ),
 }
 
@@ -565,3 +600,44 @@ def test_a_switched_text_has_nothing_left_to_switch(
         switched = accept_all(text, bulk(client, text))
         assert switched != text
         assert bulk(client, switched) == []
+
+
+@pytest.mark.parametrize("source", list(INKLUSIVUM_SOURCES), ids=str)
+def test_switching_into_the_inklusivum(set_redis, source):  # noqa: F811
+    """Articles from the article table, nouns declined for number and case
+    (genitive singular, dative plural, carried across a coordination)."""
+    with TestClient(app) as client:
+        alerts = mismatches(client, INKLUSIVUM_SOURCES[source], "de-e")
+
+    spans = sorted((alert["start"], alert["end"]) for alert in alerts)
+    assert all(end <= start for (_, end), (start, _) in zip(spans, spans[1:]))
+    assert accept_all(INKLUSIVUM_SOURCES[source], alerts) == INKLUSIVUM_TEXT
+
+
+def test_the_inklusivum_switch_leaves_what_it_cannot_decline(set_redis):  # noqa: F811
+    """Compounds are not declined yet; they stay as written rather than being
+    half converted."""
+    with TestClient(app) as client:
+        text = "Die Mitarbeiter*innenbefragung beginnt."
+        alerts = mismatches(client, text, "de-e")
+
+    assert alerts == []
+
+
+def test_an_inklusivum_text_is_not_half_switched_out_of_it(set_redis):  # noqa: F811
+    """Switching out of the Inklusivum is not supported. Its dative plurals
+    read like masculines (`den Schülernen`), but converting only those would
+    leave the rest of the text in the Inklusivum."""
+    with TestClient(app) as client:
+        for target in (":in", "/in", "()"):
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": INKLUSIVUM_TEXT,
+                    "lang": "de",
+                    "config": {"german_gender_ending": target},
+                },
+                headers={"X-TESTING-AUTH": "default@gmail.com"},
+            )
+            results = response.json()["results"]
+            assert [r["text"] for r in results if r.get("bulk")] == []

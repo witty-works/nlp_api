@@ -1,8 +1,20 @@
-from app.models import Config, Client, LangType, Rule, Alternative, ResultOut, Language
+from app.models import (
+    Config,
+    Client,
+    GermanGenderEndingType,
+    LangType,
+    Rule,
+    Alternative,
+    ResultOut,
+    Language,
+)
 from app.categories import is_sub_category_enabled
+from app.alternatives_engine import inklusivum
 from app.gender_format import (
     convert_form,
     feminine_form,
+    inklusivum_article,
+    inklusivum_target_form,
     noun_ending,
     render_noun_ending,
 )
@@ -28,6 +40,68 @@ class RegexCheck:
         self.logger = logger
         self.static_rules = static_rules
         self.nouns = nouns
+        self._inklusivum_lexicon = None
+
+    async def inklusivum_form(
+        self,
+        rule: Rule,
+        tokens: Doc,
+        token_index: int,
+        check_text: str,
+        text: str,
+        start: int,
+    ) -> tuple[str, str, int] | None:
+        """A separator form written in the Inklusivum: (form, span, start).
+
+        Articles and pronouns from the article table (`die*der` -> `de`),
+        nouns from the Inklusivum generator (`Lehrer*innen` -> `Lehrerne`),
+        covering the whole word. None where that cannot be done reliably: a
+        compound, a noun whose masculine is unknown, an unclear case.
+        """
+        articles = self.static_rules[LangType.DE]["inklusivum_article_pairs"]
+        first = (
+            token_index + rule.word_types[0]
+            if rule.word_types[0] is not None
+            else token_index
+        )
+        if not 0 <= first <= token_index:
+            first = token_index
+        span_start = tokens[first].idx
+        written = (
+            tokens[token_index].text if rule.word_types[0] in (None, 0) else check_text
+        )
+
+        if rule.id.endswith("article"):
+            found = inklusivum_article(written, articles)
+            return None if found is None else (found[0], written, span_start)
+
+        if rule.id.endswith("compound"):
+            return None
+
+        match = re.match(r"^(innen|in)$", noun_ending(text))
+        feminine = feminine_form(written)
+        if match is None or feminine is None:
+            return None
+
+        forms = await self.nouns.german_noun_lookup(feminine)
+        masculine = forms.get("male_form") if forms else None
+        if not masculine:
+            return None
+
+        plural = match.group(1) == "innen"
+        target_form = inklusivum_target_form(tokens, first, plural, articles)
+        if target_form is None:
+            return None
+
+        if self._inklusivum_lexicon is None:
+            self._inklusivum_lexicon = inklusivum.Lexicon.from_static_rules(
+                self.static_rules, LangType.DE
+            )
+        form = inklusivum.noun(
+            masculine, feminine, target_form, "", self._inklusivum_lexicon, True
+        )
+
+        return None if not form else (form, written, span_start)
 
     async def handle(
         self,
@@ -159,7 +233,15 @@ class RegexCheck:
                 # app/gender_format.py so every mismatch has exactly one
                 # alternative and accepting them all is a format switch.
                 target = config.german_gender_ending
-                if rule.id.endswith("article"):
+                if target == GermanGenderEndingType.INKLUSIVUM:
+                    written = await self.inklusivum_form(
+                        rule, tokens, token_index, check_text, text, start
+                    )
+                    if written is None:
+                        continue
+
+                    converted, text, start = written
+                elif rule.id.endswith("article"):
                     # An article or pronoun: `die*der`, `Der/die`, `jede*r`;
                     # the article table decides, so `Klasse/n` is left alone.
                     form, form_start = text, start

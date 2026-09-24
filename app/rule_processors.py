@@ -377,12 +377,12 @@ async def german_gender_endings(
         ):
             return new_token_index
 
+    # Unlike the separator rules above these also run for the Inklusivum:
+    # regex_check writes the Inklusivum form rather than splicing an ending.
     subcategory = "gendered_denominations_ending_advanced"
-    if (
-        not is_inklusivum
-        and is_sub_category_enabled(config.disabled_categories, subcategory)
-        and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
-    ):
+    if is_sub_category_enabled(
+        config.disabled_categories, subcategory
+    ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
         endings = []
         for key, regexp in config._gendereddenom_ending.items():
             if config.german_gender_ending == key:

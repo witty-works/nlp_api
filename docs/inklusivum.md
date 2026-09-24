@@ -56,6 +56,7 @@ Where those pages are silent, the association's own tool is the second source: t
 - **Possessives**, where the gendered form already agrees with the noun it modifies, so only the stem changes: `ihrem` → `ensem`, `Ihre` → `Ense`.
 - **The article for words that take no ending**, so `Der Gast` is offered as `De Gast`. Nothing else reports these, since the noun is not gendered and no denomination rule matches it.
 - **Attributive adjectives**, where the noun is being rewritten: `als guter Arzte` becomes `als gutey Arzte`. Most need no change even then, because after an article the endings are the ordinary German ones.
+- **Switching a text into the Inklusivum** from any separator format, through the gender format switch (`bulk: "gender_format"`, see [request-configuration.md](./request-configuration.md#switching-a-texts-gender-format)). Separator pairs map to the article table's `Inklusivum` column with the case it records; a noun takes its number from the ending and its case from the article before it (`des` → genitive, plural `den` → dative), from the noun it is coordinated with, or from spaCy, and is left as written when none of them says. Compounds are left as written too.
 - **Explanations** naming the rule behind an article or adjective suggestion, linking into the association's page at the section that covers it.
 - **Detection**, so text already written in the Inklusivum is neither reported by the gendered denomination rules nor by the spell checker. Nouns are confirmed against the lexicon; articles and possessives are closed sets; the article-less adjective endings `-ey` and `-erm` go by shape, where `-ers` does not ("anders", "besonders").
 
@@ -142,6 +143,10 @@ Only the article actually needs changing here, and that is now reported separate
 So this is the second entry in this list that emits wrong output rather than nothing. It is last because it is also the least likely to fire: reaching it needs `eines` tagged `PRON` with `Case=Gen`, and a standalone genitive pronoun is close to extinct in modern German ("der Vorschlag eines von euch"). No fixture produces it, which is why it has never shown up in a snapshot.
 
 The fix is to report nothing in that slot rather than to invent a form — a guard where `RuleCheck.inklusivum_articles` builds the pronominal suggestion, not a change to the table, since the table is also read for the cases that do exist. Left undone deliberately: it is a behaviour change on a path no test covers, so it wants its own fixture proving the finding disappears rather than being folded into a documentation pass.
+
+### 9. Switching out of the Inklusivum
+
+The switch only goes into the Inklusivum. Out of it, `de Lehrere` would have to become `die*der Lehrer*in`, which needs the rules to read Inklusivum forms as findings: detection currently makes sure they are *not* reported. An Inklusivum noun is confirmed against the lexicon already, so the reading is there; what is missing is emitting it as a mismatch with the separator form, and choosing between the feminine and masculine plural base (`Lehrerne` → `Lehrer*innen`) from the lexicon rather than the ending. Until then a client switching an Inklusivum text to a separator format converts nothing, which is safe.
 
 ## Forms the sources did not settle
 

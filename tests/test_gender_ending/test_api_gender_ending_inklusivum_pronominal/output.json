@@ -1,5 +1,7 @@
 {
-    "bulk_actions": [],
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "de-e",
     "language": "de",
     "limit_reached": false,
@@ -28,6 +30,8 @@
                     "text": "Untersuchung"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Einer für alle, alle für einen. Dann kam einer, der das nicht wusste. Ein guter Arzt hilft jedem.",
             "end": 84,

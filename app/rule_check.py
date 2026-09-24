@@ -407,9 +407,14 @@ class RuleCheck:
         if not self.is_inklusivum(lang, config):
             return False
 
+        return await self.is_inklusivum_noun(token.text)
+
+    async def is_inklusivum_noun(self, word: str) -> bool:
+        """Whether `word` is the Inklusivum of a gendered pair in the noun
+        lexicon (`Lehrerne`, `Schülernen`), whatever format was asked for."""
         lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
 
-        for candidate in inklusivum.base_form_candidates(token.text):
+        for candidate in inklusivum.base_form_candidates(word):
             forms = await self.nouns.german_noun_lookup(candidate)
             if not forms:
                 continue
@@ -418,7 +423,7 @@ class RuleCheck:
             if not feminine:
                 continue
 
-            if inklusivum.is_form_of(token.text, candidate, feminine, lexicon):
+            if inklusivum.is_form_of(word, candidate, feminine, lexicon):
                 return True
 
         return False

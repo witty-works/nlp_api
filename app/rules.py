@@ -748,6 +748,9 @@ def fetch_static_rules(langs: list[str]):
         # `die~der`, `jede~r`, ...: what a lowercase word with a gender
         # separator may be, see app/gender_format.py.
         static_rules[LangType.DE]["inclusive_article_forms"] = set()
+        # (die, der) -> ("de", "nominativ"): what a separator pair is in the
+        # Inklusivum, keyed by the unordered pair so `der*die` finds it too.
+        static_rules[LangType.DE]["inklusivum_article_pairs"] = {}
 
         for article in articles:
             article = Article(
@@ -764,6 +767,12 @@ def fetch_static_rules(langs: list[str]):
                 static_rules[LangType.DE]["inclusive_article_forms"].add(
                     article.inclusive
                 )
+                if article.inklusivum:
+                    pair = tuple(sorted(article.inclusive.split("~")))
+                    static_rules[LangType.DE]["inklusivum_article_pairs"][pair] = (
+                        article.inklusivum,
+                        article.form,
+                    )
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
             static_rules[LangType.DE]["articles"].append(article.feminine)
