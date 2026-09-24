@@ -309,11 +309,16 @@ PAGE = r"""<!doctype html>
       }
 
       let aiCheckTimer;
-      apiKey.addEventListener("input", (event) => {
-        editor.setApiKey(event.target.value);
+      function useApiKey(delay) {
+        editor.setApiKey(apiKey.value);
         clearTimeout(aiCheckTimer);
-        aiCheckTimer = setTimeout(checkAiSuggestions, 500);
-      });
+        aiCheckTimer = setTimeout(checkAiSuggestions, delay);
+      }
+      apiKey.addEventListener("input", () => useApiKey(500));
+      // A browser restoring the field on reload, or a password manager filling
+      // it, sets the value without an input event.
+      apiKey.addEventListener("change", () => useApiKey(0));
+      if (apiKey.value) useApiKey(0);
 
       const form = document.getElementById("write");
       const prompt = document.getElementById("prompt");

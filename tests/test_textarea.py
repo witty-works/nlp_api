@@ -195,7 +195,7 @@ def test_the_key_goes_only_into_x_key():
     # Read from the field for each request and passed on as the header; the
     # editor component gets it through setApiKey.
     assert '"x-key": apiKey.value' in script
-    assert "editor.setApiKey(event.target.value)" in script
+    assert "editor.setApiKey(apiKey.value)" in script
 
 
 def test_the_page_calls_routes_that_exist():
