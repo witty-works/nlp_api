@@ -341,10 +341,11 @@ def key_config(redis, email: str) -> Optional[KeyConfig]:
         }
         dropped = sorted(set(fields) - set(known[part]))
         if dropped:
+            # Without the email, which comes from the request: a dry-run sync
+            # of the key file names the entries that no longer validate.
             logging.getLogger("nlp_api").warning(
-                "synced %s for %s no longer valid, ignored: %s",
+                "a synced %s is no longer valid, ignored: %s",
                 part,
-                email,
                 ", ".join(dropped),
             )
 

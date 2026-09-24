@@ -21,6 +21,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
 
     services:
       # The snapshots contain LanguageTool findings, so they only hold still if
@@ -95,8 +98,25 @@ jobs:
           export testing=True
           pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
 
+      # The workflow runs on push only, so the scanner cannot tell a branch
+      # with an open pull request from any other and files every analysis as a
+      # branch. Passing the pull request explicitly gets it analysed as one
+      # (its own page in SonarCloud, and a comment on the PR) without a second
+      # run of the suite for a pull_request trigger.
+      - name: Find pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          gh pr list --head "$BRANCH" --state open --json number,baseRefName \
+            --jq '.[0] | select(.) | "args=-Dsonar.pullrequest.key=\(.number) -Dsonar.pullrequest.branch=\(env.BRANCH) -Dsonar.pullrequest.base=\(.baseRefName)"' \
+            >> "$GITHUB_OUTPUT"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@bfd4e558cda28cda6b5defafb9232d191be8c203 # v4.2.1
+        with:
+          args: ${{ steps.pr.outputs.args }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
