@@ -696,14 +696,6 @@ class Config(BaseModel):
 
         return separator, noun_separator, separate_gender_plural
 
-    @staticmethod
-    def get_french_noun_separator(french_gender_separator: FrenchGenderSeparatorType):
-        return (
-            french_gender_separator[0],
-            french_gender_separator[0],
-            french_gender_separator.endswith("s"),
-        )
-
     @field_validator("preferred_languages", mode="before")
     @classmethod
     def valid_preferred_languages(cls, v):
