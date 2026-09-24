@@ -622,3 +622,22 @@ def test_the_inklusivum_switch_leaves_what_it_cannot_decline(set_redis):  # noqa
         alerts = mismatches(client, text, "de-e")
 
     assert alerts == []
+
+
+def test_an_inklusivum_text_is_not_half_switched_out_of_it(set_redis):  # noqa: F811
+    """Switching out of the Inklusivum is not supported. Its dative plurals
+    read like masculines (`den Schülernen`), but converting only those would
+    leave the rest of the text in the Inklusivum."""
+    with TestClient(app) as client:
+        for target in (":in", "/in", "()"):
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": INKLUSIVUM_TEXT,
+                    "lang": "de",
+                    "config": {"german_gender_ending": target},
+                },
+                headers={"X-TESTING-AUTH": "default@gmail.com"},
+            )
+            results = response.json()["results"]
+            assert [r["text"] for r in results if r.get("bulk")] == []

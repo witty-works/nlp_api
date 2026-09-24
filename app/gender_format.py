@@ -235,7 +235,12 @@ _PAIR_TAIL = r"\s+(?:und|oder|bzw\.|sowie|&)\s+[\w-]*?in(?:nen)?\b"
 _ROLE_SUBCATEGORIES = {"titles", "function", "leadership"}
 
 
-def mark_masculines_for_bulk(results: list, text: str, lang: str = LangType.DE) -> None:
+def mark_masculines_for_bulk(
+    results: list,
+    text: str,
+    lang: str = LangType.DE,
+    inklusivum_words: set[str] = frozenset(),
+) -> None:
     """Add generic masculines and pair formulas to the gender format switch.
 
     Every role alert offering the gender-inclusive form in the configured
@@ -243,8 +248,11 @@ def mark_masculines_for_bulk(results: list, text: str, lang: str = LangType.DE) 
     `Schüler:innen`) is marked with `bulk_alternative` pointing at it, so
     "switch the gender format" also genders what was written in the generic
     masculine. Left out: feminine forms (`Die Lehrerin`, often a particular
-    woman), a masculine that starts an unrecognised pair formula, and anything
-    overlapping an alert already in the switch.
+    woman), a masculine that starts an unrecognised pair formula, anything
+    overlapping an alert already in the switch, and Inklusivum nouns
+    (`inklusivum_words`, e.g. `den Schülernen` read as `Schülern`): switching
+    out of the Inklusivum is not supported, and converting only those would
+    leave a half-switched text.
     """
     taken = [(result.start, result.end) for result in results if result.bulk]
 
@@ -278,6 +286,8 @@ def mark_masculines_for_bulk(results: list, text: str, lang: str = LangType.DE) 
             if re.search(re.escape(result.text) + _PAIR_TAIL, text):
                 continue
         if any(start < result.end and result.start < end for start, end in taken):
+            continue
+        if inklusivum_words.intersection(result.text.split()):
             continue
 
         result.bulk = "gender_format"

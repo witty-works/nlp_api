@@ -80,7 +80,15 @@ async def apply_language_rules(
 
     list_results = apply_false_positives(list_results, configs)
     if "gender_format" in bulk_actions(language.lang, config):
-        mark_masculines_for_bulk(list_results, text, language.lang)
+        inklusivum_words = set()
+        if language.lang == LangType.DE:
+            for result in list_results:
+                if result.bulk or result.category != "gender-orientation":
+                    continue
+                for word in result.text.split():
+                    if await context.rule_check.is_inklusivum_noun(word):
+                        inklusivum_words.add(word)
+        mark_masculines_for_bulk(list_results, text, language.lang, inklusivum_words)
 
     return list_results
 
