@@ -48,11 +48,16 @@ async def add_security_headers(request, call_next):
     # everything that depends on who is asking. A route that deliberately sets
     # its own keeps it — see /v2.0/categories.
     route_cache_control = response.headers.get("Cache-Control")
+    # Likewise a route with a stricter Content-Security-Policy than the one
+    # the docs need (/textarea).
+    route_csp = response.headers.get("Content-Security-Policy")
 
     await secure_headers.set_headers_async(response)
 
     if route_cache_control is not None:
         response.headers["Cache-Control"] = route_cache_control
+    if route_csp is not None:
+        response.headers["Content-Security-Policy"] = route_csp
 
     return response
 
