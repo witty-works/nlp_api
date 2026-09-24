@@ -403,26 +403,33 @@ def test_fails(fails_case_dir, snapshot, set_redis):
     "rephrase_dir",
     get_dirs("tests/test_rephrase"),
 )
+@pytest.mark.skipif(
+    context.settings.llm_model in ("", "bedrock/test.model"),
+    reason="Skipping rephrase tests: set LLM_MODEL (and LLM_API_BASE, LLM_API_KEY)"
+    " to run them against a real LLM",
+)
 def test_rephrase(rephrase_dir, snapshot, set_redis):
-    if len(context.settings.aws_key):
-        with TestClient(app) as client:
-            # Read input files from the case directory.
-            input_json = rephrase_dir.joinpath("input.json").read_text()
-            # Call the tested endpoint.
-            response = client.post(
-                "/v1.0/rephrase",
-                json=json.loads(input_json),
-                headers={"X-TESTING-AUTH": "test@gmail.com"},
-            )
-            assert response.status_code == 200
+    """Against the LLM in LLM_MODEL, which pytest.ini otherwise sets to a
+    placeholder nothing answers. The snapshots record one model's wording, so
+    another model is expected to differ in it."""
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = rephrase_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v1.0/rephrase",
+            json=json.loads(input_json),
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+        assert response.status_code == 200
 
-            # output must be string
-            output = json.dumps(
-                response.json(), sort_keys=True, indent=4, ensure_ascii=False
-            )
-            # Snapshot the return value.
-            snapshot.snapshot_dir = rephrase_dir
-            snapshot.assert_match(output, "output.json")
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = rephrase_dir
+        snapshot.assert_match(output, "output.json")
 
 
 def test_lemmatize():
