@@ -21,7 +21,7 @@ from app.llm_alternatives import LlmAlternatives
 from app.rule_check import RuleCheck
 from app.regex_check import RegexCheck
 from app.emoji_check import EmojiCheck
-from app.config_manager import parse_term_replacements
+from app.config_manager import parse_default_config, parse_term_replacements
 
 
 @asynccontextmanager
@@ -40,6 +40,10 @@ async def lifespan(app: FastAPI, context: AppContext):
             print(f"Profiler started for {app_name}")
         except Exception:
             pass
+
+    # A DEFAULT_CONFIG that does not validate stops the start here, rather
+    # than being skipped on every request.
+    parse_default_config(context.settings.default_config or "")
 
     # Initialize HTTP client
     context.http = Http(context.settings, context.logger)

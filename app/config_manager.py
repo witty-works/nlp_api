@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+import logging
+from functools import lru_cache
 from typing import Optional
 
 from fastapi import HTTPException
@@ -125,7 +127,10 @@ def build_default_user_configs(
     if entry is not None:
         key_defaults = dict(entry.config)
         for field, value in entry.config.items():
-            config[field] = {"value": value, "status": "suggestion"}
+            # The two flags clients may not set for themselves are forced, as
+            # above; the rest a request may override.
+            field_status = status if field in CLIENT_OPTIONAL else "suggestion"
+            config[field] = {"value": value, "status": field_status}
         for field, value in entry.force.items():
             if field == "disabled_categories":
                 for category in value:
@@ -211,10 +216,72 @@ async def fetch_user_organization_configs(
     return configs
 
 
+# The two fields a request only decides itself where CLIENT_CONFIG_ENABLED is on.
+CLIENT_OPTIONAL = ("store_context", "llm_alternatives")
+
+
+def set_config_field(config: Config, field: str, value, source: str) -> bool:
+    """Assign one field as the request's own config would take it: validated
+    and normalised (`"de-CH"` becomes `["de-CH"]`, strings become enums). A
+    value that does not validate is logged and left out, so a stale stored
+    config cannot fail the request. Whether it was set."""
+    try:
+        Config.__pydantic_validator__.validate_assignment(config, field, value)
+    except ValidationError as error:
+        logging.getLogger("nlp_api").warning(
+            "%s: invalid value for %s ignored: %s",
+            source,
+            field,
+            error.errors(include_input=False, include_url=False),
+        )
+        return False
+
+    return True
+
+
+@lru_cache(maxsize=4)
+def parse_default_config(default_config: str) -> dict:
+    """DEFAULT_CONFIG as a dict of validated request config fields. Raises
+    ValueError naming what is wrong; startup calls this, so a typo stops the
+    server instead of being skipped on every request."""
+    if not default_config:
+        return {}
+    try:
+        defaults = json.loads(default_config)
+    except ValueError:
+        raise ValueError(
+            f"DEFAULT_CONFIG is not valid JSON: {default_config!r}"
+        ) from None
+    if not isinstance(defaults, dict):
+        raise ValueError("DEFAULT_CONFIG must be a JSON object")
+    unknown = sorted(set(defaults) - set(Config.model_fields))
+    if unknown:
+        raise ValueError(
+            f"DEFAULT_CONFIG has no such config option: {', '.join(unknown)}"
+        )
+    try:
+        Config(**defaults)
+    except ValidationError as error:
+        raise ValueError(
+            f"DEFAULT_CONFIG: {error.errors(include_input=False, include_url=False)}"
+        ) from None
+
+    return defaults
+
+
+def apply_defaults(config: Config, defaults: dict, settled: set, source: str) -> None:
+    """Fill in `defaults` for the fields nothing has settled yet (the request
+    did not set them, no earlier default did)."""
+    for field, value in defaults.items():
+        if field not in settled:
+            set_config_field(config, field, value, source)
+
+
 def apply_configs(
     check_request_in: CheckRequestIn,
     configs: dict,
     force_disables: bool = True,
+    settled: set | None = None,
 ):
     disabled_categories = check_request_in.config.disabled_categories
     if "force_categories" not in configs or configs["force_categories"] is None:
@@ -260,13 +327,15 @@ def apply_configs(
             # rely on it already being off. A suggestion only fills in for a
             # request that never mentioned the field — which is also why the
             # first config to suggest one wins over any later one.
-            if (
-                data["status"] == "force"
-                or config not in check_request_in.config.model_fields_set
-            ):
+            taken = (
+                check_request_in.config.model_fields_set if settled is None else settled
+            )
+            if data["status"] == "force" or config not in taken:
                 check_request_in.config.__setattr__(config, bool(data["value"]))
+                if settled is not None:
+                    settled.add(config)
         elif data["status"] == "force":
-            check_request_in.config.__setattr__(config, data["value"])
+            set_config_field(check_request_in.config, config, data["value"], "config")
 
     for category in inclusive_categories:
         if (
@@ -316,16 +385,12 @@ def llm_alternatives_allowed(settings: Settings, user_email: Optional[str]) -> b
     }
 
 
-def apply_default_config(request_in: BaseRequestIn, context: AppContext) -> None:
-    """Fill in what this deployment prefers where the request said nothing.
-
-    Only fields the request did not set itself, so a client that asks for
-    something still gets it. A synced config layered on later still wins, as
-    does a `force` rule in one.
-    """
-    if not context.settings.default_config:
-        return
-
+def apply_default_config(
+    request_in: BaseRequestIn, context: AppContext, settled: set
+) -> None:
+    """Fill in what this deployment prefers (DEFAULT_CONFIG) where nothing is
+    settled yet. A key's defaults, a synced config and a `force` rule layered
+    on later still win."""
     # Not during tests. The suite asserts on what the built-in defaults produce,
     # and this would let a value in someone's local .env change the expected
     # output of every fixture that does not name the field itself. The same
@@ -333,47 +398,44 @@ def apply_default_config(request_in: BaseRequestIn, context: AppContext) -> None
     if context.settings.testing:
         return
 
-    try:
-        defaults = json.loads(context.settings.default_config)
-    except ValueError:
-        context.logger.error(
-            "DEFAULT_CONFIG is not valid JSON, ignoring it: %r",
-            context.settings.default_config,
-        )
-        return
-
-    for key, value in defaults.items():
-        if key not in Config.model_fields:
-            context.logger.error("DEFAULT_CONFIG has no such config option: %r", key)
-            continue
-
-        if key in request_in.config.model_fields_set:
-            continue
-
-        try:
-            setattr(request_in.config, key, value)
-        except ValidationError:
-            context.logger.error("DEFAULT_CONFIG value rejected for %r: %r", key, value)
+    defaults = parse_default_config(context.settings.default_config or "")
+    apply_defaults(request_in.config, defaults, settled, "DEFAULT_CONFIG")
 
 
 async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email: Optional[str], context: AppContext
 ) -> dict:
-    # What the request set itself, before any default is filled in.
-    sent = set(request_in.config.model_fields_set)
-    apply_default_config(request_in, context)
+    """Build the request's config from its layers, each filling in or
+    overriding the one before:
 
-    request_in.config.__setattr__(
-        "alternatives_max_count", context.settings.alternatives_max_count
-    )
+    1. the built-in defaults of `Config`;
+    2. what the request sent (`store_context` and `llm_alternatives` only
+       where CLIENT_CONFIG_ENABLED is on);
+    3. DEFAULT_CONFIG, for fields the request did not send;
+    4. a synced API key's `config`, for fields the request did not send;
+    5. suggestions in a synced config, for the two flags above;
+    6. `force` rules in the user's, then the organisation's config;
+    7. LLM_ACCESS / LLM_ALLOWED_USERS, which can only turn the LLM off.
+
+    Every value is validated as it is applied. `settled` is what the request
+    or an earlier layer decided, which later defaults leave alone.
+    """
+    settled = set(request_in.config.model_fields_set)
 
     # `store_context` and `llm_alternatives` are only the client's to set where
     # the deployment says so. Where it does not, they are reset here before any
     # config is layered on; where it does, a `force` rule in a synced config
     # still overrules whatever arrived, and `llm_access` overrules everything.
     if not context.settings.client_config_enabled:
+        settled -= set(CLIENT_OPTIONAL)
         request_in.config.__setattr__("store_context", True)
         request_in.config.__setattr__("llm_alternatives", False)
+
+    apply_default_config(request_in, context, settled)
+
+    request_in.config.__setattr__(
+        "alternatives_max_count", context.settings.alternatives_max_count
+    )
 
     configs = {}
     if not user_email:
@@ -389,13 +451,15 @@ async def fetch_configs_for_request(
     if configs:
         # An API key's defaults take the place of the deployment's, and a
         # force in any config still wins over both.
-        for field, value in configs.get("key_defaults", {}).items():
-            if field not in sent:
-                setattr(request_in.config, field, value)
-        apply_configs(request_in, configs["config"])
+        apply_defaults(
+            request_in.config, configs.get("key_defaults", {}), settled, "API key"
+        )
+        apply_configs(request_in, configs["config"], settled=settled)
 
         if "organization_config" in configs:
-            apply_configs(request_in, configs["organization_config"], False)
+            apply_configs(
+                request_in, configs["organization_config"], False, settled=settled
+            )
 
             configs["term_replacements"] |= configs["organization_term_replacements"]
             configs["false_positives"] = list(
