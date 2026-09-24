@@ -75,8 +75,10 @@ dependencies = [
     "litellm>=1.60.0",
     "pluralizefr>=0.0.1",
     "python-multipart>=0.0.32",
-    # API_KEYS_FILE (app/api_keys.py).
+    # The API key file (app/api_keys.py).
     "pyyaml>=6.0",
+    # Minimum client versions (app/version_validators.py).
+    "packaging>=22.0",
 ]
 requires-python = ">3.12,<3.15"
 license = "Proprietary"
