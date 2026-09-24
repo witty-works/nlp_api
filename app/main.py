@@ -48,11 +48,12 @@ if context.settings.slack_enabled:
             context.logger.warning(f"Slack initialization skipped: {e}")
 
 
-# Main entry point for direct execution
+# Main entry point for direct execution, for local use only: deployments run
+# gunicorn (docker-entrypoint.sh) or uvicorn with their own --host.
 if __name__ == "__main__":  # pragma: no cover
     uvicorn.run(
         app,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         log_level=context.settings.logger_config_level,
         server_header=False,
