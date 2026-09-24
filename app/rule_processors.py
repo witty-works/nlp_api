@@ -4,6 +4,7 @@ Core functions for processing Witty language rules.
 """
 
 import re
+from functools import lru_cache
 from inspect import currentframe
 
 from spacy.tokens import Doc
@@ -22,12 +23,19 @@ from app.models import (
     WordType,
 )
 from app.categories import is_sub_category_enabled
-from app.helper import is_valid_text
+from app.helper import from_utf16, is_valid_text, to_utf16
 from app.gender_format import (
     COMPOUND_PATTERNS,
+    FORM_ARTICLE,
+    FORM_COMPOUND,
+    FORM_NOUN,
+    FORMATS,
+    MISMATCH_SUBCATEGORY,
     convert_french,
+    format_switch_enabled,
     french_doublet,
     gendered_form_end,
+    mark_bulk,
 )
 from app.text_utils import german_lemmatization
 
@@ -78,11 +86,8 @@ async def french_gender_endings(
     """French inclusive forms written in another `french_gender_separator`
     format: `enseignant.e.s` under `·` gets `enseignant·es`. Marked as part of
     the gender format switch, like the German mismatches."""
-    subcategory = "gendered_denominations_ending_advanced"
-    if not (
-        is_sub_category_enabled(config.disabled_categories, subcategory)
-        and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
-    ):
+    subcategory = MISMATCH_SUBCATEGORY
+    if not format_switch_enabled(config):
         return token_index
 
     token = tokens[token_index]
@@ -109,9 +114,12 @@ async def french_gender_endings(
     converted = convert_french(
         form,
         config.french_gender_separator,
-        set(french["masculine_articles"]),
-        set(french["feminine_articles"]),
-        lambda word: not tokens.vocab[word].is_oov,
+        french["masculine_article_words"],
+        french["feminine_article_words"],
+        # A word the model has a vector for; has_vector, unlike vocab[word],
+        # adds no lexeme for every stem asked about. A model without vectors
+        # converts nothing (startup warns about it).
+        tokens.vocab.has_vector,
     )
     if converted is None:
         return token_index
@@ -133,8 +141,7 @@ async def french_gender_endings(
         None,
         [Alternative(converted)],
     )
-    result.bulk = "gender_format"
-    result.bulk_alternative = 0
+    mark_bulk(result, 0)
     list_full.append(result)
 
     return last + 1
@@ -145,6 +152,12 @@ async def french_doublet_genders(
 ) -> bool | None:
     """Whether `one` is the masculine of the doublet `one`/`other`, False when
     it is the feminine, None when the two are not one role's two genders."""
+    # One of them has to be a feminine with a masculine: an in-memory set,
+    # which spares the DB queries below for almost every `X et Y`.
+    feminines = context.db.french_feminine_nouns
+    if one.lower() not in feminines and other.lower() not in feminines:
+        return None
+
     for masculine, feminine, first_is_masculine in (
         (one, other, True),
         (other, one, False),
@@ -195,7 +208,7 @@ async def french_doublets(
     found = french_doublet(
         tokens,
         token_index,
-        {conjunction.strip() for conjunction in french["noun_conjunction"].values()},
+        french["noun_conjunction_words"],
         french["articles_map"],
     )
     if found is None:
@@ -268,6 +281,7 @@ def on_gendered_form(
     form_end: int,
     text: str,
     new_token_index: int,
+    offsets: dict | bool = False,
 ) -> int:
     """What the rules found on the start of a split gendered form.
 
@@ -276,17 +290,21 @@ def on_gendered_form(
     applies, widened to the whole form so accepting `Leitungsperson` replaces
     `Chef/in` and not only `Chef`. The loop goes on at the next token either
     way, so the form's own ending is still checked.
+
+    Results carry UTF-16 offsets once the text has an emoji in it, so the
+    token's positions are compared in those.
     """
+    stem = tokens[token_index]
     end = tokens[form_end].idx + len(tokens[form_end].text)
     kept = []
     for result in list_full[found:]:
         if any(alternative.gender_role for alternative in result.alternatives or []):
             continue
-        if result.start == tokens[token_index].idx or result.end == tokens[
-            token_index
-        ].idx + len(tokens[token_index].text):
-            result.end = end
-            result.text = text[result.start : end]
+        if result.start == to_utf16(offsets, stem.idx) or result.end == to_utf16(
+            offsets, stem.idx + len(stem.text)
+        ):
+            result.text = text[from_utf16(offsets, result.start) : end]
+            result.end = to_utf16(offsets, end)
         kept.append(result)
     list_full[found:] = kept
 
@@ -307,6 +325,118 @@ def is_bullet_point(line: str) -> bool:
     return bool(re.match(r"^\d+[).:]", line))
 
 
+# The format tables are pydantic private attributes, so they are read off an
+# instance; they are the same for every config.
+_FORMAT_TABLES = Config()
+_GENDER_MARKER = re.compile("[/():_*I]")
+
+
+@lru_cache(maxsize=None)
+def _d_and_i_rules(target: GermanGenderEndingType) -> tuple[Rule, ...]:
+    """The rules for the configured format's own forms (the `d_and_i`
+    subcategory), built once per format rather than per token."""
+    tables = _FORMAT_TABLES
+    word_types = (
+        (-1, 1, target[0]) if target.startswith("/") else (None, None, target[0])
+    )
+    rules = [
+        Rule(
+            target + "",
+            LangType.DE,
+            tables._gendereddenom_ending[target],
+            None,
+            tables._gendereddenom_ending_word_type[target],
+            "d_and_i",
+        )
+    ]
+    if target in tables._gendereddenom_ending_article:
+        rules.append(
+            Rule(
+                target + " article",
+                LangType.DE,
+                tables._gendereddenom_ending_article[target],
+                None,
+                word_types,
+                "d_and_i",
+            )
+        )
+
+    return tuple(rules)
+
+
+def _with_kind(rule: Rule, kind: str) -> Rule:
+    rule.form_kind = kind
+
+    return rule
+
+
+@lru_cache(maxsize=None)
+def _mismatch_rules(target: GermanGenderEndingType) -> tuple[Rule, ...]:
+    """The rules for forms written in any other format than `target`, built
+    once per format rather than per token. regex_check writes the converted
+    form, so the rules carry no alternatives of their own."""
+    tables = _FORMAT_TABLES
+    rules = []
+    for key, regexp in tables._gendereddenom_ending.items():
+        if key == target:
+            continue
+
+        rules.append(
+            _with_kind(
+                Rule(
+                    key + "",
+                    LangType.DE,
+                    regexp,
+                    None,
+                    tables._gendereddenom_ending_word_type[key],
+                    MISMATCH_SUBCATEGORY,
+                ),
+                FORM_NOUN,
+            )
+        )
+
+        # Compounds with the marker inside: `Mitarbeiter*innengespräch`,
+        # `Lehrer*innen-Team`. Only the infix formats keep them in one token,
+        # so only they are read; every format can be written.
+        if key in COMPOUND_PATTERNS:
+            rules.append(
+                _with_kind(
+                    Rule(
+                        key + "compound",
+                        LangType.DE,
+                        COMPOUND_PATTERNS[key],
+                        None,
+                        tables._gendereddenom_ending_word_type[key],
+                        MISMATCH_SUBCATEGORY,
+                    ),
+                    FORM_COMPOUND,
+                )
+            )
+
+        # Articles and pronouns in every format, `jede/-r` and `jede(r)` too:
+        # a bulk switch has to convert them along with the nouns. Tokenised
+        # like the nouns in the same format, except that a plain slash splits
+        # a pair into three tokens (`die / der`) while `jede/-r` stays one.
+        if key in tables._gendereddenom_ending_article:
+            word_types = FORMATS[key].article_word_types
+
+            rules.append(
+                _with_kind(
+                    Rule(
+                        key + "article",
+                        LangType.DE,
+                        tables._gendereddenom_ending_article[key],
+                        None,
+                        word_types,
+                        MISMATCH_SUBCATEGORY,
+                    ),
+                    FORM_ARTICLE,
+                )
+            )
+
+    return tuple(rules)
+
+
 async def german_gender_endings(
     config: Config,
     client: Client,
@@ -318,8 +448,12 @@ async def german_gender_endings(
     list_full: list,
     context: AppContext,
 ) -> int:
-    # shallow check to see if any of the delimiters is even contained
-    if not re.search("[/):_*I]", text):
+    # A gendered form has a marker in this token or the few after it (the
+    # tokenizer splits `Lehrer ( -in )` and `die / der`); most tokens have none.
+    if not any(
+        _GENDER_MARKER.search(token.text)
+        for token in tokens[token_index : token_index + 4]
+    ):
         return token_index
 
     # The Inklusivum is a declension system rather than an infix separator, so
@@ -331,34 +465,7 @@ async def german_gender_endings(
     if not is_inklusivum and is_sub_category_enabled(
         config.disabled_categories, subcategory
     ):
-        word_types = (
-            (-1, 1, config.german_gender_ending[0])
-            if config.german_gender_ending.startswith("/")
-            else (None, None, config.german_gender_ending[0])
-        )
-
-        endings = [
-            Rule(
-                config.german_gender_ending + "",
-                LangType.DE,
-                config._gendereddenom_ending[config.german_gender_ending],
-                None,
-                config._gendereddenom_ending_word_type[config.german_gender_ending],
-                subcategory,
-            ),
-        ]
-
-        if config.german_gender_ending in config._gendereddenom_ending_article:
-            endings.append(
-                Rule(
-                    config.german_gender_ending + " article",
-                    LangType.DE,
-                    config._gendereddenom_ending_article[config.german_gender_ending],
-                    None,
-                    word_types,
-                    subcategory,
-                )
-            )
+        endings = list(_d_and_i_rules(config.german_gender_ending))
 
         new_token_index = await context.regex_check.handle(
             config,
@@ -379,67 +486,9 @@ async def german_gender_endings(
 
     # Unlike the separator rules above these also run for the Inklusivum:
     # regex_check writes the Inklusivum form rather than splicing an ending.
-    subcategory = "gendered_denominations_ending_advanced"
-    if is_sub_category_enabled(
-        config.disabled_categories, subcategory
-    ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
-        endings = []
-        for key, regexp in config._gendereddenom_ending.items():
-            if config.german_gender_ending == key:
-                continue
-
-            ending = Rule(
-                key + "",
-                LangType.DE,
-                regexp,
-                None,
-                config._gendereddenom_ending_word_type[key],
-                subcategory,
-                [Alternative(config.german_gender_ending)],
-            )
-
-            endings.append(ending)
-
-            # Compounds with the marker inside: `Mitarbeiter*innengespräch`,
-            # `Lehrer*innen-Team`. Only the infix formats keep them in one
-            # token, so only they are read; every format can be written.
-            if key in COMPOUND_PATTERNS:
-                endings.append(
-                    Rule(
-                        key + "compound",
-                        LangType.DE,
-                        COMPOUND_PATTERNS[key],
-                        None,
-                        config._gendereddenom_ending_word_type[key],
-                        subcategory,
-                    )
-                )
-
-            # Articles and pronouns in every format, `jede/-r` and `jede(r)`
-            # too: a bulk switch has to convert them along with the nouns.
-            if key in config._gendereddenom_ending_article:
-                # Tokenised like the nouns in the same format, except that a
-                # plain slash splits a pair into three tokens (`die / der`)
-                # while `jede/-r` stays one.
-                if key.startswith("("):
-                    word_types = config._gendereddenom_ending_word_type[key]
-                elif key == GermanGenderEndingType.SLASH_DASH:
-                    word_types = (None, None, "/")
-                elif key.startswith("/"):
-                    word_types = (-1, 2, "/")
-                else:
-                    word_types = (None, None, key[0])
-
-                ending = Rule(
-                    key + "article",
-                    LangType.DE,
-                    config._gendereddenom_ending_article[key],
-                    None,
-                    word_types,
-                    subcategory,
-                )
-
-                endings.append(ending)
+    subcategory = MISMATCH_SUBCATEGORY
+    if format_switch_enabled(config):
+        endings = list(_mismatch_rules(config.german_gender_ending))
 
         new_token_index = await context.regex_check.handle(
             config,
@@ -613,36 +662,11 @@ async def witty_rules(
             else None
         )
         if valid_text:
-            found = len(list_full)
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                None,
-                false_positive_matcher,
-            )
-            if form_end is not None:
-                new_token_index = on_gendered_form(
-                    list_full,
-                    found,
-                    tokens,
-                    token_index,
-                    form_end,
-                    text,
-                    new_token_index,
-                )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check", context
+            # German also gets a second pass for suffix rules (`…mann`).
+            handled = False
+            for suffix_check in (
+                (False, True) if language.lang == LangType.DE else (False,)
             ):
-                continue
-
-            if language.lang == LangType.DE:
                 found = len(list_full)
                 new_token_index = await context.rule_check.handle(
                     config,
@@ -655,7 +679,7 @@ async def witty_rules(
                     list_full,
                     None,
                     false_positive_matcher,
-                    True,
+                    suffix_check,
                 )
                 if form_end is not None:
                     new_token_index = on_gendered_form(
@@ -666,6 +690,7 @@ async def witty_rules(
                         form_end,
                         text,
                         new_token_index,
+                        offsets,
                     )
 
                 if check_continue(
@@ -676,7 +701,10 @@ async def witty_rules(
                     "rule_check",
                     context,
                 ):
-                    continue
+                    handled = True
+                    break
+            if handled:
+                continue
 
         if language.lang == LangType.DE:
             new_token_index = await german_gender_endings(

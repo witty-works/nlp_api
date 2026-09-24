@@ -537,6 +537,26 @@ class RuleIn(BaseModel):
     lemmatizations: Optional[list[LemmatizationIn]] = Field(default_factory=list)
 
 
+# What follows the separator in a gendered noun: `Lehrer*innen`, `Kolleg*in`,
+# `Angestellte*r`, `Rom*nja`. One list, so every pattern and set agrees.
+GENDER_ENDING_PARTS = ("innen", "in", "r", "nja", "ze", "iza", "eza")
+_GENDER_ENDINGS = "|".join(GENDER_ENDING_PARTS)
+
+
+def _noun_form(opening: str, closing: str = "") -> re.Pattern:
+    """A noun with a gender ending after `opening` (a separator, or an opening
+    bracket that `closing` ends): `Lehrer*innen`, `Lehrer(innen)`."""
+    return re.compile(rf"^([A-ZÄÖÜ][a-zäöü]+){opening}({_GENDER_ENDINGS}){closing}$")
+
+
+def _article_form(separator: str) -> re.Pattern:
+    """An article or pronoun pair, or a word with a short ending, around
+    `separator`: `die*der`, `jede*r`."""
+    return re.compile(
+        rf"^[A-ZÄÖÜa-zäöü][a-zäöü]{{1,6}}{separator}[A-ZÄÖÜa-zäöü][a-zäöü]{{0,6}}$"
+    )
+
+
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
@@ -567,30 +587,16 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)\*(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.UNDERSCORE: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)_(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.COLON: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+):(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.SLASH: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)/(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.SLASH_DASH: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)/-(innen|in|r|nja|ze|iza|eza)$"
-        ),
+        GermanGenderEndingType.STAR: _noun_form(r"\*"),
+        GermanGenderEndingType.UNDERSCORE: _noun_form("_"),
+        GermanGenderEndingType.COLON: _noun_form(":"),
+        GermanGenderEndingType.SLASH: _noun_form("/"),
+        GermanGenderEndingType.SLASH_DASH: _noun_form("/-"),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)?|R|Nja|Ze)$"
         ),
-        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
-        ),
-        GermanGenderEndingType.PARENTHESIS: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
-        ),
+        GermanGenderEndingType.PARENTHESIS_DASH: _noun_form(r"\(-", r"\)"),
+        GermanGenderEndingType.PARENTHESIS: _noun_form(r"\(", r"\)"),
         # The Inklusivum has no entry here on purpose: its nouns are not marked
         # by a separator but by a declension ending that is indistinguishable by
         # shape from ordinary nouns ("Liebe", "Woche"). Detecting it needs a
@@ -600,24 +606,12 @@ class Config(BaseModel):
     # opening `Ein*e`; whether one really is an article is decided against the
     # article table (app/gender_format.py), not by this shape.
     _gendereddenom_ending_article = {
-        GermanGenderEndingType.STAR: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\*[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
-        GermanGenderEndingType.UNDERSCORE: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}_[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
-        GermanGenderEndingType.COLON: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}:[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
-        GermanGenderEndingType.SLASH: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
-        GermanGenderEndingType.SLASH_DASH: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/-?[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
-        GermanGenderEndingType.CAPITAL_LETTER: re.compile(
-            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}/[A-ZÄÖÜa-zäöü][a-zäöü]{0,6}$"
-        ),
+        GermanGenderEndingType.STAR: _article_form(r"\*"),
+        GermanGenderEndingType.UNDERSCORE: _article_form("_"),
+        GermanGenderEndingType.COLON: _article_form(":"),
+        GermanGenderEndingType.SLASH: _article_form("/"),
+        GermanGenderEndingType.SLASH_DASH: _article_form("/-?"),
+        GermanGenderEndingType.CAPITAL_LETTER: _article_form("/"),
         GermanGenderEndingType.PARENTHESIS: re.compile(
             r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\([a-zäöü]{1,7}\)$"
         ),
