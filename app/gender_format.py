@@ -206,13 +206,11 @@ def is_gendered_stem(tokens, index: int) -> bool:
 def bulk_actions(lang: str, config: Config) -> list[str]:
     """The `bulk` groups a check in this language with this config can return.
 
-    Switching the gender format needs German, a separator format (not the
-    Inklusivum yet), inclusive roles, and the mismatch subcategory enabled:
+    Switching the gender format needs German (any format, the Inklusivum too)
+    or French, inclusive roles, and the mismatch subcategory enabled:
     the same conditions under which the rules produce its alerts.
     """
-    supported = (
-        lang == LangType.DE and config.german_gender_ending != Ending.INKLUSIVUM
-    ) or (lang == LangType.FR)
+    supported = lang in (LangType.DE, LangType.FR)
     if (
         supported
         and Config.gendered_roles_format_inclusive(config.gendered_roles_format)
@@ -445,3 +443,78 @@ def french_doublet(
         return None
 
     return first_article, first, second_article, second
+
+
+# --- Inklusivum -------------------------------------------------------------
+#
+# Switching into the Inklusivum (`de-e`) is not a separator swap: articles
+# come from the article table (`die*der` -> `de`), nouns from the Inklusivum
+# generator, which needs number (from the ending) and case. Only the genitive
+# singular (-s) and the dative plural (-n) are marked, so that is what the case
+# has to decide.
+
+_CONJUNCTIONS = {"und", "oder", "sowie", "bzw.", "&"}
+_MORPH_CASES = {
+    "Nom": "nominativ",
+    "Acc": "akkusativ",
+    "Dat": "dativ",
+    "Gen": "genitiv",
+}
+
+
+def inklusivum_article(form: str, articles: dict) -> tuple[str, str] | None:
+    """A separator pair in the Inklusivum, with the case the table gives it:
+    `die*der` -> (`de`, `nominativ`), `Jede/r` -> (`Jedey`, `nominativ`)."""
+    parts = split_form(form)
+    if parts is None:
+        return None
+
+    found = articles.get(tuple(sorted(part.lower() for part in parts)))
+    if found is None:
+        return None
+
+    inklusivum, case = found
+    if form[:1].isupper():
+        inklusivum = inklusivum[:1].upper() + inklusivum[1:]
+
+    return inklusivum, case
+
+
+def inklusivum_target_form(
+    tokens, stem: int, plural: bool, articles: dict
+) -> str | None:
+    """The declension column for a noun switched into the Inklusivum, from the
+    article before it or spaCy's case for it; None when neither says."""
+    case = None
+    if stem > 0:
+        before = tokens[stem - 1]
+        written = before.text
+        if stem > 2 and before.text.isalpha() and tokens[stem - 2].text == "/":
+            written = tokens[stem - 3].text + "/" + before.text
+        paired = inklusivum_article(written, articles)
+        if paired is not None:
+            case = paired[1]
+        elif before.text.lower() == "des":
+            case = "genitiv"
+        elif before.text.lower() == "den" and plural:
+            case = "dativ"
+        elif before.text.lower() in _CONJUNCTIONS and stem >= 2:
+            # `den Lehrer*innen und Kolleg*innen`: the second of two
+            # coordinated nouns takes the first one's case. The first form
+            # may be split into tokens (`Lehrer(innen)`, `Lehrer/-innen`),
+            # written without spaces: its stem is where they start.
+            first = stem - 2
+            while first > 0 and not tokens[first - 1].whitespace_:
+                first -= 1
+            return inklusivum_target_form(tokens, first, plural, articles)
+
+    if case is None:
+        morph = tokens[stem].morph.get("Case")
+        case = _MORPH_CASES.get(morph[0]) if morph else None
+    if case is None:
+        return None
+
+    if plural:
+        return "pl_dat" if case == "dativ" else "pl_nom"
+
+    return "sg_gen" if case == "genitiv" else "sg_nom"
