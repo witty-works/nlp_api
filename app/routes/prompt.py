@@ -12,9 +12,7 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
-from app.auth_service import fetch_user
 from app.context import AppContext
-from app.categories import inclusive_categories
 from app.dependencies import (
     fetch_current_username,
     fetch_management_username,
@@ -35,6 +33,11 @@ from app.config_manager import fetch_configs_for_request, debug_configs
 from app.language_processor import fetch_text, apply_language_rules
 from app.review_prompt import ReviewPrompt
 from app.prompt import llm_error
+from app.llm_access import (
+    LlmRefused,
+    llm_user,
+    with_inclusive_categories_disabled,
+)
 from app.routes.check import check
 
 router = APIRouter()
@@ -57,11 +60,7 @@ async def debug_review_prompt(
     context: AppContext = Depends(get_app_context),
     review_type: ReviewType = ReviewType.EXPLAIN_EDITS,
 ) -> Result | str:
-    for category in inclusive_categories:
-        if category in check_request_in.config.disabled_categories:
-            continue
-
-        check_request_in.config.disabled_categories.append(category)
+    with_inclusive_categories_disabled(check_request_in.config)
 
     check_result = await check(request, response, check_request_in, None, context)
     if isinstance(check_result, Result):
@@ -175,11 +174,7 @@ async def review_draft(
     (None when there was nothing to fix) and whether the text was cut to the
     check limit. None when the draft's language could not be determined.
     """
-    for category in inclusive_categories:
-        if category in check_request_in.config.disabled_categories:
-            continue
-
-        check_request_in.config.disabled_categories.append(category)
+    with_inclusive_categories_disabled(check_request_in.config)
 
     text, language, limit_reached = fetch_text(check_request_in, context.langs, context)
 
@@ -236,22 +231,13 @@ async def post_write(
         Client.parse(write_request_in.client), context.settings.minimum_versions
     )
 
-    user_email = await fetch_user(
-        request, context.settings, context.redis, context.http
-    )
-    if user_email is None:
-        response.status_code = status.HTTP_401_UNAUTHORIZED
-        return Result.factory("User not found")
-
-    configs = await fetch_configs_for_request(write_request_in, user_email, context)
-    if not configs:
-        response.status_code = status.HTTP_401_UNAUTHORIZED
-        return Result.factory("User config missing")
-
-    # `llm_access` has had its say by now, see fetch_configs_for_request.
-    if not write_request_in.config.llm_alternatives:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return Result.factory("LLM use not enabled on user")
+    try:
+        _, configs = await llm_user(
+            request, write_request_in, context, "LLM use not enabled on user"
+        )
+    except LlmRefused as refused:
+        response.status_code = refused.status_code
+        return Result.factory(refused.message)
 
     context.redis.store_metrics(request, configs, REPHRASE_API_VERSION, "write")
 

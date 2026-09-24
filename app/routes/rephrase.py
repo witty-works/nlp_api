@@ -10,6 +10,7 @@ from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
 from app.prompt import llm_error
+from app.llm_access import LlmRefused, llm_user
 from app.context import AppContext
 from app.dependencies import fetch_current_username, get_app_context
 from app.settings import get_settings
@@ -19,8 +20,7 @@ from app.version_validators import (
     rephrase_api_version,
     REPHRASE_API_VERSION,
 )
-from app.config_manager import fetch_configs_for_request, llm_available
-from app.auth_service import fetch_user
+from app.config_manager import llm_available
 
 router = APIRouter()
 
@@ -92,24 +92,16 @@ async def rephrase_sentence(
 
         rephrase_api_version(version)
 
-        user_email = await fetch_user(
-            request, context.settings, context.redis, context.http
-        )
-        if user_email is None:
-            response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("User not found")
-
-        configs = await fetch_configs_for_request(
-            rephrase_request_in, user_email, context
-        )
-
-        if not configs:
-            response.status_code = status.HTTP_401_UNAUTHORIZED
-            return Result.factory("User config missing")
-
-        if not rephrase_request_in.config.llm_alternatives:
-            response.status_code = status.HTTP_403_FORBIDDEN
-            return Result.factory("Rephrasing via LLM not enabled on user")
+        try:
+            _, configs = await llm_user(
+                request,
+                rephrase_request_in,
+                context,
+                "Rephrasing via LLM not enabled on user",
+            )
+        except LlmRefused as refused:
+            response.status_code = refused.status_code
+            return Result.factory(refused.message)
     else:
         # Debug mode. There is no user to check `users` against — the route
         # sits behind its own basic auth — but whether the deployment has an
