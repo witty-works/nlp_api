@@ -230,6 +230,17 @@ class Settings(BaseSettings):
     # Only for a provider that is not at its vendor's own address: a self-hosted
     # vLLM or Ollama, a gateway, an Azure deployment.
     llm_api_base: Optional[str] = ""
+    # What one LLM call may generate. Reasoning models spend most of it on
+    # thinking before they answer (500-1000 tokens for one rephrasing), and
+    # an answer cut off by this limit is refused rather than used.
+    llm_max_tokens: int = 2000
+    # Seconds before an LLM call is given up and answered with a 503.
+    llm_timeout: float = 60.0
+    # LLM calls one worker process runs at once; the rest wait up to
+    # llm_timeout for a slot. Providers limit concurrent requests per account
+    # (2 for the BFH inference server), so this times WORKERS should stay
+    # within that. 0 for no limit.
+    llm_max_concurrency: int = 2
 
     # Who the deployment is willing to spend LLM tokens on. `users` — the
     # default — means anyone the request resolves to a user for.

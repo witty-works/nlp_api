@@ -5,7 +5,6 @@ Handles LLM prompt processing and review functionality.
 
 import difflib
 import json
-import logging
 import re
 from typing import Union
 
@@ -35,6 +34,7 @@ from app.version_validators import REPHRASE_API_VERSION, client_version
 from app.config_manager import fetch_configs_for_request, debug_configs
 from app.language_processor import fetch_text, apply_language_rules
 from app.review_prompt import ReviewPrompt
+from app.prompt import llm_error
 from app.routes.check import check
 
 router = APIRouter()
@@ -136,12 +136,17 @@ async def prompt(
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return Result.factory("User config disallows LLM use")
 
-    check_request_in.text = await context.prompt.handle(
-        check_request_in.text, None, None, 0.4
-    )
-    check_request_in.text = context.prompt.parse_json(check_request_in.text)
+    try:
+        check_request_in.text = await context.prompt.handle(
+            check_request_in.text, None, None, 0.4
+        )
+        check_request_in.text = context.prompt.parse_json(check_request_in.text)
 
-    reviewed = await review_draft(check_request_in, configs, context)
+        reviewed = await review_draft(check_request_in, configs, context)
+    except Exception as error:
+        response.status_code, headers, message = llm_error(error, "/v1.0/prompt")
+        response.headers.update(headers)
+        return Result.factory(message)
     if reviewed is None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
@@ -162,7 +167,7 @@ async def review_draft(
     check_request_in: CheckRequestIn,
     configs: dict,
     context: AppContext,
-    max_tokens: int = 300,
+    max_tokens: int | None = None,
 ) -> tuple[list, str | None, bool] | None:
     """Check what the LLM wrote and have it apply Witty's alternatives.
 
@@ -200,8 +205,9 @@ async def review_draft(
     return check_result, reviewed_response, limit_reached
 
 
-# Room for a rewritten text of about the length WriteRequestIn accepts.
-WRITE_MAX_TOKENS = 1500
+# Room for a rewritten text of about the length WriteRequestIn accepts, on top
+# of LLM_MAX_TOKENS, which a reasoning model may spend thinking first.
+WRITE_TEXT_TOKENS = 1500
 
 
 @router.post(
@@ -267,10 +273,11 @@ async def post_write(
             f"{write_request_in.prompt}\n\nRespond with the text only.{length}"
         )
 
+    max_tokens = context.settings.llm_max_tokens + WRITE_TEXT_TOKENS
     try:
         draft = plain_response(
             await context.prompt.handle(
-                user_prompt, None, None, 0.4, max_tokens=WRITE_MAX_TOKENS
+                user_prompt, None, None, 0.4, max_tokens=max_tokens
             )
         )
         check_request_in = CheckRequestIn(
@@ -279,15 +286,13 @@ async def post_write(
             client=write_request_in.client,
             config=write_request_in.config,
         )
-        reviewed = await review_draft(
-            check_request_in, configs, context, WRITE_MAX_TOKENS
-        )
-    except Exception:
-        # The caller gets nothing specific, the operator the whole story: a
-        # wrong LLM_API_BASE or an expired provider key ends up here.
-        logging.getLogger("nlp_api").exception("/v1.0/write failed")
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Result.factory("An error occurred")
+        reviewed = await review_draft(check_request_in, configs, context, max_tokens)
+    except Exception as error:
+        # The caller gets the kind of failure, the operator the whole story: a
+        # wrong LLM_API_BASE or an expired provider key ends up here too.
+        response.status_code, headers, message = llm_error(error, "/v1.0/write")
+        response.headers.update(headers)
+        return Result.factory(message)
 
     if reviewed is None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY

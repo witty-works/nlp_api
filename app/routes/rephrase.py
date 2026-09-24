@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
+from app.prompt import llm_error
 from app.context import AppContext
 from app.dependencies import fetch_current_username, get_app_context
 from app.settings import get_settings
@@ -126,11 +127,11 @@ async def rephrase_sentence(
             rephrase_request_in.sentence,
             await context.llm_alternatives.handle(rephrase_request_in),
         )
-    except Exception as e:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        message = "An error occurred"
+    except Exception as error:
+        response.status_code, headers, message = llm_error(error, "/v1.0/rephrase")
+        response.headers.update(headers)
         if not version:
-            message = f"{message}: {e}"
+            message = f"{message}: {error}"
 
         return Result.factory(message)
 

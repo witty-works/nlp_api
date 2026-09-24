@@ -492,6 +492,9 @@ config change:
 | `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
 | `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
 | `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
+| `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
+| `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
+| `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
 
 ```bash
 # Anthropic directly

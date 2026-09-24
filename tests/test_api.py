@@ -3158,7 +3158,9 @@ def test_write(llm_access, set_redis, monkeypatch):
     class Response:
         def __init__(self, content):
             message = type("Message", (), {"content": content})
-            self.choices = [type("Choice", (), {"message": message})]
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
 
     async def acompletion(**kwargs):
         calls.append(kwargs)
@@ -3275,6 +3277,7 @@ def llm_calls(monkeypatch):
 
     class Choice:
         message = Message()
+        finish_reason = "stop"
 
     class Response:
         choices = [Choice()]
