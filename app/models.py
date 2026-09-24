@@ -27,9 +27,13 @@ from app.privacy_filter import get_privacy_filter
 class Client(BaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
+    # Whether the request named a client at all. Without one it still counts
+    # as web-ext 0.0.0 here, but no minimum version applies to it.
+    given: bool = True
 
     @classmethod
     def parse(cls, version: Optional[str]) -> "Client":
+        given = version is not None
         if version is None:
             version = "0.0.0"
 
@@ -37,7 +41,7 @@ class Client(BaseModel):
         if ":" in version:
             name, version = version.split(":", 1)
 
-        return cls(name=name, version=version)
+        return cls(name=name, version=version, given=given)
 
 
 class Language(object):

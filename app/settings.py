@@ -205,6 +205,7 @@ class Settings(BaseSettings):
     git_revision: Optional[str] = ""
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
+    minimum_version_witty_editor: Optional[str] = ""
     minimum_versions: dict[str, str] = {}
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     import_from_dump: bool = True
@@ -298,6 +299,11 @@ class Settings(BaseSettings):
         if settings.minimum_version_word_plugin:
             settings.minimum_versions["word-plugin"] = (
                 settings.minimum_version_word_plugin
+            )
+
+        if settings.minimum_version_witty_editor:
+            settings.minimum_versions["witty-editor"] = (
+                settings.minimum_version_witty_editor
             )
 
         if settings.platform_relationships:

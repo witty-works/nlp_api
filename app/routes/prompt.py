@@ -226,7 +226,9 @@ async def post_write(
     behind the management auth. The draft is checked and the LLM asked to apply
     Witty's alternatives, the same review the dashboard's Witty GPT runs.
     """
-    client_version(Client.parse(write_request_in.client))
+    client_version(
+        Client.parse(write_request_in.client), context.settings.minimum_versions
+    )
 
     user_email = await fetch_user(
         request, context.settings, context.redis, context.http
@@ -250,9 +252,7 @@ async def post_write(
     # Witty checks this much of a text at once, so a longer draft would only be
     # reviewed in part; the model is asked to stay inside it, and a draft that
     # does not is reported through `limit_reached`.
-    length = (
-        f" Keep the result under {context.settings.text_max_length} characters."
-    )
+    length = f" Keep the result under {context.settings.text_max_length} characters."
     if write_request_in.text.strip():
         user_prompt = (
             "Apply the instruction to the text below. Respond with the complete"

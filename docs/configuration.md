@@ -84,6 +84,9 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
 | MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
 | MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                                                                  |
+| MINIMUM_VERSION_WITTY_EDITOR| (empty)                                                        | If set, reject requests from the Witty editor (client `witty-editor:<version>`, e.g. the /textarea page) below this semver.                                      |
+
+The `MINIMUM_VERSION_*` settings apply to /v2.4/check, /v2.0/auth, /v1.0/rephrase and /v1.0/write. A client below its minimum gets a 400 whose `detail` names the version to upgrade to; clients show it as "this version is no longer supported". The client comes from the request's `client` field (`<name>:<version>`, a bare version counts as `web-ext`); a request without one is never rejected.
 
 ## Reducing Resource Usage
 

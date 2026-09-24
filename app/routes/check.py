@@ -54,11 +54,11 @@ async def check(
     version: str | None = None,
     context: AppContext | None = None,
 ) -> Result | ResultsOut:
+    assert context is not None, "AppContext must be provided"
     client = Client.parse(check_request_in.client)
-    client_version(client)
+    client_version(client, context.settings.minimum_versions)
 
     user_email = None
-    assert context is not None, "AppContext must be provided"
     if version is not None:
         check_api_version(version)
 
