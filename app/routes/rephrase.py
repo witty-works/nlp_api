@@ -83,7 +83,7 @@ async def rephrase_sentence(
     version: str | None = None,
 ) -> Union[RephrasesOut, Result]:
     client = Client.parse(rephrase_request_in.client)
-    client_version(client)
+    client_version(client, context.settings.minimum_versions)
 
     if version is not None:
         if rephrase_request_in.model is not None:

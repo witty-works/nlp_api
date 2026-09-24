@@ -38,14 +38,18 @@ def check_api_version(version: str) -> None:
 def client_version(
     client: Client, minimum_versions: dict[str, str] | None = None
 ) -> None:
-    if not minimum_versions:
+    """Reject a client below the minimum version set for its name.
+
+    A request without a client string is never rejected: it is parsed as
+    web-ext 0.0.0, which would fail any web-ext minimum. Clients read the 400
+    as "this version is no longer supported" and show its detail.
+    """
+    if not minimum_versions or not client.given:
         return
 
     if client.name in minimum_versions and VersionString(
         client.version or "0.0.0"
-    ) < VersionString(
-        minimum_versions[client.name]
-    ):  # pragma: no cover
+    ) < VersionString(minimum_versions[client.name]):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Client version '{client.version}' not supported, please use at least '{minimum_versions[client.name]}'.",

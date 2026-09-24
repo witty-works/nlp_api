@@ -48,7 +48,7 @@ async def post_auth_2_0(
     client = Client.parse(
         check_request_in.client if check_request_in is not None else None
     )
-    client_version(client)
+    client_version(client, context.settings.minimum_versions)
 
     user_email = await fetch_user(
         request, context.settings, context.redis, context.http
