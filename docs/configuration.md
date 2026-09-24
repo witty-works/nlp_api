@@ -264,7 +264,19 @@ REQUIRE_AUTH=false LANGUAGETOOL_COMPAT_ROOT=true \
   pdm run uvicorn app.main:app --port 8081
 ```
 
-`DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins.
+`DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins. It is checked when the API starts: an option that does not exist or a value that does not validate stops the start with a message naming it.
+
+A request's config is built in this order, each layer filling in or overriding the one before (`fetch_configs_for_request` in [config_manager.py](../app/config_manager.py)):
+
+1. the built-in defaults;
+2. what the request sent (`store_context` and `llm_alternatives` only with `CLIENT_CONFIG_ENABLED`);
+3. `DEFAULT_CONFIG`, for fields the request did not send;
+4. a synced API key's `config`, for fields the request did not send;
+5. suggestions in a synced user config, for `store_context` and `llm_alternatives`;
+6. `force` rules in the user's, then the organisation's config;
+7. `LLM_ACCESS` / `LLM_ALLOWED_USERS`, which can only turn the LLM off.
+
+Every value is validated as it is applied, the way a request's own config is; one that does not validate is logged and left out.
 
 Any field of the check config can go in it. Unknown keys and values the config rejects are logged and skipped rather than taken, so a typo does not silently change what the server checks for.
 
@@ -492,6 +504,9 @@ config change:
 | `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
 | `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
 | `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
+| `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
+| `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
+| `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
 
 ```bash
 # Anthropic directly

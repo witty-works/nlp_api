@@ -2990,7 +2990,12 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
                 "/user/configs?email=nobody@example.org", headers=login
             )
             assert response.status_code == 404
-            response = client.put("/api_keys", json={"entries": []}, headers=login)
+            response = client.put(
+                "/api_keys",
+                params={"allow_empty": True},
+                json={"entries": []},
+                headers=login,
+            )
             assert response.status_code == 200
 
             # Without it: the route's own refusal, not the key gate's.
@@ -3158,7 +3163,9 @@ def test_write(llm_access, set_redis, monkeypatch):
     class Response:
         def __init__(self, content):
             message = type("Message", (), {"content": content})
-            self.choices = [type("Choice", (), {"message": message})]
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
 
     async def acompletion(**kwargs):
         calls.append(kwargs)
@@ -3225,6 +3232,23 @@ def test_write(llm_access, set_redis, monkeypatch):
         assert calls == []
 
 
+def test_write_refuses_a_text_it_could_only_shorten(llm_access, set_redis):
+    """A prompt's result has to fit what Witty checks at once, so a longer text
+    would come back cut; it is refused instead, before any LLM call."""
+    llm_access(LlmAccessType.USERS)
+    too_long = "Die Lehrer kommen. " * (context.settings.text_max_length // 19 + 1)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Fix the typos.", "text": too_long},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert "longer than" in response.json()["detail"][0]["msg"]
+
+
 def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog):
     """A provider error is a generic 500 for the caller and a traceback for
     the operator."""
@@ -3275,6 +3299,7 @@ def llm_calls(monkeypatch):
 
     class Choice:
         message = Message()
+        finish_reason = "stop"
 
     class Response:
         choices = [Choice()]

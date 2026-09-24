@@ -5,7 +5,7 @@ Handles authentication, authorization, and API key management.
 
 from typing import Union
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Request, Response, status
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
@@ -32,7 +32,13 @@ from app.config_manager import (
     llm_alternatives_allowed,
 )
 from app.auth_service import fetch_user
-from app.api_keys import ApiKeysIn, SyncResult, sync
+from app.api_keys import (
+    ApiKeyEntry,
+    ApiKeysIn,
+    SyncResult,
+    sync,
+    validate_entries,
+)
 
 router = APIRouter()
 
@@ -201,10 +207,19 @@ async def delete_api_key(
     "/api_keys",
     response_model=SyncResult,
     responses={409: {"model": ErrorMessage}, 422: {"model": ErrorMessage}},
+    # Validated in the handler, so a 422 cannot echo a key back; the schema
+    # is still documented.
+    openapi_extra={
+        "requestBody": {
+            "content": {"application/json": {"schema": ApiKeysIn.model_json_schema()}},
+            "required": True,
+        }
+    },
 )
 async def put_api_keys(
-    api_keys_in: ApiKeysIn,
+    body: dict = Body(..., include_in_schema=False),
     dry_run: bool = False,
+    allow_empty: bool = False,
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_management_username),
 ):
@@ -212,9 +227,11 @@ async def put_api_keys(
     and bin/sync_api_keys.py): add new keys, revoke the ones this endpoint
     synced before that are no longer listed, and replace each email's config.
     Keys minted any other way are left alone. With `dry_run`, only report
-    what would change. The response names emails, never keys."""
+    what would change. An empty list is refused unless `allow_empty`, since it
+    revokes every synced key. The response names emails, never keys."""
     try:
-        result = sync(context.redis, api_keys_in.entries, dry_run)
+        entries = validate_entries(body)
+        result = sync(context.redis, entries, dry_run, allow_empty)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
@@ -227,16 +244,20 @@ async def put_api_keys(
             + ", ".join(sorted(set(result.conflicts))),
         )
 
-    result.warnings = sync_warnings(api_keys_in, context)
+    result.warnings = sync_warnings(entries, context)
 
     return result
 
 
-def sync_warnings(api_keys_in: ApiKeysIn, context: AppContext) -> list[str]:
-    """What the sync writes but the API will not act on."""
+def sync_warnings(entries: list[ApiKeyEntry], context: AppContext) -> list[str]:
+    """What the sync writes but the API will not act on, or should know."""
     warnings = []
+    if entries and not context.settings.api_key_hmac_key:
+        warnings.append(
+            "API_KEY_HMAC_KEY is not set: the keys are stored in Redis as written"
+        )
     seen = set()
-    for entry in api_keys_in.entries:
+    for entry in entries:
         if entry.email in seen:
             continue
         seen.add(entry.email)

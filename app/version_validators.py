@@ -4,7 +4,7 @@ Also exposes typed version constants.
 """
 
 from fastapi import HTTPException, status
-from cmp_version import VersionString
+from packaging.version import InvalidVersion, Version
 from typing import Final, Literal
 
 from app.models import Client
@@ -47,10 +47,20 @@ def client_version(
     if not minimum_versions or not client.given:
         return
 
-    if client.name in minimum_versions and VersionString(
-        client.version or "0.0.0"
-    ) < VersionString(minimum_versions[client.name]):
+    if client.name in minimum_versions and _below(
+        client.version or "0.0.0", minimum_versions[client.name]
+    ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Client version '{client.version}' not supported, please use at least '{minimum_versions[client.name]}'.",
         )
+
+
+def _below(version: str, minimum: str) -> bool:
+    """Semantic version order, pre-releases before their release (`2.4.0-beta`
+    is below `2.4.0`). A version that does not parse counts as below: with a
+    minimum set, "abc" is not a supported version."""
+    try:
+        return Version(version) < Version(minimum)
+    except InvalidVersion:
+        return True

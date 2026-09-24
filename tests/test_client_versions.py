@@ -29,7 +29,17 @@ def test_clients_at_or_above_their_minimum_pass(client):
 
 
 @pytest.mark.parametrize(
-    "client", ["witty-editor:2.3.9", "web-ext:1.30.0", "1.29.0", "witty-editor:"]
+    "client",
+    [
+        "witty-editor:2.3.9",
+        "web-ext:1.30.0",
+        "1.29.0",
+        "witty-editor:",
+        # A pre-release comes before its release.
+        "witty-editor:2.4.0-beta",
+        # Not a version at all.
+        "witty-editor:abc",
+    ],
 )
 def test_clients_below_their_minimum_are_rejected(client):
     with pytest.raises(HTTPException) as raised:

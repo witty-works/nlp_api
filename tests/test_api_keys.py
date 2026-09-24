@@ -67,9 +67,13 @@ def test_a_broken_file_says_what_is_wrong(text, message):
         parse(text)
 
 
-@pytest.fixture
-def client(set_redis):  # noqa: F811
+# Every sync test runs with keys stored as written and as HMAC digests.
+@pytest.fixture(params=["", "an-hmac-secret"], ids=["plain", "hmac"])
+def client(request, set_redis, monkeypatch):  # noqa: F811
     with TestClient(app) as test_client:
+        monkeypatch.setattr(
+            app.state.context.settings, "api_key_hmac_key", request.param
+        )
         db = app.state.context.redis.db
         db.delete(SYNCED_KEYS, KEY_CONFIGS)
         yield test_client
@@ -207,9 +211,100 @@ def test_the_sync_says_what_will_not_take_effect(client, monkeypatch):
     finally:
         redis.db.delete(redis.get_user_id("jane@acme.example"))
 
-    assert warnings == [
+    hmac_note = "API_KEY_HMAC_KEY is not set: the keys are stored in Redis as written"
+    assert [w for w in warnings if w != hmac_note] == [
         "jane@acme.example: config ignored, a config synced from the dashboard "
         "for this email wins",
         "tom@example.org: llm_alternatives has no effect, LLM_ACCESS "
         "(or LLM_ALLOWED_USERS) does not allow it",
     ]
+
+
+def test_an_empty_file_revokes_nothing_unless_asked(client):
+    sync(client, JANE)
+
+    refused = client.put("/api_keys", json={"entries": []})
+    assert refused.status_code == 422
+    assert "revoke every synced key" in refused.json()["detail"]
+    assert auth(client, JANE_KEY).status_code == 200
+
+    emptied = client.put(
+        "/api_keys", params={"allow_empty": True}, json={"entries": []}
+    )
+    assert emptied.json()["revoked"] == ["jane@acme.example"]
+    assert auth(client, JANE_KEY).status_code == 403
+
+
+def test_a_key_minted_elsewhere_for_the_same_email_stays_unmanaged(client):
+    """Listing a dashboard key in the file does not take it over, so deleting
+    it from the file later cannot revoke it either."""
+    redis = app.state.context.redis
+    redis.set_api_key("dashboard-key-0123456789", "tom@example.org")
+
+    first = sync(client, {**TOM, "key": "dashboard-key-0123456789"}, JANE).json()
+    assert first["unmanaged"] == ["tom@example.org"]
+    assert first["added"] == ["jane@acme.example"]
+
+    sync(client, JANE)
+    assert redis.get_api_key_email("dashboard-key-0123456789") == "tom@example.org"
+
+
+def test_a_key_moving_to_another_email_is_reported(client):
+    sync(client, JANE)
+    moved = sync(client, {**TOM, "key": JANE_KEY}).json()
+
+    assert moved["moved"] == ["jane@acme.example -> tom@example.org"]
+    assert app.state.context.redis.get_api_key_email(JANE_KEY) == "tom@example.org"
+
+
+def test_a_stored_config_that_no_longer_validates_does_not_fail_requests(client):
+    """After a deploy that renamed an option or narrowed a value, the key's
+    user keeps working; what no longer applies is left out."""
+    sync(client, JANE)
+    app.state.context.redis.db.hset(
+        KEY_CONFIGS,
+        "jane@acme.example",
+        '{"config": {"renamed_option": 1, "german_gender_ending": "bogus"},'
+        ' "force": {}}',
+    )
+
+    assert auth(client, JANE_KEY).status_code == 200
+    assert check(client, JANE_KEY, "Die Lehrer*innen kommen.").status_code == 200
+
+
+def test_errors_never_quote_a_key(client):
+    typo = {"email": "a@b", "kye": JANE_KEY}
+    response = client.put("/api_keys", json={"entries": [typo]})
+
+    assert response.status_code == 422
+    assert JANE_KEY not in response.text
+
+    with pytest.raises(ValueError) as raised:
+        parse(f"- email: a@b\n  kye: {JANE_KEY}\n")
+    assert JANE_KEY not in str(raised.value)
+
+    with pytest.raises(ValueError, match=r"not valid YAML at line \d") as raised:
+        parse(f"- email: a@b\n  key: [{JANE_KEY}\n")
+    assert JANE_KEY not in str(raised.value)
+
+
+def test_minting_writes_a_private_file_that_stays_valid(tmp_path):
+    import argparse
+    import importlib.util
+    import os
+    import stat
+
+    spec = importlib.util.spec_from_file_location("api_key_cli", "bin/api_key.py")
+    cli = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cli)
+
+    path = tmp_path / "api_keys.yaml"
+    args = argparse.Namespace(
+        file=str(path), email="[odd]@example.org", api_key=None, note="An odd one"
+    )
+    assert cli.create_in_file(args) == 0
+
+    assert stat.S_IMODE(os.stat(path).st_mode) == 0o600
+    entries = parse(path.read_text())
+    assert [entry.email for entry in entries] == ["[odd]@example.org"]
+    assert path.read_text().startswith("# An odd one\n")

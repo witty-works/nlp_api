@@ -5,7 +5,6 @@ Handles LLM prompt processing and review functionality.
 
 import difflib
 import json
-import logging
 import re
 from typing import Union
 
@@ -13,9 +12,7 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
-from app.auth_service import fetch_user
 from app.context import AppContext
-from app.categories import inclusive_categories
 from app.dependencies import (
     fetch_current_username,
     fetch_management_username,
@@ -35,6 +32,12 @@ from app.version_validators import REPHRASE_API_VERSION, client_version
 from app.config_manager import fetch_configs_for_request, debug_configs
 from app.language_processor import fetch_text, apply_language_rules
 from app.review_prompt import ReviewPrompt
+from app.prompt import llm_error
+from app.llm_access import (
+    LlmRefused,
+    llm_user,
+    with_inclusive_categories_disabled,
+)
 from app.routes.check import check
 
 router = APIRouter()
@@ -57,11 +60,7 @@ async def debug_review_prompt(
     context: AppContext = Depends(get_app_context),
     review_type: ReviewType = ReviewType.EXPLAIN_EDITS,
 ) -> Result | str:
-    for category in inclusive_categories:
-        if category in check_request_in.config.disabled_categories:
-            continue
-
-        check_request_in.config.disabled_categories.append(category)
+    with_inclusive_categories_disabled(check_request_in.config)
 
     check_result = await check(request, response, check_request_in, None, context)
     if isinstance(check_result, Result):
@@ -136,12 +135,17 @@ async def prompt(
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return Result.factory("User config disallows LLM use")
 
-    check_request_in.text = await context.prompt.handle(
-        check_request_in.text, None, None, 0.4
-    )
-    check_request_in.text = context.prompt.parse_json(check_request_in.text)
+    try:
+        check_request_in.text = await context.prompt.handle(
+            check_request_in.text, None, None, 0.4
+        )
+        check_request_in.text = context.prompt.parse_json(check_request_in.text)
 
-    reviewed = await review_draft(check_request_in, configs, context)
+        reviewed = await review_draft(check_request_in, configs, context)
+    except Exception as error:
+        response.status_code, headers, message = llm_error(error, "/v1.0/prompt")
+        response.headers.update(headers)
+        return Result.factory(message)
     if reviewed is None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
@@ -162,7 +166,7 @@ async def review_draft(
     check_request_in: CheckRequestIn,
     configs: dict,
     context: AppContext,
-    max_tokens: int = 300,
+    max_tokens: int | None = None,
 ) -> tuple[list, str | None, bool] | None:
     """Check what the LLM wrote and have it apply Witty's alternatives.
 
@@ -170,11 +174,7 @@ async def review_draft(
     (None when there was nothing to fix) and whether the text was cut to the
     check limit. None when the draft's language could not be determined.
     """
-    for category in inclusive_categories:
-        if category in check_request_in.config.disabled_categories:
-            continue
-
-        check_request_in.config.disabled_categories.append(category)
+    with_inclusive_categories_disabled(check_request_in.config)
 
     text, language, limit_reached = fetch_text(check_request_in, context.langs, context)
 
@@ -200,8 +200,9 @@ async def review_draft(
     return check_result, reviewed_response, limit_reached
 
 
-# Room for a rewritten text of about the length WriteRequestIn accepts.
-WRITE_MAX_TOKENS = 1500
+# Room for a rewritten text of about the length WriteRequestIn accepts, on top
+# of LLM_MAX_TOKENS, which a reasoning model may spend thinking first.
+WRITE_TEXT_TOKENS = 1500
 
 
 @router.post(
@@ -230,22 +231,13 @@ async def post_write(
         Client.parse(write_request_in.client), context.settings.minimum_versions
     )
 
-    user_email = await fetch_user(
-        request, context.settings, context.redis, context.http
-    )
-    if user_email is None:
-        response.status_code = status.HTTP_401_UNAUTHORIZED
-        return Result.factory("User not found")
-
-    configs = await fetch_configs_for_request(write_request_in, user_email, context)
-    if not configs:
-        response.status_code = status.HTTP_401_UNAUTHORIZED
-        return Result.factory("User config missing")
-
-    # `llm_access` has had its say by now, see fetch_configs_for_request.
-    if not write_request_in.config.llm_alternatives:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return Result.factory("LLM use not enabled on user")
+    try:
+        _, configs = await llm_user(
+            request, write_request_in, context, "LLM use not enabled on user"
+        )
+    except LlmRefused as refused:
+        response.status_code = refused.status_code
+        return Result.factory(refused.message)
 
     context.redis.store_metrics(request, configs, REPHRASE_API_VERSION, "write")
 
@@ -253,6 +245,14 @@ async def post_write(
     # reviewed in part; the model is asked to stay inside it, and a draft that
     # does not is reported through `limit_reached`.
     length = f" Keep the result under {context.settings.text_max_length} characters."
+    # A longer text could only come back shortened, which a request to fix
+    # its typos would not expect; refused instead.
+    if len(write_request_in.text) > context.settings.text_max_length:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory(
+            f"The text is longer than {context.settings.text_max_length}"
+            " characters, the most a prompt can rewrite"
+        )
     if write_request_in.text.strip():
         user_prompt = (
             "Apply the instruction to the text below. Respond with the complete"
@@ -267,10 +267,11 @@ async def post_write(
             f"{write_request_in.prompt}\n\nRespond with the text only.{length}"
         )
 
+    max_tokens = context.settings.llm_max_tokens + WRITE_TEXT_TOKENS
     try:
         draft = plain_response(
             await context.prompt.handle(
-                user_prompt, None, None, 0.4, max_tokens=WRITE_MAX_TOKENS
+                user_prompt, None, None, 0.4, max_tokens=max_tokens
             )
         )
         check_request_in = CheckRequestIn(
@@ -279,15 +280,13 @@ async def post_write(
             client=write_request_in.client,
             config=write_request_in.config,
         )
-        reviewed = await review_draft(
-            check_request_in, configs, context, WRITE_MAX_TOKENS
-        )
-    except Exception:
-        # The caller gets nothing specific, the operator the whole story: a
-        # wrong LLM_API_BASE or an expired provider key ends up here.
-        logging.getLogger("nlp_api").exception("/v1.0/write failed")
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Result.factory("An error occurred")
+        reviewed = await review_draft(check_request_in, configs, context, max_tokens)
+    except Exception as error:
+        # The caller gets the kind of failure, the operator the whole story: a
+        # wrong LLM_API_BASE or an expired provider key ends up here too.
+        response.status_code, headers, message = llm_error(error, "/v1.0/write")
+        response.headers.update(headers)
+        return Result.factory(message)
 
     if reviewed is None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
