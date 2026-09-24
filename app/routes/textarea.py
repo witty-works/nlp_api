@@ -60,6 +60,20 @@ PAGE = r"""<!doctype html>
         max-width: none;
         resize: vertical;
       }
+      /* A checkbox and its label side by side, unlike the text fields. */
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .checkbox input {
+        width: auto;
+        margin: 0;
+      }
+      .checkbox label {
+        margin: 0;
+      }
       button {
         font: inherit;
         margin-top: 0.5rem;
@@ -161,21 +175,23 @@ PAGE = r"""<!doctype html>
         and press Alt+Shift+W, to see why it was flagged and what to write
         instead.
       </p>
-      <p>
-        <input
-          id="ai-suggestions"
-          type="checkbox"
-          disabled
-          aria-describedby="ai-suggestions-help"
-        />
-        <label for="ai-suggestions">AI suggestions</label>
+      <div>
+        <span class="checkbox">
+          <input
+            id="ai-suggestions"
+            type="checkbox"
+            disabled
+            aria-describedby="ai-suggestions-help"
+          />
+          <label for="ai-suggestions">AI suggestions</label>
+        </span>
         <span id="ai-suggestions-help" class="help">
           Also offer whole sentences rewritten by a language model when you open
           a suggestion. The sentence is then sent to the language model this
           server uses.
           <span id="ai-suggestions-note">Enter an API key to use them.</span>
         </span>
-      </p>
+      </div>
       <p id="status" role="status" aria-live="polite"></p>
       <form id="write">
         <h2>Write or rewrite with a prompt</h2>
