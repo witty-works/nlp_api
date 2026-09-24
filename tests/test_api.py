@@ -2990,7 +2990,12 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
                 "/user/configs?email=nobody@example.org", headers=login
             )
             assert response.status_code == 404
-            response = client.put("/api_keys", json={"entries": []}, headers=login)
+            response = client.put(
+                "/api_keys",
+                params={"allow_empty": True},
+                json={"entries": []},
+                headers=login,
+            )
             assert response.status_code == 200
 
             # Without it: the route's own refusal, not the key gate's.
