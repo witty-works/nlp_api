@@ -150,6 +150,9 @@ class Settings(BaseSettings):
     # Where the page sends people who need a key: a mailto link under "Getting
     # an API key". Empty leaves the section out.
     textarea_contact: str = "api@witty.works"
+    # A link to the deployment's legal information (imprint, "Impressum") in
+    # the page footer. Empty leaves it out; only http(s) addresses are linked.
+    textarea_imprint_url: str = ""
 
     def open_paths(self) -> list[str]:
         """The paths the require_api_key gate lets through without a key."""

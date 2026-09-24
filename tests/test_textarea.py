@@ -204,9 +204,7 @@ def test_the_page_calls_routes_that_exist():
     assert called, "the page fetches nothing"
 
     posts = {
-        route.path
-        for route in app.routes
-        if "POST" in getattr(route, "methods", set())
+        route.path for route in app.routes if "POST" in getattr(route, "methods", set())
     }
     assert called <= posts, called - posts
 
@@ -288,7 +286,10 @@ def test_fetch_editor_prefers_the_bundled_notices(tmp_path):
     )
 
     fetch_editor.download(
-        "@witty-works/editor", "2.0.1", integrity(package), tmp_path,
+        "@witty-works/editor",
+        "2.0.1",
+        integrity(package),
+        tmp_path,
         fake_registry(package),
     )
     notices = tmp_path / "witty-editor.js.LICENSE.txt"
@@ -302,7 +303,10 @@ def test_fetch_editor_refuses_anything_but_the_pin(tmp_path):
 
     with pytest.raises(fetch_editor.FetchError, match="does not match"):
         fetch_editor.download(
-            "@witty-works/editor", "2.0.0", integrity(package), tmp_path,
+            "@witty-works/editor",
+            "2.0.0",
+            integrity(package),
+            tmp_path,
             fake_registry(tampered),
         )
     assert not any(tmp_path.iterdir())
@@ -311,7 +315,10 @@ def test_fetch_editor_refuses_anything_but_the_pin(tmp_path):
     empty = tarball({"LICENSE": b"MIT"})
     with pytest.raises(fetch_editor.FetchError, match="dist/witty-editor.js"):
         fetch_editor.download(
-            "@witty-works/editor", "2.0.0", integrity(empty), tmp_path,
+            "@witty-works/editor",
+            "2.0.0",
+            integrity(empty),
+            tmp_path,
             fake_registry(empty),
         )
     assert not any(tmp_path.iterdir())
@@ -379,7 +386,9 @@ def test_pin_accepts_only_our_publish_workflow():
 
     # A publish attestation alone, no provenance.
     only_publish = audit_result(
-        repository, workflow, "refs/tags/2.0.2",
+        repository,
+        workflow,
+        "refs/tags/2.0.2",
         predicate="https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
     )
     with pytest.raises(fetch_editor.FetchError, match="no verified provenance"):
@@ -396,11 +405,7 @@ def test_pin_rewrites_only_the_pin():
     integrity = "sha512-" + "A" * 86 + "=="
 
     rewritten = fetch_editor.rewrite_pin(source, "2.0.2", integrity)
-    lines = [
-        line
-        for line in rewritten.splitlines()
-        if line not in source.splitlines()
-    ]
+    lines = [line for line in rewritten.splitlines() if line not in source.splitlines()]
     assert lines == [
         'VERSION = "2.0.2"',
         f'    "{integrity[:47]}"',
@@ -463,3 +468,24 @@ def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     # The help text is added to the editor's own hint, not put in its place.
     assert 'describedBy: "editor-help"' in script
     assert "aria-describedby" not in script
+
+
+def test_imprint_link_is_the_deployments(textarea, monkeypatch):
+    """No imprint unless configured; a web address only."""
+    with TestClient(app) as client:
+        assert "Imprint" not in client.get("/textarea").text
+
+        monkeypatch.setattr(
+            context.settings,
+            "textarea_imprint_url",
+            "https://www.witty.works/impressum",
+        )
+        page = client.get("/textarea").text
+        assert '<a href="https://www.witty.works/impressum">Imprint</a>' in page
+
+        monkeypatch.setattr(
+            context.settings, "textarea_imprint_url", "javascript:alert(1)"
+        )
+        page = client.get("/textarea").text
+        assert "Imprint" not in page
+        assert "javascript:" not in page

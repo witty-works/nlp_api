@@ -14,7 +14,7 @@ docs/textarea.md.
 
 from html import escape
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from starlette.requests import Request
@@ -23,6 +23,7 @@ from starlette.responses import FileResponse, HTMLResponse, Response
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.models import WRITE_PROMPT_MAX_LENGTH, WRITE_TEXT_MAX_LENGTH
+from app.settings import Settings
 
 
 router = APIRouter()
@@ -206,6 +207,7 @@ PAGE = r"""<!doctype html>
         check are sent to this server; texts you rewrite with a prompt also go to
         the language model it uses.
       </p>
+      <!--imprint-->
     </footer>
     <script src="/textarea/witty-editor.js"></script>
     <script>
@@ -448,13 +450,26 @@ MISSING_BUNDLE = """<!doctype html>
 </html>"""
 
 
-def render_page(contact: str, check_max: int) -> str:
-    """The page, pointing people without a key to the deployment's contact."""
+def render_page(settings: Settings) -> str:
+    """The page, pointing people without a key to the deployment's contact,
+    and to its imprint where it has one."""
+    contact = settings.textarea_contact
     page = (
         PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH))
         .replace("__TEXT_MAX__", str(WRITE_TEXT_MAX_LENGTH))
-        .replace("__CHECK_MAX__", str(check_max))
+        .replace("__CHECK_MAX__", str(settings.text_max_length))
     )
+
+    # Only a web address becomes a link, so a mistyped setting cannot put a
+    # `javascript:` URL on the page.
+    imprint = settings.textarea_imprint_url
+    if imprint and urlparse(imprint).scheme in ("http", "https"):
+        page = page.replace(
+            "<!--imprint-->", f'<p><a href="{escape(imprint)}">Imprint</a></p>'
+        )
+    else:
+        page = page.replace("<!--imprint-->", "")
+
     if not contact:
         return page.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
 
@@ -491,11 +506,7 @@ def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
         )
 
-    return HTMLResponse(
-        content=render_page(
-            context.settings.textarea_contact, context.settings.text_max_length
-        )
-    )
+    return HTMLResponse(content=render_page(context.settings))
 
 
 @router.get(
