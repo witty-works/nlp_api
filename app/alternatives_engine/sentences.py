@@ -83,10 +83,17 @@ async def build_sentence_gendered_forms(
                     else sentence_female_tokens[token_index].text.lower()
                 )
             else:
+                # An article pair: only its first part keeps a capital at the
+                # start of a sentence (`Die/der`, not `Die/Der`).
+                male_word = sentence_male_tokens[token_index].text
+                if sentence_female_tokens[token_index].text[
+                    :1
+                ].isupper() and male_word.lower() in static_rules[lang].get(
+                    "masculine_articles", {}
+                ):
+                    male_word = male_word[:1].lower() + male_word[1:]
                 binary_form += (
-                    sentence_female_tokens[token_index].text
-                    + conjunction
-                    + sentence_male_tokens[token_index].text
+                    sentence_female_tokens[token_index].text + conjunction + male_word
                 )
         else:
             inclusive_form += sentence_male_tokens[token_index].text

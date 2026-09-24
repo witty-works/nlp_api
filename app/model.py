@@ -508,6 +508,14 @@ class Model:
             )
             model.add_pipe("german_article_agreement", last=True)
 
+        if lang == LangType.FR and not model.vocab.vectors.shape[0]:
+            # French gender format conversion confirms a word by its vector.
+            self.logger.warning(
+                "%s has no word vectors: French gender formats will not be"
+                " converted",
+                model.meta.get("name", lang),
+            )
+
         self.models[lang] = model
         self.locks[lang] = asyncio.Lock()
 
@@ -686,16 +694,19 @@ def custom_lemmatizer_factory(nlp, name):
 
 
 def is_genitive_attachment(token: Token) -> bool:
-    """Whether a German noun phrase is a genitive attribute or the object of a
-    preposition, the places where `der` opens a genitive plural: `das Buch der
-    Lehrer`, `wegen der Lehrer`. A conjunct is where the phrase it is
+    """Whether a German noun phrase is a genitive attribute, a genitive object
+    or the object of a preposition, the places where `der` opens a genitive
+    plural: `das Buch der Lehrer`, `wir gedenken der Lehrer`, `wegen der
+    Lehrer`. A conjunct is where the phrase it is
     coordinated with is: `die Meinung der Lehrer und der Schüler`."""
     while token.dep_ == "cj" and token.head is not token:
         token = token.head
         if token.dep_ == "cd" and token.head is not token:
             token = token.head
 
-    return token.dep_ == "ag" or token.head.pos_ == "ADP"
+    # A genitive attribute (`ag`), a genitive object (`og`: `wir gedenken der
+    # Lehrer`), or under a preposition.
+    return token.dep_ in ("ag", "og") or token.head.pos_ == "ADP"
 
 
 @German.component("german_article_agreement")
