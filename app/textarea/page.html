@@ -60,8 +60,9 @@
         font-size: 1.125rem;
       }
       /* Hard to miss: nothing on the page works without a key. */
-      /* <output> is inline by default; these are paragraphs. */
-      output {
+      /* <output> is inline by default; these are paragraphs. Not a hidden
+         one, which a display here would show again. */
+      output:not([hidden]) {
         display: block;
         margin: 1em 0;
       }
