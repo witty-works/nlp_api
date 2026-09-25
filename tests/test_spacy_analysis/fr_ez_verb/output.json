@@ -1,0 +1,550 @@
+[
+    {
+        "auto-detected word type": "~pron|~v|conj|~||n|adv|||n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Vous"
+            },
+            {
+                "end": 6,
+                "start": 4,
+                "text": "la marque"
+            },
+            {
+                "end": 10,
+                "start": 8,
+                "text": "notre clientèle"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "incarnez",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "vous",
+        "morph": {
+            "Number": "Plur",
+            "Person": "2"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRON",
+        "text": "Vous",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "incarnez",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "incarner",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "2",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 5,
+        "tag": "VERB",
+        "text": "incarnez",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "animez",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "et",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 14,
+        "tag": "CCONJ",
+        "text": "et",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "incarnez",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "animer",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 17,
+        "tag": "ADP",
+        "text": "animez",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "la"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "marque",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "la",
+        "morph": {
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 24,
+        "tag": "DET",
+        "text": "la",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "obj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "animez",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "marque",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 27,
+        "tag": "NOUN",
+        "text": "marque",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "advmod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "animez",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "auprès",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 34,
+        "tag": "ADV",
+        "text": "auprès",
+        "whitespace": " ",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "case",
+                "ner": "",
+                "token": "de"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "notre"
+            },
+            {
+                "dep": "obl:arg",
+                "ner": "",
+                "token": "clientèle"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "case",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "clientèle",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "de",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 41,
+        "tag": "ADP",
+        "text": "de",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "case",
+                "ner": "",
+                "token": "de"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "notre"
+            },
+            {
+                "dep": "obl:arg",
+                "ner": "",
+                "token": "clientèle"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "clientèle",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "notre",
+        "morph": {
+            "Number": "Sing",
+            "Poss": "Yes"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 44,
+        "tag": "DET",
+        "text": "notre",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "obl:arg",
+                "ner": "",
+                "token": "clientèle"
+            },
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "marque"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "auprès"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "obl:arg",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "auprès",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "clientèle",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 50,
+        "tag": "NOUN",
+        "text": "clientèle",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Vous"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "animez"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "incarnez",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 59,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

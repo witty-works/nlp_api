@@ -4,10 +4,14 @@ import sys
 from app.settings import Settings
 
 
-"""Logger setup class to simplify logging setup."""
-
-
 class Logger:
+    """Factory for the application logger.
+
+    Configures a logger to write to stdout or to a file depending on settings,
+    with a consistent format and level. No handlers are added when logging is
+    disabled.
+    """
+
     @staticmethod
     def factory(settings: Settings) -> logging.Logger:
         logger = logging.getLogger("nlp_api")

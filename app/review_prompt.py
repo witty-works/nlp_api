@@ -9,7 +9,8 @@ class ReviewPrompt:
         review_type: ReviewType,
         previous_prompt: str | None = None,
         max_prompt_length: int | None = None,
-    ):
+        min_changes: int | None = 0,
+    ) -> str | None:
         prompt = (
             'You are an expert in inclusive language. You are tasked with editing the "previous response".'
             + "\n"
@@ -20,7 +21,7 @@ class ReviewPrompt:
         else:
             prompt += (
                 'The "previous response" is the following JSON string: '
-                + json.dumps(previous_prompt)
+                + json.dumps(previous_prompt, ensure_ascii=False)
             )
 
         prompt += """For each item in the below "issues list", replace the content provided in "issue" within the "previous response" using any of the provided "alternatives".
@@ -63,7 +64,16 @@ Do not include the "issues list" in your response.
             changes.append(change)
 
         if max_prompt_length is not None:
-            while len(json.dumps(changes)) > max_prompt_length - len(prompt):
+            while len(
+                json.dumps(changes, ensure_ascii=False)
+            ) > max_prompt_length - len(prompt):
                 changes.pop()
 
-        return prompt + '\nBelow is the "issues list":\n' + json.dumps(changes)
+        if len(changes) <= min_changes:
+            return None
+
+        return (
+            prompt
+            + '\nBelow is the "issues list":\n'
+            + json.dumps(changes, ensure_ascii=False)
+        )

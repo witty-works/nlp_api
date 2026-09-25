@@ -96,8 +96,11 @@ for lang in langs:
             target = row[male_form_i] if row[male_form_i] else row[base_form_i]
             for i in range(column_count):
                 if columns[i].startswith("collective_noun"):
-                    if row[i]:
-                        lemma_plural_lookup[lang].append(row[i])
+                    # Collective nouns refer to a group but are grammatically
+                    # singular ("die Kollegschaft"); the lookup answers "is
+                    # this string a plural form?", so they do not belong in
+                    # it. Listing them forced plural agreement onto their
+                    # articles ("seinen Kollegschaft").
                     continue
                 if row[i] and row[i] != target and row[i] != row[base_form_i]:
                     lookup[lang][row[i]] = target

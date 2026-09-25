@@ -1,0 +1,640 @@
+[
+    {
+        "auto-detected word type": "~pron|~n||n|~v|||||||n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 4,
+                "start": 0,
+                "text": "Our Customer Success team"
+            },
+            {
+                "end": 8,
+                "start": 5,
+                "text": "a Ninja Developer"
+            },
+            {
+                "end": 12,
+                "start": 9,
+                "text": "the Sales department"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "Our"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Success"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "poss",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "team",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "our",
+        "morph": {
+            "Number": "Plur",
+            "Person": "1",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRP$",
+        "text": "Our",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Customer"
+            },
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "Our"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Success"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "Success",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "customer",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Customer",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "Our"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Success"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "team",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Success",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "PROPN",
+        "start": 13,
+        "tag": "NNP",
+        "text": "Success",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "hired",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "team",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 21,
+        "tag": "NN",
+        "text": "team",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "hired",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "hire",
+        "morph": {
+            "Tense": "Past",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 26,
+        "tag": "VBD",
+        "text": "hired",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "Developer",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "a",
+        "morph": {
+            "Definite": "Ind",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 32,
+        "tag": "DT",
+        "text": "a",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "Developer",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Ninja",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "PROPN",
+        "start": 34,
+        "tag": "NNP",
+        "text": "Ninja",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "dobj",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "hired",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Developer",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "PROPN",
+        "start": 40,
+        "tag": "NNP",
+        "text": "Developer",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "prep",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "Developer",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "for",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 50,
+        "tag": "IN",
+        "text": "for",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "the"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Sales"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "department"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": "department",
+        "emoji_desc": null,
+        "head": "department",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "the",
+        "morph": {
+            "Definite": "Def",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 54,
+        "tag": "DT",
+        "text": "the",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "the"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Sales"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "department"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "compound",
+        "dependent": "department",
+        "emoji_desc": null,
+        "head": "department",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Sales",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "PROPN",
+        "start": 58,
+        "tag": "NNP",
+        "text": "Sales",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "department"
+            },
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "a"
+            },
+            {
+                "dep": "compound",
+                "ner": "",
+                "token": "Ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pobj",
+        "dependent": "department",
+        "emoji_desc": null,
+        "head": "for",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "department",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 64,
+        "tag": "NN",
+        "text": "department",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "team"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "Developer"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": "Developer",
+        "emoji_desc": null,
+        "head": "hired",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 74,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

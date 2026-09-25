@@ -1,5 +1,27 @@
-from app.models import Config, Client, LangType, Rule, Alternative, ResultOut, Language
+from app.models import (
+    Config,
+    Client,
+    GermanGenderEndingType,
+    LangType,
+    Rule,
+    Alternative,
+    ResultOut,
+    Language,
+)
 from app.categories import is_sub_category_enabled
+from app.alternatives_engine import inklusivum
+from app.gender_format import (
+    FORM_ARTICLE,
+    FORM_COMPOUND,
+    convert_form,
+    form_span,
+    mark_bulk,
+    feminine_form,
+    inklusivum_pair,
+    inklusivum_target_form,
+    noun_ending,
+    render_noun_ending,
+)
 from app.helper import upperfirst
 from app.nouns import Nouns
 from app.settings import Settings
@@ -22,6 +44,54 @@ class RegexCheck:
         self.logger = logger
         self.static_rules = static_rules
         self.nouns = nouns
+
+    async def inklusivum_form(
+        self,
+        rule: Rule,
+        tokens: Doc,
+        token_index: int,
+        check_text: str,
+        text: str,
+        start: int,
+    ) -> tuple[str, str, int] | None:
+        """A separator form written in the Inklusivum: (form, span, start).
+
+        Articles and pronouns from the article table (`die*der` -> `de`),
+        nouns from the Inklusivum generator (`Lehrer*innen` -> `Lehrerne`),
+        covering the whole word. None where that cannot be done reliably: a
+        compound, a noun whose masculine is unknown, an unclear case.
+        """
+        articles = self.static_rules[LangType.DE]["inklusivum_article_pairs"]
+        written, span_start, first = form_span(
+            rule, tokens, token_index, check_text, text, start, whole_word=True
+        )
+
+        if getattr(rule, "form_kind", None) == FORM_ARTICLE:
+            found = inklusivum_pair(written, articles)
+            return None if found is None else (found[0], written, span_start)
+
+        if getattr(rule, "form_kind", None) == FORM_COMPOUND:
+            return None
+
+        match = re.match(r"^(innen|in)$", noun_ending(text))
+        feminine = feminine_form(written)
+        if match is None or feminine is None:
+            return None
+
+        forms = await self.nouns.german_noun_lookup(feminine)
+        masculine = forms.get("male_form") if forms else None
+        if not masculine:
+            return None
+
+        plural = match.group(1) == "innen"
+        target_form = inklusivum_target_form(tokens, first, plural, articles)
+        if target_form is None:
+            return None
+
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+        form = inklusivum.noun(masculine, feminine, target_form, "", lexicon, True)
+
+        return None if not form else (form, written, span_start)
 
     async def handle(
         self,
@@ -149,32 +219,53 @@ class RegexCheck:
                         continue
 
             elif subcategory == "gendered_denominations_ending_advanced":
-                if check_text.islower():
-                    if (
-                        connector_string == "/"
-                        and tokens[token_index - 1].text.islower()
-                    ):
-                        text = tokens[token_index - 1].text + text
+                # The same form in the configured format, written by
+                # app/gender_format.py so every mismatch has exactly one
+                # alternative and accepting them all is a format switch.
+                target = config.german_gender_ending
+                if target == GermanGenderEndingType.INKLUSIVUM:
+                    written = await self.inklusivum_form(
+                        rule, tokens, token_index, check_text, text, start
+                    )
+                    if written is None:
+                        continue
 
-                    text_split = text.split(connector_string)
+                    converted, text, start = written
+                elif getattr(rule, "form_kind", None) == FORM_ARTICLE:
+                    # An article or pronoun: `die*der`, `Der/die`, `jede*r`;
+                    # the article table decides, so `Klasse/n` is left alone.
+                    # A split form (`die / der`) is covered whole, not "/der".
+                    form, form_start, _ = form_span(
+                        rule, tokens, token_index, check_text, text, start, False
+                    )
+
+                    converted = convert_form(
+                        form,
+                        target,
+                        self.static_rules[LangType.DE]["inclusive_article_forms"],
+                        self.static_rules[LangType.DE]["articles"],
+                    )
+                    # Unknown, or already written the configured way.
+                    if converted is None or converted == form:
+                        continue
+
+                    text, start = form, form_start
+                else:
+                    # A noun ending: `*innen`, `/in`, `Innen`, `(innen)`, `*r`,
+                    # on a word that is a person noun (Lehrerin, Angestellter),
+                    # so a switch leaves `Podcasts/in` alone.
+                    feminine = feminine_form(check_text)
                     if (
-                        text_split[0]
-                        not in self.static_rules[LangType.DE]["feminine_articles"]
-                        or text_split[1]
-                        not in self.static_rules[LangType.DE]["masculine_articles"]
+                        feminine is not None
+                        and await self.nouns.german_noun_lookup(feminine) is None
                     ):
                         continue
 
-                    alternatives = [
-                        Alternative(
-                            text.replace(
-                                connector_string, config.german_gender_ending[0]
-                            )
-                        )
-                    ]
-                # Kundinnen -> Kund*innen
-                elif text.lower().endswith("innen") or text.lower().endswith("innen)"):
-                    alternatives = [Alternative(alternatives[0].lemma + "nen")]
+                    converted = render_noun_ending(noun_ending(text), target)
+                    if converted is None or converted == text:
+                        continue
+
+                alternatives = [Alternative(converted)]
             elif subcategory.startswith("gender_specific_abbreviation"):
                 has_advanced = is_sub_category_enabled(
                     config.disabled_categories, "gender_specific_abbreviation_advanced"
@@ -318,25 +409,26 @@ class RegexCheck:
 
             skip_token = start_token + 1
 
-            list_full.append(
-                ResultOut.factory(
-                    config,
-                    client,
-                    language,
-                    text,
-                    rule.text_id,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            result = ResultOut.factory(
+                config,
+                client,
+                language,
+                text,
+                rule.text_id,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
+            if subcategory == "gendered_denominations_ending_advanced":
+                mark_bulk(result, 0)
+            list_full.append(result)
 
             return skip_token
 

@@ -1,0 +1,383 @@
+[
+    {
+        "auto-detected word type": "~|n|~pron|~n|~|~pron|a|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 2,
+                "start": 0,
+                "text": "Die Zufriedenheit"
+            },
+            {
+                "end": 4,
+                "start": 2,
+                "text": "unserer Kunden"
+            },
+            {
+                "end": 6,
+                "start": 5,
+                "text": "uns"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "ag",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Zufriedenheit",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Nom",
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "ART",
+        "text": "Die",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "ist",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Zufriedenheit",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 4,
+        "tag": "NN",
+        "text": "Zufriedenheit",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unserer"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "ag",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kunden",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "mein",
+        "morph": {
+            "Case": "Gen",
+            "Gender": "Masc",
+            "Number": "Plur",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 18,
+        "tag": "PPOSAT",
+        "text": "unserer",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Die"
+            },
+            {
+                "dep": "ag",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "ag",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Zufriedenheit",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "Kunde",
+        "morph": {
+            "Case": "Gen",
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 26,
+        "tag": "NN",
+        "text": "Kunden",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "ist",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "sein",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 33,
+        "tag": "VAFIN",
+        "text": "ist",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "da",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "ist",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "sich",
+        "morph": {
+            "Case": "Dat",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 37,
+        "tag": "PPER",
+        "text": "uns",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pd",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "ist",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "wichtig",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADV",
+        "start": 41,
+        "tag": "ADJD",
+        "text": "wichtig",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Zufriedenheit"
+            },
+            {
+                "dep": "da",
+                "ner": "",
+                "token": "uns"
+            },
+            {
+                "dep": "pd",
+                "ner": "",
+                "token": "wichtig"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "ist",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 48,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

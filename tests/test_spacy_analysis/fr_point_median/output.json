@@ -1,0 +1,408 @@
+[
+    {
+        "auto-detected word type": "~pron|~v|~a|adv|pron||~|~n|~n|~v|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Nous"
+            },
+            {
+                "end": 5,
+                "start": 4,
+                "text": "expérimenté·e"
+            },
+            {
+                "end": 8,
+                "start": 6,
+                "text": "Les étudiant·e·s"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "xcomp",
+                "ner": "",
+                "token": "un·e"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "nous",
+        "morph": {
+            "Number": "Plur",
+            "Person": "1"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRON",
+        "text": "Nous",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "chercher",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "1",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 5,
+        "tag": "VERB",
+        "text": "cherchons",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "xcomp",
+                "ner": "",
+                "token": "un·e"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "xcomp",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "un·",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 15,
+        "tag": "ADJ",
+        "text": "un·e",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "développeur·se"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "expérimenté·e"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "xcomp",
+                "ner": "",
+                "token": "un·e"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "obj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "un·e",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "développeur·se",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 20,
+        "tag": "ADV",
+        "text": "développeur·se",
+        "whitespace": " ",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "développeur·se"
+            },
+            {
+                "dep": "obj",
+                "ner": "",
+                "token": "expérimenté·e"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "xcomp",
+                "ner": "",
+                "token": "un·e"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "obj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "un·e",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "expérimenté·e",
+        "morph": {},
+        "ner": "",
+        "pos": "PRON",
+        "start": 35,
+        "tag": "PRON",
+        "text": "expérimenté·e",
+        "whitespace": "",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Nous"
+            },
+            {
+                "dep": "xcomp",
+                "ner": "",
+                "token": "un·e"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "cherchons",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 48,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "Les"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "étudiant·e·s"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "curieux·ses"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "étudiant·e·s",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "le",
+        "morph": {
+            "Definite": "Def",
+            "Number": "Plur",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 50,
+        "tag": "DET",
+        "text": "Les",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "étudiant·e·s"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "curieux·ses"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "curieux·ses",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "étudiant·e·",
+        "morph": {
+            "Gender": "Masc",
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 54,
+        "tag": "NOUN",
+        "text": "étudiant·e·s",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "curieux·ses"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrivent",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "curieux·se",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 67,
+        "tag": "NOUN",
+        "text": "curieux·ses",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrivent",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "arriver",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 79,
+        "tag": "VERB",
+        "text": "arrivent",
+        "whitespace": "",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "curieux·ses"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "arrivent",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 87,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

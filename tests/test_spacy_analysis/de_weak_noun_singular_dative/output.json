@@ -1,0 +1,415 @@
+[
+    {
+        "auto-detected word type": "~pron|v||~pron|~n||~|n|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "Wir"
+            },
+            {
+                "end": 5,
+                "start": 3,
+                "text": "unserem Kunden"
+            },
+            {
+                "end": 8,
+                "start": 6,
+                "text": "das Projekt"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "sb",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sprechen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "ich",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PPER",
+        "text": "Wir",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sprechen",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "sprechen",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Plur",
+            "Person": "1",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 4,
+        "tag": "VVFIN",
+        "text": "sprechen",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "mo",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sprechen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "mit",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 13,
+        "tag": "APPR",
+        "text": "mit",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "unserem"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Kunden",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "mein",
+        "morph": {
+            "Case": "Dat",
+            "Gender": "Masc",
+            "Number": "Sing",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 17,
+        "tag": "PPOSAT",
+        "text": "unserem",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Kunden"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "mit",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Kunde",
+        "morph": {
+            "Case": "Dat",
+            "Gender": "Masc",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 25,
+        "tag": "NN",
+        "text": "Kunden",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "op",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sprechen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "über",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 32,
+        "tag": "APPR",
+        "text": "über",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "das"
+            },
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Projekt"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "Projekt",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "der",
+        "morph": {
+            "Case": "Acc",
+            "Definite": "Def",
+            "Gender": "Neut",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 37,
+        "tag": "ART",
+        "text": "das",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nk",
+                "ner": "",
+                "token": "Projekt"
+            },
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nk",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "über",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "Projekt",
+        "morph": {
+            "Case": "Acc",
+            "Gender": "Neut",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 41,
+        "tag": "NN",
+        "text": "Projekt",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "sb",
+                "ner": "",
+                "token": "Wir"
+            },
+            {
+                "dep": "mo",
+                "ner": "",
+                "token": "mit"
+            },
+            {
+                "dep": "op",
+                "ner": "",
+                "token": "über"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "sprechen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 48,
+        "tag": "$.",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

@@ -1,5 +1,5 @@
-from pydantic import field_validator, BaseModel
-from typing import Union, Optional, Annotated, Any
+from pydantic import field_validator, BaseModel, Field
+from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
@@ -17,6 +17,7 @@ from app.categories import (
     get_proficiency_level,
     get_category,
     get_category_name,
+    get_config_option_labels,
     map_gravity,
 )
 
@@ -26,6 +27,21 @@ from app.privacy_filter import get_privacy_filter
 class Client(BaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
+    # Whether the request named a client at all. Without one it still counts
+    # as web-ext 0.0.0 here, but no minimum version applies to it.
+    given: bool = True
+
+    @classmethod
+    def parse(cls, version: Optional[str]) -> "Client":
+        given = version is not None
+        if version is None:
+            version = "0.0.0"
+
+        name = "web-ext"
+        if ":" in version:
+            name, version = version.split(":", 1)
+
+        return cls(name=name, version=version, given=given)
 
 
 class Language(object):
@@ -89,17 +105,27 @@ class Language(object):
 class MetricsType(str, Enum):
     ALL = "all"
     AUTH_COUNTS = "auth_counts"
-    AUTH_PLANS = "auth_plans"
     AUTH_HOST = "auth_host"
     CHECK_COUNTS = "check_counts"
-    CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
-    REPHRASE_PLANS = "rephrase_plans"
     REPHRASE_HOST = "rephrase_host"
     PROMPT_COUNTS = "prompt_counts"
-    PROMPT_PLANS = "prompt_plans"
     PROMPT_HOST = "prompt_host"
+    WRITE_COUNTS = "write_counts"
+    WRITE_HOST = "write_host"
+
+
+class LlmAccessType(str, Enum):
+    """Who a deployment is willing to spend LLM tokens on."""
+
+    # No LLM calls at all, whatever any config asks for.
+    DISABLED = "disabled"
+    # Anyone the request resolves to a user for, optionally narrowed to the
+    # emails in `llm_allowed_users`.
+    USERS = "users"
+    # Anyone who can reach the API, resolved user or not.
+    EVERYONE = "everyone"
 
 
 class ContentType(str, Enum):
@@ -208,6 +234,12 @@ class LangVariantType(str, Enum):
     frFR = "fr-FR"
 
 
+# Stands in for a separator where the pipeline expects one, for the Inklusivum,
+# which does not have any. It must never reach a rendered suggestion; anything
+# splicing a separator into a word has to go through utils.splice_separator.
+INKLUSIVUM_SEPARATOR = "DEE"
+
+
 class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
@@ -217,6 +249,7 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
+    INKLUSIVUM = "de-e"
 
 
 class FrenchGenderSeparatorType(str, Enum):
@@ -326,6 +359,7 @@ class Article(BaseModel):
     neuter: Optional[str] = None
     plural: Optional[str] = None
     inclusive: Optional[str] = None
+    inklusivum: Optional[str] = None
     fallback: Optional[str] = None
 
     def get_article(self, gender: str, lemma: str) -> str | None:
@@ -344,9 +378,10 @@ class Article(BaseModel):
 
         return None
 
+
 class RuleDynamic(BaseModel):
     alternatives: Optional[list] = None
-    false_positives: Optional[list[str]] = []
+    false_positives: Optional[list[str]] = Field(default_factory=list)
     subcategory: Optional[str] = None
     article: Optional[Article] = None
 
@@ -357,9 +392,9 @@ class Rule(Lemma):
     parent_id: Optional[int]
     lang: str
     actual_word_types: Optional[str] = None
-    subcategories: Optional[list[str]] = []
+    subcategories: Optional[list[str]] = None
     is_advanced: bool = False
-    alternatives: Optional[list[Alternative]] = []
+    alternatives: Optional[list[Alternative]] = None
     false_positives: Optional[list[str]] = None
     case_sensitive_false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
@@ -375,7 +410,9 @@ class Rule(Lemma):
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     source: Optional[ResultSource] = None
     adapt_alternatives: bool = False
-    dynamic: RuleDynamic = RuleDynamic()
+    # Per-request scratch space; must be per-instance, a class-level default
+    # would be shared by every rule in the process.
+    dynamic: RuleDynamic
 
     def __init__(
         self,
@@ -391,6 +428,7 @@ class Rule(Lemma):
         self.id = id
         self.text_id = id
         self.lang = lang
+        self.dynamic = RuleDynamic()
 
         super().__init__(lemma, words, word_types)
 
@@ -488,21 +526,40 @@ class RuleIn(BaseModel):
     word_types: list | dict
     actual_word_types: Optional[str] = None
     subcategories: list[str]
-    alternatives: Optional[list[AlternativeIn]] = []
-    false_positives: Optional[list[str]] = []
+    alternatives: Optional[list[AlternativeIn]] = Field(default_factory=list)
+    false_positives: Optional[list[str]] = Field(default_factory=list)
     label: Optional[str] = None
     pattern: Optional[str] = None
     is_pattern_match: Optional[bool] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
-    lemmatizations: Optional[list[LemmatizationIn]] = []
+    lemmatizations: Optional[list[LemmatizationIn]] = Field(default_factory=list)
+
+
+# What follows the separator in a gendered noun: `Lehrer*innen`, `Kolleg*in`,
+# `Angestellte*r`, `Rom*nja`. One list, so every pattern and set agrees.
+GENDER_ENDING_PARTS = ("innen", "in", "r", "nja", "ze", "iza", "eza")
+_GENDER_ENDINGS = "|".join(GENDER_ENDING_PARTS)
+
+
+def _noun_form(opening: str, closing: str = "") -> re.Pattern:
+    """A noun with a gender ending after `opening` (a separator, or an opening
+    bracket that `closing` ends): `Lehrer*innen`, `Lehrer(innen)`."""
+    return re.compile(rf"^([A-ZÄÖÜ][a-zäöü]+){opening}({_GENDER_ENDINGS}){closing}$")
+
+
+def _article_form(separator: str) -> re.Pattern:
+    """An article or pronoun pair, or a word with a short ending, around
+    `separator`: `die*der`, `jede*r`."""
+    return re.compile(
+        rf"^[A-ZÄÖÜa-zäöü][a-zäöü]{{1,6}}{separator}[A-ZÄÖÜa-zäöü][a-zäöü]{{0,6}}$"
+    )
 
 
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
-    plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
@@ -530,39 +587,36 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)\*(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.UNDERSCORE: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)_(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.COLON: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+):(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.SLASH: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)/(innen|in|r|nja|ze|iza|eza)$"
-        ),
-        GermanGenderEndingType.SLASH_DASH: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)/-(innen|in|r|nja|ze|iza|eza)$"
-        ),
+        GermanGenderEndingType.STAR: _noun_form(r"\*"),
+        GermanGenderEndingType.UNDERSCORE: _noun_form("_"),
+        GermanGenderEndingType.COLON: _noun_form(":"),
+        GermanGenderEndingType.SLASH: _noun_form("/"),
+        GermanGenderEndingType.SLASH_DASH: _noun_form("/-"),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
             r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)?|R|Nja|Ze)$"
         ),
-        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
-            r"^^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
-        ),
-        GermanGenderEndingType.PARENTHESIS: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
-        ),
+        GermanGenderEndingType.PARENTHESIS_DASH: _noun_form(r"\(-", r"\)"),
+        GermanGenderEndingType.PARENTHESIS: _noun_form(r"\(", r"\)"),
+        # The Inklusivum has no entry here on purpose: its nouns are not marked
+        # by a separator but by a declension ending that is indistinguishable by
+        # shape from ordinary nouns ("Liebe", "Woche"). Detecting it needs a
+        # lexicon lookup against known gendered pairs, not a suffix pattern.
     }
+    # Article and pronoun forms, `die*der` as well as `jede*r` or a sentence
+    # opening `Ein*e`; whether one really is an article is decided against the
+    # article table (app/gender_format.py), not by this shape.
     _gendereddenom_ending_article = {
-        GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[a-zäöü]{3,7}_[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.CAPITAL_LETTER: re.compile(
-            r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"
+        GermanGenderEndingType.STAR: _article_form(r"\*"),
+        GermanGenderEndingType.UNDERSCORE: _article_form("_"),
+        GermanGenderEndingType.COLON: _article_form(":"),
+        GermanGenderEndingType.SLASH: _article_form("/"),
+        GermanGenderEndingType.SLASH_DASH: _article_form("/-?"),
+        GermanGenderEndingType.CAPITAL_LETTER: _article_form("/"),
+        GermanGenderEndingType.PARENTHESIS: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\([a-zäöü]{1,7}\)$"
+        ),
+        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
+            r"^[A-ZÄÖÜa-zäöü][a-zäöü]{1,6}\(-[a-zäöü]{1,7}\)$"
         ),
     }
     _gendereddenom_ending_word_type = {
@@ -579,7 +633,7 @@ class Config(BaseModel):
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
 
-    disabled_categories: list = []
+    disabled_categories: list = Field(default_factory=list)
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
@@ -596,6 +650,25 @@ class Config(BaseModel):
             if lang == LangType.DE
             else self.french_gender_separator
         )
+
+    @staticmethod
+    def field_options(*names: str) -> dict:
+        """The accepted values and the default, for enum-typed config fields.
+
+        Read off the model rather than listed out, so a new member of one of
+        those enums cannot be forgotten here.
+        """
+        options = {}
+        for name in names:
+            field = Config.model_fields[name]
+            default = field.default
+
+            options[name] = {
+                "values": [member.value for member in field.annotation],
+                "default": default.value if isinstance(default, Enum) else default,
+            }
+
+        return options
 
     @staticmethod
     def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
@@ -621,6 +694,12 @@ class Config(BaseModel):
         if gender_separator is None:
             return "", "", False
 
+        if gender_separator == GermanGenderEndingType.INKLUSIVUM:
+            # The Inklusivum is a declension system, not a separator, so this
+            # stands in for one. Nothing may splice it into a word: see
+            # utils.splice_separator.
+            return INKLUSIVUM_SEPARATOR, INKLUSIVUM_SEPARATOR, False
+
         if gender_separator in GermanGenderEndingType._member_map_.values():
             if gender_separator == GermanGenderEndingType.CAPITAL_LETTER:
                 separator = "/"
@@ -633,14 +712,6 @@ class Config(BaseModel):
             separate_gender_plural = gender_separator.endswith("s")
 
         return separator, noun_separator, separate_gender_plural
-
-    @staticmethod
-    def get_french_noun_separator(french_gender_separator: FrenchGenderSeparatorType):
-        return (
-            french_gender_separator[0],
-            french_gender_separator[0],
-            french_gender_separator.endswith("s"),
-        )
 
     @field_validator("preferred_languages", mode="before")
     @classmethod
@@ -721,8 +792,8 @@ class RuleConfig(BaseModel):
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
-    categories: Optional[dict[str, BooleanConfigType]] = {}
-    force_categories: Optional[list[str]] = []
+    categories: Optional[dict[str, BooleanConfigType]] = Field(default_factory=dict)
+    force_categories: Optional[list[str]] = Field(default_factory=list)
     addons: Optional[list[str]] = None
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
@@ -782,10 +853,9 @@ class DomainConfig(BaseModel):
 class ConfRequest(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
-    false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement | dict] = {}
+    false_positives: list[str] = Field(default_factory=list)
+    term_replacements: dict[str, TermReplacement | dict] = Field(default_factory=dict)
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     sync_date: Optional[str] = None
@@ -800,16 +870,17 @@ class UserConfRequest(ConfRequest):
 
 
 class OrganizationConfRequest(ConfRequest):
-    trial_ends_at: Optional[str] = None
+    # No fields of its own; kept as a distinct type so the organisation and
+    # user config endpoints stay separately typed.
+    pass
 
 
 class ConfResponse(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: RuleConfig
-    false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement] = {}
+    false_positives: list[str] = Field(default_factory=list)
+    term_replacements: dict[str, TermReplacement] = Field(default_factory=dict)
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
 
@@ -819,11 +890,12 @@ class UserConfResponse(ConfRequest):
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
-    organization_false_positives: Optional[list[str]] = []
-    organization_term_replacements: Optional[dict[str, TermReplacement]] = {}
+    organization_false_positives: Optional[list[str]] = Field(default_factory=list)
+    organization_term_replacements: Optional[dict[str, TermReplacement]] = Field(
+        default_factory=dict
+    )
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
-    organization_trial_ends_at: Optional[str] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
@@ -831,7 +903,7 @@ class UserConfResponse(ConfRequest):
 
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
-    config: Optional[Config] = Config()
+    config: Optional[Config] = Field(default_factory=Config)
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 
@@ -855,6 +927,19 @@ class RephraseRequestIn(BaseRequestIn):
         GermanGenderEndingType | FrenchGenderSeparatorType | None
     ] = None
     lang: LangType
+
+
+WRITE_PROMPT_MAX_LENGTH = 1000
+WRITE_TEXT_MAX_LENGTH = 4000
+
+
+class WriteRequestIn(BaseRequestIn):
+    type: str = "write"
+    # What to do: "make it shorter", "write a job ad for a nurse", ...
+    prompt: Annotated[str, Len(min_length=1, max_length=WRITE_PROMPT_MAX_LENGTH)]
+    # The text to change. Empty means write a new one from the prompt alone.
+    text: Annotated[str, Len(max_length=WRITE_TEXT_MAX_LENGTH)] = ""
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
 
 
 class CheckRequestIn(BaseRequestIn):
@@ -896,6 +981,12 @@ class ResultOut(BaseModel):
     gravity: Optional[float] = None
     proficiency_level: Optional[str] = None
     source: Optional[ResultSource] = None
+    # Set on alerts safe to accept all at once: accepting
+    # `alternatives[bulk_alternative]` of every one, in any order, gives the
+    # same text, and they never overlap. "gender_format" marks the switch to
+    # the configured gender format, generic masculines included.
+    bulk: Optional[str] = None
+    bulk_alternative: Optional[int] = None
 
     @staticmethod
     def factory(
@@ -975,6 +1066,25 @@ class ResultOut(BaseModel):
                     content = ContentType("video")
                 elif language._(subcategory_key, "hard_facts"):
                     content = ContentType("advanced")
+
+        if (
+            icon_image is None
+            and category == "gender-orientation"
+            and language.lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        ):
+            # The ending's own logo replaces the emoji on every gendered
+            # finding once the Inklusivum is the configured ending: the
+            # suggestions are in the user's chosen system, whichever rule
+            # produced them. Data comes from the dashboard via
+            # config_options.json; clients without icon_image support keep
+            # the emoji icon.
+            icon_image = (
+                get_config_option_labels()
+                .get("german_gender_ending", {})
+                .get("icon_image", {})
+                .get(config.german_gender_ending)
+            )
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = language._(subcategory, "canonical_url")
@@ -1080,7 +1190,7 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
-    def uppper_first(text):
+    def upper_first(text):
         if not text:
             return text
 
@@ -1115,11 +1225,11 @@ class ResultOut(BaseModel):
 
                 if category != "orthography":
                     if is_upper:
-                        alternative.lemma = ResultOut.uppper_first(alternative.lemma)
-                        alternative.male_form = ResultOut.uppper_first(
+                        alternative.lemma = ResultOut.upper_first(alternative.lemma)
+                        alternative.male_form = ResultOut.upper_first(
                             alternative.male_form
                         )
-                        alternative.female_form = ResultOut.uppper_first(
+                        alternative.female_form = ResultOut.upper_first(
                             alternative.female_form
                         )
                 elif alternative.lemma is not None:
@@ -1184,11 +1294,11 @@ class ResultOut(BaseModel):
 
             punctuation = "[.!?:]" if lang == LangType.DE else "[.!?]"
 
-            preceeding_text = full_text[max(0, start - 5) : start]
+            preceding_text = full_text[max(0, start - 5) : start]
             if (
-                re.search(r"^ *$", preceeding_text) is not None
-                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) is not None
-                or re.search(punctuation + r"\s*$", preceeding_text, re.MULTILINE)
+                re.search(r"^ {0,5}$", preceding_text) is not None
+                or re.search(r"\s{3,5}$", preceding_text, re.MULTILINE) is not None
+                or re.search(punctuation + r"\s{0,5}$", preceding_text, re.MULTILINE)
                 is not None
             ):
                 return True
@@ -1225,16 +1335,44 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     id: str
     name: str
-    plan: Optional[str] = None
     config: Optional[RuleConfig] = None
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
     domains: Optional[DomainConfig] = None
     organization_domains: Optional[DomainConfig] = None
-    organization_trial_ends_at: Optional[str] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
+
+
+class CategoryGroupOut(BaseModel):
+    key: str
+    label: Optional[str] = None
+
+
+class CategoryOut(CategoryGroupOut):
+    parent: str
+    # The key of the stricter variant, where there is one. Independent of
+    # `key`: switching the category off entirely means disabling both.
+    advanced_key: Optional[str] = None
+    proficiency_level: Optional[str] = None
+
+
+class CategoriesOut(BaseModel):
+    categories: list[CategoryOut]
+    groups: list[CategoryGroupOut]
+
+
+class ConfigOptionOut(BaseModel):
+    values: list[str]
+    default: Optional[str] = None
+    # Value -> display label. Absent for values the dashboard has no wording
+    # for; clients fall back to showing the value itself.
+    labels: dict[str, str] = {}
+
+
+class ConfigOptionsOut(BaseModel):
+    options: dict[str, ConfigOptionOut]
 
 
 class RephrasesOut(BaseModel):
@@ -1246,11 +1384,18 @@ class RephrasesOut(BaseModel):
         return RephrasesOut(sentence=sentence, results=results)
 
 
+class EditOut(BaseModel):
+    op: Literal["equal", "insert", "delete"]
+    text: str
+
+
 class PromptOut(BaseModel):
     check_results: list[ResultOut]
-    inititial_response: str
+    initial_response: Optional[str] = None
     limit_reached: bool
     reviewed_response: Optional[str] = None
+    # Word diff from initial_response to reviewed_response; /v1.0/write only.
+    edits: Optional[list[EditOut]] = None
 
 
 class ResultsOut(BaseModel):
@@ -1263,6 +1408,11 @@ class ResultsOut(BaseModel):
     gender_separator: Union[
         GermanGenderEndingType | FrenchGenderSeparatorType | None
     ] = None
+    # The `bulk` groups results of this request can carry, whether or not any
+    # does: ["gender_format"] where switching the gender format is supported
+    # for this language and config. Always sent, unlike an absent `bulk`, so a
+    # client can tell an API without bulk actions from a text without any.
+    bulk_actions: list[str] = Field(default_factory=list)
 
 
 class PrettyJSONResponse(Response):

@@ -9,6 +9,10 @@ training_data/en-GB
 
 analyze_rules/*
 
+# Benchmark corpora, fetched rather than vendored: the geschicktgendern subset
+# of diversifix is CC BY-NC-SA and must not enter the repository.
+.cache/
+
 __pycache__/
 *.py[cod]
 *$py.class
@@ -17,6 +21,9 @@ __pycache__/
 .pdm.toml
 
 database/db.sqlite3
+
+# API keys handed out by hand (bin/sync_api_keys.py): the keys themselves.
+api_keys.yaml
 
 # Unit test / coverage reports
 .coverage
@@ -32,3 +39,9 @@ subcategories.csv
 .python-version
 .blackfire.ini
 .pdm-python
+
+models/context_aware_model/
+
+# The editor script for /textarea, installed by bin/fetch_editor.py
+/app/static/witty-editor.js
+/app/static/witty-editor.js.LICENSE.txt

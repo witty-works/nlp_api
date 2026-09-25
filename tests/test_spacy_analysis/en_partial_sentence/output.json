@@ -1,0 +1,235 @@
+[
+    {
+        "auto-detected word type": "~pron|~|~v|||a"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "We"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "looking",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "we",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRP",
+        "text": "We",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            }
+        ],
+        "dep": "aux",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "looking",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "be",
+        "morph": {
+            "Mood": "Ind",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 3,
+        "tag": "VBP",
+        "text": "are",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "looking",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "look",
+        "morph": {
+            "Aspect": "Prog",
+            "Tense": "Pres",
+            "VerbForm": "Part"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 7,
+        "tag": "VBG",
+        "text": "looking",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            }
+        ],
+        "dep": "prep",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "looking",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "for",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 15,
+        "tag": "IN",
+        "text": "for",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "an"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "experienced"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            }
+        ],
+        "dep": "det",
+        "dependent": "experienced",
+        "emoji_desc": null,
+        "head": "experienced",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "an",
+        "morph": {
+            "Definite": "Ind",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 19,
+        "tag": "DT",
+        "text": "an",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "experienced"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            }
+        ],
+        "dep": "pobj",
+        "dependent": "experienced",
+        "emoji_desc": null,
+        "head": "for",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "experienced",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 22,
+        "tag": "JJ",
+        "text": "experienced",
+        "whitespace": "",
+        "word_type": "a"
+    }
+]

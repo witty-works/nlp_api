@@ -21,6 +21,7 @@ from app.query_definitions import (
 )
 from app.settings import Settings
 import aiosqlite
+import aiofiles
 import json
 from spacy.tokens import Token
 from copy import deepcopy
@@ -59,7 +60,9 @@ class Db:
 
         if len(tables_exist) == 0:
             if settings.import_from_dump:
-                await sqlite_db.executescript(open("./database/dump.sql", "r").read())
+                async with aiofiles.open("./database/dump.sql", "r") as f:
+                    sql_script = await f.read()
+                await sqlite_db.executescript(sql_script)
             else:
                 source = await aiosqlite.connect("./database/db.sqlite3")
                 await source.backup(sqlite_db)
@@ -158,6 +161,72 @@ class Db:
         await cursor.close()
 
         return rows
+
+    async def fetch_surface_forms(
+        self, lang: LangType, word_type: BasicWordType
+    ) -> frozenset:
+        """Every surface form in a declension table, lowercased.
+
+        Built at startup for membership tests on the request path, so those
+        need neither a query per token nor the token._.forms cache - that
+        cache must only ever hold forms of the type the token ended up as.
+        """
+        config = declensions_config[lang][word_type]
+        rows = await self.fetch_rows(
+            f"SELECT {', '.join(config['columns'])} FROM {config['name']}"  # nosec: names are static
+        )
+
+        return frozenset(
+            value.lower() for row in rows for value in row if value
+        )
+
+    async def fetch_ambiguous_number_forms(self) -> dict:
+        """Noun forms that are both a singular and a plural of the same lemma.
+
+        The plural word list answers "is this string a plural form?", but it is
+        used to answer "is this token plural here?". For German weak nouns those
+        differ: "Kollegen" is the accusative singular as well as the plural, and
+        the list can only ever say plural. Collecting the overlap lets the
+        number decision fall to the context for those, while the unambiguous
+        majority still comes straight from the list.
+
+        Derived at startup rather than shipped as a file because the noun tables
+        survive into the distributed database, so this can never drift from it.
+        """
+        ambiguous = {}
+
+        for lang in [LangType.DE, LangType.FR]:
+            columns = declensions_config[lang][BasicWordType.NOUN]["columns"]
+            singular = [
+                column
+                for column in columns
+                if column.startswith("sg_") or column == "base_form"
+            ]
+            plural = [
+                column
+                for column in columns
+                if column.startswith("pl_") or column == "plural"
+            ]
+
+            ambiguous[lang] = set()
+            if not singular or not plural:
+                continue
+
+            selected = singular + plural
+            table = declensions_config[lang][BasicWordType.NOUN]["name"]
+            rows = await self.fetch_rows(
+                f"SELECT {', '.join(selected)} FROM {table}"  # nosec: names are static
+            )
+
+            for row in rows:
+                values = dict(zip(selected, row))
+                singular_forms = {
+                    values[column] for column in singular if values[column]
+                }
+                plural_forms = {values[column] for column in plural if values[column]}
+                ambiguous[lang] |= singular_forms & plural_forms
+
+        return ambiguous
 
     async def fetch_false_positives(
         self, rule: Rule, rewrite_to: str | None = None

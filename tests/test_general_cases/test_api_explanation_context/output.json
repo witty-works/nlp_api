@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -25,7 +28,6 @@
                 "content": "advanced",
                 "context": "Nicht auf Menschen beziehen",
                 "icon": "🙄",
-                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png",
                 "long_text": "Setze auf konkete Aussagen und Beispiele. Worthülsen und Phrasen schwächen deine Aussage oder lenken von ihr ab. ",
                 "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"

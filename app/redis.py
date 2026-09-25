@@ -7,12 +7,17 @@ import datetime
 
 from app.settings import Settings
 from app.models import MetricsType, CheckRequestIn
-
-
-"""Class to handle Redis setup and provide Redis connection."""
+import hmac
+import hashlib
 
 
 class Redis:
+    """Redis helper that manages connections, metrics, and request logs.
+
+    Provides a thin wrapper around a Redis client with helpers for
+    fetching/storing configs, metrics, and per-user request/response logs.
+    """
+
     settings: Settings
     db: RedisCache
 
@@ -22,7 +27,11 @@ class Redis:
 
     @staticmethod
     def factory(settings: Settings):
-        """Set up and return a Redis connection."""
+        """Create and return a Redis client based on settings.
+
+        Uses a real Redis connection when redis_host is configured; otherwise
+        falls back to an in-memory FakeStrictRedis.
+        """
         if settings.redis_host:
             redis_db = RedisCache(
                 host=settings.redis_host,
@@ -31,19 +40,32 @@ class Redis:
                 password=settings.redis_password,
                 ssl=settings.redis_verify_ssl,
                 ssl_cert_reqs="none",
+                decode_responses=True,
             )
         else:
-            redis_db = FakeStrictRedis()
+            redis_db = FakeStrictRedis(decode_responses=True)
 
-        return Redis(settings, redis_db)
+        redis = Redis(settings, redis_db)
 
-    def get_user_id(self, email: str):
+        # A deployment that runs for one person has no dashboard to mint a key
+        # and, without a Redis, nothing that would keep one. Writing it on every
+        # start covers both, and is what makes the personal setup work without
+        # borrowing the testing variables.
+        if settings.default_api_key and settings.default_user_email:
+            redis.set_api_key(settings.default_api_key, settings.default_user_email)
+
+        return redis
+
+    def get_user_id(self, email: str) -> str:
+        """Generate a Redis key for a user by email."""
         return "dashboard-user-email:" + email.lower()
 
-    def get_log_id(self, user_email: str | None):
+    def get_log_id(self, user_email: str | None) -> str:
+        """Generate a Redis key for user logs."""
         return "log-" + self.get_user_id(user_email if user_email else "none")
 
-    def get_log_key(self, user_email: str | None):
+    def get_log_key(self, user_email: str | None) -> str | None:
+        """Get the log key for a user if they are in the debug list."""
         key = self.get_log_id(user_email)
         if user_email is None:
             user_email = "none"
@@ -55,6 +77,7 @@ class Redis:
         self,
         organization_id: str,
     ) -> dict:
+        """Fetch organization configurations from Redis by organization ID."""
         configs = self.db.get(organization_id)
         if not configs:
             raise HTTPException(
@@ -67,6 +90,7 @@ class Redis:
         self,
         email: str,
     ) -> dict:
+        """Fetch user configurations from Redis by email."""
         configs = self.db.get(self.get_user_id(email))
         if not configs:
             raise HTTPException(status_code=404, detail="User configs not found")
@@ -75,53 +99,45 @@ class Redis:
 
     def store_metrics(
         self, request: Request, configs: dict, version: str | None, endpoint: str
-    ):
+    ) -> None:
+        """Store API usage metrics in Redis by user and host."""
         if not self.settings.log_metrics:
             return
 
         version = version + " - " if version is not None else "none - "
 
-        if "id" in configs:
-            user_id = configs["id"]
-            plan = None if "plan" not in configs else configs["plan"]
-            if (
-                "organization_config" in configs
-                and "trial_ends_at" in configs["organization_config"]
-                and configs["organization_config"]["trial_ends_at"] is not None
-            ):
-                plan = "witty_trial"
-        else:
-            user_id = "none"
-            plan = "none"
-
+        user_id = configs["id"] if "id" in configs else "none"
         host = request.headers.get("origin", "none")
 
         if endpoint == "auth":
             self.db.hincrby(MetricsType.AUTH_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.AUTH_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.AUTH_HOST, version + host, 1)
         elif endpoint == "check":
             self.db.hincrby(MetricsType.CHECK_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.CHECK_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.CHECK_HOST, version + host, 1)
         elif endpoint == "rephrase":
             self.db.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.REPHRASE_PLANS, version + plan, 1)
             self.db.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
+        elif endpoint == "prompt":
+            self.db.hincrby(MetricsType.PROMPT_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.PROMPT_HOST, version + host, 1)
+        elif endpoint == "write":
+            self.db.hincrby(MetricsType.WRITE_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.WRITE_HOST, version + host, 1)
 
     def get_user_logs(
         self,
         user_email: str | None,
-    ):
-        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
-        if data is None:
-            return data
-
-        data.reverse()
+    ) -> list:
+        """Retrieve all logged requests/responses for a user."""
         results = []
-        for result in data:
-            result = json.loads(result)
-            results.append(result)
+
+        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
+        if data is not None:
+            data.reverse()
+            for result in data:
+                result = json.loads(result)
+                results.append(result)
 
         return results
 
@@ -133,7 +149,8 @@ class Redis:
         configs: dict,
         version: str | None,
         endpoint: str,
-    ):
+    ) -> None:
+        """Log a request to Redis for debugging purposes."""
         key = self.get_log_key(user_email)
         if key is None:
             return
@@ -141,7 +158,6 @@ class Redis:
         data = {
             "type": "request",
             "date": datetime.datetime.now().isoformat(),
-            "plan": check_request_in.config.plan,
             "text": check_request_in.text,
             "auth_token": request.headers.get("Authorization", None),
             "configs": configs,
@@ -155,7 +171,8 @@ class Redis:
         self,
         user_email: str | None,
         results: BaseModel,
-    ):
+    ) -> None:
+        """Log a response to Redis for debugging purposes."""
         key = self.get_log_key(user_email)
         if key is None:
             return
@@ -166,3 +183,65 @@ class Redis:
         }
 
         self.db.lpush(key, json.dumps(data))
+
+    def _hash_api_key(self, api_key: str) -> str:
+        """HMAC-SHA256 hash an API key using the configured secret.
+
+        Returns an empty string when no secret is configured, which the callers
+        read as "store and look keys up verbatim".
+        """
+        if not self.settings.api_key_hmac_key:
+            return ""
+
+        return hmac.new(
+            self.settings.api_key_hmac_key.encode("utf-8"),
+            api_key.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+
+    def get_api_key_email(self, api_key: str) -> str | None:
+        """Retrieve the email associated with an API key.
+
+        If HMAC secret is configured, the API key is HMACed before lookup.
+        Falls back to plaintext lookup if no secret configured.
+        """
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            val = self.db.get("api_key:" + hashed)
+            if val:
+                return val
+
+        # Fallback to plaintext lookup for backward compatibility
+        return self.db.get("api_key:" + api_key)
+
+    def api_key_name(self, api_key: str) -> str:
+        """The Redis entry a key is stored under by set_api_key."""
+        return "api_key:" + (self._hash_api_key(api_key) or api_key)
+
+    def set_api_key(
+        self, api_key: str, email: str, remove_plaintext: bool = False, db=None
+    ) -> None:
+        """Store an API key mapping. If HMAC secret exists, store under hashed key.
+
+        If `remove_plaintext` is True, also remove the plaintext key. `db` is a
+        pipeline to write through instead of the connection.
+        """
+        db = self.db if db is None else db
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            db.set("api_key:" + hashed, email)
+            if remove_plaintext:
+                db.delete("api_key:" + api_key)
+            return
+
+        # No secret configured: store plaintext
+        db.set("api_key:" + api_key, email)
+
+    def delete_api_key(self, api_key: str) -> None:
+        """Delete an API key mapping. Attempts both hashed and plaintext keys."""
+        hashed = self._hash_api_key(api_key)
+        if hashed:
+            self.db.delete("api_key:" + hashed)
+
+        # Always attempt to delete plaintext key as well
+        self.db.delete("api_key:" + api_key)

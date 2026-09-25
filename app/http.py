@@ -18,36 +18,48 @@ class Http:
             connector=aiohttp.TCPConnector(ssl=True)
         )
 
-    async def close(self):
+    async def close(self) -> None:
+        """Close all HTTP client sessions."""
         await self.session.close()
         await self.ssl_session.close()
 
     async def handle_response(
         self, r: aiohttp.ClientResponse, name: str, json: bool = True
-    ) -> any:
+    ):
+        """Handle HTTP response with error logging.
+
+        Args:
+            r: aiohttp response object
+            name: Service name for error messages
+            json: If True, parse as JSON; otherwise return text
+
+        Returns:
+            Parsed JSON dict or text string
+
+        Raises:
+            Exception: If response status is not 200 or client error occurs
+        """
         try:
             if r.status != 200:  # pragma: no cover
                 result = await r.text()
-
                 self.logger.error(result)
-
                 raise Exception(result)
 
-            if json:
-                return await r.json()
+            return await r.json() if json else await r.text()
 
-            return await r.text()
         except aiohttp.ClientError as err:  # pragma: no cover
-            result = "Problem communicating with " + name
+            error_parts = [f"Problem communicating with {name}"]
+
             if r.status >= 500:
                 try:
                     response = await r.text()
-                    result += ": " + response
+                    error_parts.append(response)
                 except aiohttp.ClientError as err:
-                    result += ": " + str(err)
+                    error_parts.append(str(err))
             else:
-                result += ": " + str(err)
+                error_parts.append(str(err))
 
+            result = ": ".join(error_parts)
             self.logger.error(result)
 
         return result

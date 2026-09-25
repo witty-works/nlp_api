@@ -1,43 +1,44 @@
 import os
 import json
-import fasttext
 import logging
+
+import fasttext
+
+from app.adjectives import Adjectives
+from app.alternatives import Alternatives
+from app.categories import get_categories
+from app.context_checker import ContextChecker
+from app.db import Db
+from app.emoji_check import EmojiCheck
+from app.http import Http
+from app.lang_detection import LangDetection
+from app.languagetool import LanguageTool
+from app.llm_alternatives import LlmAlternatives
+from app.logger import Logger
+from app.model import Model
 from app.models import (
     LangWithAutoType,
     Language,
     WordType,
 )
-from app.db import Db
-from app.emoji_check import EmojiCheck
-from app.rule_check import RuleCheck
-from app.regex_check import RegexCheck
 from app.nouns import Nouns
-from app.verbs import Verbs
-from app.adjectives import Adjectives
-from app.model import Model
-from app.translations import translations
-from app.llm_alternatives import LlmAlternatives
-from app.lang_detection import LangDetection
-from app.categories import get_categories
-from app.alternatives import Alternatives
-from app.llm_alternatives import LlmAlternatives
 from app.prompt import Prompt
-from app.languagetool import LanguageTool
-from app.db import Db
-from app.settings import Settings
-from app.logger import Logger
-from app.redis import Redis
-from app.rules import fetch_static_rules
-from app.sentry import set_up_sentry_sdk
 from app.query_definitions import (
     declensions_config,
     verb_form_map,
 )
-from app.http import Http
+from app.redis import Redis
+from app.regex_check import RegexCheck
+from app.rules import fetch_static_rules
+from app.rule_check import RuleCheck
+from app.sentry import set_up_sentry_sdk
+from app.settings import Settings, get_settings
+from app.translations import translations
+from app.verbs import Verbs
 
 
 class AppContext:
-    version = "2.4.8"
+    version = "3.0.0"
     translations: dict[str, dict[str, str]]
     declensions_config: dict
     verb_form_map: dict
@@ -57,6 +58,7 @@ class AppContext:
     rule_check: RuleCheck
     regex_check: RegexCheck
     emoji_check: EmojiCheck
+    context_checker: ContextChecker
     prompt: Prompt
     langs: list = []
 
@@ -65,7 +67,7 @@ class AppContext:
         self.declensions_config = declensions_config
         self.verb_form_map = verb_form_map
         self.categories = get_categories()
-        self.settings = Settings.factory()
+        self.settings = get_settings()
         self.logger = Logger.factory(self.settings)
         self.logger.debug("app started with settings: %s", self.settings)
 
@@ -103,3 +105,6 @@ class AppContext:
 
         self.lang_detection = LangDetection(fasttext_model)
         self.redis = Redis.factory(self.settings)
+
+        # Initialize context checker with SetFit models if enabled
+        self.context_checker = ContextChecker(self.settings, self.logger)

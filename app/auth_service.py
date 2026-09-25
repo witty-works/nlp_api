@@ -1,5 +1,5 @@
 # https://github.com/425show/fastapi_microsoft_identity/blob/e98f1ff4a86e436b2d6d874738ff655fe1a63e54/LICENSE
-""" The MIT License (MIT)
+"""The MIT License (MIT)
 
 Copyright (c) 2021 Christos Matskas
 
@@ -20,15 +20,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- """
+"""
 
 from fastapi import Request
 import jwt
-import rsa as pyrsa
-import rsa.pem as pyrsa_pem
 import base64
-import struct
+import logging
 import uuid
+import re
+import asyncio
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi import (
     Request,
     HTTPException,
@@ -64,9 +66,17 @@ async def get_rsa_key(redis: Redis, session, token, url):
     if rsa_key:
         return rsa_key
 
-    rsa_key = await get_rsa_key_(session, unverified_header["kid"], url)
+    rsa_key, ttl = await get_rsa_key_(session, unverified_header["kid"], url)
 
-    redis.db.set(key, rsa_key)
+    # Set cached RSA PEM with TTL to handle JWKS rotation. Default to 1 hour.
+    try:
+        if ttl and isinstance(ttl, int) and ttl > 0:
+            redis.db.set(key, rsa_key, ex=ttl)
+        else:
+            redis.db.set(key, rsa_key, ex=3600)
+    except Exception:
+        # If Redis set fails, return the key without caching (don't expose internal errors here).
+        pass
 
     return rsa_key
 
@@ -113,17 +123,45 @@ async def decode_jwt(
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
+async def decode_jwks_jwt(
+    redis: Redis,
+    session,
+    request: Request,
+    jwks_url: str,
+    client_id: str,
+    issuer: str | None = None,
+    scope: str | None = None,
+):
+    """Verify a token against a plain JWKS document, looked up by `kid`.
+
+    Used for the tokens the dashboard issues via Laravel Passport, which carry
+    neither the tenant id of an Entra token nor a B2C policy — only a `kid` in
+    the header pointing at the issuer's JWKS. The key is fetched and cached by
+    the same path as the Microsoft ones, so a key rotation needs no redeploy.
+    """
+    token = get_token_auth_header(request)
+    rsa_key = await get_rsa_key(redis, session, token, jwks_url)
+
+    return decode_jwt_(token, rsa_key, issuer, client_id, scope)
+
+
 def decode_jwt_(
     token: str,
     rsa_key: dict,
-    issuer: str,
+    issuer: str | None,
     audience: str,
-    scope: str,
+    scope: str | None,
 ):
     try:
+        # `exp` and `nbf` are verified by PyJWT itself. `issuer=None` skips the
+        # issuer check, which is what a Passport token needs — it has no `iss`.
         claims = jwt.decode(
             token, rsa_key, algorithms=["RS256"], audience=audience, issuer=issuer
         )
+    except jwt.MissingRequiredClaimError as error:
+        # Raised when the token omits a claim we asked to be verified, e.g. an
+        # `iss` for an issuer that was configured to emit one.
+        raise AuthError(f"Token error: The {error.claim} claim is missing", 401)
     except jwt.ExpiredSignatureError:
         raise AuthError("Token error: The token has expired", 401)
     except jwt.InvalidIssuerError:
@@ -135,7 +173,12 @@ def decode_jwt_(
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
-    validate_scope_(scope, claims)
+    # An explicit None means the issuer defines no scopes to check against —
+    # Passport's `scopes` claim is a JSON array and empty for our client. An
+    # empty string still fails validation, so a misconfigured Microsoft issuer
+    # keeps being rejected rather than silently accepting every scope.
+    if scope is not None:
+        validate_scope_(scope, claims)
 
     return claims
 
@@ -188,40 +231,88 @@ def get_unverified_token_claims_(token: str):
     return jwt.decode(token, options={"verify_signature": False})
 
 
-# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
-def int_arr_to_long(arr):
-    return int("".join(["%02x" % byte for byte in arr]), 16)
-
-
-# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
 def base64_to_long(data):
     if isinstance(data, str):
         data = data.encode("ascii")
 
-    # urlsafe_b64decode will happily convert b64encoded data
-    _d = base64.urlsafe_b64decode(bytes(data) + b"==")
-    return int_arr_to_long(struct.unpack("%sB" % len(_d), _d))
+    # urlsafe_b64decode will happily convert b64encoded data. JWKS values carry
+    # no padding, and the extra "==" is ignored when none is needed.
+    return int.from_bytes(base64.urlsafe_b64decode(bytes(data) + b"=="), "big")
 
 
-# Inspired by https://github.com/mpdavis/python-jose/blob/master/jose/backends/rsa_backend.py - MIT License
 def convert_to_pem(n, e):
-    rsa_key = pyrsa.PublicKey(e=base64_to_long(e), n=base64_to_long(n))
-    der = rsa_key.save_pkcs1(format="DER")
-    return pyrsa_pem.save_pem(der, pem_marker="RSA PUBLIC KEY")
+    """Turn a JWKS RSA entry into a PEM that PyJWT and Redis can both hold."""
+    public_key = rsa.RSAPublicNumbers(
+        e=base64_to_long(e), n=base64_to_long(n)
+    ).public_key()
+
+    return public_key.public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo,
+    )
 
 
 async def get_rsa_key_(session, kid, url):
-    async with session.get(url) as r:
-        if r.status != 200:  # pragma: no cover
-            error = await r.text()
-            raise AuthError("Fetching RSA key resulted: " + error, 400)
+    # Robust fetching with retries, timeouts and exponential backoff.
+    retries = 3
+    timeout_secs = 5
+    backoff_base = 0.5
 
-        jwks = await r.json()
-        for key in jwks["keys"]:
-            if key["kid"] == kid:
-                return convert_to_pem(key["n"], key["e"])
+    for attempt in range(retries):
+        try:
+            resp = await asyncio.wait_for(session.get(url), timeout=timeout_secs)
+            async with resp as r:
+                if r.status != 200:  # pragma: no cover
+                    # Don't reflect remote response body to clients; return a sanitized error.
+                    raise AuthError(
+                        f"Fetching RSA key resulted in HTTP status {r.status}", 400
+                    )
 
-    raise AuthError("Unable to fetch RSA key", 400)
+                jwks = await r.json()
+                for key in jwks.get("keys", []):
+                    if key.get("kid") == kid:
+                        pem = convert_to_pem(key["n"], key["e"])
+
+                        # Try to parse Cache-Control header for max-age to set TTL on cached key
+                        cache_control = r.headers.get("Cache-Control", "") or ""
+                        ttl = None
+                        m = re.search(r"max-age=(\d+)", cache_control)
+                        if m:
+                            try:
+                                ttl = int(m.group(1))
+                            except Exception:
+                                ttl = None
+
+                        return pem, ttl
+
+                # If we reached here, no matching kid was found in the JWKS
+                raise AuthError("Unable to fetch RSA key", 400)
+
+        except AuthError:
+            # Don't retry on deterministic auth errors (4xx), re-raise immediately.
+            raise
+        except asyncio.TimeoutError:
+            if attempt < retries - 1:
+                await asyncio.sleep(backoff_base * (2**attempt))
+                continue
+            raise AuthError("Timeout while fetching RSA keys from issuer", 400)
+        except Exception as error:
+            # For transient network errors, retry a few times.
+            if attempt < retries - 1:
+                await asyncio.sleep(backoff_base * (2**attempt))
+                continue
+
+            # The client only ever sees the sanitized message, which makes a
+            # misconfiguration hard to place — a self-signed issuer certificate
+            # reads exactly like the issuer being down. Log the real cause.
+            logging.getLogger("nlp_api").error(
+                "Fetching RSA keys from %s failed: %s: %s",
+                url,
+                type(error).__name__,
+                error,
+            )
+
+            raise AuthError("Failed to fetch RSA keys from issuer", 400)
 
 
 def fetch_email_from_claims(claims: dict) -> str:
@@ -250,6 +341,11 @@ def fetch_email_from_claims(claims: dict) -> str:
 async def fetch_user(
     request: Request, settings: Settings, redis: Redis, http: Http
 ) -> str | None:
+    # Already resolved for this request by the key gate (require_api_key).
+    resolved = getattr(request.state, "resolved_user", None)
+    if resolved is not None:
+        return resolved
+
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
@@ -257,6 +353,11 @@ async def fetch_user(
             unverified_claims = get_unverified_token_claims(request)
             for key in settings.sso_configs:
                 config = settings.sso_configs[key]
+                # An unconfigured issuer has an empty client_id, which would
+                # otherwise match any token whose `aud` is missing or empty.
+                if not config.get("client_id"):
+                    continue
+
                 if (
                     "aud" not in unverified_claims
                     or unverified_claims["aud"] != config["client_id"]
@@ -274,6 +375,16 @@ async def fetch_user(
                         config["domain"],
                         config["policy"],
                     )
+                elif "jwks_url" in config:
+                    claims = await decode_jwks_jwt(
+                        redis,
+                        http.ssl_session,
+                        request,
+                        config["jwks_url"],
+                        config["client_id"],
+                        config["issuer"],
+                        config["expected_scope"],
+                    )
                 elif "tid" in unverified_claims:
                     claims = await decode_jwt(
                         redis,
@@ -283,22 +394,35 @@ async def fetch_user(
                         config["client_id"],
                         config["expected_scope"],
                     )
+                else:
+                    # The client id matched but the token carries nothing this
+                    # issuer knows how to verify with.
+                    continue
 
                 return fetch_email_from_claims(claims)
         except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
-            )
+            # Sanitize error messages returned to clients. If it's an AuthError,
+            # surface the sanitized message; otherwise return a generic forbidden.
+            if isinstance(e, AuthError):
+                detail = getattr(e, "error_msg", "Forbidden")
+            else:
+                detail = "Forbidden"
+
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Token provided did not map to a valid client ID",
         )
 
+    elif "x-key" in request.headers:
+        return redis.get_api_key_email(request.headers["x-key"])
+
     if settings.testing:
-        if "x-auth" in request.headers:
-            return request.headers["x-auth"]
-        if settings.redis_default_user:  # pragma: no cover
-            return settings.redis_default_user
+        # Only use test credentials when the explicit testing header is present
+        # or when an explicit allow flag is enabled in settings.
+        testing_header = request.headers.get("x-testing-auth")
+        if testing_header:
+            return testing_header
 
     return None

@@ -11,7 +11,7 @@ from app.models import (
     RuleLabelEnum,
     Alternative,
     GenderedRolesFormatType,
-    ResultOut,
+    GermanGenderEndingType,
 )
 from app.helper import is_valid_text, is_addon_enabled, upperfirst
 from app.categories import (
@@ -32,6 +32,25 @@ import re
 from copy import deepcopy
 from spacy.tokens import Token, Doc, Span
 from logging import Logger
+from app.rule_engine.utils import append_result
+from app.rule_engine.matchers.pattern import is_phrase_match
+from app.alternatives_engine import inklusivum
+from app.alternatives_engine import utils
+from app.rule_engine import utils as rule_utils
+
+# spaCy reports the case as a UD tag; the article table names them in German.
+# Surface forms of the ein-paradigm standing on its own. Matched on the word
+# rather than the lemma because the app swaps spaCy's lemmatizer for its own,
+# which leaves "Einer" as "Einer" and reduces "einen" to "ein", so neither
+# arrives as the lemma raw spaCy would give. "jeder" has a rule of its own.
+PRONOMINAL_FORMS = {"einer", "eine", "einen", "einem", "eines"}
+
+INKLUSIVUM_CASES = {
+    "Nom": "nominativ",
+    "Gen": "genitiv",
+    "Dat": "dativ",
+    "Acc": "akkusativ",
+}
 
 
 class RuleCheck:
@@ -67,14 +86,17 @@ class RuleCheck:
         self.adjectives = adjectives
         self.alternatives = alternatives
 
-    def is_target_noun(self, token: Token):
-        return (
-            token.dep_.endswith("subj")
-            or token.dep_.endswith("obj")
-            or token.dep_.startswith("obl")
-        )
+    def substring_standard_words(self, rule: Rule) -> list:
+        standard_words = self.static_rules[LangType.DE]["standard_words"]
+        if rule.false_positives is not None:
+            standard_words = rule.false_positives + standard_words
+
+        return standard_words
 
     def is_entity_type_mismatch(self, rule: Rule, token: Token):
+        # Salutation-attached surnames the statistical NER misses are
+        # labelled by the entity_ruler pipe (see Model.load_nlp_model), so
+        # ent_type_ is the single source of name evidence here.
         if rule.entity_type == EntityType.DEFAULT:
             return False
 
@@ -108,6 +130,304 @@ class RuleCheck:
 
         return False
 
+    def is_inklusivum(self, lang: LangType, config: Config) -> bool:
+        """Whether the Inklusivum is the configured German gender ending."""
+        return (
+            lang == LangType.DE
+            and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+        )
+
+    @staticmethod
+    def covers(spans: list[tuple[int, int]], start: int, end: int) -> bool:
+        """Whether a result already reported covers this span."""
+        return any(begin <= start and end <= stop for begin, stop in spans)
+
+    def inklusivum_article_for(self, article: str, case: str | None) -> str | None:
+        """The Inklusivum form of a masculine article."""
+        forms = self.static_rules[LangType.DE]["masculine_articles"].get(
+            article.lower()
+        )
+        if not forms:
+            return None
+
+        entry = forms.get(case) if case else None
+        if entry is None:
+            if len(forms) != 1:
+                return None
+            entry = next(iter(forms.values()))
+
+        return entry.inklusivum
+
+    async def inklusivum_articles(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Offer the Inklusivum article for person words that take no ending.
+
+        "Gast" carries no gender to remove, so no denomination rule matches it
+        and only the article should change. Nothing else would report it.
+
+        Runs once the other results are in, because whether to report an
+        article depends on what else was found: a phrase rule that already
+        covers "Jeder Lehrling" owns that article, and reporting it again says
+        the same thing about part of the same words. That cannot be decided
+        while the results are still being collected, since a rule anchored on
+        the noun widens its span over the article afterwards.
+
+        Every signal it needs has to be present. Where one is missing the token
+        is passed over rather than guessed at: the noun is left untouched, so a
+        wrong article is the whole of what the reader sees.
+        """
+        if not self.is_inklusivum(language.lang, config):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        articles = self.static_rules[LangType.DE]["articles"]
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        for token in tokens:
+            # Standing on its own, with no noun to introduce, the ein-paradigm
+            # takes -ey: "Einer für alle" becomes "Einey für alle". The article
+            # form is bare "ein", so this cannot come from the article table.
+            if token.pos_ == "PRON" and token.text.lower() in PRONOMINAL_FORMS:
+                end = token.idx + len(token.text)
+                if self.covers(reported, token.idx, end):
+                    continue
+
+                case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+                replacement = inklusivum.pronominal(case)
+                if replacement == token.text.lower():
+                    continue
+
+                append_result(
+                    list_full,
+                    config=config,
+                    client=client,
+                    language=language,
+                    text=token.text,
+                    text_id=token.text.lower(),
+                    full_text=full_text,
+                    offsets=offsets,
+                    subcategory=subcategory,
+                    start=token.idx,
+                    alternatives=[
+                        Alternative(
+                            upperfirst(replacement)
+                            if token.text[0].isupper()
+                            else replacement
+                        )
+                    ],
+                    explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                    url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                    long_explanation=language.translate("INKLUSIVUM_PRONOMINAL_LONG"),
+                )
+                continue
+
+            if token.pos_ != "DET" or token.text.lower() not in articles:
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            if not inklusivum.is_already_neutral(noun.lemma_, neutral):
+                continue
+
+            # -ling is a suffix, not a person word: "Frühling" and
+            # "Schmetterling" carry it too, and only a person word takes the
+            # Inklusivum article at all.
+            if (
+                noun.lemma_ not in neutral
+                and noun.lemma_.lower() not in self.db.person_words.get(LangType.DE, [])
+            ):
+                continue
+
+            # Plural articles are already neutral, so there is nothing to say.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            forms = await self.nouns.german_noun_lookup(noun.lemma_)
+            if not forms or forms.get("gender_1") != "masculine":
+                continue
+
+            end = token.idx + len(token.text)
+            if self.covers(reported, token.idx, end):
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            replacement = self.inklusivum_article_for(token.text, case)
+            if not replacement or replacement == token.text.lower():
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.text.lower(),
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+                explanation=language.translate("INKLUSIVUM_ARTICLE"),
+                url=language.translate("INKLUSIVUM_ARTICLE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ARTICLE_LONG"),
+            )
+
+    async def inklusivum_adjectives(
+        self,
+        config: Config,
+        client: Client,
+        language: Language,
+        full_text: str,
+        tokens: Doc,
+        offsets: dict,
+        list_full: list,
+    ) -> None:
+        """Convert an adjective in front of a noun the Inklusivum rewrites.
+
+        Agreement follows the noun, so once "Arzt" is written "Arzte" the
+        adjective goes with it: "als gutey Arzte". Only adjectives whose noun
+        is actually being rewritten are touched, otherwise this would rewrite
+        every adjective in the text.
+
+        Like the article pass this runs on the finished results, since whether
+        the noun is rewritten is exactly what those results say.
+        """
+        if not self.is_inklusivum(language.lang, config):
+            return
+
+        subcategory = is_sub_category_enabled(
+            config.disabled_categories, "hidden_image"
+        )
+        if not subcategory:
+            return
+
+        neutral = self.static_rules[LangType.DE]["inklusivum_neutral_nouns"]
+        reported = [(result.start, result.end) for result in list_full]
+
+        for token in tokens:
+            if token.pos_ != "ADJ":
+                continue
+
+            # An adjective that carries no ending is predicative, and those do
+            # not agree with anything: "de Arzte ist gut" keeps "gut".
+            if token.text.lower() == token.lemma_.lower():
+                continue
+
+            # The lemma is only usable as a stem when the word is built on it.
+            # It is not always: "Liebe" lemmatises to "Lieber" here, which
+            # already carries a masculine ending and would give "Lieberey".
+            # Comparatives and superlatives fail this too, "beste" to "gut".
+            if not token.text.lower().startswith(token.lemma_.lower()):
+                continue
+
+            noun = token.head
+            if noun.i == token.i or noun.pos_ not in ("NOUN", "PROPN"):
+                continue
+
+            noun_end = noun.idx + len(noun.text)
+            if not self.covers(
+                reported, noun.idx, noun_end
+            ) and not inklusivum.is_already_neutral(noun.lemma_, neutral):
+                continue
+
+            # Plural adjectives are already neutral.
+            number = noun.morph.get("Number")
+            if not number or "Plur" in number:
+                continue
+
+            case = INKLUSIVUM_CASES.get(next(iter(token.morph.get("Case")), None))
+            if case is None:
+                continue
+
+            has_article = any(child.pos_ == "DET" for child in noun.lefts)
+            replacement = inklusivum.adjective(token.lemma_, case, has_article)
+
+            end = token.idx + len(token.text)
+            if replacement == token.text.lower() or self.covers(
+                reported, token.idx, end
+            ):
+                continue
+
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=token.text,
+                text_id=token.lemma_,
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=subcategory,
+                start=token.idx,
+                alternatives=[
+                    Alternative(
+                        upperfirst(replacement)
+                        if token.text[0].isupper()
+                        else replacement
+                    )
+                ],
+                explanation=language.translate("INKLUSIVUM_ADJECTIVE"),
+                url=language.translate("INKLUSIVUM_ADJECTIVE_URL"),
+                long_explanation=language.translate("INKLUSIVUM_ADJECTIVE_LONG"),
+            )
+
+    async def is_written_in_inklusivum(
+        self, lang: LangType, config: Config, token: Token
+    ) -> bool:
+        """Whether the token already is the Inklusivum of a gendered pair.
+
+        Shape alone cannot decide this, because an Inklusivum noun looks like
+        any other noun ending in -e, and some of its forms collide with
+        ordinary plurals ("Freunde"). So candidates are confirmed against the
+        noun lexicon, and this only runs when the Inklusivum was asked for.
+        """
+        if not self.is_inklusivum(lang, config):
+            return False
+
+        return await self.is_inklusivum_noun(token.text)
+
+    async def is_inklusivum_noun(self, word: str) -> bool:
+        """Whether `word` is the Inklusivum of a gendered pair in the noun
+        lexicon (`Lehrerne`, `Schülernen`), whatever format was asked for."""
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+
+        for candidate in inklusivum.base_form_candidates(word):
+            forms = await self.nouns.german_noun_lookup(candidate)
+            if not forms:
+                continue
+
+            feminine = forms.get("female_form")
+            if not feminine:
+                continue
+
+            if inklusivum.is_form_of(word, candidate, feminine, lexicon):
+                return True
+
+        return False
+
     async def fetch_rules(
         self,
         language: Language,
@@ -125,6 +445,15 @@ class RuleCheck:
             config.addons,
             suffix_check,
         )
+
+        if rules and await self.is_written_in_inklusivum(language.lang, config, token):
+            # Already gender neutral, so the gendered denomination rules would
+            # only suggest rewriting it into the form it is already in.
+            rules = [
+                rule
+                for rule in rules
+                if not self.db.is_gendered_denom_rule(language.lang, rule.subcategories)
+            ]
 
         if (
             language.lang == LangType.FR
@@ -147,7 +476,7 @@ class RuleCheck:
                         [token.lemma_],
                         [{"word_type": "a", "lower_case": True, "lemmatize": True}],
                         ["hidden_image"],
-                        self.alternatives.get_adjective_alternatives_french(
+                        utils.build_french_adjective_alternatives(
                             male_form, female_form
                         ),
                     )
@@ -189,9 +518,7 @@ class RuleCheck:
                     [token.lemma_],
                     [{"word_type": "a", "lower_case": True, "lemmatize": True}],
                     ["hidden_image"],
-                    self.alternatives.get_adjective_alternatives_french(
-                        male_form, female_form
-                    ),
+                    utils.build_french_adjective_alternatives(male_form, female_form),
                 )
 
                 rule.adapt_alternatives = True
@@ -214,8 +541,8 @@ class RuleCheck:
         if rule.label_type != RuleLabelEnum.NOT_FOR_PEOPLE:
             return False
 
-        chunks = self.fetch_sentence_noun_chunks(tokens[token_index].sent)
-        token_chunk = self.find_token_chunk(chunks, token_index)
+        chunks = rule_utils.fetch_sentence_noun_chunks(tokens[token_index].sent)
+        token_chunk = rule_utils.find_token_chunk(chunks, token_index)
         if token_chunk is None:
             # No noun detected => assume false positive
             if len(chunks) == 0:
@@ -255,19 +582,19 @@ class RuleCheck:
         source_noun = None
 
         for a in token.ancestors:
-            if self.is_target_noun(a):
+            if rule_utils.is_target_noun(a):
                 source_noun = a
                 break
 
             for atok in a.children:
-                if self.is_target_noun(atok):
+                if rule_utils.is_target_noun(atok):
                     source_noun = atok
                     break
 
         if source_noun is None:
             source_index = word_index = None
             for word in token.sent:
-                if not self.is_target_noun(word):
+                if not rule_utils.is_target_noun(word):
                     continue
 
                 if word.i < word.head.i:
@@ -315,10 +642,8 @@ class RuleCheck:
 
                 if false_positive_check is None:
                     rule.dynamic.subcategory = "hidden_image"
-                    rule.alternatives = (
-                        self.alternatives.get_adjective_alternatives_french(
-                            male_form, female_form
-                        )
+                    rule.alternatives = utils.build_french_adjective_alternatives(
+                        male_form, female_form
                     )
                     rule.adapt_alternatives = True
                 else:
@@ -369,7 +694,7 @@ class RuleCheck:
             or category_name in self.static_rules["male_specific_dimensions"]
         ):
             # false positive check
-            gender = self.get_token_gender(token)
+            gender = rule_utils.get_token_gender(token)
             if gender is None:
                 result = await self.db.fetch_declensions(
                     LangType.FR, WordType.NOUN, token.text, token
@@ -454,17 +779,17 @@ class RuleCheck:
                 if "Masc" in gender
                 else ["gender_identity"]
             )
-            rule.dynamic.subcategory = None
+            subcategory = None
             for search_subcategory in rule.subcategories:
                 if get_category_name(search_subcategory) in subcategory_to_find:
-                    rule.dynamic.subcategory = search_subcategory
+                    subcategory = search_subcategory
                     break
 
-            if rule.dynamic.subcategory is None:
+            if subcategory is None:
                 return True
 
             subcategory = is_sub_category_enabled(
-                config.disabled_categories, rule.dynamic.subcategory
+                config.disabled_categories, subcategory
             )
             if not subcategory:
                 return True
@@ -827,10 +1152,11 @@ class RuleCheck:
                                 0 if article.lower() == "les" else article_index
                             )
 
-                            collective_noun = self.alternatives.add_article(
+                            collective_noun = utils.add_article(
                                 LangType.FR,
                                 collective_noun,
-                                self.alternatives.get_article_by_index(
+                                utils.get_article_by_index(
+                                    self.static_rules,
                                     LangType.FR,
                                     articles_list,
                                     collective_article_index,
@@ -870,7 +1196,7 @@ class RuleCheck:
                     and rule.pattern.startswith("article|l")
                     and not is_plural
                 ):
-                    gendered_article, _, _ = self.get_previous_article(
+                    gendered_article, _, _ = self.alternatives.get_previous_article(
                         token_index, tokens, LangType.FR
                     )
                     gendered_article = gendered_article.lower()
@@ -916,9 +1242,9 @@ class RuleCheck:
                             male_article
                             + " "
                             + gender_neutral_noun
-                            + self.static_rules[LangType.FR]["noun_conjunction"][
-                                "singular"
-                            ]
+                            + utils.get_noun_conjunction(
+                                self.static_rules, LangType.FR, True
+                            )
                             + female_article
                             + " "
                             + gender_neutral_noun
@@ -930,9 +1256,9 @@ class RuleCheck:
                                 female_article
                                 + " "
                                 + gender_neutral_noun
-                                + self.static_rules[LangType.FR]["noun_conjunction"][
-                                    "singular"
-                                ]
+                                + utils.get_noun_conjunction(
+                                    self.static_rules, LangType.FR, True
+                                )
                                 + male_article
                                 + " "
                                 + gender_neutral_noun
@@ -975,10 +1301,12 @@ class RuleCheck:
             return token_index
 
         if token.lemma_ == "aber" and language.lang == LangType.DE:
-            preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
+            # Bounded to the 5 characters sliced above; see Result.isUpper.
+            preceding_text = full_text[max(0, token.idx - 5) : token.idx]
             if (
-                re.search(r"^ *$", preceeding_text) is not None
-                or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
+                re.search(r"^ {0,5}$", preceding_text) is not None
+                or re.search(r"[.!?:,]\s{0,5}$", preceding_text, re.MULTILINE)
+                is not None
             ):
                 return token_index
 
@@ -1011,13 +1339,7 @@ class RuleCheck:
                 if count == 0:
                     continue
 
-                if rule.false_positives is not None:
-                    standard_words = (
-                        rule.false_positives
-                        + self.static_rules[LangType.DE]["standard_words"].copy()
-                    )
-
-                for standard_word in standard_words:
+                for standard_word in self.substring_standard_words(rule):
                     if standard_word.lower() not in rule_lemma_lower:
                         token_lower = token_lower.replace(standard_word.lower(), "")
 
@@ -1028,7 +1350,10 @@ class RuleCheck:
                 skip_token = token_index + token._.token_index_offset
                 start_token_index = token_index
             else:
-                skip_token, start_token_index, text = await self.is_phrase_match(
+                skip_token, start_token_index, text = await is_phrase_match(
+                    self.model,
+                    self.db,
+                    self.logger,
                     language.lang,
                     token_index,
                     tokens,
@@ -1037,9 +1362,7 @@ class RuleCheck:
                 )
 
                 if self.is_german_pronoun_check_required(language.lang, token):
-                    subcategory = self.german_pronoun_check(
-                        config, rule, token
-                    )
+                    subcategory = self.german_pronoun_check(config, rule, token)
                     if not subcategory:
                         continue
                     rule.dynamic.subcategory = subcategory
@@ -1131,49 +1454,45 @@ class RuleCheck:
 
             label = token._.label if token._.label is not None else rule.label
 
-            list_full.append(
-                ResultOut.factory(
-                    config,
-                    client,
-                    language,
-                    text,
-                    rule.text_id,
-                    full_text,
-                    offsets,
-                    rule.dynamic.subcategory,
-                    start,
-                    None,
-                    rule.alternatives,
-                    None,
-                    rule.explanation,
-                    rule.url,
-                    rule.icon,
-                    label,
-                    rule.source,
-                )
+            append_result(
+                list_full,
+                config=config,
+                client=client,
+                language=language,
+                text=text,
+                text_id=rule.text_id,
+                full_text=full_text,
+                offsets=offsets,
+                subcategory=rule.dynamic.subcategory,
+                start=start,
+                alternatives=rule.alternatives,
+                label=None,
+                explanation=rule.explanation,
+                url=rule.url,
+                icon=rule.icon,
+                explanation_context=label,
+                source=rule.source,
             )
 
             if token._.child_token:
-                list_full.append(
-                    ResultOut.factory(
-                        config,
-                        client,
-                        language,
-                        token._.child_token.text,
-                        token.lemma_,
-                        full_text,
-                        offsets,
-                        rule.dynamic.subcategory,
-                        token._.child_token.idx,
-                        None,
-                        rule.alternatives,
-                        None,
-                        rule.explanation,
-                        rule.url,
-                        rule.icon,
-                        label,
-                        rule.source,
-                    )
+                append_result(
+                    list_full,
+                    config=config,
+                    client=client,
+                    language=language,
+                    text=token._.child_token.text,
+                    text_id=token.lemma_,
+                    full_text=full_text,
+                    offsets=offsets,
+                    subcategory=rule.dynamic.subcategory,
+                    start=token._.child_token.idx,
+                    alternatives=rule.alternatives,
+                    label=None,
+                    explanation=rule.explanation,
+                    url=rule.url,
+                    icon=rule.icon,
+                    explanation_context=label,
+                    source=rule.source,
                 )
 
             return skip_token
@@ -1372,31 +1691,9 @@ class RuleCheck:
         return skip
 
     # TODO cache on the sentence?
-    def fetch_sentence_noun_chunks(self, sent: Span) -> list[Span]:
-        chunks = []
-        for chunk in sent.noun_chunks:
-            chunks.append(chunk)
-
-        return chunks
-
-    def find_token_chunk(self, chunks: list[Span], token_index: int):
-        for chunk in chunks:
-            if chunk.start <= token_index < chunk.end:
-                return chunk
-            if chunk.start > token_index:
-                break
-
-        return None
-
-    def get_token_gender(self, token: Token):
-        gender = token.morph.get("Gender")
-        if len(gender):
-            return gender[0]
-
-        return None
 
     def is_gender_false_positive(self, token: Token) -> bool:
-        gender = self.get_token_gender(token)
+        gender = rule_utils.get_token_gender(token)
         if gender is None:
             return False
 
@@ -1404,12 +1701,11 @@ class RuleCheck:
         male_form_found = True if gender == "Masc" else False
         female_form_found = True if gender == "Fem" else False
 
-        doc = token.sent.doc
-        for token in doc:
-            if lemma != token.lemma_.lower():
+        for other in token.doc:
+            if lemma != other.lemma_.lower():
                 continue
 
-            gender = self.get_token_gender(token)
+            gender = rule_utils.get_token_gender(other)
             if not male_form_found and gender == "Masc":
                 male_form_found = True
             elif not female_form_found and gender == "Fem":
@@ -1439,213 +1735,3 @@ class RuleCheck:
             )
 
         return result
-
-    async def check_pattern(
-        self,
-        lang: LangType,
-        tokens: Doc,
-        pattern: list,
-        i_pattern_start: int,
-        offset: int,
-    ) -> bool | int:
-        count = 0
-        for word_type in pattern:
-            allow_skip = word_type.endswith("*")
-            if i_pattern_start < 0:
-                return False
-
-            if i_pattern_start >= len(tokens):
-                if allow_skip:
-                    continue
-
-                return False
-
-            if allow_skip:
-                word_type = word_type.removesuffix("*")
-                while i_pattern_start >= 0 and await self.model.check_word_type(
-                    lang, tokens[i_pattern_start], word_type, True, True
-                ):
-                    i_pattern_start -= 1
-                    count += 1
-                    if (
-                        lang == LangType.FR
-                        and i_pattern_start >= 0
-                        and tokens[i_pattern_start + 1].lemma_ == "la"
-                        and tokens[i_pattern_start].lemma_ in ["à", "de"]
-                    ):
-                        i_pattern_start -= 1
-                        count += 1
-            elif await self.model.check_word_type(
-                lang, tokens[i_pattern_start], word_type, True
-            ):
-                if (
-                    lang == LangType.FR
-                    and i_pattern_start >= 1
-                    and tokens[i_pattern_start].lemma_ == "la"
-                    and tokens[i_pattern_start - 1].lemma_ in ["à", "de"]
-                ):
-                    i_pattern_start += 1
-                    count += 1
-
-                i_pattern_start += offset
-                count += 1
-            else:
-                return False
-
-        return count
-
-    async def is_word_match(
-        self,
-        lang: LangType,
-        token: Token,
-        word: str,
-        word_type: dict | None,
-        suffix: str,
-        lemma: str | None = None,
-    ) -> bool:
-        if word_type is None:
-            word_type = {
-                "word_type": "",
-                "lemmatize": True,
-                "lower_case": True,
-            }
-
-        lemma_ = token.lemma_ if lemma is None else lemma
-        token_word = lemma_ if word_type["lemmatize"] else token.text
-
-        # ignore differences between ’ and '
-        token_word = token_word.replace("’", "'")
-        word = word.replace("’", "'")
-
-        if word_type["lower_case"]:
-            token_word = token_word.lower()
-            word = word.lower()
-
-        if token_word != word and (
-            not suffix or not token_word.lower().endswith(word.lower())
-        ):
-            if (
-                lemma is None
-                and word_type["lemmatize"]
-                and lemma_ in self.db.male_to_female_normativ
-            ):
-                return await self.is_word_match(
-                    lang,
-                    token,
-                    word,
-                    word_type,
-                    suffix,
-                    self.db.male_to_female_normativ[lemma_],
-                )
-            return False
-
-        return await self.model.check_word_type(
-            lang, token, word_type["word_type"], True
-        )
-
-    async def is_phrase_match(
-        self,
-        lang: LangType,
-        token_index: int,
-        tokens: Doc,
-        rule: Rule,
-        false_positive_matcher: list | None = None,
-    ) -> tuple[int | None, str | None]:
-        suffix = rule.type == RuleType.SUFFIX
-
-        word_count = len(rule.words)
-        word_types_count = len(rule.word_types)
-        if word_count > 1:
-            suffix = False
-
-        skip_token_index = token_index
-        text = ""
-        for word_index in range(word_count):
-            if word_index > 0:
-                text += word_token.whitespace_
-
-            try:
-                word_token = tokens[token_index + word_index]
-            except IndexError:
-                return None, None, None
-
-            word_type = (
-                rule.word_types[word_index] if word_index < word_types_count else None
-            )
-
-            if not await self.is_word_match(
-                lang,
-                word_token,
-                rule.words[word_index],
-                word_type,
-                suffix,
-            ):
-                return None, None, None
-
-            text += word_token.text
-
-            skip_token_index += 1
-
-        if false_positive_matcher is not None and self.model.is_false_positive_match(
-            false_positive_matcher, token_index, tokens, rule.lemma
-        ):
-            return None, None, None
-
-        start_token_index = token_index
-        if rule.pattern is not None:
-            pattern = rule.pattern.split("|")
-            if pattern[0] == "*" or pattern[-1] == "*":
-                self.logger.error(
-                    "Rule pattern may not start or end with '*' but is '%s', rule id %i, idx: '%s'",
-                    rule.pattern,
-                    rule.id,
-                    tokens[token_index].idx,
-                )
-
-                return None, None, None
-
-            token_count = word_count
-            prefix_tokens_match_count = 0
-            lemma_position = pattern.index("l")
-
-            if lemma_position > 0:
-                prefix_pattern = pattern[0:lemma_position]
-                prefix_pattern.reverse()
-                tokens_match_count = await self.check_pattern(
-                    lang, tokens, prefix_pattern, token_index - 1, -1
-                )
-                if tokens_match_count is False:
-                    return None, None, None
-
-                prefix_tokens_match_count += tokens_match_count
-
-            suffix_pattern = pattern[lemma_position + 1 :]
-            if len(suffix_pattern):
-                tokens_match_count = await self.check_pattern(
-                    lang, tokens, suffix_pattern, token_index + token_count, 1
-                )
-                if tokens_match_count is False:
-                    return None, None, None
-
-                token_count += tokens_match_count
-
-            if rule.is_pattern_match:
-                start_token_index -= prefix_tokens_match_count
-                text = ""
-                for k in range(prefix_tokens_match_count + token_count):
-                    if k > 0:
-                        text += tokens[start_token_index + k - 1].whitespace_
-
-                    text += tokens[start_token_index + k].text
-
-                skip_token_index = start_token_index + token_count + 1
-
-        if (
-            start_token_index + tokens[start_token_index]._.token_index_offset
-            > skip_token_index
-        ):
-            skip_token_index = (
-                start_token_index + tokens[start_token_index]._.token_index_offset
-            )
-
-        return skip_token_index, start_token_index, text

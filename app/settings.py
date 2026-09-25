@@ -3,24 +3,45 @@ from functools import lru_cache
 import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from app.models import LangType
+from app.models import LangType, LlmAccessType
 from platformshconfig import Config
+
+# The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
+TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
 
 
 class Settings(BaseSettings):
-    """Load environment variables to python objects using pydantic."""
+    """Load environment variables into Python objects using Pydantic."""
 
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
     platform_environment_type: str = "development"
     platform_environment: str = "local"
-    languagetool_api: str = "https://lt.default.api.witty.works/v2"
+    languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
+    languagetool_username: Optional[str] = ""
+    languagetool_api_key: Optional[str] = ""
+    # Serve the LanguageTool-compatible API additionally at the exact paths a
+    # real LanguageTool server has (/v2/check, /v2/languages, ...). Needed for
+    # clients that build the URL themselves and cannot be given a path, such
+    # as the desktop app pointed at localhost. The /lt/v2/... variant is
+    # always on; this only adds the root mount.
+    languagetool_compat_root: bool = False
     platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""
+    # Guards /docs and the development helpers: /save_openapi_json, /lemmatize,
+    # /tokenize, /parse-word-types and /debug/*. Separate from the switch below
+    # because reading the schema and minting a credential are not the same
+    # risk. (/openapi.json is served unguarded either way.)
     api_docs_auth_enabled: bool = False
+    # Guards the endpoints that create or read credentials and configuration, or
+    # act on a named user's behalf: /api_key, /user/configs,
+    # /organization/configs, /user/logs, /settings, /languagetool_api and
+    # /v1.0/prompt.
+    # Defaults to on so an unconfigured deployment is closed rather than open.
+    management_auth_enabled: bool = True
     testing: bool = False
     sentry_dsn: Optional[str] = ""
     sentry_traces_sample_rate: float = 0.0
@@ -28,8 +49,8 @@ class Settings(BaseSettings):
     sentry_profiles_sample_rate: float = 0.0
     text_max_length: int = 1000
     is_prod: bool = False
-    terms_of_service: str = "https://www.witty.works/privacy"
-    contact: str = "support@witty.works"
+    terms_of_service: str = ""
+    contact: str = ""
 
     aadb2c_tenant_id: Optional[str] = ""
     aadb2c_client_id: Optional[str] = ""
@@ -40,47 +61,223 @@ class Settings(BaseSettings):
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
 
-    sso_configs: dict = {}
+    # Dashboard-issued access tokens (Laravel Passport). Unlike the Microsoft
+    # issuers these carry neither a `tid` nor a B2C policy, so they are verified
+    # against a plain JWKS document looked up by the token header's `kid`.
+    dashboard_client_id: Optional[str] = ""
+    dashboard_url: Optional[str] = ""
+    dashboard_jwks_url: Optional[str] = ""
+    dashboard_issuer: Optional[str] = ""
+    dashboard_expected_scope: Optional[str] = ""
+
+    sso_configs: dict[str, dict[str, Optional[str]]] = {}
 
     redis_host: Optional[str] = ""
     redis_port: Optional[str] = ""
     redis_username: Optional[str] = ""
     redis_password: Optional[str] = ""
-    redis_default_user: Optional[str] = ""
-    redis_default_rules: Optional[str] = ""
-    redis_default_organization_rules: Optional[str] = ""
-    redis_default_log_emails: Optional[str] = ""
+    redis_log_emails: Optional[str] = ""
     redis_verify_ssl: bool = True
+    api_key_hmac_key: Optional[str] = ""
+    testing_rules: Optional[str] = ""
+    testing_organization_rules: Optional[str] = ""
+
+    # Dashboard-less deployments: users authenticate with an API key and there
+    # is no SyncUserToNlpApi job to populate their config in Redis. When this is
+    # enabled, such a user falls back to the defaults below instead of being
+    # rejected with a 403.
+    default_user_config_enabled: bool = False
+    default_user_store_context: bool = True
+    default_user_llm_alternatives: bool = False
+
+    # An API key this deployment always has, mapped to DEFAULT_USER_EMAIL, so a
+    # server run for one person has a key without a dashboard to mint one or a
+    # Redis to keep it in. Written on every start, so it survives restarts even
+    # on the in-memory fallback.
+    #
+    # Only for a deployment whose users you are. Anyone holding this key is that
+    # user, and it is as strong as whatever is written in the environment, so
+    # mint per-user keys with bin/api_key.py where there is more than one of
+    # you.
+    default_api_key: Optional[str] = ""
+    default_user_email: Optional[str] = ""
+
+    # Let a request decide `store_context` and `llm_alternatives` for itself. A
+    # `force` rule in a synced user or organisation config still wins, and
+    # `llm_access` below overrules both, so this only hands control to the
+    # client where nothing else has an opinion. Off by default: with a
+    # dashboard, those two are the dashboard's call.
+    client_config_enabled: bool = False
+
+    # Whether a request has to resolve to a user before any text is checked.
+    # With it off the API answers anyone who can reach it, which is a deliberate
+    # choice for a private deployment and a bad one for a public host.
+    #
+    # Note what this does *not* do: an unauthenticated request still gets a 200
+    # with an empty result set, so that a signed-out client keeps working
+    # instead of erroring. Use require_api_key below to refuse it outright.
+    require_auth: bool = True
+
+    # Refuse anything that does not resolve to a user, rather than answering it
+    # emptily. Off by default so existing deployments keep the lenient
+    # behaviour; on, every route outside public_paths answers 401 without a
+    # credential.
+    #
+    # "API key" is the name because that is what a deployment without the
+    # dashboard uses (the `x-key` header, minted from DEFAULT_API_KEY), but
+    # anything fetch_user accepts satisfies it - an SSO bearer token does too,
+    # so browser extension and Word plugin clients keep working. An endpoint
+    # that asks for a username and password (management, docs) needs no key
+    # on top while that password is asked for.
+    require_api_key: bool = False
+
+    # The routes that stay reachable without a credential when require_api_key
+    # is on. Kept as a setting rather than a constant so a deployment can open
+    # up a route it needs - /slack/commands, say, which authenticates itself by
+    # signature and would otherwise be unreachable for Slack. The category list
+    # and the config options are the same for everyone and let an options page
+    # render before a key has been entered.
+    public_paths: list[str] = [
+        "/health",
+        "/v2.0/categories",
+        "/v2.0/config-options",
+    ]
+
+    # The /textarea page: Witty's editor and a prompt, for checking and
+    # rewriting text by hand with an API key. Off by default, so a deployment
+    # serves no page it did not ask for. When on, the page and its script are
+    # public without listing them in PUBLIC_PATHS: they are static and ask for
+    # a key themselves, and every check they make is gated as usual.
+    textarea_enabled: bool = False
+    # Where the page sends people who need a key: a mailto link under "Getting
+    # an API key". Empty leaves the section out.
+    textarea_contact: str = "api@witty.works"
+    # A link to the deployment's legal information (imprint, "Impressum") in
+    # the page footer. Empty leaves it out; only http(s) addresses are linked.
+    textarea_imprint_url: str = ""
+
+    def open_paths(self) -> list[str]:
+        """The paths the require_api_key gate lets through without a key."""
+        if not self.textarea_enabled:
+            return self.public_paths
+
+        return [*self.public_paths, *TEXTAREA_PATHS]
+
+    # Config this deployment starts from, as JSON, for the fields a request does
+    # not set itself. Without a dashboard there is nowhere else to say it, and a
+    # LanguageTool client cannot say it at all: the protocol carries a language
+    # and a category list and nothing further, so options like the German gender
+    # ending are otherwise stuck on their built-in default.
+    # Example: DEFAULT_CONFIG='{"german_gender_ending": "de-e"}'
+    default_config: Optional[str] = ""
+
+    slack_enabled: bool = False
     slack_signing_secret: Optional[str] = ""
     slack_bot_token: Optional[str] = ""
     slack_organization_id: Optional[str] = ""
     alternatives_max_count: int = 5
-    context_checker: dict = {}
-    context_checker_url: Optional[str] = ""
-    context_checker_api_key: Optional[str] = ""
-    context_checker_url_de: Optional[str] = ""
-    context_checker_api_key_de: Optional[str] = ""
-    context_checker_url_fr: Optional[str] = ""
-    context_checker_api_key_fr: Optional[str] = ""
+
+    # Context Checker Configuration
+    context_checker_local: bool = False
+
+    # Remote API configuration per language (used when local models unavailable)
+    # Format: {"en": {"url": "...", "api_key": "..."}, "de": {...}, "fr": {...}}
+    context_checker: dict[str, dict[str, str]] = {}
+
     models: list = [
         "en_core_web_lg",
         "de_core_news_lg",
         "fr_core_news_lg",
     ]
+    # Evict request-transient Vocab/StringStore entries after each request
+    # (spaCy memory zones). Kill switch for production rollout; costs
+    # per-language serialization of the spaCy span of a request.
+    memory_zones: bool = True
+    # Which base lemmatizer to run before the lookup overrides: "lookup"
+    # replaces the model's lemmatizer with the rule/lookup one from
+    # spacy-lookups-data (deterministic, silently wrong on unknown compounds),
+    # "trained" keeps the lemmatizer the model ships (generalizes to unseen
+    # words, but needs the overrides to guard inclusive spellings).
+    # See docs/spacy-review.md, Phase 1.
+    lemmatizer: str = "lookup"
+    # Git revision of the code this process serves, baked into the image at
+    # build time (Dockerfile ARG GIT_REVISION). Exposed via /version so
+    # clients can stamp evaluation state with the exact code it was computed
+    # against; empty when running outside a built image.
+    git_revision: Optional[str] = ""
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
-    minimum_versions: dict = {}
+    minimum_version_witty_editor: Optional[str] = ""
+    minimum_versions: dict[str, str] = {}
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     import_from_dump: bool = True
     log_missing_declension: bool = True
+    log_metrics: Optional[bool] = False
+    # Bedrock credentials. Still their own settings rather than LLM_API_KEY
+    # because Bedrock signs with a key pair and a region, and because a
+    # deployment on AWS may have none of them set and rely on an instance role.
     aws_region_name: Optional[str] = ""
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
-    aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
-    log_metrics: Optional[bool] = False
+
+    # Which model to talk to, as a LiteLLM identifier — the provider is the
+    # prefix: `bedrock/…`, `anthropic/…`, `openai/…`, `openrouter/…`. No
+    # default: there is no model every deployment can reach, and guessing one
+    # would turn a missing setting into a runtime error against someone else's
+    # endpoint. Unset simply means this deployment has no LLM.
+    llm_model: Optional[str] = ""
+    llm_api_key: Optional[str] = ""
+    # Only for a provider that is not at its vendor's own address: a self-hosted
+    # vLLM or Ollama, a gateway, an Azure deployment.
+    llm_api_base: Optional[str] = ""
+    # What one LLM call may generate. Reasoning models spend most of it on
+    # thinking before they answer (500-1000 tokens for one rephrasing), and
+    # an answer cut off by this limit is refused rather than used.
+    llm_max_tokens: int = 2000
+    # Seconds before an LLM call is given up and answered with a 503.
+    llm_timeout: float = 60.0
+    # LLM calls one worker process runs at once; the rest wait up to
+    # llm_timeout for a slot. Providers limit concurrent requests per account
+    # (2 for the BFH inference server), so this times WORKERS should stay
+    # within that. 0 for no limit.
+    llm_max_concurrency: int = 2
+
+    # Who the deployment is willing to spend LLM tokens on. `users` — the
+    # default — means anyone the request resolves to a user for.
+    # `llm_allowed_users` narrows that to named emails; an API key counts as
+    # the email it maps to, so one list covers both kinds of credential.
+    # Leave it empty to allow every user.
+    llm_access: LlmAccessType = LlmAccessType.USERS
+    llm_allowed_users: list[str] = []
+
+    def resolve_llm_model(self, model: Optional[str] = None) -> str:
+        """The model identifier to hand LiteLLM.
+
+        `model` is the per-request override the debug routes accept.
+        """
+        return model or self.llm_model
+
+    def jwks_url(self) -> str:
+        """Resolve the dashboard's JWKS document, RFC 8615 path by default."""
+        if self.dashboard_jwks_url:
+            return self.dashboard_jwks_url
+
+        if not self.dashboard_url:
+            raise ValueError(
+                "DASHBOARD_CLIENT_ID is set but neither DASHBOARD_URL nor "
+                "DASHBOARD_JWKS_URL is, so dashboard tokens cannot be verified"
+            )
+
+        return self.dashboard_url.rstrip("/") + "/.well-known/jwks.json"
 
     @staticmethod
     def factory():
+        """Construct a fully initialized Settings instance.
+
+        Populates derived fields (is_prod, minimum_versions,
+        platform relationship overrides, and Redis credentials) based on
+        environment variables and Platform.sh configuration.
+        """
         settings = Settings()
         settings.is_prod = settings.platform_environment_type == "production"
 
@@ -98,6 +295,17 @@ class Settings(BaseSettings):
             },
         }
 
+        if settings.dashboard_client_id:
+            settings.sso_configs["dashboard"] = {
+                "client_id": settings.dashboard_client_id,
+                "jwks_url": settings.jwks_url(),
+                # Passport does not emit an `iss` claim, so issuer verification
+                # is opt-in: setting DASHBOARD_ISSUER turns it into a hard
+                # requirement and tokens without the claim are then rejected.
+                "issuer": settings.dashboard_issuer or None,
+                "expected_scope": settings.dashboard_expected_scope or None,
+            }
+
         if settings.minimum_version_web_ext:
             settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
 
@@ -106,23 +314,10 @@ class Settings(BaseSettings):
                 settings.minimum_version_word_plugin
             )
 
-        if settings.context_checker_url and settings.context_checker_api_key:
-            settings.context_checker[LangType.EN] = {
-                "url": settings.context_checker_url,
-                "api_key": settings.context_checker_api_key,
-            }
-
-        if settings.context_checker_url_de and settings.context_checker_api_key_de:
-            settings.context_checker[LangType.DE] = {
-                "url": settings.context_checker_url_de,
-                "api_key": settings.context_checker_api_key_de,
-            }
-
-        if settings.context_checker_url_fr and settings.context_checker_api_key_fr:
-            settings.context_checker[LangType.FR] = {
-                "url": settings.context_checker_url_fr,
-                "api_key": settings.context_checker_api_key_fr,
-            }
+        if settings.minimum_version_witty_editor:
+            settings.minimum_versions["witty-editor"] = (
+                settings.minimum_version_witty_editor
+            )
 
         if settings.platform_relationships:
             settings.platform_relationships = json.loads(
@@ -132,7 +327,7 @@ class Settings(BaseSettings):
             if "languagetool" in settings.platform_relationships:
                 endpoint = settings.platform_relationships["languagetool"][0]
                 settings.languagetool_api = (
-                    "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+                    f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
                 )
                 settings.languagetool_verify_ssl = False
 
@@ -148,3 +343,16 @@ class Settings(BaseSettings):
             settings.redis_verify_ssl = False
 
         return settings
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    return Settings.factory()
+
+
+def reset_settings_cache() -> None:
+    """Clear the cached settings instance (primarily for tests)."""
+    try:
+        get_settings.cache_clear()  # type: ignore[attr-defined]
+    except Exception:
+        pass

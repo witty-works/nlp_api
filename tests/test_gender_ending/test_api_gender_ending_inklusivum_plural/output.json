@@ -1,0 +1,268 @@
+{
+    "bulk_actions": [
+        "gender_format"
+    ],
+    "gender_separator": "de-e",
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "female_form": "Lehrerinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Lehrer",
+                    "text": "Lehrerne"
+                },
+                {
+                    "female_form": "Lehrerinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Lehrer",
+                    "text": "Lehrerinnen und Lehrer"
+                },
+                {
+                    "text": "Lehrkräfte"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 10,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 4,
+            "subcategory": "titles",
+            "text": "Lehrer",
+            "text_id": "Lehrer"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Ärztinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Ärzte",
+                    "text": "Ärzterne"
+                },
+                {
+                    "female_form": "Ärztinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Ärzte",
+                    "text": "Ärztinnen und Ärzte"
+                },
+                {
+                    "text": "medizinisches Team"
+                },
+                {
+                    "text": "Praxen"
+                },
+                {
+                    "text": "Untersuchungen"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 39,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": 900
+                },
+                "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "titles",
+            "text": "Ärzte",
+            "text_id": "Arzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "En"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 49,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben.",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
+                    "width": 900
+                },
+                "long_text": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 47,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er",
+            "text_id": "er"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 54,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "image_url": {
+                    "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die Hände reichen",
+                    "height": 525,
+                    "src": "https://www.witty.works/assets/media/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": 900
+                },
+                "long_text": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten können",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true",
+                "video_url": "https://www.witty.works/assets/media/Communal_DE.mp4"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 50,
+            "subcategory": "communal",
+            "text": "half",
+            "text_id": "helfen"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Schülerinnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Schülern",
+                    "text": "Schülernen"
+                },
+                {
+                    "female_form": "Schülerinnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Schülern",
+                    "text": "Schülerinnen und Schülern"
+                },
+                {
+                    "text": "Schülerschaft"
+                },
+                {
+                    "text": "Lernende"
+                },
+                {
+                    "text": "Studierende"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 67,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 59,
+            "subcategory": "function",
+            "text": "Schülern",
+            "text_id": "Schüler"
+        },
+        {
+            "alternatives": [
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kollegerne"
+                },
+                {
+                    "female_form": "Kolleginnen",
+                    "gender_role": "binary_gender",
+                    "male_form": "Kollegen",
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Die Lehrer kamen. Die Meinung der Ärzte zählt. Er half den Schülern. Ich sah die Kollegen.",
+            "end": 89,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "icon_image": "https://www.witty.works/assets/media/vgd-icon-bunt.svg",
+                "image_url": {
+                    "alt": "Illustration: Ein Mann im Anzug mit verschränkten Armen steht im Scheinwerferlicht, umgeben von einer vielfältigen Menschenmenge im Schatten",
+                    "height": 409,
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": 810
+                },
+                "long_text": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "text": "Viele denken bei diesem Wort tendentiell an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 81,
+            "subcategory": "function",
+            "text": "Kollegen",
+            "text_id": "Kollege"
+        }
+    ]
+}

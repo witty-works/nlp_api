@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": ".",
     "language": "fr",
     "limit_reached": false,
@@ -26,7 +29,6 @@
             "end": 23,
             "explanation": {
                 "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Le mot « sont » ne peut pas être un verbe après « ses »."
             },
             "gravity": 1.0,
@@ -35,6 +37,57 @@
             "subcategory": "orthography",
             "text": "sont",
             "text_id": "sont"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "La.le"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Les <URL> sont bons. La/le <URL> est bon. Les professeurs et professeuses sont bons. Iel est un.e <URL>",
+            "end": 35,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Terminaisons genrées",
+                "text": "Orthographe incohérente des terminaisons genrées",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/terminaisons-genrées?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Terminaisons genrées",
+            "proficiency_level": "unconscious_bias",
+            "start": 30,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "La/le",
+            "text_id": "FrenchGenderSeparatorType.POINTfrench"
+        },
+        {
+            "alternatives": [
+                {
+                    "gender_role": "inclusive_gender",
+                    "text": "Les professeur.ses"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Les <URL> sont bons. La/le <URL> est bon. Les professeurs et professeuses sont bons. Iel est un.e <URL>",
+            "end": 90,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Terminaisons genrées",
+                "text": "Orthographe incohérente des terminaisons genrées",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/terminaisons-genrées?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Terminaisons genrées",
+            "proficiency_level": "unconscious_bias",
+            "start": 59,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "Les professeurs et professeuses",
+            "text_id": "french_doublet"
         }
     ]
 }

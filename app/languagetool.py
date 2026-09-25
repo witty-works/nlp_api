@@ -1,4 +1,3 @@
-from spacy.tokens import Doc
 from app.models import (
     LangType,
     LangVariantType,
@@ -10,11 +9,13 @@ from app.models import (
     ResultOut,
     GermanGenderEndingType,
     FrenchGenderSeparatorType,
+    WordType,
 )
 from app.categories import is_sub_category_enabled
 from app.http import Http
 from app.settings import Settings
 from app.db import Db
+from app.alternatives_engine import inklusivum
 from logging import Logger
 from app.helper import upperfirst
 
@@ -52,20 +53,16 @@ class LanguageTool:
         self.categories = categories
         self.http = http
 
-    def languagetool_matches(
+    async def languagetool_matches(
         self,
         config: Config,
         client: Client,
         language: Language,
         full_text: str,
-        tokens: Doc,
+        ent_spans: list[tuple[int, int, str]],
         offsets: dict,
         matches: list,
     ) -> list:
-        entities = []
-        for ent in tokens.ents:
-            entities.append(ent)
-
         list_results = []
         ignore = ["@", "#"]
 
@@ -89,10 +86,10 @@ class LanguageTool:
             # Ignore case issues at the start of sentence due to chunking issues
             # https://github.com/witty-works/browser-extension/pull/880
             if match["rule"]["id"] == "DE_CASE":
-                preceeding_text = full_text[start - 10 : start]
-                preceeding_text = preceeding_text.rstrip(" ")
+                preceding_text = full_text[start - 10 : start]
+                preceding_text = preceding_text.rstrip(" ")
                 # check if before the word there is only spaces and a newline or tab
-                if len(preceeding_text) and preceeding_text[-1] in ["\n", "\t"]:
+                if len(preceding_text) and preceding_text[-1] in ["\n", "\t"]:
                     continue
 
             if match["rule"]["id"] == "WHITESPACE_RULE" and (
@@ -105,18 +102,18 @@ class LanguageTool:
                 # Ignore spelling issues on name
                 if text[0:1].isupper():
                     is_entity = False
-                    for entity in entities:
+                    for ent_start, ent_end, ent_label in ent_spans:
                         if (
-                            entity.start_char >= start
-                            and entity.start_char < end
-                            and entity.end_char >= end
+                            ent_start >= start
+                            and ent_start < end
+                            and ent_end >= end
                         ) or (
-                            entity.start_char <= start
-                            and entity.end_char > start
-                            and entity.end_char <= end
+                            ent_start <= start
+                            and ent_end > start
+                            and ent_end <= end
                         ):
                             is_entity = (
-                                entity.label_
+                                ent_label
                                 in self.static_rules["named_entity_labels"][
                                     EntityType.NAME
                                 ]
@@ -141,6 +138,17 @@ class LanguageTool:
                     for substring in self.static_rules[language.lang]["salutations"]
                 ):
                     continue
+
+            # Ignore typos on words that are already written in the Inklusivum.
+            # Its articles and noun endings are not in any dictionary, so the
+            # spell checker reports every one of them.
+            if (
+                language.lang == LangType.DE
+                and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+                and match["rule"]["category"]["id"] == "TYPOS"
+                and await self.is_inklusivum_form(text)
+            ):
+                continue
 
             if language.lang == LangType.FR:
                 # Ignore typos in French female noun forms
@@ -296,7 +304,7 @@ class LanguageTool:
         client: Client,
         language: Language,
         text: str,
-        tokens: Doc,
+        ent_spans: list[tuple[int, int, str]],
         offsets: dict,
     ) -> list:
         if not self.settings.languagetool_api:
@@ -362,6 +370,16 @@ class LanguageTool:
         payload = self.convert_to_csv(payload, "enabledCategories")
         payload = self.convert_to_csv(payload, "disabledRules")
 
+        # Include optional premium credentials if provided in settings
+        try:
+            if self.settings.languagetool_username:
+                payload["username"] = self.settings.languagetool_username
+            if self.settings.languagetool_api_key:
+                payload["apiKey"] = self.settings.languagetool_api_key
+        except Exception:
+            # In case settings are missing attributes for some reason, ignore
+            pass
+
         result = await self.http.fetch_json_post(
             self.settings.languagetool_api + "/check",
             payload,
@@ -377,8 +395,8 @@ class LanguageTool:
         ):
             return []
 
-        return self.languagetool_matches(
-            config, client, language, text, tokens, offsets, result["matches"]
+        return await self.languagetool_matches(
+            config, client, language, text, ent_spans, offsets, result["matches"]
         )
 
     def convert_to_csv(self, payload: dict, key: str) -> dict:
@@ -388,6 +406,37 @@ class LanguageTool:
             del payload[key]
 
         return payload
+
+    async def is_inklusivum_form(self, text: str) -> bool:
+        """Whether the text is an Inklusivum article, pronoun or noun form.
+
+        Articles and pronouns are a closed set. Nouns are confirmed against
+        the lexicon rather than by shape, so that an ordinary misspelling that
+        happens to end in -e is still reported.
+        """
+        if text.lower() in self.static_rules[LangType.DE]["inklusivum_articles"]:
+            return True
+
+        if inklusivum.is_possessive_form(text) or inklusivum.is_adjective_form(text):
+            return True
+
+        lexicon = inklusivum.Lexicon.from_static_rules(self.static_rules, LangType.DE)
+
+        for candidate in inklusivum.base_form_candidates(text):
+            forms = await self.db.fetch_declensions(
+                LangType.DE, WordType.NOUN, candidate
+            )
+            if not forms:
+                continue
+
+            feminine = forms.get("female_form")
+            if not feminine:
+                continue
+
+            if inklusivum.is_form_of(text, candidate, feminine, lexicon):
+                return True
+
+        return False
 
     def has_gender_denom_ending(
         self, text: str, full_text: str, offset: int, config: Config
@@ -405,11 +454,18 @@ class LanguageTool:
         return False
 
     def fetch_alternatives(self, match: dict) -> list[Alternative]:
+        """Extract alternatives from a LanguageTool match result.
+
+        Args:
+            match: Match dictionary from LanguageTool response
+
+        Returns:
+            List of Alternative objects
+        """
         alternatives = []
         if "replacements" in match:
             for replacement in match["replacements"]:
-                value = replacement["value"]
-                value = value if value != "" else "-"
+                value = replacement["value"] or "-"
                 alternatives.append(Alternative(value))
 
         return alternatives

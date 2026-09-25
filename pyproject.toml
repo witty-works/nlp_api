@@ -4,6 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[tool.pdm.source]]
+type = "find_links"
+url = "https://download.pytorch.org/whl/cpu/torch_stable.html"
+name = "torch"
+
 [tool.pdm.dev-dependencies]
 dev = [
     "click",
@@ -20,7 +25,7 @@ dev = [
 
 [project]
 name = "witty-works"
-version = "2.0"
+version = "3.0.0"
 description = ""
 authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
@@ -31,40 +36,51 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
     "gunicorn",
-    "spacy",
+    # Bounded to the range the pinned models below declare, so spacy cannot
+    # float to a version they were never built against.
+    "spacy>=3.8.14,<3.9.0",
+    # Floor, not ceiling: fasttext-predict has no numpy coupling, so numpy 1
+    # would resolve silently if something else preferred it.
+    "numpy>=2.0",
     "pandas",
     "aiofiles",
-    "babel",
     "aiohttp",
     "sentry-sdk",
     "redis",
     "platformshconfig",
     "fakeredis",
-    "fasttext-wheel",
+    # Inference-only fastText build (SearXNG-maintained), no numpy dependency;
+    # Meta archived fastText upstream in 2024. See docs/spacy-review.md.
+    "fasttext-predict",
     "slack-bolt",
     "german-nouns",
     "inflex",
     "spacy-lookups-data",
-    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl",
-    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.7.0/de_core_news_lg-3.7.0-py3-none-any.whl",
-    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl",
+    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl",
+    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl",
+    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl",
     "secure>=0.3.0",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
+    "setfit>=0.7.0",
     "eng>=0.1.1",
     "blackfire",
     "blackfire-conprof>=1.0.0",
     "aiosqlite>=0.19.0",
-    "Pyarrow>=15.0.0",
     "pyjwt>=2.8.0",
     "cryptography>=42.0.2",
     "boto3>=1.34.130",
     "json-repair>=0.28.3",
-    "rsa>=4.9",
+    "litellm>=1.60.0",
     "pluralizefr>=0.0.1",
+    "python-multipart>=0.0.32",
+    # The API key file (app/api_keys.py).
+    "pyyaml>=6.0",
+    # Minimum client versions (app/version_validators.py).
+    "packaging>=22.0",
 ]
-requires-python = ">3.12"
+requires-python = ">3.12,<3.15"
 license = "Proprietary"
 
 [build-system]

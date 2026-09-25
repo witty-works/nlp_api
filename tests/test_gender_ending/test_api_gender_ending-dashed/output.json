@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "*in",
     "language": "de",
     "limit_reached": false,
@@ -29,11 +32,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
@@ -74,11 +76,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
@@ -119,11 +120,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",
@@ -156,17 +156,18 @@
                     "text": "Immobilien-Asset-Management"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "äcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
             "end": 125,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration von Astronautin und Astronaut, Künstlerin und Künstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter ",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Rege Lesende an, alle Geschlechter mitzudenken",

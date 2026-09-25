@@ -1,283 +1,48 @@
 # NLP API
 
-NLP API for inclusive language: https://api.witty.works
+- What it is: a FastAPI service that checks text for inclusive language (en/de/fr) using spaCy and an in-memory SQLite rules database. It can optionally use LanguageTool for spelling/grammar and an LLM for grammatically correct alternatives or rephrasing.
+- Key capabilities:
+  - Detect issues and surface inclusive alternatives across multiple diversity dimensions (see public overview: https://www.witty.works/en/categories.html)
+  - Optional grammar/spell checks via LanguageTool (self-hosted or public API)
+  - Optional LLM-powered alternatives and rephrasing
+  - Reducing bias in LLM output (through prompt injection and automatic follow-ups prompts)
+  - Custom, organization-specific rules
+  - LanguageTool-compatible API, so LanguageTool clients (desktop app, add-ons) can use this service as their custom server — see [LanguageTool-compatible API](docs/api.md#languagetool-compatible-api)
+- Integrations:
+  - Use https://github.com/witty-works/dashboard to manage to user/organization configuration — optional, see [Running without the dashboard](docs/configuration.md#running-without-the-dashboard)
+  - Use https://github.com/witty-works/browser-extension and https://github.com/witty-works/world-plugin UI clients
+  - Use https://github.com/witty-works/rule-editor to manage the rules
+- Quick start links:
+  - Install and run: see [Installation instructions](docs/setup.md#installation-python-312-using-pdm) (with PDM) and [Run Locally](docs/setup.md#run-locally); containerized setup in [Using Docker](docs/setup.md#using-docker) and [Using docker compose](docs/setup.md#using-docker-compose-recommended-for-local-multi-service-setup)
+  - Configure the app: see [Configuration](docs/configuration.md) and [Core settings](docs/configuration.md#core-settings); adjust spaCy models in [Changing spaCy models](docs/configuration.md#changing-spacy-models)
+  - Explore the API: interactive docs at /docs; see [API Endpoints](docs/api.md) for examples
+- Where to look in the code:
+  - [app/main.py](app/main.py) — FastAPI app factory and route inclusion
+  - [app/routes/](app/routes/) — request handlers and route wiring
+  - [app/settings.py](app/settings.py) — environment-driven configuration (pydantic-settings)
+  - [app/language_processor.py](app/language_processor.py) — spaCy loading and NLP pipeline helpers
+  - [app/categories.py](app/categories.py) — category logic and helpers
+  - [app/model.py](app/model.py) — core rule matching; includes `_fetch_word_type()` POS heuristics
+  - [app/languagetool.py](app/languagetool.py) — LanguageTool client integration
+  - [app/context_checker.py](app/context_checker.py) — local SetFit or remote API context checking
+  - [app/prompt.py](app/prompt.py) — the one place an LLM is called; provider comes from `LLM_MODEL` via LiteLLM
+  - [bin/convert_to_cpu.py](bin/convert_to_cpu.py), [bin/download_from_huggingface.py](bin/download_from_huggingface.py), [bin/test_cpu.py](bin/test_cpu.py) — context model utilities
+  - [app/auth_service.py](app/auth_service.py), [app/middleware.py](app/middleware.py) — auth (API key/OAuth2) and docs protection
+  - [bin/api_key.py](bin/api_key.py) — mint and revoke API keys where no dashboard does it
+  - [app/redis.py](app/redis.py) — Redis client and helpers
 
-Including LanguageTool for spellchecking
+## Documentation Index
 
-## Resources
+To keep this README scannable, detailed sections have moved to `docs/`. Quick links:
 
-This project has two key dependencies:
-
-| Dependency Name | Documentation                | Description                                                                            |
-| --------------- | ---------------------------- | -------------------------------------------------------------------------------------- |
-| spaCy           | https://spacy.io             | Industrial-strength Natural Language Processing (NLP) with Python and Cython           |
-| FastAPI         | https://fastapi.tiangolo.com | FastAPI framework, high performance, easy to learn, fast to code, ready for production |
-
----
-
-# Installation instructions (with python3.12)
-
-- Install Platform.sh CLI https://docs.platform.sh/development/cli.html
-  - Run `platform login`
-  - Run `platform project:set-remote` (select `witty`)
-  - Run `platform list` to find out what commands are available
-  - Run `platform help [command]` to find out details about a command
-
-## Adjust size on platform.sh
-
-Adjust server size:
-
-```
-platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
-  {"app": {"resources": {"profile_size": "8"}},"languagetool": {"resources": {"profile_size": "4"}}}}'
-```
-
-Adjust instance count:
-
-```
-platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
-  {"app": {"resources": {"instance_count": "2"}},"languagetool": {"resources": {"instance_count": "2"}}}}'
-```
-
-## Using Docker
-
-1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Pull images from Azure container registry:
-
-```
-az login
-az acr login --name wittyworks
-docker pull wittyworks.azurecr.io/nlpapi:main
-docker pull wittyworks.azurecr.io/languagetool:main
-```
-
-3. Run images:
-
-First run the LanguageTool image:
-
-```
-docker run --rm --name lt -p 8000:8000 wittyworks.azurecr.io/languagetool:main
-```
-
-Open another terminal tab and check LanguageTool container local address:
-
-```
-lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' lt`
-```
-
-As a last step run the NLP API image:
-
-```
-docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
-```
-
-You should see application running under http://localhost:8000/docs
-
-## Using pdm
-
-```
-pdm venv create 3.12
-pdm use
-pdm venv activate
-pdm sync --dev
-wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
-```
-
-## Update dependencies locally
-
-To update packages locally after pyproject.toml/pdm.lock was changed, run the
-command:
-
-```
-pdm sync --dev
-```
-
-## Add new package
-
-When adding new package to the project, you need to updated existing
-pyproject.toml. Following command will install the package and add it to the
-`pyproject.toml/pdm.lock` and `pyproject.toml/pdm.lock`:
-
-```
-pdm add <package_name>
-```
-
-## Docker image
-
-### Build Docker image:
-
-After making changes in the code or in the Dockerfile, you can run the local
-setup. Build new image with the following commands:
-
-```
-pdm export --prod -o requirements.txt
-DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
-docker run nlpapi
-```
-
-## Install Platform.sh CLI
-
-- Run `platform login`
-- Run `platform project:set-remote`
-- Run `platform list` to find out what commands are available
-- Run `platform help [command]` to find out details about a command
-
-see https://docs.platform.sh/development/cli.html for details
-
-## Run Locally
+- [Technical Notes](docs/technical-notes.md)
+- [Database Seed (dump.sql)](docs/database-seed.md)
+- [Configuration & Environment Variables](docs/configuration.md)
+- [Setup & Deployment](docs/setup.md)
+- [API Endpoints](docs/api.md)
+- [Request Configuration & Categories](docs/request-configuration.md)
+- [Tests](docs/tests.md)
+- [Training Data & Lookups](docs/training-data.md)
+- [Inklusivum (de-e)](docs/inklusivum.md) and [Rückfragen dazu](docs/inklusivum-feedback.md)
 
 ---
-
-Note for the Mac users. Set environment variables with the following snippet:
-
-```
-cp .env.development.mac .env
-```
-
----
-
-```
-pdm run uvicorn app.main:app --reload
-```
-
-or
-
-```
-uvicorn app.main:app --reload
-```
-
-Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
-
-For an alternate view of the docs navigate to http://localhost:8000/redoc
-
-## Profiling locally
-
-```
-pdm run blackfire-python uvicorn app.main:app --reload
-```
-
-Make sure you have a `.blackfire.ini`, get the settings from
-https://blackfire.io/docs/php/configuration
-
-Make sure you to select "Witty Works > NLP API" (defaults to "Personal")
-
-```
-BLACKFIRE_SERVER_ID=""
-BLACKFIRE_SERVER_TOKEN=""
-```
-
-## Production Deployment
-
-Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the
-username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic
-auth for the API docs.
-
-If the build fails due to "No space left on device" while installing the
-dependencies run:
-
-```
-platform project:clear-build-cache
-```
-
-see:
-https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
-
-## Example API call
-
-```
-curl -X 'POST' \
-  'http://127.0.0.1:8000/v1.1/check' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "text": "Wer sind unsere Kunden?"
-}'
-```
-
-## Cloud deployment
-
-Test deployment (proof of concept) was done on Azure Kubernetes service with
-Docker images attached to this repository. More about that:
-https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
-
-## Run tests
-
-To run the entire test suite
-
-```
-pdm run pytest -vv
-```
-
-To only run the last failing tests
-
-```
-pdm run pytest -vv --lf
-```
-
-To update the fixtures with the current API responses run
-
-```
-pdm run pytest --snapshot-update
-```
-
-Make sure to review the changes if they are indeed intended before commiting!
-
-## Benchmarking
-
-Install the Apache HTTP server benchmarking tool:
-https://httpd.apache.org/docs/2.4/programs/ab.html
-
-```
-ab -c 50 -n 100 -p tests/test_small.json -T application/json https://[env subdomain].platformsh.site/check
-```
-
-## Localization
-
-Go to
-https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6b4e6e8f312a530f653eb0
-Export to CSV
-
-```
-pdm run python -m bin.update_locales -i [CSV export]
-```
-
-## Analyze Rules
-
-```
-pdm run python -m bin.analyze_rules -l en
-```
-
-## Update the ignore.txt
-
-1. Download the current LanguageTool server
-
-```
-curl https://languagetool.org/download/LanguageTool-stable.zip
-```
-
-Unzip the file and move into the folder
-
-2. Run the LanguageTool server
-
-```
-java -noverify -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --allow-origin "*"
-```
-
-3. Run the script to generate ignore words:
-
-for German:
-
-```
-pdm run python -m bin.analyze_rules -l de
-```
-
-for English:
-
-```
-pdm run python -m bin.analyze_rules -l en
-```
-
-## Incorrect/Missing German Articles
-
-See https://www.verbformen.de/deklination/pronomen and update
-./training_data/de-DE/articles.csv accordingly.

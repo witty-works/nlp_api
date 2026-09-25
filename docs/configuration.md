@@ -1,0 +1,747 @@
+# Configuration
+
+## Table of Contents
+
+- [Notes](#notes)
+- [Quick start: minimal .env for local dev](#quick-start-minimal-env-for-local-dev)
+- [Core settings](#core-settings)
+- [Reducing Resource Usage](#reducing-resource-usage)
+- [Personal server](#personal-server)
+- [API docs protection](#api-docs-protection)
+- [Protecting the management endpoints](#protecting-the-management-endpoints)
+- [Sentry.io](#sentryio)
+- [LanguageTool](#languagetool)
+- [Context Checker](#context-checker)
+  - [Local SetFit Models](#local-setfit-models)
+  - [Remote API](#remote-api)
+- [Redis](#redis)
+- [LLM provider (LLM-assisted alternatives and rephrasing)](#llm-provider-llm-assisted-alternatives-and-rephrasing)
+  - [AWS Bedrock](#aws-bedrock)
+  - [Who may spend the LLM budget](#who-may-spend-the-llm-budget)
+- [Slack](#slack)
+- [Textarea page](#textarea-page)
+- [Authentication](#authentication)
+- [Platform.sh](#platformsh)
+- [Optional profiling (Blackfire)](#optional-profiling-blackfire)
+- [What's configured by default](#whats-configured-by-default)
+- [Changing spaCy models](#changing-spacy-models)
+
+---
+
+The API is configured via environment variables (loaded from a local .env file and the process environment using pydantic-settings). Below you'll find all relevant options with defaults, what they do, and sample configs for local, Docker, and Platform.sh deployments.
+
+## Notes
+
+- For macOS development with spaCy, copy the provided snippet to avoid MKL warnings: `cp .env.development.mac .env`
+
+## Quick start: minimal .env for local dev
+
+```bash
+# Logging
+LOGGING_ENABLED=true
+LOGGING_CONFIG_FILENAME=stdout
+LOGGING_CONFIG_LEVEL=INFO
+
+# LanguageTool (run locally or use public API)
+LANGUAGETOOL_API=http://localhost:8000/v2
+LANGUAGETOOL_VERIFY_SSL=false
+
+# Use in-memory fake Redis by omitting REDIS_HOST
+# REDIS_HOST=localhost
+
+# Docs auth (disabled by default)
+API_DOCS_AUTH_ENABLED=false
+
+# Disable Sentry in dev
+SENTRY_DSN=
+SENTRY_SAMPLE_RATE=0.0
+SENTRY_TRACES_SAMPLE_RATE=0.0
+SENTRY_PROFILES_SAMPLE_RATE=0.0
+
+# Feature flags
+ALTERNATIVES_MAX_COUNT=5
+TEXT_MAX_LENGTH=1000
+LOG_METRICS=false
+```
+
+Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 to the settings fields in [app/settings.py](../app/settings.py) (e.g., `API_DOCS_AUTH_ENABLED` -> `api_docs_auth_enabled`).
+
+## Core settings
+
+| Variable                    | Default                                                        | Description                                                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
+| LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
+| LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
+| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
+| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
+| TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
+| ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
+| TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
+| CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
+| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                                                                             |
+| IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from [database/dump.sql](../database/dump.sql) (otherwise from [database/db.sqlite3](../database/db.sqlite3)). |
+| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
+| MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
+| MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                                                                  |
+| MINIMUM_VERSION_WITTY_EDITOR| (empty)                                                        | If set, reject requests from the Witty editor (client `witty-editor:<version>`, e.g. the /textarea page) below this semver.                                      |
+
+The `MINIMUM_VERSION_*` settings apply to /v2.4/check, /v2.0/auth, /v1.0/rephrase and /v1.0/write. A client below its minimum gets a 400 whose `detail` names the version to upgrade to; clients show it as "this version is no longer supported". The client comes from the request's `client` field (`<name>:<version>`, a bare version counts as `web-ext`); a request without one is never rejected.
+
+## Reducing Resource Usage
+
+The API can be configured to use significantly fewer system resources (CPU and memory) by disabling or optimizing certain features. This is particularly useful for development environments, smaller deployments, or when running on resource-constrained infrastructure.
+
+### Using Smaller spaCy Models
+
+By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg`, `fr_core_news_lg`) which provide high accuracy but consume substantial memory (400-500 MB per language).
+
+**To use smaller models:**
+
+1. Update the `MODELS` environment variable to use medium or small models:
+
+   ```bash
+   # Medium models (~100 MB each)
+   MODELS=["en_core_web_md","de_core_news_md","fr_core_news_md"]
+
+   # Small models (~10-15 MB each)
+   MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
+   ```
+
+2. Update `pyproject.toml` to include the corresponding model wheels:
+
+   ```toml
+   [project]
+   dependencies = [
+       # ... other dependencies
+       "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.0/en_core_web_md-3.7.0-py3-none-any.whl",
+       "https://github.com/explosion/spacy-models/releases/download/de_core_news_md-3.7.0/de_core_news_md-3.7.0-py3-none-any.whl",
+       "https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-3.7.0/fr_core_news_md-3.7.0-py3-none-any.whl",
+   ]
+   ```
+
+3. Reinstall dependencies:
+   ```bash
+   pdm install
+   ```
+
+**Trade-offs:**
+
+- Small models: ~95% of large model accuracy, 30x smaller — see [spaCy Facts & Figures](https://spacy.io/usage/facts-figures) for benchmark comparisons
+- Medium models: ~98% of large model accuracy, 4-5x smaller — see [spaCy Facts & Figures](https://spacy.io/usage/facts-figures)
+- Reduced accuracy primarily affects named entity recognition and dependency parsing
+
+### Disabling LLM-Assisted Rephrasing
+
+LLM-powered alternatives and rephrasing are optional.
+
+**To ensure it's disabled:**
+
+```bash
+LLM_ACCESS=disabled
+```
+
+That is the switch to use: it refuses the call whatever any config asks for, so
+it holds even where credentials happen to be present. Leaving the provider
+variables empty also stops the calls, but by failing them rather than by
+declining them.
+
+**Benefits:**
+
+- No provider API costs
+- Eliminates external API latency
+- LLM routes (`/v1.0/rephrase`, `/v1.0/prompt`) will return appropriate error responses
+
+**Note:** LLM features are also gated by `LLM_ACCESS` and by the `llm_alternatives` flag in the user/organization config, so even with a provider configured, users need explicit access. See [Who may spend the LLM budget](#who-may-spend-the-llm-budget).
+
+### Disabling Context Checker (False Positive Filtering)
+
+The context checker reduces false positives but adds computational overhead—either through local SetFit model inference or remote API calls.
+
+**To disable context checking:**
+
+```bash
+# Disable local models
+CONTEXT_CHECKER_LOCAL=false
+
+# Don't configure remote API endpoints
+CONTEXT_CHECKER=
+```
+
+**Benefits:**
+
+- Saves 200-400 MB RAM per language when local models are disabled (no SetFit models loaded)
+- Reduces inference latency by 50-200ms per request
+- Eliminates external API dependencies (if using remote mode)
+
+**Trade-offs:**
+
+- Slightly higher false positive rate on grammar rules (typically 5-10% more false positives)
+- Most impactful for rules that are context-sensitive
+
+**When to disable:**
+
+- Development environments where false positives are acceptable
+- Resource-constrained deployments
+- When prioritizing speed over precision
+
+### Disabling LanguageTool
+
+LanguageTool provides spell-checking and additional grammar rules but requires either running a separate LanguageTool server or making external API calls.
+
+**To disable LanguageTool:**
+
+```bash
+# Set to empty string to disable
+LANGUAGETOOL_API=
+```
+
+**Benefits:**
+
+- No need to run/maintain a separate LanguageTool server
+- Eliminates external API calls and latency (100-500ms per request)
+- No LanguageTool API costs if using premium service
+
+**Trade-offs:**
+
+- No spell-checking functionality
+- Missing some grammar rules that LanguageTool provides but the API doesn't
+- Reduced coverage for certain error types
+
+**Note:** The API's core rule engine will continue to function—you'll still get alternatives, declensions, and custom rules. Only LanguageTool-specific features are disabled.
+
+### Resource Optimization Example Configuration
+
+For minimal resource usage in development:
+
+```bash
+# Use small spaCy models
+MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
+
+# Disable LLM features
+AWS_REGION_NAME=
+AWS_KEY=
+AWS_SECRET_KEY=
+
+# Disable context checker
+CONTEXT_CHECKER_LOCAL=false
+CONTEXT_CHECKER=
+
+# Disable LanguageTool
+LANGUAGETOOL_API=
+
+# Use fake in-memory Redis
+REDIS_HOST=
+
+# Basic logging
+LOGGING_ENABLED=true
+LOGGING_CONFIG_FILENAME=stdout
+LOGGING_CONFIG_LEVEL=INFO
+```
+
+This configuration reduces memory usage from ~2-3 GB to ~300-500 MB while maintaining core functionality.
+
+## Personal server
+
+A server for yourself, checked from a LanguageTool client such as the desktop app, needs three things set. Nothing here suits a public host.
+
+```bash
+REQUIRE_AUTH=false                 # answer anyone who can reach it
+DEFAULT_USER_CONFIG_ENABLED=true   # or /v2.0/auth answers 403 and clients go quiet
+LANGUAGETOOL_COMPAT_ROOT=true      # serve the endpoints at the root as well
+DEFAULT_CONFIG='{"german_gender_ending": "de-e"}'
+```
+
+`DEFAULT_USER_CONFIG_ENABLED` is the one that is easy to miss. Without a dashboard there is no job filling Redis with a config for the email an API key resolves to, so `/v2.0/auth` refuses it and a client concludes it is signed out. Checking still works if you call it directly, which is what makes this confusing: the browser extension simply stops highlighting and says nothing.
+
+Watch for a forced config too. A `force` entry in a synced user or organisation config, including the ones `TESTING_RULES` and `TESTING_ORGANIZATION_RULES` carry, beats whatever a request asks for. That is deliberate, so an organisation can pin a house style, but it means a request asking for `de-e` can come back checked against `*in`. The `gender_separator` field in the response says which ending actually applied, so read that first when the results are not what the config asked for.
+
+Then run it on LanguageTool's local port, because the desktop app has no host or port field:
+
+```bash
+REQUIRE_AUTH=false LANGUAGETOOL_COMPAT_ROOT=true \
+  DEFAULT_CONFIG='{"german_gender_ending": "de-e"}' \
+  pdm run uvicorn app.main:app --port 8081
+```
+
+`DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins. It is checked when the API starts: an option that does not exist or a value that does not validate stops the start with a message naming it.
+
+A request's config is built in this order, each layer filling in or overriding the one before (`fetch_configs_for_request` in [config_manager.py](../app/config_manager.py)):
+
+1. the built-in defaults;
+2. what the request sent (`store_context` and `llm_alternatives` only with `CLIENT_CONFIG_ENABLED`);
+3. `DEFAULT_CONFIG`, for fields the request did not send;
+4. a synced API key's `config`, for fields the request did not send;
+5. suggestions in a synced user config, for `store_context` and `llm_alternatives`;
+6. `force` rules in the user's, then the organisation's config;
+7. `LLM_ACCESS` / `LLM_ALLOWED_USERS`, which can only turn the LLM off.
+
+Every value is validated as it is applied, the way a request's own config is; one that does not validate is logged and left out.
+
+Any field of the check config can go in it. Unknown keys and values the config rejects are logged and skipped rather than taken, so a typo does not silently change what the server checks for.
+
+Note that port 8081 is where a real local LanguageTool server would sit, so run one or the other, not both. The [Tests](./tests.md#languagetool) page uses a different port for exactly that reason.
+
+### From the browser extension
+
+The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too.
+
+```bash
+DEFAULT_API_KEY=pick-something-long
+DEFAULT_USER_EMAIL=you@example.com
+DEFAULT_USER_CONFIG_ENABLED=true
+```
+
+`DEFAULT_USER_CONFIG_ENABLED` belongs with it: the key resolves to an email that has no config stored, and without the fallback `/v2.0/auth` answers 403 and the extension concludes it is signed out. Checking still works if you call it directly, which is what makes that one confusing to diagnose.
+
+This is for a deployment whose users are you. Anyone with the key is that user, and it is only as protected as the environment it sits in. Where there is more than one of you, run a real Redis and mint a key each:
+
+```bash
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+```bash
+pdm run python -m bin.api_key create you@example.com
+```
+
+The in-memory Redis is per process, so without `REDIS_HOST` that script would write to its own memory and never reach the API. It refuses to run rather than appearing to succeed.
+
+## API docs protection
+
+Protect `/docs` and the development helpers (`/save_openapi_json`,
+`/lemmatize`, `/tokenize`, `/parse-word-types`, `/debug/*`) via HTTP Basic when
+needed. `/openapi.json` is served unguarded either way.
+
+| Variable              | Default | Description                                        |
+| --------------------- | ------- | -------------------------------------------------- |
+| API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for the docs UI and dev helpers. |
+| API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
+| API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
+
+## Protecting the management endpoints
+
+Separate from the docs switch, because reading the schema and minting a
+credential are not the same risk. This one guards `/api_key`, `/user/configs`,
+`/organization/configs`, `/user/logs`, `/settings`, `/languagetool_api` and
+`/v1.0/prompt` —
+the endpoints that hand out or expose credentials and configuration, or act on
+a named user's behalf — and defaults to **on**, so a deployment nobody
+configured is closed rather than open.
+
+`/v1.0/prompt` is in that list because it takes `user_email` as a query
+parameter: whoever calls it picks whose configuration applies and whose LLM
+budget is spent. A caller that already sends basic auth for `/user/configs`,
+as the dashboard does, needs no change.
+
+| Variable                | Default | Description                                                                             |
+| ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development.    |
+
+It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
+there is one pair to configure rather than two. With auth enabled and no
+password set, those endpoints answer 500 rather than letting anyone through.
+
+## Sentry.io
+
+Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=true`, Sentry is disabled.
+
+| Variable                    | Default | Description                                |
+| --------------------------- | ------- | ------------------------------------------ |
+| SENTRY_DSN                  | (empty) | Project DSN.                               |
+| SENTRY_SAMPLE_RATE          | 0.0     | Error event sampling rate (0.0–1.0).       |
+| SENTRY_TRACES_SAMPLE_RATE   | 0.0     | Performance tracing sample rate (0.0–1.0). |
+| SENTRY_PROFILES_SAMPLE_RATE | 0.0     | Profiling sample rate (0.0–1.0).           |
+
+Sentry uses `PLATFORM_ENVIRONMENT` as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
+
+## LanguageTool
+
+Optional spell/grammar checking. You can use the public API or self-host LanguageTool.
+
+| Variable                | Default                             | Description                                                                            |
+| ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------------- |
+| LANGUAGETOOL_API        | https://api.languagetoolplus.com/v2 | Base URL of your LanguageTool instance (must include `/v2`).                           |
+| LANGUAGETOOL_VERIFY_SSL | true                                | Verify TLS certs when calling LanguageTool. Set to false for local/self-signed setups. |
+| LANGUAGETOOL_USERNAME   | (empty)                             | Optional: your username/email for premium LanguageTool accounts (used for API access). |
+| LANGUAGETOOL_API_KEY    | (empty)                             | Optional: your API key / access token for premium LanguageTool accounts.               |
+| LANGUAGETOOL_COMPAT_ROOT | false                              | Serve the [LanguageTool-compatible API](./api.md#languagetool-compatible-api) additionally at the root (`/v2/check`, ...), the exact path layout of a real LanguageTool server. Needed for clients that cannot be given a path in their server URL, e.g. the desktop app pointed at localhost. |
+
+Self-hosted: https://github.com/languagetool-org/languagetool
+
+Platform.sh integration: If `PLATFORM_RELATIONSHIPS` is present, the app auto-detects the `languagetool` relationship and rewrites `LANGUAGETOOL_API` to the internal service URL with `LANGUAGETOOL_VERIFY_SSL=false`.
+
+## Context Checker
+
+Reduces false positives by checking rule hits in their sentence context. Two modes are supported:
+
+1. Local SetFit Models (recommended): Uses locally-hosted SetFit models for fast, privacy-preserving inference
+2. Remote API: External service endpoints
+
+### Local SetFit Models
+
+| Variable              | Default | Description                                                     |
+| --------------------- | ------- | --------------------------------------------------------------- |
+| CONTEXT_CHECKER_LOCAL | false   | When true, use local SetFit models instead of remote API calls. |
+
+When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use.
+
+#### Setup Local SetFit Models
+
+Option 1: Download from Hugging Face (Recommended)
+
+```bash
+# Install huggingface-hub if not already installed
+pdm add huggingface-hub
+
+# Download all models (en, de, fr)
+pdm run python -m bin.download_from_huggingface --lang all
+
+# Or download a specific language
+pdm run python -m bin.download_from_huggingface --lang en
+```
+
+Why CPU format is required: The API launches multiple worker processes for concurrency. It leverages PyTorch shared memory to avoid duplicating model weights in each worker. GPU tensors cannot be shared with this mechanism out of the box, while CPU tensors can. Using CPU models allows `ContextChecker` to call `share_memory()` on the underlying backbone, reducing RAM and speeding up startup.
+
+Test the CPU model:
+
+```bash
+pdm run python -m bin.test_cpu -i models/context_aware_model/en
+```
+
+Deployment (Platform.sh)
+
+```bash
+rsync -azP models/ "$(platform ssh -e main --pipe)":models/
+platform environment:redeploy -e main
+```
+
+#### convert_to_cpu.py reference (optional)
+
+If you obtain raw SetFit model dumps from another source and need to ensure they run on CPU, [bin/convert_to_cpu.py](../bin/convert_to_cpu.py) converts a downloaded SetFit model directory to a CPU-only version and writes it to [models/context_aware_model/<lang>](../models/context_aware_model/).
+
+Usage:
+
+```bash
+pdm run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
+```
+
+Arguments:
+
+- `-i, --in` Path to source model directory (must contain SetFit artifacts like `config.json`, `model.safetensors` or `pytorch_model.bin`)
+- `-l, --lang` Language code used for the destination folder (`en`, `de`, `fr`)
+
+Notes:
+
+- Output directory is created if missing and may overwrite existing files
+- If the input model is already CPU-only, the script simply writes a copy
+- CPU models enable shared-memory loading for multi-process inference
+
+### Remote API
+
+Configure per-language endpoints and Bearer API keys using the structured `CONTEXT_CHECKER` environment variable. If not provided and `CONTEXT_CHECKER_LOCAL=false`, context checking is skipped.
+
+Environment Variable Format:
+
+```bash
+CONTEXT_CHECKER='{"en": {"url": "https://api.example.com/en", "api_key": "key123"}, "de": {"url": "https://api.example.com/de", "api_key": "key456"}}'
+```
+
+Structure:
+
+```json
+{
+  "en": {
+    "url": "https://your-api-endpoint.com/context-check",
+    "api_key": "your-bearer-token"
+  },
+  "de": {
+    "url": "https://your-api-endpoint.com/context-check-de",
+    "api_key": "your-bearer-token-de"
+  },
+  "fr": {
+    "url": "https://your-api-endpoint.com/context-check-fr",
+    "api_key": "your-bearer-token-fr"
+  }
+}
+```
+
+Request format: The remote service receives `{ "data": ["sentence 1", "sentence 2", ...] }` and must return a list where each item is `"1"` to keep the match or any other value to discard it as a false positive.
+
+Behavior:
+
+- Local models (`CONTEXT_CHECKER_LOCAL=true`) are preferred when available
+- If local models are not available for a language, the app falls back to remote API (if configured)
+- If neither local nor remote is available, context checking is skipped for that language
+
+## Redis
+
+Redis stores user/organization configs, API key mappings, optional request/response logs, and metrics. If `REDIS_HOST` is empty, a fake in-memory Redis is used (great for development and tests).
+
+| Variable         | Default     | Description                                                                                                                                                   |
+| ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| REDIS_HOST       | (empty)     | Redis hostname. Leave empty to use in-memory fake Redis.                                                                                                      |
+| REDIS_PORT       | (empty)     | Redis port.                                                                                                                                                   |
+| REDIS_USERNAME   | (empty)     | Redis username.                                                                                                                                               |
+| REDIS_PASSWORD   | (empty)     | Redis password.                                                                                                                                               |
+| REDIS_VERIFY_SSL | true        | Verify TLS certs when connecting to Redis over SSL.                                                                                                           |
+| REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
+| LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
+| TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
+
+Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
+
+## LLM provider (LLM-assisted alternatives and rephrasing)
+
+Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). In debug mode you can test locally.
+
+Calls go through [LiteLLM](https://docs.litellm.ai/docs/providers), so the
+provider is the prefix of the model identifier and switching providers is a
+config change:
+
+| Variable       | Default  | Description                                                                                        |
+| -------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
+| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
+| `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
+| `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
+| `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
+| `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
+
+```bash
+# Anthropic directly
+LLM_MODEL="anthropic/claude-sonnet-4-5"
+LLM_API_KEY="sk-ant-…"
+
+# Anything OpenAI-compatible you host yourself
+LLM_MODEL="openai/my-model"
+LLM_API_BASE="http://localhost:8000/v1"
+```
+
+Parameters a given provider does not support are dropped rather than raising, so
+the same `max_tokens` / `temperature` / `top_p` settings work across all of them.
+
+There is no default model — no one identifier is reachable from every
+deployment. Leaving `LLM_MODEL` empty is a valid configuration meaning "this
+deployment has no LLM": the features are refused the same way
+`LLM_ACCESS=disabled` refuses them, rather than failing a call at the provider.
+
+### AWS Bedrock
+
+Bedrock keeps its own settings because it signs with a key pair and a region
+rather than a bearer token — `LLM_API_KEY` is not used for it. Leave `AWS_KEY`
+and `AWS_SECRET_KEY` empty to let an instance role supply the credentials
+instead. The model still comes from `LLM_MODEL`, as `bedrock/<model id>`.
+
+| Variable        | Default                            | Description                                                   |
+| --------------- | ---------------------------------- | ------------------------------------------------------------- |
+| AWS_REGION_NAME | (empty)                            | AWS region (e.g., eu-central-1).                              |
+| AWS_KEY         | (empty)                            | AWS access key ID.                                            |
+| AWS_SECRET_KEY  | (empty)                            | AWS secret access key.                                        |
+
+### Who may spend the LLM budget
+
+These calls are billed to whoever runs the API, so who may make them is the
+operator's decision and nothing else can overrule it.
+
+| Variable            | Default | Description                                                                                                       |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| `LLM_ACCESS`        | `users` | `disabled`, `users` or `everyone` — see below.                                                                    |
+| `LLM_ALLOWED_USERS` | `[]`    | With `users`, narrows it to these emails. JSON list, e.g. `LLM_ALLOWED_USERS='["a@example.com","b@example.com"]'`. |
+
+- **`disabled`** — no LLM calls, whoever asks. A `force: true` rule in a synced
+  config does not override it, and neither do the debug routes.
+- **`users`** — anyone the request resolved to a user for. That covers a
+  dashboard token and an `x-key` alike: an API key *is* its user's email by the
+  time this is checked, so `LLM_ALLOWED_USERS` lists emails and one list
+  narrows both. Leave it empty to allow every user. This is the default.
+- **`everyone`** — anyone who can reach the API, resolved user or not. Pair it
+  with `REQUIRE_AUTH=false` for a deployment that is open by design.
+
+The policy says who **may**, not who **does**: it can only ever turn
+`llm_alternatives` off. Something still has to turn it on —
+
+| To turn it on for                       | Set                                                                |
+| --------------------------------------- | -------------------------------------------------------------------- |
+| every user of a dashboard-less deployment | `DEFAULT_USER_LLM_ALTERNATIVES=true` (with `DEFAULT_USER_CONFIG_ENABLED`) |
+| whoever asks per request                | `CLIENT_CONFIG_ENABLED=true`, then the client sends `config.llm_alternatives` |
+| a specific dashboard organization       | the dashboard's own LLM alternatives setting, which syncs as a `force` rule |
+
+So `LLM_ACCESS=everyone` on its own changes nothing until one of those applies.
+
+## Slack
+
+Opt-in Slack integration. When enabled, the API registers the `/slack/commands` endpoint and provides the `/witty` command handler.
+
+| Variable              | Default | Description                                                                           |
+| --------------------- | ------- | ------------------------------------------------------------------------------------- |
+| SLACK_ENABLED         | false   | When true, initialize Slack Bolt and include the Slack routes.                        |
+| SLACK_SIGNING_SECRET  | (empty) | Slack app signing secret used to verify requests.                                     |
+| SLACK_BOT_TOKEN       | (empty) | Bot token to call Slack APIs.                                                         |
+| SLACK_ORGANIZATION_ID | (empty) | Optional: fallback organization ID for config lookup when user email isn’t available. |
+
+Notes
+
+- If `SLACK_ENABLED=false` (default), no Slack code is initialized and the Slack routes are not included.
+- With `SLACK_ENABLED=true` but empty Slack credentials, the app uses a local/dev Slack client for testing (no external calls).
+
+## Textarea page
+
+Opt-in page for checking and rewriting text by hand with an API key: Witty's editor and a prompt. Setup, including installing the editor script, is in [textarea.md](./textarea.md).
+
+| Variable         | Default | Description                                                                                          |
+| ---------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| TEXTAREA_ENABLED | false   | Serve `/textarea`. Opens it and its script without a key behind `REQUIRE_API_KEY`; checks stay gated. |
+| TEXTAREA_CONTACT | api@witty.works | Where the page tells visitors to request an API key (a mailto link). Empty leaves the section out. |
+| TEXTAREA_IMPRINT_URL | (empty) | Link to the deployment's legal information (imprint), shown in the page footer. Empty leaves it out; only http(s) addresses are linked. |
+
+The editor script is installed separately: `python bin/fetch_editor.py`, or `--build-arg TEXTAREA=true` (`TEXTAREA=true docker compose build`) for the image.
+
+## Authentication
+
+Supported methods:
+
+- API Keys: mint with [bin/api_key.py](../bin/api_key.py) or the `/api_key` endpoints (stored in Redis)
+- Dashboard access tokens (Laravel Passport, verified against a JWKS document)
+- Azure AD B2C (per-tenant)
+- Microsoft Office SSO (multi-tenant)
+
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
+
+A dashboard behind a self-signed certificate — a local Lando one, for
+instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
+[Running against a dashboard on Lando](./setup.md#running-against-a-dashboard-on-lando).
+
+Azure AD B2C
+| Variable | Description |
+|---|---|
+| AADB2C_TENANT_ID | B2C tenant ID (GUID). |
+| AADB2C_CLIENT_ID | Application (client) ID registered in B2C. |
+| AADB2C_POLICY | B2C user flow/policy name used by your app. |
+| AADB2C_DOMAIN | B2C domain (e.g., wittyworksdev). |
+| AADB2C_EXPECTED_SCOPE | Scope expected in access tokens (e.g., access_as_user). |
+
+Office/Microsoft 365 SSO
+| Variable | Description |
+|---|---|
+| OFFICE_SSO_CLIENT_ID | Application (client) ID. |
+| OFFICE_SSO_EXPECTED_SCOPE | Scope expected in access tokens. |
+
+If an `Authorization: Bearer <token>` is present, the API validates the token against the configured client(s) and required scope. Alternatively, pass an `x-key` header with a valid API key mapping to a user email in Redis. For local testing you can also use `X-TESTING-AUTH: user@example.com` when `TESTING=true`.
+
+## Running without the dashboard
+
+Normally the dashboard's `SyncUserToNlpApi` job writes each user's config into
+Redis, and a user with no config there is rejected: `/v2.0/auth` answers 403 and
+clients read that as "not signed in". A deployment that runs this API on its own
+has no such job, so the two settings below fill the gap.
+
+|                        Variable | Default       | Description                                                                                                                                                                |
+| ------------------------------: | :-----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  `DEFAULT_USER_CONFIG_ENABLED`  | false         | Give a user with no stored config the defaults below instead of a 403. The `/user/configs` management endpoint still reports 404 for them, so "nothing is stored" stays visible. |
+|  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
+| `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
+|       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
+|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it.                                                   |
+
+`CLIENT_CONFIG_ENABLED` never overrules a deployment that has an opinion: a
+`force` rule for either flag in a synced user or organisation config still wins.
+`disabled_categories` and custom rules are unaffected — a client's
+`disabled_categories` were already honoured.
+
+Users are still identified by email, so an API-key deployment needs keys before
+anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
+
+## Platform.sh
+
+The app auto-detects Platform.sh relationships and environment:
+
+- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis.
+- `PLATFORM_APPLICATION_NAME` is used when Blackfire continuous profiling is enabled.
+
+## Optional profiling (Blackfire)
+
+To enable continuous profiling in supported environments, set:
+
+```bash
+BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
+PLATFORM_APPLICATION_NAME=app
+```
+
+## Testing variables
+
+These are fixtures for the test suite, which authenticates as the email they carry. They are only loaded when `TESTING` is set; a deployment that sets them without it gets an error in the log and they are ignored. That guard exists because an entry marked `"status": "force"` in either overrides what a request asks for, so a server that loaded them would quietly answer with something other than what its clients requested.
+
+The following environment variables are used to seed test data and shortcuts when running the application in a development or test environment (for example when `REDIS_HOST` is empty and an in-memory fake Redis is used). These are loaded into `Settings` ([app/settings.py](../app/settings.py)) and applied during startup ([app/startup.py](../app/startup.py)).
+
+|                     Variable | Default | Description                                                                                                                                                                                                                                  |
+| ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry. It is necessary for running the test suite. Other settings listed below should be disabled while running the test suite.                                      |
+|              `TESTING_RULES` | (empty) | JSON string containing a user-level rules object. On startup the app parses this JSON and writes it to Redis under the seeded user's id (the `email` field). See `.env.example` for an example payload.                                      |
+| `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
+
+These variables are optional and intended for local development or CI scenarios to make it easier to test flows without external Redis or having to manually seed data.
+
+Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
+
+---
+
+## What’s configured by default
+
+- Fake Redis in development (when no `REDIS_HOST` is provided).
+- LanguageTool enabled against the public API by default; set `LANGUAGETOOL_API` to your self-hosted URL or set it empty to disable.
+- Sentry disabled unless `SENTRY_DSN` is set and `TESTING` is false.
+- Context checker disabled unless the per-language URL and API key are provided.
+
+## Changing spaCy models
+
+- Update `MODELS` in your environment to the desired packages (e.g., use `en_core_web_md`).
+- Update `pyproject.toml` to include matching wheel URLs or pip names for those models.
+- Reinstall dependencies so spaCy can load the specified models.
+
+---
+
+## See Also
+
+- [Setup & Deployment](./setup.md) - Installation and deployment instructions
+- [Request Configuration & Categories](./request-configuration.md) - Per-request configuration options
+- [API Endpoints](./api.md) - Available endpoints and authentication
+- Back to [📋 Documentation Index](../README.md#documentation-index)
+Which one a token is checked against is decided by its `aud` claim: it has to
+equal the client id of exactly one configured issuer. A token whose audience
+matches nothing configured is rejected with a 403.
+
+Dashboard (Laravel Passport)
+| Variable | Description |
+|---|---|
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
+| DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
+| DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
+| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+
+The signing key is fetched from the JWKS document by the token header's `kid`
+and cached in Redis for the lifetime the document's `Cache-Control` header
+allows (one hour when it says nothing), so rotating the dashboard's Passport
+keys needs no redeploy here.
+
+A dashboard behind a self-signed certificate — a local Lando one, for
+instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
+[Running against a dashboard on Lando](./setup.md#running-against-a-dashboard-on-lando).
+

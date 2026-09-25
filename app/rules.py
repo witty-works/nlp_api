@@ -8,6 +8,10 @@ def fetch_static_rules(langs: list[str]):
         LangType.DE: {
             # load articles for gendered denom
             "df_articles": "articles.csv",
+            # nouns the regular Inklusivum rules cannot derive
+            "df_inklusivum_nouns": "inklusivum_nouns.csv",
+            # person words the Inklusivum leaves unchanged
+            "df_inklusivum_neutral_nouns": "inklusivum_neutral_nouns.csv",
         },
         LangType.EN: {},
         LangType.FR: {},
@@ -715,21 +719,38 @@ def fetch_static_rules(langs: list[str]):
         ]
 
         # articles
+        df_articles = data[LangType.DE]["df_articles"]
+        # zip stops at the shortest column, so a missing Inklusivum column would
+        # empty the whole article table rather than leave that one field unset.
+        inklusivum_column = (
+            df_articles["Inklusivum"]
+            if "Inklusivum" in df_articles
+            else [None] * len(df_articles["Form"])
+        )
+
         articles = list(
             zip(
-                data[LangType.DE]["df_articles"]["Form"],
-                data[LangType.DE]["df_articles"]["Masculine"],
-                data[LangType.DE]["df_articles"]["Feminine"],
-                data[LangType.DE]["df_articles"]["Neuter"],
-                data[LangType.DE]["df_articles"]["Plural"],
-                data[LangType.DE]["df_articles"]["Alternative"],
+                df_articles["Form"],
+                df_articles["Masculine"],
+                df_articles["Feminine"],
+                df_articles["Neuter"],
+                df_articles["Plural"],
+                df_articles["Alternative"],
+                inklusivum_column,
             )
         )
 
         static_rules[LangType.DE]["masculine_articles"] = {}
         static_rules[LangType.DE]["feminine_articles"] = {}
         static_rules[LangType.DE]["neuter_articles"] = {}
+        static_rules[LangType.DE]["inclusive_articles"] = {}
         static_rules[LangType.DE]["articles"] = []
+        # `die~der`, `jede~r`, ...: what a lowercase word with a gender
+        # separator may be, see app/gender_format.py.
+        static_rules[LangType.DE]["inclusive_article_forms"] = set()
+        # (die, der) -> ("de", "nominativ"): what a separator pair is in the
+        # Inklusivum, keyed by the unordered pair so `der*die` finds it too.
+        static_rules[LangType.DE]["inklusivum_article_pairs"] = {}
 
         for article in articles:
             article = Article(
@@ -739,7 +760,28 @@ def fetch_static_rules(langs: list[str]):
                 neuter=article[3],
                 plural=article[4],
                 inclusive=article[5],
+                inklusivum=article[6],
             )
+
+            if "~" in article.inclusive:
+                static_rules[LangType.DE]["inclusive_article_forms"].add(
+                    article.inclusive
+                )
+                if article.inklusivum:
+                    pair = tuple(sorted(article.inclusive.split("~")))
+                    pairs = static_rules[LangType.DE]["inklusivum_article_pairs"]
+                    known = pairs.get(pair)
+                    if known is None:
+                        pairs[pair] = (article.inklusivum, article.form)
+                    elif known[0] != article.inklusivum:
+                        raise ValueError(
+                            f"articles.csv: {'~'.join(pair)} has two Inklusivum"
+                            f" forms, {known[0]} and {article.inklusivum}"
+                        )
+                    elif known[1] != article.form:
+                        # Listed for several cases (`zur~zum`): the pair does
+                        # not tell the case, so the noun's own analysis does.
+                        pairs[pair] = (article.inklusivum, None)
 
             static_rules[LangType.DE]["articles"].append(article.masculine)
             static_rules[LangType.DE]["articles"].append(article.feminine)
@@ -773,8 +815,99 @@ def fetch_static_rules(langs: list[str]):
                 article.form
             ] = article
 
+            if article.inclusive not in static_rules[LangType.DE]["inclusive_articles"]:
+                static_rules[LangType.DE]["inclusive_articles"][article.inclusive] = {}
+            static_rules[LangType.DE]["inclusive_articles"][article.inclusive][
+                article.form
+            ] = article.inklusivum
+
         static_rules[LangType.DE]["articles"] = set(
             static_rules[LangType.DE]["articles"]
+        )
+
+        # Determiners that fix the number of the noun they introduce, used for
+        # forms the word list cannot decide. These are surface lookups on
+        # purpose: the tagger mislabels "viele" as singular often enough that
+        # its reading of the determiner is no more trustworthy than its reading
+        # of the noun, and a fixed list behaves the same on every model.
+        # Only forms without a counterpart in the other number are listed.
+        static_rules[LangType.DE]["plural_only_determiners"] = {
+            "viele",
+            "vielen",
+            "vieler",
+            "alle",
+            "allen",
+            "mehrere",
+            "mehreren",
+            "mehrerer",
+            "beide",
+            "beiden",
+            "beider",
+            "einige",
+            "einigen",
+            "einiger",
+            "etliche",
+            "etlichen",
+            "sämtliche",
+            "sämtlichen",
+            "zahlreiche",
+            "zahlreichen",
+            "diverse",
+            "diversen",
+            "verschiedene",
+            "verschiedenen",
+            "unzählige",
+            "unzähligen",
+        }
+        # The ein and jed paradigms have no plural at all.
+        static_rules[LangType.DE]["singular_only_determiners"] = {
+            "ein",
+            "eine",
+            "einen",
+            "einem",
+            "einer",
+            "eines",
+            "kein",
+            "keinem",
+            "keines",
+            "jeder",
+            "jede",
+            "jedes",
+            "jedem",
+            "jeden",
+            "dieses",
+            "diesem",
+            "jenes",
+            "jenem",
+            "manches",
+            "manchem",
+            "welches",
+            "welchem",
+            "solches",
+            "solchem",
+        }
+
+        # Every Inklusivum article and pronoun form, for recognising text that
+        # is already written in the Inklusivum.
+        static_rules[LangType.DE]["inklusivum_articles"] = {
+            form
+            for forms in static_rules[LangType.DE]["inclusive_articles"].values()
+            for form in forms.values()
+            if form
+        }
+
+        static_rules[LangType.DE]["inklusivum_neutral_nouns"] = set(
+            data[LangType.DE]["df_inklusivum_neutral_nouns"]["Word"]
+        )
+
+        static_rules[LangType.DE]["inklusivum_nouns"] = dict(
+            zip(
+                data[LangType.DE]["df_inklusivum_nouns"]["Masculine"],
+                zip(
+                    data[LangType.DE]["df_inklusivum_nouns"]["Singular"],
+                    data[LangType.DE]["df_inklusivum_nouns"]["Plural"],
+                ),
+            )
         )
 
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
@@ -1766,6 +1899,15 @@ def fetch_static_rules(langs: list[str]):
             "Yo",
             "Sup",
             "Holler",
+        )
+
+    french = static_rules.get(LangType.FR)
+    if french and "masculine_articles" in french:
+        # Looked up per token by the French gender format rules.
+        french["masculine_article_words"] = frozenset(french["masculine_articles"])
+        french["feminine_article_words"] = frozenset(french["feminine_articles"])
+        french["noun_conjunction_words"] = frozenset(
+            conjunction.strip() for conjunction in french["noun_conjunction"].values()
         )
 
     return static_rules

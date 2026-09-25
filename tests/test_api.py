@@ -1,23 +1,39 @@
+import base64
 import pytest
 import logging
 import json
+import time
 from pathlib import Path
+
+import jwt
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi.testclient import TestClient
 from app.main import (
     app,
     context,
+)
+from app.categories import get_category_keys
+from app.prompt import Prompt
+from app.config_manager import (
+    debug_configs,
     fetch_configs_for_request,
     parse_term_replacements,
 )
 from app.auth_service import (
+    fetch_user,
     AuthError,
+    convert_to_pem,
     validate_scope_,
     get_token_,
     get_unverified_token_claims_,
 )
 from app.models import (
+    Config,
+    LangVariantType,
     LangWithAutoType,
     CheckRequestIn,
+    LlmAccessType,
 )
 
 tokens = {
@@ -33,8 +49,14 @@ logging.basicConfig(
 
 
 def get_dirs(path):
+    # id= keeps the test IDs stable when cases are added or removed;
+    # without it pytest numbers the directories by position.
     return list(
-        subpath for subpath in Path(path).iterdir() if not subpath.name.startswith(".")
+        pytest.param(subpath, id=subpath.name)
+        for subpath in sorted(Path(path).iterdir())
+        if subpath.is_dir()
+        and not subpath.name.startswith(".")
+        and subpath.name != "__pycache__"
     )
 
 
@@ -50,6 +72,15 @@ def test_health():
         assert response.status_code == 200
 
 
+def test_content_security_policy_is_sent_whole():
+    """Every directive reaches the header, not only the last one configured."""
+    with TestClient(app) as client:
+        csp = client.get("/health").headers["content-security-policy"]
+
+    directives = {part.split()[0] for part in csp.split(";") if part.strip()}
+    assert {"default-src", "script-src", "style-src", "img-src"} <= directives
+
+
 @pytest.mark.parametrize(
     "review_prompt_dir",
     get_dirs("tests/test_review_prompt"),
@@ -62,7 +93,7 @@ def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
         response = client.post(
             "/debug/review_prompt",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -86,7 +117,7 @@ def test_highlight_position(highlight_position_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -110,7 +141,7 @@ def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -126,7 +157,7 @@ def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
     "spacy_model_dir",
     get_dirs("tests/test_spacy_model"),
 )
-def test_spacy_model(spacy_model_dir, snapshot):
+def test_spacy_model(spacy_model_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = spacy_model_dir.joinpath("input.json").read_text()
@@ -134,7 +165,7 @@ def test_spacy_model(spacy_model_dir, snapshot):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -158,7 +189,7 @@ def test_chunking_issues_dir(chunking_issues_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -182,7 +213,7 @@ def test_demo_wordings_english(demo_wordings_english_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -206,7 +237,7 @@ def test_demo_wordings_german(demo_wordings_german_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -230,7 +261,7 @@ def test_general_cases(general_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -254,7 +285,7 @@ def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "free@gmail.com"},
+            headers={"X-TESTING-AUTH": "free@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -278,7 +309,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -302,7 +333,7 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -332,7 +363,7 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -356,7 +387,7 @@ def test_fails(fails_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 422
 
@@ -373,26 +404,33 @@ def test_fails(fails_case_dir, snapshot, set_redis):
     "rephrase_dir",
     get_dirs("tests/test_rephrase"),
 )
+@pytest.mark.skipif(
+    context.settings.llm_model in ("", "bedrock/test.model"),
+    reason="Skipping rephrase tests: set LLM_MODEL (and LLM_API_BASE, LLM_API_KEY)"
+    " to run them against a real LLM",
+)
 def test_rephrase(rephrase_dir, snapshot, set_redis):
-    if len(context.settings.aws_key):
-        with TestClient(app) as client:
-            # Read input files from the case directory.
-            input_json = rephrase_dir.joinpath("input.json").read_text()
-            # Call the tested endpoint.
-            response = client.post(
-                "/v1.0/rephrase",
-                json=json.loads(input_json),
-                headers={"X-Auth": "test@gmail.com"},
-            )
-            assert response.status_code == 200
+    """Against the LLM in LLM_MODEL, which pytest.ini otherwise sets to a
+    placeholder nothing answers. The snapshots record one model's wording, so
+    another model is expected to differ in it."""
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = rephrase_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v1.0/rephrase",
+            json=json.loads(input_json),
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+        assert response.status_code == 200
 
-            # output must be string
-            output = json.dumps(
-                response.json(), sort_keys=True, indent=4, ensure_ascii=False
-            )
-            # Snapshot the return value.
-            snapshot.snapshot_dir = rephrase_dir
-            snapshot.assert_match(output, "output.json")
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = rephrase_dir
+        snapshot.assert_match(output, "output.json")
 
 
 def test_lemmatize():
@@ -482,7 +520,7 @@ def test_config_not_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -497,7 +535,7 @@ def test_config_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -512,7 +550,7 @@ def test_config_organization_changed(set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -538,7 +576,7 @@ def set_redis():
     }
 
     user_object["term_replacements"] = parse_term_replacements(
-        user_object["term_replacements"]
+        user_object["term_replacements"], context
     )
     context.redis.db.set(
         context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
@@ -740,7 +778,7 @@ def set_redis():
     }
 
     user_object["term_replacements"] = parse_term_replacements(
-        user_object["term_replacements"]
+        user_object["term_replacements"], context
     )
     context.redis.db.set(
         context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
@@ -820,7 +858,7 @@ def set_redis():
     }
 
     organization_object["term_replacements"] = parse_term_replacements(
-        organization_object["term_replacements"]
+        organization_object["term_replacements"], context
     )
     context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
@@ -836,7 +874,7 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -859,7 +897,7 @@ def test_witty_addons(test_witty_addons_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -901,7 +939,7 @@ def test_logged_in_missing_org(test_logged_in_missing_org_dir, snapshot, set_red
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test-missing-org@gmail.com"},
+            headers={"X-TESTING-AUTH": "test-missing-org@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -924,7 +962,7 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -945,17 +983,22 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
         response = client.post("/v2.0/auth")
         assert response.status_code == 403
 
-        response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "missing@gmail.com"}
+        )
         assert response.status_code == 403
 
-        response = client.post("/v2.0/auth", headers={"X-Auth": "2_2@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "2_2@gmail.com"}
+        )
         assert response.status_code == 200
+        # A stored `trial_ends_at` is ignored rather than reported on: the
+        # dashboard still syncs one, and nothing here acts on it.
+        assert "organization_trial_ends_at" not in response.json()
 
-        response = response.json()
-        assert "organization_trial_ends_at" in response
-        assert response["organization_trial_ends_at"] is not None
-
-        response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
         assert response.status_code == 200
         # output must be string
         output = json.dumps(
@@ -974,7 +1017,9 @@ def test_auth_2_0_team_analytics_opt_out(
     test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis
 ):
     with TestClient(app) as client:
-        response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
+        response = client.post(
+            "/v2.0/auth", headers={"X-TESTING-AUTH": "default@gmail.com"}
+        )
         assert response.status_code == 200
         # output must be string
         output = json.dumps(
@@ -993,6 +1038,47 @@ def test_auth_token_validation():
             headers={"Authorization": "Bearer " + tokens["third_party_token"]},
         )
         assert response.status_code == 403
+
+
+def test_api_key_validation(set_redis):
+    with TestClient(app) as client:
+        # Invalid API key on auth should be forbidden
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"x-key": "invalid"},
+        )
+        assert response.status_code == 403
+
+        # Create a valid API key mapping via management endpoint
+        api_key = "valid-api-key-123"
+        email = "test@gmail.com"
+        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        assert resp.status_code == 204
+
+        # Valid API key on auth should pass
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+
+        # Invalid API key for check endpoint: unauthenticated is allowed -> 200
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Hallo Kunde"},
+            headers={"x-key": "invalid"},
+        )
+        assert response.status_code == 200
+
+        # Valid API key for check endpoint should also return 200
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Hallo Kunde"},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
 
         response = client.post(
             "/v2.0/auth",
@@ -1020,7 +1106,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "test@gmail.com"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -1032,7 +1118,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
         snapshot.assert_match(output, "output.json")
 
 
-def test_validate_scope(event_loop, set_redis):
+def test_validate_scope(set_redis):
     try:
         claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
         valid = validate_scope_("access_as_user", claims)
@@ -1050,7 +1136,7 @@ def test_validate_scope(event_loop, set_redis):
     assert valid is False
 
 
-def test_token(event_loop, set_redis):
+def test_token(set_redis):
     try:
         token = get_token_("")
     except AuthError as e:
@@ -1072,14 +1158,15 @@ def test_token(event_loop, set_redis):
     assert token == tokens["azureadbc_valid_expired"]
 
 
-def test_token_claims(event_loop, set_redis):
+def test_token_claims(set_redis):
     claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
 
     assert claims is not False
 
 
 # test overwriting user configuration by organization forced rules
-def test_fetch_configs_for_request(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_fetch_configs_for_request(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -1093,9 +1180,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
         },
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
-    )
+    await fetch_configs_for_request(test_request, "test@gmail.com", context)
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
     assert hasattr(test_request.config, "llm_alternatives")
@@ -1108,7 +1193,8 @@ def test_fetch_configs_for_request(event_loop, set_redis):
 # test not overwriting user configuration by organization suggestion/default rules
 
 
-def test_fetch_user_rules_suggestion(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_fetch_user_rules_suggestion(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -1120,9 +1206,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
-    )
+    await fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language == "de-DE"
@@ -1135,14 +1219,13 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
 # test user not set any parameters, but organization did
 
 
-def test_set_organization_rules(event_loop, set_redis):
+@pytest.mark.asyncio
+async def test_set_organization_rules(set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = CheckRequestIn(**request_data)
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
-    )
+    await fetch_configs_for_request(test_request, "test@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -1153,15 +1236,14 @@ def test_set_organization_rules(event_loop, set_redis):
 # test user and organization didn't set any rules
 
 
-def test_set_default_rules(event_loop):
+@pytest.mark.asyncio
+async def test_set_default_rules():
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = CheckRequestIn(**request_data)
 
-    event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
-    )
+    await fetch_configs_for_request(test_request, "non_existant@gmail.com", context)
     assert test_request.config.store_context is True
     assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language is None
@@ -1446,6 +1528,117 @@ def test_store_get_delete_rules():
         assert response.content == b'{"detail":"Organization configs not found"}'
 
 
+def test_user_config_sync_inklusivum(snapshot):
+    """The dashboard sync path for the Inklusivum ending.
+
+    The gender-ending fixtures pass the config inline with each check; the
+    dashboard instead stores it via POST /user/configs. This covers that
+    round-trip: a dashboard-shaped payload with german_gender_ending "de-e"
+    is stored, and a subsequent check without any inline config must come
+    back Inklusivum-formatted (Jedey Expertere, ensen - not Expert*in).
+    """
+    user_request_data = {
+        "id": "test-config-sync-inklusivum",
+        "email": "config-sync-inklusivum@gmail.com",
+        "name": "Tests Config Sync Inklusivum",
+        "organization_id": None,
+        "config": {
+            "german_gender_ending": {"value": "de-e", "status": "force"},
+            "gendered_roles_format": {"value": "inclusive_gender", "status": "force"},
+            "preferred_variants": {"value": ["de-DE", "en-US"], "status": "suggestion"},
+            "french_gender_separator": {"value": "·", "status": "suggestion"},
+            "show_inspiration_alternatives": {"value": True, "status": "suggestion"},
+            "categories": {},
+        },
+        "false_positives": [],
+        "domains": {"list": [], "type": "deny"},
+        "notifications": 5,
+        "config_hash": "test-config-sync-inklusivum-hash",
+        "sync_date": "2026-08-07 12:00:00",
+    }
+
+    with TestClient(app) as client:
+        response = client.post("/user/configs", json=user_request_data)
+        assert response.status_code == 204
+
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": "Jeder Experte weiß das. Die Lehrerin gibt dem Schüler"
+                " den Stift. Wir suchen einen Mitarbeiter und seinen Kollegen."
+            },
+            headers={"X-TESTING-AUTH": user_request_data["email"]},
+        )
+        assert response.status_code == 200
+
+        # The stored ending formats the suggestions; nothing may fall back to
+        # a separator ending like Expert*in.
+        body = response.json()
+        texts = [
+            alternative["text"]
+            for result in body["results"]
+            for alternative in result["alternatives"]
+        ]
+        assert not any("*" in text for text in texts)
+
+        # Gendered findings carry the Inklusivum logo from
+        # config_options.json; findings from other categories keep theirs.
+        logo = "https://www.witty.works/assets/media/vgd-icon-bunt.svg"
+        by_subcategory = {result["subcategory"]: result for result in body["results"]}
+        assert by_subcategory["titles"]["explanation"]["icon_image"] == logo
+        assert by_subcategory["function"]["explanation"]["icon_image"] == logo
+        assert (
+            by_subcategory["anglicism_advanced"]["explanation"].get("icon_image")
+            != logo
+        )
+
+        # output must be string
+        output = json.dumps(body, sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = "tests/test_user_config_sync/test_inklusivum"
+        snapshot.assert_match(output, "output.json")
+
+
+def test_api_key_get_missing():
+    """GET /api_key should return 404 for unknown keys."""
+    with TestClient(app) as client:
+        response = client.get("/api_key", params={"api_key": "missing-key-123"})
+        # Endpoint is defined with 404 response on missing key
+        assert response.status_code == 404
+
+
+def test_api_key_create_fetch_delete(set_redis):
+    """POST/GET/DELETE flow for /api_key endpoints."""
+    api_key = "test-api-key-123"
+    email = "test@gmail.com"
+
+    with TestClient(app) as client:
+        # Ensure it's not there first
+        resp = client.get("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 404
+
+        # Create mapping
+        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        assert resp.status_code == 204
+
+        # Fetch mapping
+        resp = client.get("/api_key", params={"api_key": api_key})
+        # The operation is defined with 204 status; presence is asserted via Redis state
+        assert resp.status_code == 204
+
+        # Verify Redis contains the mapping
+        stored = context.redis.db.get("api_key:" + api_key)
+        assert stored == email
+
+        # Delete mapping
+        resp = client.delete("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 204
+
+        # Ensure it's gone
+        resp = client.get("/api_key", params={"api_key": api_key})
+        assert resp.status_code == 404
+
+
 def test_rule_debug():
     with TestClient(app) as client:
         request_data = {
@@ -1497,7 +1690,6 @@ def test_rule_debug():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 },
                 "gravity": 0.9,
             }
@@ -1544,7 +1736,6 @@ def test_rule_patterns():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",
                 },
                 "gravity": 0.9,
@@ -1585,7 +1776,6 @@ def test_rule_patterns():
                     "text": "",
                     "long_text": "",
                     "icon": "❗",
-                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                     "context": "bar",
                 },
                 "gravity": 0.9,
@@ -1593,6 +1783,160 @@ def test_rule_patterns():
         ]
 
         assert response_content == expected
+
+
+def test_rule_debug_gendered_declension_fallback():
+    # Gendered pairs whose declensions the nouns DB does not carry are
+    # synthesized for the regular patterns (app.nouns.synthesize_gendered_pair)
+    # instead of bailing with "Declension ... missing" and no alternatives.
+    with TestClient(app) as client:
+        # Weak masculine n-declension: masculine oblique forms end in -n.
+        request_data = {
+            "text": "Der Guatemalteke kam am Morgen.",
+            "lang": "de",
+            "lemma": "Guatemalteke",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Guatemalteke~Guatemaltekin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        finding = response_content[0]
+        assert finding["text"] == "Guatemalteke"
+        assert finding["subcategory"] == "titles"
+        assert finding["alternatives"] == [
+            {
+                "text": "Guatemaltek*in",
+                "male_form": "Guatemalteken",
+                "female_form": "Guatemaltekin",
+                "gender_role": "inclusive_gender",
+            },
+            {
+                "text": "Guatemaltekin/Guatemalteken",
+                "male_form": "Guatemalteken",
+                "female_form": "Guatemaltekin",
+                "gender_role": "binary_gender",
+            },
+        ]
+
+        # -er class: masculine plural equals the base form.
+        request_data = {
+            "text": "Die Temposünder werden verwarnt.",
+            "lang": "de",
+            "lemma": "Temposünder",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Temposünder~Temposünderin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        finding = response_content[0]
+        assert finding["text"] == "Temposünder"
+        assert finding["alternatives"] == [
+            {
+                "text": "Temposünder*innen",
+                "male_form": "Temposünder",
+                "female_form": "Temposünderinnen",
+                "gender_role": "inclusive_gender",
+            },
+            {
+                "text": "Temposünderinnen und Temposünder",
+                "male_form": "Temposünder",
+                "female_form": "Temposünderinnen",
+                "gender_role": "binary_gender",
+            },
+        ]
+
+
+def test_rule_debug_gendered_declension_fallback_keeps_the_prefix_lowercase():
+    """A suffix rule on a compound is where synthesis meets a prefix.
+
+    The synthesized forms stay unprefixed so that add_german_prefix can join
+    them, because that is what lowercases the second half. Prefixing them
+    where they are built produced "CyberHacktivist", and the later call could
+    not undo it: it skips a word that already starts with the prefix.
+    """
+    with TestClient(app) as client:
+        request_data = {
+            "text": "Der Cyberhacktivist kam.",
+            "lang": "de",
+            "lemma": "Hacktivist",
+            "type": "suffix",
+            "subcategories": ["titles"],
+            "word_types": [
+                {"word_type": "n", "lower_case": False, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "Hacktivist~Hacktivistin",
+                    "is_gendered_noun": True,
+                    "word_types": [
+                        {"word_type": "n", "lower_case": False, "lemmatize": True},
+                    ],
+                },
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        assert len(response_content) == 1
+        texts = [alt["text"] for alt in response_content[0]["alternatives"]]
+        assert texts == [
+            "Die*der Cyberhacktivist*in",
+            "Die/der Cyberhacktivistin/Cyberhacktivist",
+        ]
+        assert not any("CyberH" in text for text in texts)
+
+
+@pytest.mark.parametrize(
+    "spacy_analysis_dir",
+    get_dirs("tests/test_spacy_analysis"),
+)
+def test_spacy_analysis(spacy_analysis_dir, snapshot):
+    """Token-level snapshot of the spaCy analysis (docs/spacy-review.md, Phase 0).
+
+    Captures word_type, lemma, is_singular plus the raw tag/pos/morph/dep per
+    token, so changes to models or the analysis pipeline show up as reviewable
+    token diffs instead of only opaque end-to-end rule changes.
+    """
+    with TestClient(app) as client:
+        input_json = json.loads(spacy_analysis_dir.joinpath("input.json").read_text())
+        response = client.get("/debug/spacy", params=input_json)
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = spacy_analysis_dir
+        snapshot.assert_match(output, "output.json")
 
 
 def test_spacy():
@@ -1607,7 +1951,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1632,7 +1976,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
             },
@@ -1648,14 +1992,14 @@ def test_spacy():
                 "lemma": "Herr",
                 "word_type": "n",
                 "is_singular": True,
-                "ner": "",
+                "ner": "PER",
             },
             {
                 "text": "Müller",
                 "lemma": "Müller",
                 "word_type": "",
                 "is_singular": True,
-                "ner": "",
+                "ner": "PER",
             },
             {
                 "text": "in",
@@ -1675,7 +2019,7 @@ def test_spacy():
                 "text": "😃",
                 "lemma": "😃",
                 "word_type": "emoji",
-                "is_singular": None,
+                "is_singular": False,
                 "ner": "",
             },
         ]
@@ -1689,13 +2033,14 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|adv|a|n||||emoji"},
             {
                 "noun chunks": [
                     {"text": "👩🏻‍🚒", "start": 0, "end": 1},
                     {"text": "Das", "start": 1, "end": 2},
                     {"text": "Herr Müller", "start": 5, "end": 7},
                     {"text": "London", "start": 8, "end": 9},
+                    {"text": "😃", "start": 9, "end": 10},
                 ]
             },
             {
@@ -1739,10 +2084,10 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1772,7 +2117,7 @@ def test_spacy():
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "word_type": "a",
+                "word_type": "adv",
                 "is_singular": None,
                 "ner": "",
                 "start": 13,
@@ -1788,10 +2133,10 @@ def test_spacy():
                 "children": [
                     {"dep": "mo", "token": "sehr", "ner": ""},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1807,15 +2152,15 @@ def test_spacy():
                 "morph": {"Degree": "Pos"},
                 "tag": "ADJD",
                 "pos": "ADV",
-                "dep": "mo",
+                "dep": "pd",
                 "head": "ist",
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1823,7 +2168,7 @@ def test_spacy():
                 "lemma": "Herr",
                 "word_type": "n",
                 "is_singular": True,
-                "ner": "",
+                "ner": "PER",
                 "start": 28,
                 "whitespace": " ",
                 "emoji_desc": None,
@@ -1836,10 +2181,10 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1847,7 +2192,7 @@ def test_spacy():
                 "lemma": "Müller",
                 "word_type": "",
                 "is_singular": True,
-                "ner": "",
+                "ner": "PER",
                 "start": 33,
                 "whitespace": " ",
                 "emoji_desc": None,
@@ -1859,12 +2204,12 @@ def test_spacy():
                 "head": "Herr",
                 "dependent": None,
                 "children": [
-                    {"dep": "nk", "token": "Müller", "ner": ""},
+                    {"dep": "nk", "token": "Müller", "ner": "PER"},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1885,10 +2230,10 @@ def test_spacy():
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
@@ -1910,34 +2255,34 @@ def test_spacy():
                 "children": [
                     {"dep": "nk", "token": "London", "ner": "LOC"},
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
             {
                 "text": "😃",
                 "lemma": "😃",
                 "word_type": "emoji",
-                "is_singular": None,
+                "is_singular": False,
                 "ner": "",
                 "start": 50,
                 "whitespace": "",
                 "emoji_desc": "grinning face with big eyes",
                 "is_emoji": True,
-                "morph": {},
-                "tag": "KON",
-                "pos": "CCONJ",
-                "dep": "punct",
+                "morph": {"Case": "Acc", "Gender": "Neut", "Number": "Plur"},
+                "tag": "NN",
+                "pos": "NOUN",
+                "dep": "pd",
                 "head": "ist",
                 "dependent": None,
                 "children": [
                     {"dep": "sb", "token": "Das", "ner": ""},
-                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
-                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "pd", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": "PER"},
                     {"dep": "mo", "token": "in", "ner": ""},
-                    {"dep": "punct", "token": "😃", "ner": ""},
+                    {"dep": "pd", "token": "😃", "ner": ""},
                 ],
             },
         ]
@@ -1949,7 +2294,7 @@ def test_spacy():
     "lemma_case_dir",
     get_dirs("tests/test_lemmatizers"),
 )
-def test_lemmatizer(lemma_case_dir, snapshot):
+def test_lemmatizer(lemma_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = lemma_case_dir.joinpath("input.json").read_text()
@@ -1957,7 +2302,7 @@ def test_lemmatizer(lemma_case_dir, snapshot):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -1985,7 +2330,7 @@ def test_grammatically_correct_alternatives(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2009,7 +2354,7 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2033,7 +2378,7 @@ def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2057,7 +2402,7 @@ def test_not_for_people(test_not_for_people_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2081,7 +2426,7 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2109,7 +2454,7 @@ def test_english_false_positive_pattern(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2137,7 +2482,7 @@ def test_english_upper_case_multiterms(
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2146,6 +2491,46 @@ def test_english_upper_case_multiterms(
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = english_upper_case_multiterms_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "context_checker_dir",
+    get_dirs("tests/test_context_checker"),
+)
+@pytest.mark.skipif(
+    not context.settings.context_checker_local,
+    reason="Skipping context checker tests: local models are not enabled",
+)
+def test_context_checker(context_checker_dir, snapshot, set_redis):
+    """
+    Test that context checker correctly identifies false positives vs genuine matches.
+
+    The context checker uses SetFit models (or remote API) to analyze whether
+    flagged words are used in problematic contexts or are false positives.
+
+    Examples:
+    - "fossil fuel industry" - false positive (scientific/technical context)
+    - "you are such a fossil" - genuine match (ageist insult)
+    - "Die Firma ist unabhängig" - false positive (company independence)
+    - "Sie ist sehr unabhängig" - genuine match (gender stereotype)
+    """
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = context_checker_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.4/check",
+            json=json.loads(input_json),
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = context_checker_dir
         snapshot.assert_match(output, "output.json")
 
 
@@ -2161,7 +2546,7 @@ def test_plain_language(plain_language_dir, snapshot, set_redis):
         response = client.post(
             "/v2.4/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "free@gmail.com"},
+            headers={"X-TESTING-AUTH": "free@gmail.com"},
         )
         assert response.status_code == 200
         # output must be string
@@ -2171,3 +2556,1002 @@ def test_plain_language(plain_language_dir, snapshot, set_redis):
         # Snapshot the return value.
         snapshot.snapshot_dir = plain_language_dir
         snapshot.assert_match(output, "output.json")
+
+
+@pytest.fixture
+def dashboard_sso(request):
+    """Register a dashboard issuer and pre-seed its verification key.
+
+    The RSA PEM is written straight into the cache `get_rsa_key` reads, so the
+    test never reaches out for the JWKS document — the fetch path itself is
+    shared with the Microsoft issuers and covered by their tests.
+    """
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    numbers = private_key.public_key().public_numbers()
+
+    def to_base64_url(value: int) -> str:
+        raw = value.to_bytes((value.bit_length() + 7) // 8, "big")
+        return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
+
+    kid = "test-dashboard-kid"
+    context.redis.db.set(
+        "rsa_pem:" + kid,
+        convert_to_pem(to_base64_url(numbers.n), to_base64_url(numbers.e)),
+    )
+
+    previous = context.settings.sso_configs.get("dashboard")
+    context.settings.sso_configs["dashboard"] = {
+        "client_id": "1",
+        "jwks_url": "https://dashboard.example.com/.well-known/jwks.json",
+        "issuer": None,
+        "expected_scope": None,
+    }
+
+    def issue(**overrides) -> str:
+        now = int(time.time())
+        claims = {
+            "aud": "1",
+            "jti": "1234",
+            "iat": now,
+            "nbf": now,
+            "exp": now + 3600,
+            "sub": "1",
+            "scopes": [],
+            "email": "test@gmail.com",
+            "preferred_username": "test@gmail.com",
+        }
+        claims.update(overrides)
+
+        return jwt.encode(
+            claims,
+            private_key.private_bytes(
+                serialization.Encoding.PEM,
+                serialization.PrivateFormat.PKCS8,
+                serialization.NoEncryption(),
+            ).decode(),
+            algorithm="RS256",
+            headers={"kid": kid},
+        )
+
+    yield issue
+
+    context.redis.db.delete("rsa_pem:" + kid)
+    if previous is None:
+        del context.settings.sso_configs["dashboard"]
+    else:  # pragma: no cover
+        context.settings.sso_configs["dashboard"] = previous
+
+
+def test_dashboard_token(dashboard_sso, set_redis):
+    """A Passport access token maps to the user it names."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 200
+        assert response.json()["id"] == "test-user"
+
+
+def test_dashboard_token_rejections(dashboard_sso, set_redis):
+    """Expired, wrong-audience and unsigned variants are all refused."""
+    with TestClient(app) as client:
+        expired = dashboard_sso(iat=1, nbf=1, exp=2)
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + expired}
+        )
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Token error: The token has expired"
+
+        # A different client id belongs to no configured issuer at all.
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso(aud="2")},
+        )
+        assert response.status_code == 403
+        assert (
+            response.json()["detail"]
+            == "Token provided did not map to a valid client ID"
+        )
+
+        # Same claims, signed with a key the issuer does not publish.
+        tampered = jwt.encode(
+            get_unverified_token_claims_(dashboard_sso()),
+            "secret",
+            algorithm="HS256",
+            headers={"kid": "test-dashboard-kid"},
+        )
+        response = client.post(
+            "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + tampered}
+        )
+        assert response.status_code == 403
+
+
+def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
+    """Configuring an issuer makes a token without an `iss` claim invalid."""
+    context.settings.sso_configs["dashboard"][
+        "issuer"
+    ] = "https://dashboard.example.com"
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso()},
+        )
+        assert response.status_code == 403
+
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={
+                "Authorization": "Bearer "
+                + dashboard_sso(iss="https://dashboard.example.com")
+            },
+        )
+        assert response.status_code == 200
+
+
+@pytest.fixture
+def standalone_settings():
+    """Run the API the way a deployment without a dashboard would."""
+    previous = (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    )
+    context.settings.default_user_config_enabled = True
+    context.settings.client_config_enabled = True
+
+    yield context.settings
+
+    (
+        context.settings.default_user_config_enabled,
+        context.settings.client_config_enabled,
+    ) = previous
+
+
+def test_auth_without_dashboard_config(standalone_settings):
+    """An API key for an unsynced user still resolves to a usable config."""
+    api_key = "standalone-api-key"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 200
+
+        config = response.json()
+        # No organisation exists to belong to, and nulls are stripped from the
+        # response, so the key is absent rather than null.
+        assert "organization_id" not in config
+        assert config["config_hash"]
+
+        # Stable across calls, so a client can tell a stale copy from a fresh one.
+        again = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert again.json()["config_hash"] == config["config_hash"]
+
+        # And the check endpoint works for the same key.
+        response = client.post(
+            "/v2.4/check",
+            json={"text": "Wir suchen einen Ninja Programmierer."},
+            headers={"x-key": api_key},
+        )
+        assert response.status_code == 200
+        assert len(response.json()["results"])
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_default_user_config_flags(standalone_settings):
+    """The configured defaults take effect whether or not clients may set them."""
+    email = "nobody-synced-me@example.com"
+    standalone_settings.default_user_llm_alternatives = True
+
+    try:
+        # Clients may set the flags, so the default is only a starting point.
+        request_in = CheckRequestIn(text="Hello world.")
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is False
+
+        # Clients may not, so the default is the last word.
+        standalone_settings.client_config_enabled = False
+
+        request_in = CheckRequestIn(
+            text="Hello world.", config={"llm_alternatives": False}
+        )
+        await fetch_configs_for_request(request_in, email, context)
+        assert request_in.config.llm_alternatives is True
+    finally:
+        standalone_settings.default_user_llm_alternatives = False
+
+
+def test_auth_without_dashboard_config_disabled():
+    """Without the flag an unsynced user keeps being rejected."""
+    api_key = "standalone-api-key-off"
+    email = "nobody-synced-me@example.com"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, email)
+
+        response = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert response.status_code == 403
+
+        context.redis.delete_api_key(api_key)
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config(standalone_settings, set_redis):
+    """`store_context` and `llm_alternatives` follow the request when allowed."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    # default@gmail.com's organisation forces neither of the two.
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is False
+    assert request_in.config.llm_alternatives is True
+
+    # An organisation that does force them keeps the last word.
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": False},
+    )
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is True
+
+
+@pytest.mark.asyncio
+async def test_client_settable_config_disabled(set_redis):
+    """With the flag off the server keeps deciding both."""
+    request_in = CheckRequestIn(
+        text="Hello world.",
+        config={"store_context": False, "llm_alternatives": True},
+    )
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+
+    assert request_in.config.store_context is True
+    assert request_in.config.llm_alternatives is False
+
+
+def test_categories():
+    """The category list is public and cacheable."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/categories")
+        assert response.status_code == 200
+        # The security middleware must not have clobbered this with no-cache.
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        payload = response.json()
+        categories = {category["key"]: category for category in payload["categories"]}
+
+        # Every reported key is one the check endpoint accepts as disabled.
+        assert set(categories) <= set(get_category_keys())
+
+        assert categories["sexism"]["parent"] == "gender-orientation"
+        assert categories["sexism"]["advanced_key"] == "sexism_advanced"
+        assert categories["orthography"]["advanced_key"] is None
+        assert categories["sexism"]["label"] == "Sexism"
+
+        groups = {group["key"]: group for group in payload["groups"]}
+        assert set(category["parent"] for category in categories.values()) == set(
+            groups
+        )
+        assert groups["gender-orientation"]["label"] == "Gender + Orientation"
+
+        response = client.get("/v2.0/categories", params={"locale": "de-DE"})
+        assert response.status_code == 200
+
+        german = {
+            category["key"]: category for category in response.json()["categories"]
+        }
+        assert set(german) == set(categories)
+        assert german["sexism"]["label"] not in (
+            None,
+            "",
+            categories["sexism"]["label"],
+        )
+
+
+def test_require_auth_off():
+    """A deployment can choose to check text for anyone who asks."""
+    text = {"text": "Wir suchen einen Ninja Programmierer."}
+
+    with TestClient(app) as client:
+        # The default: no user, no results, but still a 200 so a client that has
+        # been signed out keeps working.
+        response = client.post("/v2.4/check", json=text)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+        context.settings.require_auth = False
+        try:
+            response = client.post("/v2.4/check", json=text)
+            assert response.status_code == 200
+            assert len(response.json()["results"])
+        finally:
+            context.settings.require_auth = True
+
+
+def test_management_auth():
+    """The endpoints that mint credentials are closed unless told otherwise."""
+    with TestClient(app) as client:
+        context.settings.management_auth_enabled = True
+        try:
+            response = client.post(
+                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+            )
+            assert response.status_code == 401
+
+            # The settings object carries every secret the deployment holds.
+            assert client.get("/settings").status_code == 401
+
+            # `user_email` is a query parameter here, so the caller picks whose
+            # config applies and whose LLM budget is spent.
+            response = client.post(
+                "/v1.0/prompt",
+                params={"user_email": "test@gmail.com"},
+                json={"text": "Hello world."},
+            )
+            assert response.status_code == 401
+
+            # The docs switch is a separate decision and stays where it was.
+            assert context.settings.api_docs_auth_enabled is False
+        finally:
+            context.settings.management_auth_enabled = False
+
+        assert context.redis.get_api_key_email("should-not-exist") is None
+
+
+def test_require_api_key():
+    """With the switch on, only the public paths answer without a credential."""
+    body = {"text": "Der Lehrer gibt dem Schüler den Stift."}
+
+    with TestClient(app) as client:
+        context.redis.set_api_key("gate-key", "default@gmail.com")
+        context.settings.require_api_key = True
+        try:
+            # The routes a client needs before it has been given a key.
+            assert client.get("/health").status_code == 200
+            assert client.get("/v2.0/categories").status_code == 200
+            assert client.get("/v2.0/config-options").status_code == 200
+
+            # Everything else is closed, including routes that merely describe
+            # the deployment rather than checking anything.
+            assert client.post("/v2.4/check", json=body).status_code == 401
+            assert client.get("/version").status_code == 401
+
+            # A key that resolves to nobody is no better than no key. The
+            # lenient path answers both of these with 200 and no results, so
+            # this is the difference the switch makes.
+            response = client.post(
+                "/v2.4/check", json=body, headers={"x-key": "not-a-key"}
+            )
+            assert response.status_code == 401
+
+            response = client.post(
+                "/v2.4/check", json=body, headers={"x-key": "gate-key"}
+            )
+            assert response.status_code == 200
+
+            # A path that does not exist is refused before it is routed, so
+            # the gate cannot be probed for which routes are there.
+            assert client.get("/no-such-route").status_code == 401
+
+            # Matching is exact: a path that merely starts with a public one
+            # is not itself public.
+            assert client.get("/health-internal").status_code == 401
+
+            # CORS preflight carries no credentials, so refusing it would break
+            # the browser clients before they send the real request.
+            response = client.options(
+                "/v2.4/check",
+                headers={
+                    "Origin": "https://example.test",
+                    "Access-Control-Request-Method": "POST",
+                },
+            )
+            assert response.status_code == 200
+        finally:
+            context.settings.require_api_key = False
+
+        # Off is the default, and leaves the lenient behaviour untouched: an
+        # unauthenticated check is answered, just with nothing in it.
+        response = client.post("/v2.4/check", json=body)
+        assert response.status_code == 200
+        assert response.json()["results"] == []
+
+
+def test_require_api_key_leaves_password_protected_routes_to_their_password():
+    """An endpoint that asks for a username and password needs no key on top,
+    while that password is asked for."""
+    login = {"Authorization": "Basic " + base64.b64encode(b"admin:secret").decode()}
+    settings = context.settings
+    previous = (settings.api_docs_username, settings.api_docs_password)
+
+    with TestClient(app) as client:
+        settings.require_api_key = True
+        settings.management_auth_enabled = True
+        settings.api_docs_username, settings.api_docs_password = "admin", "secret"
+        try:
+            # With the login: through, without a key.
+            response = client.get(
+                "/user/configs?email=nobody@example.org", headers=login
+            )
+            assert response.status_code == 404
+            response = client.put(
+                "/api_keys",
+                params={"allow_empty": True},
+                json={"entries": []},
+                headers=login,
+            )
+            assert response.status_code == 200
+
+            # Without it: the route's own refusal, not the key gate's.
+            response = client.get("/user/configs?email=nobody@example.org")
+            assert response.status_code == 401
+            assert response.headers["WWW-Authenticate"] == "Basic"
+
+            # Everything else still needs a key, login or not.
+            response = client.post("/v2.4/check", json={"text": "Hallo"}, headers=login)
+            assert response.status_code == 401
+
+            # With management auth off those routes check nothing, so the
+            # key gate stays in front of them.
+            settings.management_auth_enabled = False
+            response = client.get("/user/configs?email=nobody@example.org")
+            assert response.status_code == 401
+            assert "x-key" in response.json()["detail"]
+        finally:
+            settings.require_api_key = False
+            settings.management_auth_enabled = False
+            settings.api_docs_username, settings.api_docs_password = previous
+
+
+def test_require_api_key_public_paths_are_configurable():
+    """A deployment can open a route that authenticates itself."""
+    with TestClient(app) as client:
+        context.settings.require_api_key = True
+        previous = context.settings.public_paths
+        context.settings.public_paths = ["/health", "/version"]
+        try:
+            assert client.get("/version").status_code == 200
+            # Dropped from the list, so no longer public.
+            assert client.get("/v2.0/categories").status_code == 401
+        finally:
+            context.settings.public_paths = previous
+            context.settings.require_api_key = False
+
+
+@pytest.fixture
+def llm_access():
+    """Set the LLM access policy for one test and put it back afterwards."""
+    previous = (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    )
+
+    def set_access(access, allowed_users=None):
+        context.settings.llm_access = access
+        context.settings.llm_allowed_users = allowed_users or []
+        # A deployment with no model configured has no LLM whatever the policy
+        # says, so naming one is what makes the policy observable at all.
+        context.settings.llm_model = "bedrock/some.model"
+
+        return context.settings
+
+    yield set_access
+
+    (
+        context.settings.llm_access,
+        context.settings.llm_allowed_users,
+        context.settings.llm_model,
+    ) = previous
+
+
+@pytest.mark.asyncio
+async def test_llm_access_disabled(llm_access, standalone_settings, set_redis):
+    """Nothing turns LLM alternatives on once the operator says no."""
+    llm_access(LlmAccessType.DISABLED)
+
+    # Not the client...
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # ...and not an organisation that forces them on either.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    # Nor the debug routes, which resolve no user at all.
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_access_users(llm_access, standalone_settings, set_redis):
+    """`users` allows whoever the request resolved to, or only the named ones."""
+    settings = llm_access(LlmAccessType.USERS)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # No user resolved, so there is nobody to allow.
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+    # An allowlist narrows it to the named emails, matched case-insensitively.
+    llm_access(LlmAccessType.USERS, ["Default@Gmail.com"])
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, "default@gmail.com", context)
+    assert request_in.config.llm_alternatives is True
+
+    # test@gmail.com's organisation forces them on, and still does not get them.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert settings.llm_allowed_users == ["Default@Gmail.com"]
+
+
+@pytest.mark.asyncio
+async def test_llm_access_everyone(llm_access, standalone_settings):
+    """`everyone` covers requests that resolved to no user at all."""
+    llm_access(LlmAccessType.EVERYONE)
+
+    request_in = CheckRequestIn(text="Hello world.", config={"llm_alternatives": True})
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is True
+
+    # Still opt-in: the policy permits the spend, it does not ask for it.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, None, context)
+    assert request_in.config.llm_alternatives is False
+
+
+def test_llm_access_rephrase(llm_access, set_redis):
+    """The policy reaches the endpoint that actually spends the tokens."""
+    llm_access(LlmAccessType.DISABLED)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase",
+            json={
+                "sentence": "The chairman called.",
+                "text": "The chairman called.",
+                "start": 0,
+                "alternatives": [],
+                "lang": "en",
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+        # test@gmail.com's organisation forces llm_alternatives on, so without
+        # the policy this would have reached the LLM.
+        assert response.status_code == 403
+
+
+def test_write(llm_access, set_redis, monkeypatch):
+    """A prompt rewrites the text, and the draft gets Witty's review."""
+    calls = []
+    replies = [
+        # The draft, quoted the way models like to answer.
+        '"The chairman will call the guys tomorrow."',
+        # The review of it, braces and all.
+        "The chair will call everyone tomorrow {as agreed}.",
+    ]
+
+    class Response:
+        def __init__(self, content):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response(replies[len(calls) - 1])
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    llm_access(LlmAccessType.USERS)
+    body = {"prompt": "Make it more formal.", "text": "Chairman calls guys tmrw."}
+    auth = {"X-TESTING-AUTH": "test@gmail.com"}
+
+    with TestClient(app) as client:
+        # Whoever the credential resolves to; without one there is nobody.
+        assert client.post("/v1.0/write", json=body).status_code == 401
+
+        response = client.post("/v1.0/write", json=body, headers=auth)
+        assert response.status_code == 200
+        result = response.json()
+
+        prompt = calls[0]["messages"][1]["content"]
+        assert "Make it more formal." in prompt
+        assert "Chairman calls guys tmrw." in prompt
+        # Room for a whole text rather than the 300 tokens of /v1.0/prompt,
+        # and asked to stay within what Witty checks at once.
+        assert calls[0]["max_tokens"] > 300
+        assert f"under {context.settings.text_max_length} characters" in prompt
+
+        assert result["initial_response"] == "The chairman will call the guys tomorrow."
+        flagged = {alert["text"] for alert in result["check_results"]}
+        assert "chairman" in flagged
+        # The review goes back to the model, whose answer is taken as the text.
+        assert len(calls) == 2
+        assert "The chairman will call the guys tomorrow." in (
+            calls[1]["messages"][1]["content"]
+        )
+        assert result["reviewed_response"] == (
+            "The chair will call everyone tomorrow {as agreed}."
+        )
+
+        # A word diff from the draft to the review, as the dashboard shows it.
+        edits = result["edits"]
+        assert {"op": "delete", "text": "chairman"} in edits
+        assert {"op": "insert", "text": "chair"} in edits
+        assert "".join(e["text"] for e in edits if e["op"] != "insert") == (
+            result["initial_response"]
+        )
+        assert "".join(e["text"] for e in edits if e["op"] != "delete") == (
+            result["reviewed_response"]
+        )
+
+        # An empty editor is a request for a new text from the prompt alone.
+        calls.clear()
+        replies[0] = "Welcome, everyone."
+        response = client.post(
+            "/v1.0/write", json={"prompt": "Greet the team."}, headers=auth
+        )
+        assert response.status_code == 200
+        assert calls[0]["messages"][1]["content"].startswith("Greet the team.")
+
+        # The operator's policy still has the last word.
+        llm_access(LlmAccessType.DISABLED)
+        calls.clear()
+        response = client.post("/v1.0/write", json=body, headers=auth)
+        assert response.status_code == 403
+        assert calls == []
+
+
+def test_write_refuses_a_text_it_could_only_shorten(llm_access, set_redis):
+    """A prompt's result has to fit what Witty checks at once, so a longer text
+    would come back cut; it is refused instead, before any LLM call."""
+    llm_access(LlmAccessType.USERS)
+    too_long = "Die Lehrer kommen. " * (context.settings.text_max_length // 19 + 1)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Fix the typos.", "text": too_long},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert "longer than" in response.json()["detail"][0]["msg"]
+
+
+def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog):
+    """A provider error is a generic 500 for the caller and a traceback for
+    the operator."""
+
+    async def acompletion(**kwargs):
+        raise ConnectionError("provider unreachable")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client, caplog.at_level(logging.ERROR, "nlp_api"):
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Greet the team."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 500
+    assert "provider unreachable" not in response.text
+    assert "/v1.0/write failed" in caplog.text
+    assert "provider unreachable" in caplog.text
+
+
+def test_prompt_and_write_metrics_are_counted(monkeypatch):
+    """Each has its own counter; the prompt one used to be dropped."""
+    from starlette.requests import Request
+
+    monkeypatch.setattr(context.settings, "log_metrics", True)
+    request = Request({"type": "http", "headers": []})
+    configs = {"id": "metrics-user"}
+
+    for endpoint in ("prompt", "write"):
+        before = int(
+            context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0
+        )
+        context.redis.store_metrics(request, configs, "1.0", endpoint)
+        after = int(context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user"))
+        assert after == before + 1
+
+
+def test_auth_reports_llm_suggestions_the_server_refuses(set_redis, monkeypatch):
+    """A client reading /v2.0/auth learns that AI suggestions would be refused
+    (LLM_ACCESS, LLM_ALLOWED_USERS, no model), so it need not offer them."""
+
+    def llm_alternatives():
+        with TestClient(app) as client:
+            response = client.post(
+                "/v2.0/auth", headers={"X-TESTING-AUTH": "default@gmail.com"}
+            )
+        return response.json()["config"].get("llm_alternatives")
+
+    assert llm_alternatives() != {"value": False, "status": "force"}
+
+    monkeypatch.setattr(context.settings, "llm_access", LlmAccessType.DISABLED)
+    assert llm_alternatives() == {"value": False, "status": "force"}
+
+
+@pytest.fixture
+def llm_calls(monkeypatch):
+    """Capture what would have been sent to a provider, without calling one."""
+    calls = []
+
+    class Message:
+        content = "a reply"
+
+    class Choice:
+        message = Message()
+        finish_reason = "stop"
+
+    class Response:
+        choices = [Choice()]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+    return calls
+
+
+@pytest.mark.asyncio
+async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
+    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
+
+    prompt = Prompt(context.settings)
+    result = await prompt.handle("say something", "be brief")
+    assert result == "a reply"
+
+    call = llm_calls[0]
+    assert call["model"] == "bedrock/some.model"
+    assert call["messages"] == [
+        {"role": "system", "content": "be brief"},
+        {"role": "user", "content": "say something"},
+    ]
+    # Bedrock signs with a key pair, so the bearer token is not offered to it.
+    assert "api_key" not in call
+
+    monkeypatch.setattr(context.settings, "aws_key", "an-id")
+    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
+    await prompt.handle("say something")
+    assert llm_calls[1]["aws_access_key_id"] == "an-id"
+
+    # An unset key pair has to stay unset so an instance role can take over.
+    monkeypatch.setattr(context.settings, "aws_key", "")
+    await prompt.handle("say something")
+    assert "aws_access_key_id" not in llm_calls[2]
+
+
+@pytest.mark.asyncio
+async def test_llm_unconfigured_model(set_redis, monkeypatch):
+    """No model configured is no LLM, rather than a call that fails."""
+    monkeypatch.setattr(context.settings, "llm_model", "")
+
+    # test@gmail.com's organisation forces llm_alternatives on.
+    request_in = CheckRequestIn(text="Hello world.")
+    await fetch_configs_for_request(request_in, "test@gmail.com", context)
+    assert request_in.config.llm_alternatives is False
+
+    assert (
+        debug_configs(CheckRequestIn(text="Hello world."), context.settings)[
+            "llm_alternatives"
+        ]["value"]
+        is False
+    )
+
+
+@pytest.mark.asyncio
+async def test_llm_provider_switch(llm_calls, monkeypatch):
+    """Pointing at another provider is a config change and nothing else."""
+    monkeypatch.setattr(context.settings, "llm_model", "openrouter/some/model")
+    monkeypatch.setattr(context.settings, "llm_api_key", "a-key")
+    monkeypatch.setattr(context.settings, "llm_api_base", "https://example.com/v1")
+
+    await Prompt(context.settings).handle("say something")
+
+    call = llm_calls[0]
+    assert call["model"] == "openrouter/some/model"
+    assert call["api_key"] == "a-key"
+    assert call["api_base"] == "https://example.com/v1"
+    # The AWS key pair is not offered to a provider that cannot use it.
+    assert "aws_access_key_id" not in call
+    # An omitted system prompt still gets the inclusive-language default.
+    assert "inclusive language" in call["messages"][0]["content"]
+
+
+@pytest.mark.asyncio
+async def test_llm_model_override(llm_calls):
+    """The debug routes' per-request model wins over the configured one."""
+    await Prompt(context.settings).handle("hi", None, "anthropic/some-model")
+
+    assert llm_calls[0]["model"] == "anthropic/some-model"
+    assert "aws_access_key_id" not in llm_calls[0]
+
+
+def test_config_options_accept_a_language_code():
+    """`de` as well as `de-DE`: a client that only knows the language gets
+    the translated labels instead of a 422."""
+    with TestClient(app) as client:
+        for locale in ("de", "de-CH"):
+            response = client.get("/v2.0/config-options", params={"locale": locale})
+            assert response.status_code == 200
+            labels = response.json()["options"]["german_gender_ending"]["labels"]
+            assert labels["de-e"].startswith("Inklusivum, z.B.")
+
+        assert (
+            client.get("/v2.0/categories", params={"locale": "fr"}).status_code == 200
+        )
+        assert (
+            client.get("/v2.0/config-options", params={"locale": "xx"}).status_code
+            == 422
+        )
+
+
+def test_config_options():
+    """Every reported value is one a check request is allowed to send."""
+    with TestClient(app) as client:
+        response = client.get("/v2.0/config-options")
+        assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "public, max-age=3600"
+
+        options = response.json()["options"]
+        assert set(options) == {
+            "german_gender_ending",
+            "french_gender_separator",
+            "gendered_roles_format",
+        }
+
+        for field, option in options.items():
+            assert option["default"] in option["values"]
+
+            for value in option["values"]:
+                # The model is the same one /v2.4/check validates against, so a
+                # reported value that it rejects would be a contradiction.
+                assert Config(**{field: value})
+
+            rejected = client.post(
+                "/v2.4/check", json={"text": "Hello.", "config": {field: "not-a-value"}}
+            )
+            assert rejected.status_code == 422
+
+        assert "*in" in options["german_gender_ending"]["values"]
+        assert options["gendered_roles_format"]["default"] == "both"
+
+        # Every value carries a label, in every locale the API serves. An
+        # unlabelled one would leave an options page showing a bare `(-)`.
+        for locale in LangVariantType:
+            response = client.get(
+                "/v2.0/config-options", params={"locale": locale.value}
+            )
+            assert response.status_code == 200
+
+            for field, option in response.json()["options"].items():
+                assert set(option["labels"]) == set(option["values"]), (locale, field)
+
+        german = client.get("/v2.0/config-options", params={"locale": "de-DE"}).json()[
+            "options"
+        ]["german_gender_ending"]["labels"]
+        assert german["(-)"] != options["german_gender_ending"]["labels"]["(-)"]
+
+
+def test_api_key_mode_options_page(standalone_settings):
+    """The sequence an extension in API-key mode makes from its options page.
+
+    The options page is where a key gets entered in the first place, so the two
+    lists it renders have to come back before there is a key to send.
+    """
+    api_key = "options-page-key"
+
+    with TestClient(app) as client:
+        context.redis.set_api_key(api_key, "options@example.com")
+
+        # 1. Both lists, with no credential of any kind.
+        categories = client.get("/v2.0/categories").json()
+        assert categories["categories"]
+        options = client.get("/v2.0/config-options").json()["options"]
+
+        # 2. Signed in with the key the user just pasted in.
+        auth = client.post("/v2.0/auth", json={}, headers={"x-key": api_key})
+        assert auth.status_code == 200
+
+        text = {"text": "Wir suchen einen Ninja Programmierer für unsere Kunden."}
+        results = client.post(
+            "/v2.4/check", json=text, headers={"x-key": api_key}
+        ).json()["results"]
+
+        # A result's `subcategory` is one of the reported keys, or the
+        # `advanced_key` of one: that is what lets a toggle line up with what
+        # the user sees flagged.
+        keys = {}
+        for category in categories["categories"]:
+            keys[category["key"]] = category
+            if category["advanced_key"]:
+                keys[category["advanced_key"]] = category
+
+        reported = {result["subcategory"] for result in results}
+        assert reported
+        assert reported <= set(keys)
+        # The text is chosen to flag an advanced variant, since that is the
+        # case a client gets wrong by assuming one key per toggle.
+        assert any(key.endswith("_advanced") for key in reported)
+
+        # 3. A category switched off on the options page is gone from the next
+        # check, without any dashboard having said so. One toggle means both
+        # keys: the base and the advanced one are matched independently.
+        category = keys[sorted(reported)[0]]
+        off = [key for key in (category["key"], category["advanced_key"]) if key]
+
+        results = client.post(
+            "/v2.4/check",
+            json={**text, "config": {"disabled_categories": off}},
+            headers={"x-key": api_key},
+        ).json()["results"]
+        assert not set(off) & {result["subcategory"] for result in results}
+
+        # 4. A gender ending picked from /v2.0/config-options is honoured.
+        for ending in options["german_gender_ending"]["values"]:
+            response = client.post(
+                "/v2.4/check",
+                json={
+                    "text": "Wir suchen einen Programmierer.",
+                    "config": {"german_gender_ending": ending},
+                },
+                headers={"x-key": api_key},
+            )
+            assert response.status_code == 200
+
+        context.redis.delete_api_key(api_key)
+
+
+def test_fetch_user_reuses_the_user_the_key_gate_resolved():
+    """The gate resolves the user once; the handler gets the same answer
+    without a second Redis lookup or token check."""
+    import asyncio
+
+    from starlette.requests import Request
+
+    request = Request({"type": "http", "headers": [], "state": {}})
+    request.state.resolved_user = "gate@example.org"
+
+    assert asyncio.run(fetch_user(request, context.settings, None, None)) == (
+        "gate@example.org"
+    )

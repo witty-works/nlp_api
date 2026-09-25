@@ -1,0 +1,20 @@
+# API keys synced to the NLP API with bin/sync_api_keys.py (see
+# docs/setup.md#from-a-local-file). Copy to api_keys.yaml, which git ignores,
+# and keep it on your machine: it holds the keys themselves.
+#
+# Add a key with
+#   pdm run python -m bin.api_key create <email> --file api_keys.yaml --note "<who and why>"
+# and sync. Revoke one by deleting its entry and syncing.
+
+# Jane Doe (ACME), HR pilot until 2026-12, introduced by Tom
+- email: jane@acme.example
+  key: example-key-jane-replace-me-0000000000
+  config:                   # optional: what a request gets where it says nothing
+    german_gender_ending: ":in"
+    gendered_roles_format: inclusive_gender
+  force:                    # optional: what a request gets whatever it says
+    french_gender_separator: "·"
+
+# Tom Example, internal testing
+- email: tom@example.org
+  key: example-key-tom-replace-me-00000000000

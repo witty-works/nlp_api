@@ -1,4 +1,7 @@
 {
+    "bulk_actions": [
+        "gender_format"
+    ],
     "gender_separator": "·",
     "language": "fr",
     "limit_reached": false,
@@ -31,16 +34,17 @@
                     "text": "Les enseignant·es"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 1,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile",
             "end": 15,
             "explanation": {
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
@@ -85,16 +89,17 @@
                     "text": "Le professeur ou la professeuse"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagia",
             "end": 40,
             "explanation": {
                 "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entouré d'une foule hétéroclite dans l'ombre.",
                     "height": 409,
-                    "src": "https://www.witty.works/hubfs/witty-works-Generic-masculine-810x410.jpg.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-Generic-masculine-810x410.jpg.png",
                     "width": 810
                 },
                 "long_text": "Pour inclure tout le monde, utilisez des mots qui créent des images mentales de personnes de tous les genres.",
@@ -108,6 +113,32 @@
             "subcategory": "function",
             "text": "Le professeur",
             "text_id": "professeur"
+        },
+        {
+            "alternatives": [
+                {
+                    "gender_role": "inclusive_gender",
+                    "text": "Les professeur·ses"
+                }
+            ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
+            "category": "gender-orientation",
+            "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
+            "end": 81,
+            "explanation": {
+                "icon": "💯",
+                "long_text": "Terminaisons genrées",
+                "text": "Orthographe incohérente des terminaisons genrées",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/terminaisons-genrées?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Terminaisons genrées",
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "Les professeurs et professeuses",
+            "text_id": "french_doublet"
         },
         {
             "alternatives": [
@@ -135,7 +166,6 @@
             "end": 95,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "long_text": "Pour inclure des personnes de tous les genres, adressez-vous directement à elles ou utilisez des mots non genrés.",
                 "text": "Excluez-vous les personnes non binaires ?",
                 "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/pronoms-binaires?reducedView=true"
@@ -175,16 +205,17 @@
                     "text": "un peintre ou une peintre"
                 }
             ],
+            "bulk": "gender_format",
+            "bulk_alternative": 0,
             "category": "gender-orientation",
             "context": "Les professeurs sont bons. Le professeur est bon. Les professeurs et professeuses sont bons. Il est un peintre. Ile est demandée à la stagiaire.",
             "end": 110,
             "explanation": {
                 "icon": "😟",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration de paires d'hommes et de femmes astronautes, artistes, soignants, professeurs, ouvriers du bâtiment.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/wittyworks%20learning%20bite%20Berufe.png",
+                    "src": "https://www.witty.works/assets/media/wittyworks%20learning%20bite%20Berufe.png",
                     "width": 900
                 },
                 "long_text": "Pour désigner des personnes de tous les genres dans les différentes fonctions, utilisez un langage inclusif.",
@@ -222,11 +253,10 @@
             "end": 143,
             "explanation": {
                 "icon": "😒",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "image_url": {
                     "alt": "Illustration d'un groupe diversifié de personnes d'identités de genre, d'âges, d'origines ethniques et de morphologies différentes qui sont toutes LGBTQUIA+.",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/gender%20identity-1.png",
+                    "src": "https://www.witty.works/assets/media/gender%20identity-1.png",
                     "width": 900
                 },
                 "long_text": "Pour inclure les personnes de tous les genres, ne limitez pas les personnes à des rôles, des identités et des expressions de genre traditionnels.",

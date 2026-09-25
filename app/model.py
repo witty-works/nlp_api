@@ -7,13 +7,15 @@ from spacy.lang.char_classes import (
     ALPHA,
     HYPHENS,
 )
-from spacy.tokenizer import Tokenizer
-from spacy.util import compile_infix_regex, compile_suffix_regex, compile_prefix_regex
+
+from spacy.util import compile_infix_regex, compile_suffix_regex
 from spacy.lookups import Lookups
 from spacy.tokens import Token, Doc
-from spacy.matcher import PhraseMatcher, Matcher
+from spacy.matcher import Matcher
 
+import asyncio
 import re
+from contextlib import asynccontextmanager
 from logging import Logger
 import json
 
@@ -42,6 +44,8 @@ class Model:
     loggger: Logger
     static_rules: dict
     lemma_plural_lookup: set
+    # Filled in at startup once the database is available.
+    ambiguous_number_lookup: dict
     db: Db
 
     def __init__(
@@ -55,6 +59,10 @@ class Model:
         self.logger = logger
         self.static_rules = static_rules
         self.lemma_plural_lookup = lemma_plural_lookup
+        self.ambiguous_number_lookup = {}
+        # Filled in at startup once the database is available.
+        self.de_verb_surface_forms = frozenset()
+        self.de_noun_surface_forms = frozenset()
 
         for model_name in self.settings.models:
             lang = model_name[0:2]
@@ -64,7 +72,6 @@ class Model:
         "AFX",
         "ADJA",
         "ADJD",
-        "ADV",
         "ADJ",
         "JJ",
         "JJR",
@@ -91,6 +98,25 @@ class Model:
     ]
 
     models = {}
+    locks = {}
+
+    @asynccontextmanager
+    async def nlp_session(self, lang: LangType):
+        """Bounds per-request Vocab/StringStore growth via memory zones.
+
+        Serialized per language: zones are process-global on the vocab, so a
+        zone exiting while another request's Doc is alive would evict strings
+        that Doc still references. spaCy work is GIL-bound anyway; the slow
+        awaits (LanguageTool, LLM) belong outside this block. Docs created
+        inside must not be used after it - extract plain data before leaving.
+        """
+        if not self.settings.memory_zones:
+            yield
+            return
+
+        async with self.locks[lang]:
+            with self.models[lang].memory_zone():
+                yield
 
     def token_is_conjunction(self, token: Token) -> bool:
         return token.text == "," or token.pos_ == "CCONJ"
@@ -135,6 +161,13 @@ class Model:
 
         return word_type
 
+    @staticmethod
+    def _traced(trace: list | None, tag: str, word_type: str) -> str:
+        """Record which branch decided, for the word-type metrics runner."""
+        if trace is not None:
+            trace.append(tag)
+        return word_type
+
     async def _fetch_word_type(
         self,
         lang: LangType,
@@ -142,23 +175,30 @@ class Model:
         expected_word_type: str | None = None,
         single_word: bool = False,
         strict: bool = False,
+        trace: list | None = None,
     ) -> str:
+        """Hacky approach to fix some issues in spaCy POS detection.
+        It was optimized for spaCy large models for the current rule set.
+        Fine tuning the spaCy models is probably the cleaner approach.
+
+        Every return is tagged via _traced so bin/word_type_metrics.py can
+        measure which branches still earn their keep per model version."""
         # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
         # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
         if token._.is_emoji:
-            return WordType.EMOJI
+            return self._traced(trace, "emoji", WordType.EMOJI)
 
         if token.pos_ == "NUM":
             if WordType.NUMBER != expected_word_type and (
                 token.tag_ in ["CARD", "CD"] or "Card" in token.morph.get("NumType")
             ):
-                return WordType.CARDINAL
+                return self._traced(trace, "cardinal", WordType.CARDINAL)
 
-            return WordType.NUMBER
+            return self._traced(trace, "number", WordType.NUMBER)
 
         if not is_valid_text(lang, token.text):
-            return ""
+            return self._traced(trace, "invalid-text", "")
 
         if expected_word_type is None:
             expected_word_type = ""
@@ -166,21 +206,42 @@ class Model:
             expected_word_type == WordType.ARTICLE
             and token.text.lower() in self.static_rules[lang]["articles"]
         ):
-            return WordType.ARTICLE
+            return self._traced(trace, "article-list", WordType.ARTICLE)
 
         if token.pos_ == "ADV":
             if WordType.ADVERB == expected_word_type:
-                return WordType.ADVERB
+                return self._traced(trace, "adverb-expected", WordType.ADVERB)
 
-            if lang == LangType.FR and WordType.ADJECTIVE == expected_word_type:
-                return WordType.ADJECTIVE
+            if WordType.ADJECTIVE == expected_word_type:
+                if lang == LangType.FR and token.text.lower().endswith("ez"):
+                    # Vous l’incarnez et l’**animez** auprès de notre clientèle.
+                    return self._traced(trace, "fr-ez-verb", WordType.VERB)
+
+                return self._traced(
+                    trace, "adv-as-expected-adjective", WordType.ADJECTIVE
+                )
 
         if (
             lang == LangType.EN
+            and expected_word_type
             and "-" in token.text
             and not token.text.startswith("-")
             and not token.text.endswith("-")
         ):
+            # Splitting exists so "one-eyed"-class rules can match their
+            # parts, which only makes sense against an expectation. In
+            # auto-detect the whole-token tag is the better reading: the
+            # split turns "self-driven" into a noun via "self" (measured in
+            # docs/spacy-review.md, word-type branch metrics).
+            # The tagger's reading of the whole compound answers the
+            # expectation directly; splitting loses it. en 3.7.1 hid this by
+            # tagging compounds PROPN, which matched any expectation (case:
+            # 'state-of-the-art' in tests/test_lemmatizers/test_english_lemmatizer).
+            if expected_word_type == WordType.ADJECTIVE and (
+                token.tag_ in self.adj_tags or token.pos_ in self.adj_tags
+            ):
+                return self._traced(trace, "hyphen-adjective", WordType.ADJECTIVE)
+
             tokens = self.fetch_tokens(lang, token.text.replace("-", " "))
             word_type = await self.fetch_word_type(
                 lang, tokens[0], expected_word_type, single_word
@@ -190,22 +251,36 @@ class Model:
                 WordType.CARDINAL,
                 WordType.NUMBER,
             ] and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]:
-                return await self.fetch_word_type(
-                    lang, tokens[-1], expected_word_type, single_word
+                return self._traced(
+                    trace,
+                    "hyphen-split-last",
+                    await self.fetch_word_type(
+                        lang, tokens[-1], expected_word_type, single_word
+                    ),
                 )
 
-            return word_type
+            return self._traced(trace, "hyphen-split-first", word_type)
 
-        if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
+        # UPOS wins when the two taggers disagree: the de 3.8.0 pipeline
+        # emits pos=NOUN with tag=ADJD for nouns like 'Ehrgeiz' (case:
+        # tests/test_general_cases/test_api_capitalize_alternatives).
+        if (
+            token.tag_ in self.adj_tags or token.pos_ in self.adj_tags
+        ) and token.pos_ not in ("NOUN", "PROPN"):
             if lang == LangType.FR and token.text.lower().endswith("ez"):
                 # Vous l’incarnez et l’**animez** auprès de notre clientèle.
-                return WordType.VERB
+                return self._traced(trace, "fr-ez-verb", WordType.VERB)
 
-            return WordType.ADJECTIVE
+            return self._traced(trace, "adjective-tags", WordType.ADJECTIVE)
+
+        # Predicative/adverbial adjectives carry an adjective tag (ADJD, JJ)
+        # and are handled above; what reaches this point is a plain adverb.
+        if token.pos_ == "ADV":
+            return self._traced(trace, "adverb", WordType.ADVERB)
 
         if lang == LangType.FR and expected_word_type == WordType.NOUN:
             if token.pos_ == "NOUN" or token.tag_ == "NN":
-                return WordType.NOUN
+                return self._traced(trace, "fr-noun-expected", WordType.NOUN)
 
         if token.pos_ == "VERB":
             if (
@@ -213,37 +288,50 @@ class Model:
                 and lang == LangType.DE
                 and WordType.ADJECTIVE in expected_word_type
             ):
-                return WordType.ADJECTIVE
+                return self._traced(
+                    trace, "de-verb-as-expected-adjective", WordType.ADJECTIVE
+                )
 
-            return WordType.VERB
+            return self._traced(trace, "verb", WordType.VERB)
 
         if token.pos_ in self.pronoun_tags or token.tag_ in self.pronoun_tags:
             if expected_word_type == WordType.NOUN:
-                return WordType.NOUN
+                return self._traced(trace, "pronoun-as-expected-noun", WordType.NOUN)
 
-            return WordType.PRONOUN
+            return self._traced(trace, "pronoun", WordType.PRONOUN)
 
         if token.pos_ == "NOUN" or token.tag_ == "NN":
-            if lang == LangType.DE:
-                if token.text[0].islower() and self.db:
-                    result = await self.db.fetch_declensions(
-                        lang, WordType.VERB, token.text, token
+            if lang == LangType.DE and token.text[0].islower():
+                # A lowercase "noun" that the verb table knows is usually a
+                # misread infinitive ("Wir wollen das abzocken"). But only
+                # when the form is not also a known noun: informal lowercase
+                # German ("Anlaß zur sorge", "auf kosten des...") must stay
+                # a noun (measured in docs/spacy-review.md, word-type branch
+                # metrics). Membership sets built at startup: no per-token
+                # queries, and nothing touches the token._.forms cache,
+                # which must only ever hold forms of the type the token
+                # ended up as.
+                word = token.text.lower()
+                if (
+                    word in self.de_verb_surface_forms
+                    and word not in self.de_noun_surface_forms
+                ):
+                    return self._traced(
+                        trace, "de-lowercase-noun-is-verb", WordType.VERB
                     )
-                    if result is not None:
-                        return WordType.VERB
 
-            return WordType.NOUN
+            return self._traced(trace, "noun", WordType.NOUN)
 
         if lang == LangType.DE and token.text[0].isupper() and token.text.endswith("-"):
-            return WordType.NOUN
+            return self._traced(trace, "de-dash-noun", WordType.NOUN)
 
         if token.tag_ == "KON" or token.pos_ == "CCONJ":
-            return WordType.CONJUNCTION
+            return self._traced(trace, "conjunction", WordType.CONJUNCTION)
 
         if token.pos_ == "PROPN":
-            return expected_word_type
+            return self._traced(trace, "propn-as-expected", expected_word_type)
 
-        return ""
+        return self._traced(trace, "no-match", "")
 
     async def check_word_type(
         self,
@@ -294,103 +382,232 @@ class Model:
 
         return matcher(tokens)
 
-    def fetch_phrase_matcher(self, lang: LangType, tokens: Doc, phrases: list) -> list:
-        # Phrase matcher part to handle False positives with two words and special symbols
-        matcher = PhraseMatcher(s[lang].vocab, attr="LOWER")
+    def tune_tokenizer(self, lang, nlp):
+        """Adjust the shipped tokenizer in place rather than rebuilding it.
 
-        # Only run model.make_doc to speed things up
-        patterns = [self.models[lang].make_doc(text) for text in phrases]
-        matcher.add("TerminologyList", patterns)
-
-        return matcher(tokens)
-
-    def custom_tokenizer(self, lang, nlp):
+        de: keep gender-colon words ('Kund:in') whole; en/fr: keep hyphen
+        compounds whole; all: always split a trailing period
+        (https://github.com/explosion/spaCy/discussions/12930)."""
         if lang == LangType.DE:
-            infixes = German.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if ":<>=" in infixes[i]:
-                    # handle 'Kund:in' as one word
-                    infixes[i] = r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA)
-                    break
-
-            rules = German.Defaults.tokenizer_exceptions
+            infixes = [
+                # handle 'Kund:in' as one word
+                (
+                    r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA)
+                    if ":<>=" in infix
+                    else infix
+                )
+                for infix in German.Defaults.infixes
+            ]
             suffixes = German.Defaults.suffixes
-            prefixes = German.Defaults.prefixes
-            token_match = German.Defaults.token_match
         elif lang == LangType.EN:
-            infixes = English.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if HYPHENS in infixes[i]:
-                    # https://spacy.io/usage/linguistic-features#tokenization
-                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
-                    infixes.pop(i)
-                    break
-
-            rules = English.Defaults.tokenizer_exceptions
+            # https://spacy.io/usage/linguistic-features#tokenization
+            infixes = [i for i in English.Defaults.infixes if HYPHENS not in i]
             suffixes = English.Defaults.suffixes
-            prefixes = English.Defaults.prefixes
-            token_match = English.Defaults.token_match
         elif lang == LangType.FR:
-            # return None
-            infixes = French.Defaults.infixes
-            for i in range(0, len(infixes)):
-                if HYPHENS in infixes[i]:
-                    # https://spacy.io/usage/linguistic-features#tokenization
-                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
-                    infixes.pop(i)
-                    break
-
-            rules = French.Defaults.tokenizer_exceptions
+            infixes = [i for i in French.Defaults.infixes if HYPHENS not in i]
             suffixes = French.Defaults.suffixes
-            prefixes = French.Defaults.prefixes
-            token_match = French.Defaults.token_match
         else:
-            return None
+            return
 
-        # https://github.com/explosion/spaCy/discussions/12930
-        suffixes += [r"\."]
+        nlp.tokenizer.infix_finditer = compile_infix_regex(infixes).finditer
+        nlp.tokenizer.suffix_search = compile_suffix_regex(
+            list(suffixes) + [r"\."]
+        ).search
 
-        return Tokenizer(
-            vocab=nlp.vocab,
-            rules=rules,
-            prefix_search=compile_prefix_regex(prefixes).search,
-            suffix_search=compile_suffix_regex(suffixes).search,
-            infix_finditer=compile_infix_regex(infixes).finditer,
-            token_match=token_match,
-        )
+    # Case-sensitive on purpose: lowercased matching minted person spans out
+    # of "HR" and the verb "miss". The union runs in every pipeline so names
+    # keep their titles across language boundaries ("Mrs. Smith" in a German
+    # text). Kept in step with static_rules[lang]["salutations"], which
+    # drives the LanguageTool exemptions for the same words.
+    salutation_titles = [
+        "Herr",
+        "Herrn",
+        "Frau",
+        "Fräulein",
+        "Hr.",
+        "Fr.",
+        "Mr",
+        "Mr.",
+        "Mrs",
+        "Mrs.",
+        "Ms",
+        "Ms.",
+        "Miss",
+        "Monsieur",
+        "Madame",
+        "Mademoiselle",
+        "M.",
+        "Mme",
+        "Mme.",
+        "Dr",
+        "Dr.",
+        "Prof",
+        "Prof.",
+    ]
 
     def load_nlp_model(self, lang, spacy_model):
         model = spacy.load(spacy_model, disable=["textcat"])
         model.add_pipe("emoji", first=True)
-        tokenizer = self.custom_tokenizer(lang, model)
-        if tokenizer is not None:
-            model.tokenizer = tokenizer
+        self.tune_tokenizer(lang, model)
 
-        # Switch to non-trainable lemmatizer
-        model.remove_pipe("lemmatizer")
-        # Add non-trainable lemmatizer from language defaults
-        # and load lemmatizer tables from spacy-lookups-data
-        model.add_pipe("lemmatizer").initialize()
+        if self.settings.lemmatizer == "lookup":
+            # Switch to the non-trainable lemmatizer with its tables from
+            # spacy-lookups-data.
+            model.remove_pipe("lemmatizer")
+            lemmatizer = model.add_pipe("lemmatizer")
+            lemmatizer.initialize()
 
-        model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+        if (
+            self.settings.lemmatizer == "lookup"
+            and model.get_pipe("lemmatizer").mode == "lookup"
+        ):
+            # Merge the product lemma pins into the lemmatizer's own lookup
+            # table (de/fr) - last write wins, so the pins override shipped
+            # entries.
+            model.get_pipe("lemmatizer").lookups.get_table("lemma_lookup").update(
+                lemma_lookup[lang]
+            )
+        else:
+            # The rule-mode lemmatizer (en) and the trained one have no
+            # surface-keyed table to merge into, so the pins run as a pipe.
+            model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+
+        # A salutation followed by a name is a person reference even where
+        # the statistical NER stays silent - the de 3.8.0 model dropped bare
+        # surnames like 'Herr Müller' (case:
+        # tests/test_general_cases/test_api_entity_de). The entity_ruler is
+        # spaCy's layer for exactly this; the ner keeps every span the ruler
+        # already claimed. The optional punctuation token covers dotted
+        # titles the loaded tokenizer splits ("Mrs." in a German text), and
+        # PROPN+ covers multi-token names ("Herr Peter Müller"). Guarded
+        # because pipelines without a ner (de_dep_news_trf) must still load.
+        if "ner" in model.pipe_names:
+            entity_ruler = model.add_pipe("entity_ruler", before="ner")
+            entity_ruler.add_patterns(
+                [
+                    {
+                        "label": "PERSON" if lang == LangType.EN else "PER",
+                        "pattern": [
+                            {"TEXT": {"IN": self.salutation_titles}},
+                            {"IS_PUNCT": True, "OP": "?"},
+                            {"POS": "PROPN", "OP": "+"},
+                        ],
+                    }
+                ]
+            )
+
+        if lang == LangType.DE:
+            # Gender-symbol forms (Kund:innen, Kolleg*in) are nouns wherever
+            # they appear, but the de 3.8.0 tagger reads some as adjectives
+            # (case: tests/test_spacy_analysis/de_gender_colon). Retire this
+            # pattern when a future model passes that case without it.
+            ruler = model.get_pipe("attribute_ruler")
+            ruler.add(
+                patterns=[[{"TEXT": {"REGEX": r"^\w+[:*·](in|innen)$"}}]],
+                attrs={"POS": "NOUN", "TAG": "NN"},
+            )
+            model.add_pipe("german_article_agreement", last=True)
+
+        if lang == LangType.FR and not model.vocab.vectors.shape[0]:
+            # French gender format conversion confirms a word by its vector.
+            self.logger.warning(
+                "%s has no word vectors: French gender formats will not be"
+                " converted",
+                model.meta.get("name", lang),
+            )
 
         self.models[lang] = model
+        self.locks[lang] = asyncio.Lock()
+
+    def is_number_ambiguous(self, lang: LangType, token: Token) -> bool:
+        """Whether the word list cannot decide this token's number.
+
+        True for forms that are both a singular and a plural of the same lemma,
+        where the list can only ever answer plural.
+        """
+        return token.text in self.ambiguous_number_lookup.get(lang, ())
+
+    def number_from_determiner(self, lang: LangType, token: Token) -> bool | None:
+        """Read the number off the determiner introducing this noun.
+
+        Preferred over the tagger for ambiguous forms because it is a fixed
+        lookup: it gives the same answer whichever model is loaded, which the
+        morphology does not. Returns None when no determiner settles it.
+        """
+        rules = self.static_rules.get(lang, {})
+        plural_only = rules.get("plural_only_determiners")
+        singular_only = rules.get("singular_only_determiners")
+
+        if not plural_only and not singular_only:
+            return None
+
+        # A determiner binds only the noun phrase it opens, so walk back over
+        # adjectives and stop at the first word that is not one. Running past
+        # that would pick up the determiner of an earlier phrase, reading
+        # "eine Arbeitskraft für unsere Kunden" as a singular Kunden.
+        for index in range(token.i - 1, max(token.i - 4, token.sent.start) - 1, -1):
+            previous = token.doc[index]
+
+            word = previous.text.lower()
+            if word in plural_only:
+                return False
+            if word in singular_only:
+                return True
+
+            if previous.pos_ not in ("ADJ", "ADV"):
+                return None
+
+        return None
 
     def is_token_singular(self, lang: LangType, token: Token) -> bool | None:
         plural_lookup_first = (
             False if token.text.endswith("e") and token.lemma_.endswith("er") else True
         )
-        if plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+        # An ambiguous form is genuinely both, so the list is not evidence and
+        # must not pre-empt the reading from the surrounding sentence.
+        ambiguous = self.is_number_ambiguous(lang, token)
+
+        if (
+            not ambiguous
+            and plural_lookup_first
+            and token.text in self.lemma_plural_lookup[lang]
+        ):
             return False
+
+        if ambiguous:
+            from_determiner = self.number_from_determiner(lang, token)
+            if from_determiner is not None:
+                return from_determiner
 
         number = token.morph.get("Number")
         if number:
-            return "Sing" in number
+            is_singular = "Sing" in number
 
-        if not plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+            if (
+                self.settings.log_metrics
+                and ambiguous
+                and is_singular
+                and token.text in self.lemma_plural_lookup[lang]
+            ):
+                # Where the two sources disagree the model decides, so record it:
+                # this is the only place a different spaCy model can change the
+                # number, and without a count the trade-off is invisible.
+                self.logger.info(
+                    "Number from morphology over word list for '%s' (%s), model '%s'",
+                    token.text,
+                    lang,
+                    self.models[lang].meta.get("name", "unknown"),
+                )
+
+            return is_singular
+
+        # Nothing decided it, so fall back to the list even when ambiguous:
+        # a guess from the lexicon beats no answer, and this keeps the previous
+        # behaviour wherever the model has no morphological reading at all.
+        if token.text in self.lemma_plural_lookup[lang]:
             return False
 
-        if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
+        if lang == LangType.EN and token.pos_ == "NOUN" and token.text.endswith("s"):
             return False
 
         if token.text.endswith("-"):
@@ -474,6 +691,59 @@ def custom_lemmatizer(lang):
 @French.factory("custom_lemmatizer_factory")
 def custom_lemmatizer_factory(nlp, name):
     return custom_lemmatizer(nlp.lang)
+
+
+def is_genitive_attachment(token: Token) -> bool:
+    """Whether a German noun phrase is a genitive attribute, a genitive object
+    or the object of a preposition, the places where `der` opens a genitive
+    plural: `das Buch der Lehrer`, `wir gedenken der Lehrer`, `wegen der
+    Lehrer`. A conjunct is where the phrase it is
+    coordinated with is: `die Meinung der Lehrer und der Schüler`."""
+    while token.dep_ == "cj" and token.head is not token:
+        token = token.head
+        if token.dep_ == "cd" and token.head is not token:
+            token = token.head
+
+    # A genitive attribute (`ag`), a genitive object (`og`: `wir gedenken der
+    # Lehrer`), or under a preposition.
+    return token.dep_ in ("ag", "og") or token.head.pos_ == "ADP"
+
+
+@German.component("german_article_agreement")
+def german_article_agreement(doc: Doc) -> Doc:
+    """Give a masculine noun the case and number of the `der` before it.
+
+    `der Lehrer` is a nominative singular or a genitive plural. After a
+    coordination with a plural verb ("Die Lehrer*innen und der Lehrer treffen
+    …") the tagger reads it as a genitive plural, sometimes even with the
+    article tagged as a nominative singular. Everything downstream reads the noun, so the
+    article went missing from the suggestion and the noun came out plural
+    (`der Lehrerne`). Only where the noun phrase is not attached as a
+    genitive does the article's reading win.
+    """
+    for token in doc:
+        if token.pos_ != "NOUN" or token.i == 0:
+            continue
+
+        article = doc[token.i - 1]
+        while article.pos_ == "ADJ" and article.i > 0:
+            article = doc[article.i - 1]
+        if article.lower_ != "der":
+            continue
+
+        # A masculine noun: after `der`, a feminine one is a dative singular
+        # and a neuter one only ever a genitive plural.
+        if (
+            token.morph.get("Gender") == ["Masc"]
+            and token.morph.get("Case") == ["Gen"]
+            and token.morph.get("Number") == ["Plur"]
+            and not is_genitive_attachment(token)
+        ):
+            features = token.morph.to_dict()
+            features.update(Case="Nom", Number="Sing")
+            token.set_morph(features)
+
+    return doc
 
 
 class TokenLemmatizer:

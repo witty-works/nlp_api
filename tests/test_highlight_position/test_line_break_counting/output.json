@@ -1,14 +1,18 @@
 {
+    "bulk_actions": [],
     "language": "en",
     "limit_reached": false,
     "results": [
         {
             "alternatives": [
                 {
-                    "text": "dedicated"
+                    "context": "Identity first",
+                    "text": "resourceful person",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "committed"
+                    "text": "they"
                 }
             ],
             "category": "social-motive",
@@ -17,11 +21,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png",
                 "image_url": {
                     "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening",
                     "height": 525,
-                    "src": "https://www.witty.works/hubfs/witty-works-exaggeration.png",
+                    "src": "https://www.witty.works/assets/media/witty-works-exaggeration.png",
                     "width": 900
                 },
                 "long_text": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",

@@ -3,10 +3,8 @@ name: run tests
 on: [push]
 
 env:
-  #CONTEXT_CHECKER_URL: "https://setfit-english.westeurope.inference.ml.azure.com/score"
-  CONTEXT_CHECKER_API_KEY: ${{ secrets.CONTEXT_CHECKER_API_KEY }}
-  #CONTEXT_CHECKER_URL_DE: "https://setfit-german.westeurope.inference.ml.azure.com/score"
-  CONTEXT_CHECKER_API_KEY_DE: ${{ secrets.CONTEXT_CHECKER_API_KEY_DE }}
+  # Context Checker - using local models in CI, remote API not needed
+  # If remote API is needed, use: CONTEXT_CHECKER='{"en":{"url":"...","api_key":"..."}}'
   AADB2C_TENANT_ID: "81932fe1-f25e-43fc-b674-002ff8235389"
   AADB2C_CLIENT_ID: "7e090308-575a-4e7d-84e4-78c83d083ab6"
   AADB2C_EXPECTED_SCOPE: "access_as_user"
@@ -23,11 +21,49 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    services:
+      # The snapshots contain LanguageTool findings, so they only hold still if
+      # LanguageTool does. Pinned to the same version the compose file runs,
+      # because the hosted API is a different one: it moved to 6.9 and stopped
+      # reporting COMMA_COMPOUND_SENTENCE, which changes a snapshot on its own.
+      # The heap is raised because the default runs out part way through the
+      # suite, and the container exiting reads as every later test failing to
+      # connect rather than as one crash.
+      languagetool:
+        image: erikvl87/languagetool:6.8
+        ports:
+          - 8010:8010
+        env:
+          Java_Xms: 512m
+          Java_Xmx: 4g
+        # The image defines its own healthcheck, so the runner waits for it;
+        # only the timings need widening for a cold JVM start.
+        options: >-
+          --health-interval 10s
+          --health-retries 20
+          --health-start-period 30s
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      # The spacy 3.8 model wheels plus torch overflow the runner disk;
+      # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false # the LanguageTool service container must survive
+          swap-storage: true
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: pdm-project/setup-pdm@v3
@@ -35,6 +71,8 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
+        env:
+          PIP_NO_CACHE_DIR: "1"
         run: |
           pdm sync --dev
 
@@ -53,18 +91,32 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
-      - if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
-        name: Use LT "dev" via .env file for anything but "main"
-        run: |
-          echo "LANGUAGETOOL_API=\"https://lt.dev-54ta5gq-jyeciedibdzvq.fr-4.platformsh.site/v2\"" >> .env
-
       - name: Run test suite
+        env:
+          LANGUAGETOOL_API: "http://localhost:8010/v2"
         run: |
           export testing=True
           pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
 
+      # The workflow runs on push only, so the scanner cannot tell a branch
+      # with an open pull request from any other and files every analysis as a
+      # branch. Passing the pull request explicitly gets it analysed as one
+      # (its own page in SonarCloud, and a comment on the PR) without a second
+      # run of the suite for a pull_request trigger.
+      - name: Find pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          gh pr list --head "$BRANCH" --state open --json number,baseRefName \
+            --jq '.[0] | select(.) | "args=-Dsonar.pullrequest.key=\(.number) -Dsonar.pullrequest.branch=\(env.BRANCH) -Dsonar.pullrequest.base=\(.baseRefName)"' \
+            >> "$GITHUB_OUTPUT"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@bfd4e558cda28cda6b5defafb9232d191be8c203 # v4.2.1
+        with:
+          args: ${{ steps.pr.outputs.args }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

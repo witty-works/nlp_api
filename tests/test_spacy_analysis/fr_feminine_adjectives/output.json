@@ -1,0 +1,353 @@
+[
+    {
+        "auto-detected word type": "~|~n|~a|~|~a|conj|~a|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 3,
+                "start": 0,
+                "text": "La directrice sportive"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "La"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "sportive"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "directrice",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "le",
+        "morph": {
+            "Definite": "Def",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 0,
+        "tag": "DET",
+        "text": "La",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "impulsive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "directeur",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 3,
+        "tag": "NOUN",
+        "text": "directrice",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "La"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "sportive"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "directrice",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "sportif",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 14,
+        "tag": "ADJ",
+        "text": "sportive",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cop",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "impulsive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "être",
+        "morph": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 23,
+        "tag": "AUX",
+        "text": "est",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "impulsive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "impulsif",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 27,
+        "tag": "ADJ",
+        "text": "impulsive",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "cc",
+                "ner": "",
+                "token": "et"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "cc",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "attentive",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "et",
+        "morph": {},
+        "ner": "",
+        "pos": "CCONJ",
+        "start": 37,
+        "tag": "CCONJ",
+        "text": "et",
+        "whitespace": " ",
+        "word_type": "conj"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "conj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "impulsive",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "attentif",
+        "morph": {
+            "Gender": "Fem",
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 40,
+        "tag": "ADJ",
+        "text": "attentive",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "directrice"
+            },
+            {
+                "dep": "cop",
+                "ner": "",
+                "token": "est"
+            },
+            {
+                "dep": "conj",
+                "ner": "",
+                "token": "attentive"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "impulsive",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {},
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 49,
+        "tag": "PUNCT",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

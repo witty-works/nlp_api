@@ -1,0 +1,322 @@
+[
+    {
+        "auto-detected word type": "~pron|adv|~v||~n|adv|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "She"
+            },
+            {
+                "end": 5,
+                "start": 3,
+                "text": "the businessmen"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "she",
+        "morph": {
+            "Case": "Nom",
+            "Gender": "Fem",
+            "Number": "Sing",
+            "Person": "3",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRP",
+        "text": "She",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "advmod",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "quickly",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 4,
+        "tag": "RB",
+        "text": "quickly",
+        "whitespace": " ",
+        "word_type": "adv"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "brief",
+        "morph": {
+            "Tense": "Past",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 12,
+        "tag": "VBD",
+        "text": "briefed",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "det",
+                "ner": "",
+                "token": "the"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "det",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "businessmen",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "the",
+        "morph": {
+            "Definite": "Def",
+            "PronType": "Art"
+        },
+        "ner": "",
+        "pos": "DET",
+        "start": 20,
+        "tag": "DT",
+        "text": "the",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "dobj",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "businessman",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 24,
+        "tag": "NNS",
+        "text": "businessmen",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "advmod",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "thoroughly",
+        "morph": {},
+        "ner": "",
+        "pos": "ADV",
+        "start": 36,
+        "tag": "RB",
+        "text": "thoroughly",
+        "whitespace": "",
+        "word_type": "adv"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "She"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "quickly"
+            },
+            {
+                "dep": "dobj",
+                "ner": "",
+                "token": "businessmen"
+            },
+            {
+                "dep": "advmod",
+                "ner": "",
+                "token": "thoroughly"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": "businessmen",
+        "emoji_desc": null,
+        "head": "briefed",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 46,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]

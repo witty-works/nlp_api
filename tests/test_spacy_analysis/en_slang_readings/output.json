@@ -1,0 +1,715 @@
+[
+    {
+        "auto-detected word type": "~pron|~|~v||a|a|n||pron|~n||~n|~|a|"
+    },
+    {
+        "noun chunks": [
+            {
+                "end": 1,
+                "start": 0,
+                "text": "We"
+            },
+            {
+                "end": 7,
+                "start": 4,
+                "text": "analytical ninja programmer"
+            },
+            {
+                "end": 10,
+                "start": 8,
+                "text": "our customers"
+            },
+            {
+                "end": 12,
+                "start": 11,
+                "text": "Ours"
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "searching",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "we",
+        "morph": {
+            "Case": "Nom",
+            "Number": "Plur",
+            "Person": "1",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 0,
+        "tag": "PRP",
+        "text": "We",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "aux",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "searching",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "be",
+        "morph": {
+            "Mood": "Ind",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 3,
+        "tag": "VBP",
+        "text": "are",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "searching",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "search",
+        "morph": {
+            "Aspect": "Prog",
+            "Tense": "Pres",
+            "VerbForm": "Part"
+        },
+        "ner": "",
+        "pos": "VERB",
+        "start": 7,
+        "tag": "VBG",
+        "text": "searching",
+        "whitespace": " ",
+        "word_type": "v"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "prep",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "searching",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "for",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 17,
+        "tag": "IN",
+        "text": "for",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "analytical"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": "programmer",
+        "emoji_desc": null,
+        "head": "programmer",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "analytical",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 21,
+        "tag": "JJ",
+        "text": "analytical",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "analytical"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "amod",
+        "dependent": "programmer",
+        "emoji_desc": null,
+        "head": "programmer",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "ninja",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 32,
+        "tag": "JJ",
+        "text": "ninja",
+        "whitespace": " ",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pobj",
+        "dependent": "programmer",
+        "emoji_desc": null,
+        "head": "for",
+        "is_emoji": false,
+        "is_singular": true,
+        "lemma": "programmer",
+        "morph": {
+            "Number": "Sing"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 38,
+        "tag": "NN",
+        "text": "programmer",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "analytical"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "prep",
+        "dependent": "programmer",
+        "emoji_desc": null,
+        "head": "programmer",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "for",
+        "morph": {},
+        "ner": "",
+        "pos": "ADP",
+        "start": 49,
+        "tag": "IN",
+        "text": "for",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "poss",
+                "ner": "",
+                "token": "our"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "customers"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "analytical"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "poss",
+        "dependent": "customers",
+        "emoji_desc": null,
+        "head": "customers",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "our",
+        "morph": {
+            "Number": "Plur",
+            "Person": "1",
+            "Poss": "Yes",
+            "PronType": "Prs"
+        },
+        "ner": "",
+        "pos": "PRON",
+        "start": 53,
+        "tag": "PRP$",
+        "text": "our",
+        "whitespace": " ",
+        "word_type": "pron"
+    },
+    {
+        "children": [
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "customers"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "analytical"
+            },
+            {
+                "dep": "amod",
+                "ner": "",
+                "token": "ninja"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "pobj",
+                "ner": "",
+                "token": "programmer"
+            },
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "pobj",
+        "dependent": "customers",
+        "emoji_desc": null,
+        "head": "for",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "customer",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 57,
+        "tag": "NNS",
+        "text": "customers",
+        "whitespace": "",
+        "word_type": "n"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "We"
+            },
+            {
+                "dep": "aux",
+                "ner": "",
+                "token": "are"
+            },
+            {
+                "dep": "prep",
+                "ner": "",
+                "token": "for"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "searching",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 66,
+        "tag": ".",
+        "text": ".",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Ours"
+            },
+            {
+                "dep": "attr",
+                "ner": "",
+                "token": "ass"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "nsubj",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "are",
+        "is_emoji": false,
+        "is_singular": false,
+        "lemma": "our",
+        "morph": {
+            "Number": "Plur"
+        },
+        "ner": "",
+        "pos": "NOUN",
+        "start": 68,
+        "tag": "NNS",
+        "text": "Ours",
+        "whitespace": " ",
+        "word_type": "n"
+    },
+    {
+        "children": [],
+        "dep": "ROOT",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "are",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "be",
+        "morph": {
+            "Mood": "Ind",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+        },
+        "ner": "",
+        "pos": "AUX",
+        "start": 73,
+        "tag": "VBP",
+        "text": "are",
+        "whitespace": " ",
+        "word_type": ""
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Ours"
+            },
+            {
+                "dep": "attr",
+                "ner": "",
+                "token": "ass"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "attr",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "are",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": "ass",
+        "morph": {
+            "Degree": "Pos"
+        },
+        "ner": "",
+        "pos": "ADJ",
+        "start": 77,
+        "tag": "JJ",
+        "text": "ass",
+        "whitespace": "",
+        "word_type": "a"
+    },
+    {
+        "children": [
+            {
+                "dep": "nsubj",
+                "ner": "",
+                "token": "Ours"
+            },
+            {
+                "dep": "attr",
+                "ner": "",
+                "token": "ass"
+            },
+            {
+                "dep": "punct",
+                "ner": "",
+                "token": "."
+            }
+        ],
+        "dep": "punct",
+        "dependent": null,
+        "emoji_desc": null,
+        "head": "are",
+        "is_emoji": false,
+        "is_singular": null,
+        "lemma": ".",
+        "morph": {
+            "PunctType": "Peri"
+        },
+        "ner": "",
+        "pos": "PUNCT",
+        "start": 80,
+        "tag": ".",
+        "text": ".",
+        "whitespace": "",
+        "word_type": ""
+    }
+]
