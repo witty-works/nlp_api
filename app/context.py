@@ -38,7 +38,7 @@ from app.verbs import Verbs
 
 
 class AppContext:
-    version = "2.4.8"
+    version = "3.0.0"
     translations: dict[str, dict[str, str]]
     declensions_config: dict
     verb_form_map: dict
