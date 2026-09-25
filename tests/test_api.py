@@ -21,6 +21,7 @@ from app.config_manager import (
     parse_term_replacements,
 )
 from app.auth_service import (
+    fetch_user,
     AuthError,
     convert_to_pem,
     validate_scope_,
@@ -3539,3 +3540,18 @@ def test_api_key_mode_options_page(standalone_settings):
             assert response.status_code == 200
 
         context.redis.delete_api_key(api_key)
+
+
+def test_fetch_user_reuses_the_user_the_key_gate_resolved():
+    """The gate resolves the user once; the handler gets the same answer
+    without a second Redis lookup or token check."""
+    import asyncio
+
+    from starlette.requests import Request
+
+    request = Request({"type": "http", "headers": [], "state": {}})
+    request.state.resolved_user = "gate@example.org"
+
+    assert asyncio.run(fetch_user(request, context.settings, None, None)) == (
+        "gate@example.org"
+    )

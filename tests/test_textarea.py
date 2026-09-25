@@ -6,7 +6,6 @@ here: that the page is opt-in, how it sits behind the key gate, what it serves
 without its script, and the page's own contract with the API.
 """
 
-import ast
 import base64
 import hashlib
 import importlib.util
@@ -21,7 +20,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app, context
-from app.routes.textarea import PAGE
+from app.routes.textarea import PAGE, PAGE_SCRIPT
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -105,19 +104,27 @@ def test_missing_script_says_how_to_install_it(textarea):
         assert client.get("/textarea/witty-editor.js").status_code == 404
 
 
-def test_csp_lets_the_page_run(textarea):
-    """Its inline script and same-origin editor script, and nothing else."""
+def test_csp_lets_the_page_run_and_nothing_else(textarea):
+    """Stricter than the API's own policy, which the Swagger docs need: no
+    inline or third-party script, requests only to this server, not framed."""
     with TestClient(app) as client:
         csp = client.get("/textarea").headers["content-security-policy"]
+        api_csp = client.get("/health").headers["content-security-policy"]
 
     directives = dict(
         (part.split()[0], part.split()[1:]) for part in csp.split(";") if part.strip()
     )
-    assert {"'self'", "'unsafe-inline'"} <= set(directives["script-src"])
-    # The page's fetches go to its own origin; connect-src falls back to this.
-    assert "'self'" in directives["default-src"]
-    # The popover's inline logo and its learning-bite pictures.
-    assert {"data:", "www.witty.works"} <= set(directives["img-src"])
+    assert directives["script-src"] == ["'self'"]
+    assert directives["connect-src"] == ["'self'"]
+    assert directives["frame-ancestors"] == ["'none'"]
+    # The editor injects its styles; the popover shows its inline logo and
+    # the learning-bite pictures.
+    assert "'unsafe-inline'" in directives["style-src"]
+    assert {"data:", "https://www.witty.works"} <= set(directives["img-src"])
+    # The page has no inline script left to allow.
+    assert "<script>" not in PAGE
+    # Everything else keeps the policy the docs need.
+    assert "'unsafe-inline'" in api_csp.split("script-src")[1].split(";")[0]
 
 
 def test_page_structure_for_assistive_technology():
@@ -133,7 +140,7 @@ def test_page_structure_for_assistive_technology():
 
     # Results are announced rather than only drawn.
     for region in ("status", "write-status"):
-        assert f'<p id="{region}" role="status" aria-live="polite">' in PAGE
+        assert f'<output id="{region}" aria-live="polite">' in PAGE
 
     # Strike-through and colour are spoken as words, new tabs are announced.
     script = page_script()
@@ -177,7 +184,7 @@ def test_the_contact_is_the_deployments(textarea, monkeypatch):
 
 
 def page_script() -> str:
-    return PAGE.split("<script>")[1].split("</script>")[0]
+    return PAGE_SCRIPT.read_text(encoding="utf-8")
 
 
 def test_the_key_goes_only_into_x_key():
@@ -325,9 +332,8 @@ def test_fetch_editor_refuses_anything_but_the_pin(tmp_path):
 
 
 def test_fetch_editor_is_pinned():
-    """The script names an exact version and its sha512, not a range or tag."""
+    """The pin file names an exact version and its sha512, not a range or tag."""
     fetch_editor = load_fetch_editor()
-
     assert re.fullmatch(r"\d+\.\d+\.\d+", fetch_editor.VERSION)
     assert fetch_editor.INTEGRITY.startswith("sha512-")
 
@@ -399,27 +405,61 @@ def test_pin_accepts_only_our_publish_workflow():
         check(failed)
 
 
-def test_pin_rewrites_only_the_pin():
+def test_pin_writes_the_pin_file(tmp_path):
     fetch_editor = load_fetch_editor()
-    source = (ROOT / "bin" / "fetch_editor.py").read_text()
+    path = tmp_path / "editor-pin.json"
     integrity = "sha512-" + "A" * 86 + "=="
 
-    rewritten = fetch_editor.rewrite_pin(source, "2.0.2", integrity)
-    lines = [line for line in rewritten.splitlines() if line not in source.splitlines()]
-    assert lines == [
-        'VERSION = "2.0.2"',
-        f'    "{integrity[:47]}"',
-        f'    "{integrity[47:]}"',
-    ]
+    fetch_editor.write_pin("2.0.2", integrity, path)
 
-    # And what it wrote reads back as that pin.
-    pinned = {
-        node.targets[0].id: ast.literal_eval(node.value)
-        for node in ast.parse(rewritten).body
-        if isinstance(node, ast.Assign)
-        and getattr(node.targets[0], "id", None) in ("VERSION", "INTEGRITY")
-    }
-    assert pinned == {"VERSION": "2.0.2", "INTEGRITY": integrity}
+    assert fetch_editor.load_pin(path) == ("2.0.2", integrity)
+
+
+def test_an_unexpected_audit_answer_is_an_error_not_a_traceback():
+    fetch_editor = load_fetch_editor()
+    audit = audit_result(
+        "https://github.com/witty-works/browser-extension",
+        ".github/workflows/publish-editor.yaml",
+        "refs/tags/2.0.2",
+    )
+    del audit["verified"][0]["attestationBundles"][0]["bundle"]["dsseEnvelope"]
+
+    with pytest.raises(fetch_editor.FetchError, match="unexpected npm audit"):
+        fetch_editor.check_provenance(audit, "@witty-works/editor", "2.0.2")
+
+
+def test_an_interrupted_install_leaves_the_previous_one_whole(tmp_path):
+    """Files are written aside first and moved into place together."""
+    fetch_editor = load_fetch_editor()
+    (tmp_path / "witty-editor.js").write_bytes(b"old script")
+    (tmp_path / "witty-editor.js.LICENSE.txt").write_bytes(b"old notices")
+
+    class Interrupted(Exception):
+        pass
+
+    real_replace = fetch_editor.os.replace
+
+    def replace_then_fail(source, target):
+        raise Interrupted
+
+    fetch_editor.os.replace = replace_then_fail
+    try:
+        with pytest.raises(Interrupted):
+            fetch_editor.install_atomically(
+                tmp_path,
+                {
+                    "witty-editor.js": b"new script",
+                    "witty-editor.js.LICENSE.txt": b"new",
+                },
+            )
+    finally:
+        fetch_editor.os.replace = real_replace
+
+    assert (tmp_path / "witty-editor.js").read_bytes() == b"old script"
+    assert sorted(p.name for p in tmp_path.iterdir()) == [
+        "witty-editor.js",
+        "witty-editor.js.LICENSE.txt",
+    ]
 
 
 def test_script_is_revalidated_not_redownloaded(textarea):
@@ -434,6 +474,22 @@ def test_script_is_revalidated_not_redownloaded(textarea):
         assert again.status_code == 304
         assert again.content == b""
 
+        # A weak or listed ETag, as proxies send them, counts too.
+        for sent in (f"W/{etag}", f'"other", {etag}'):
+            listed = client.get(
+                "/textarea/witty-editor.js", headers={"If-None-Match": sent}
+            )
+            assert listed.status_code == 304, sent
+
+        # The page's own script is revalidated the same way.
+        page_js = client.get("/textarea/page.js")
+        assert page_js.status_code == 200
+        assert page_js.headers["cache-control"] == "no-cache"
+        page_js_again = client.get(
+            "/textarea/page.js", headers={"If-None-Match": page_js.headers["etag"]}
+        )
+        assert page_js_again.status_code == 304
+
         # A reinstall changes the ETag, and the new script is sent.
         textarea.write_text("window.WittyEditor = {mount() {}, v: 2};")
         response = client.get(
@@ -444,17 +500,29 @@ def test_script_is_revalidated_not_redownloaded(textarea):
 
 
 def test_page_limits_match_the_api(textarea):
-    """The page refuses what /v1.0/write would, before sending it."""
-    from app.models import WRITE_PROMPT_MAX_LENGTH, WRITE_TEXT_MAX_LENGTH
+    """The page refuses what /v1.0/write would, before sending it: a prompt up
+    to its limit, a text up to what Witty checks at once."""
+    from app.models import WRITE_PROMPT_MAX_LENGTH
 
     with TestClient(app) as client:
         page = client.get("/textarea").text
 
     assert f'maxlength="{WRITE_PROMPT_MAX_LENGTH}"' in page
-    assert f"const TEXT_MAX = {WRITE_TEXT_MAX_LENGTH};" in page
-    # The editor splits long texts into requests the API checks whole.
-    assert f"maxRequestLength: {context.settings.text_max_length}," in page
-    assert "__" not in page.split("<script>")[1]
+    config = json.loads(
+        re.search(
+            r'<script id="page-config" type="application/json">(.*?)</script>', page
+        ).group(1)
+    )
+    # The editor splits long texts into requests the API checks whole, and a
+    # prompt can rewrite as much as one of them.
+    assert config == {
+        "checkMax": context.settings.text_max_length,
+        "textMax": context.settings.text_max_length,
+    }
+    script = page_script()
+    assert "maxRequestLength: CONFIG.checkMax," in script
+    assert "const TEXT_MAX = CONFIG.textMax;" in script
+    assert "__" not in page
 
 
 def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
@@ -520,7 +588,7 @@ def test_nothing_can_be_typed_or_run_without_a_working_key():
     assert "run.disabled = !keyValid || running;" in script
     assert "aiSuggestions.disabled = !(keyValid && llmAllowed);" in script
     # Applied once before any key is checked, so the page starts disabled.
-    startup = "// Disabled until a key is checked and works.\n      applyInputState();"
+    startup = "// Disabled until a key is checked and works.\napplyInputState();"
     assert script.index(startup) > script.index("const TEXT_MAX")
 
 
@@ -531,9 +599,23 @@ def test_a_missing_key_is_said_where_it_cannot_be_missed(textarea):
         page = client.get("/textarea").text
 
     assert "Using it needs an API key." in page
-    notice = re.search(r'<p id="key-required".*?</p>', page, re.S).group(0)
+    notice = re.search(r'<output id="key-required".*?</output>', page, re.S).group(0)
     assert "Enter your API key above to use this" in notice
     assert 'href="#get-a-key"' in notice
 
     script = page_script()
     assert "keyRequired.hidden = keyValid;" in script
+
+
+def test_a_placeholder_left_unfilled_stops_the_page(monkeypatch):
+    """A new placeholder that render_page does not fill in would show as text
+    on the page; it fails instead."""
+    from app.routes import textarea as module
+
+    monkeypatch.setattr(module, "PAGE", module.PAGE + "__NEW_LIMIT__")
+    module._render_page.cache_clear()
+    try:
+        with pytest.raises(RuntimeError, match="__NEW_LIMIT__"):
+            module.render_page(context.settings)
+    finally:
+        module._render_page.cache_clear()

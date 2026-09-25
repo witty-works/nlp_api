@@ -48,11 +48,16 @@ async def add_security_headers(request, call_next):
     # everything that depends on who is asking. A route that deliberately sets
     # its own keeps it — see /v2.0/categories.
     route_cache_control = response.headers.get("Cache-Control")
+    # Likewise a route with a stricter Content-Security-Policy than the one
+    # the docs need (/textarea).
+    route_csp = response.headers.get("Content-Security-Policy")
 
     await secure_headers.set_headers_async(response)
 
     if route_cache_control is not None:
         response.headers["Cache-Control"] = route_cache_control
+    if route_csp is not None:
+        response.headers["Content-Security-Policy"] = route_csp
 
     return response
 
@@ -82,31 +87,67 @@ def is_password_protected(request, settings) -> bool:
     own: the management endpoints behind MANAGEMENT_AUTH_ENABLED, the docs
     and development helpers behind API_DOCS_AUTH_ENABLED. Only while that
     switch is on, since with it off they check nothing."""
-    guards = []
+    enabled = set()
     if settings.management_auth_enabled:
-        guards.append(fetch_management_username)
+        enabled.add(fetch_management_username)
     if settings.api_docs_auth_enabled:
-        guards.append(fetch_current_username)
-    if not guards:
+        enabled.add(fetch_current_username)
+    if not enabled:
         return False
 
-    for route in request.app.routes:
-        if not isinstance(route, APIRoute):
-            continue
-        match, _ = route.matches(request.scope)
-        if match == Match.FULL:
-            return any(_depends_on(route.dependant, guard) for guard in guards)
+    route = _route_for(request.app, request.method, request.url.path)
 
-    return False
+    return route is not None and bool(_guards_of(route) & enabled)
+
+
+# Both are answered once per route or path rather than per request: matching
+# goes through every route, the guards through each one's dependency tree.
+_ROUTE_GUARDS: dict[int, frozenset] = {}
+_PATH_ROUTES: dict[tuple, APIRoute | None] = {}
+_PATH_ROUTES_MAX = 1024
+
+
+def _guards_of(route: APIRoute) -> frozenset:
+    guards = _ROUTE_GUARDS.get(id(route))
+    if guards is None:
+        guards = frozenset(
+            guard
+            for guard in (fetch_management_username, fetch_current_username)
+            if _depends_on(route.dependant, guard)
+        )
+        _ROUTE_GUARDS[id(route)] = guards
+
+    return guards
+
+
+def _route_for(app, method: str, path: str) -> APIRoute | None:
+    key = (id(app), method, path)
+    if key in _PATH_ROUTES:
+        return _PATH_ROUTES[key]
+
+    scope = {"type": "http", "method": method, "path": path}
+    found = None
+    for route in app.routes:
+        if isinstance(route, APIRoute) and route.matches(scope)[0] == Match.FULL:
+            found = route
+            break
+
+    # Bounded: paths are client input, so a flood of made-up ones must not
+    # grow it without end.
+    if len(_PATH_ROUTES) >= _PATH_ROUTES_MAX:
+        _PATH_ROUTES.clear()
+    _PATH_ROUTES[key] = found
+
+    return found
 
 
 async def require_api_key(request, call_next):
     """Refuse requests that do not resolve to a user.
 
     Only active when the setting is on. It sits in front of the routes rather
-    than in each one so that a route added later is closed by default; the
-    cost is that the user is resolved twice on the request path, once here and
-    once in the handler.
+    than in each one so that a route added later is closed by default. The
+    user it resolves is kept on the request, so the handler does not resolve
+    it again (see fetch_user).
     """
     context = getattr(request.app.state, "context", None)
 
@@ -143,6 +184,8 @@ async def require_api_key(request, call_next):
             status_code=401,
             content={"detail": "A valid API key is required in the x-key header."},
         )
+
+    request.state.resolved_user = user_email
 
     return await call_next(request)
 

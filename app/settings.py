@@ -7,7 +7,7 @@ from app.models import LangType, LlmAccessType
 from platformshconfig import Config
 
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
-TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js")
+TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
 
 
 class Settings(BaseSettings):

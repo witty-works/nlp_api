@@ -96,6 +96,19 @@ RUN python -m venv /opt/venv \
 # spacy: this is the check that would have caught the missing httpx.
 RUN /opt/venv/bin/python -c "import spacy, httpx; print('spacy', spacy.__version__, 'ok')"
 
+# ----------------------------------------------------------------- editor ---
+# The editor script for the /textarea page, only when asked for: the page is
+# off by default (TEXTAREA_ENABLED), and an image without it carries nothing of
+# it. Downloads the npm release pinned in bin/editor-pin.json (no npm needed)
+# and checks it against the integrity the registry published. A stage of its
+# own, so a change to the app does not download it again.
+FROM python:${PYTHON_VERSION}-slim-bookworm AS editor
+
+ARG TEXTAREA=false
+COPY ./bin/fetch_editor.py ./bin/editor-pin.json /tmp/
+RUN mkdir -p /editor \
+    && if [ "$TEXTAREA" = "true" ]; then python /tmp/fetch_editor.py --dest /editor; fi
+
 # ---------------------------------------------------------------- runtime ---
 FROM python:${PYTHON_VERSION}-slim-bookworm AS runtime
 
@@ -118,14 +131,8 @@ COPY ./app /code/app
 COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# The editor script for the /textarea page, only when asked for: the page is
-# off by default (TEXTAREA_ENABLED), and an image without it carries nothing of
-# it. Downloads the npm release pinned in bin/fetch_editor.py (no npm needed)
-# and checks it against the integrity the registry published.
-ARG TEXTAREA=false
-COPY ./bin/fetch_editor.py /tmp/fetch_editor.py
-RUN if [ "$TEXTAREA" = "true" ]; then python /tmp/fetch_editor.py --dest /code/app/static; fi \
-    && rm /tmp/fetch_editor.py
+# Empty unless the image was built with TEXTAREA=true (see the editor stage).
+COPY --from=editor /editor/ /code/app/static/
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R appuser /code
 
