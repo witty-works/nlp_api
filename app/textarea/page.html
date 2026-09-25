@@ -60,6 +60,11 @@
         font-size: 1.125rem;
       }
       /* Hard to miss: nothing on the page works without a key. */
+      /* <output> is inline by default; these are paragraphs. */
+      output {
+        display: block;
+        margin: 1em 0;
+      }
       .notice {
         margin: 1rem 0 0;
         padding: 0.5rem 0.75rem;
@@ -150,10 +155,10 @@
           requests to this server; it is not saved.
         </span>
       </p>
-      <p id="key-required" class="notice" role="status">
+      <output id="key-required" class="notice">
         <span id="key-required-text">Enter your API key above to use this
         page.</span><!--key-request-->
-      </p>
+      </output>
       <div id="editor"></div>
       <p id="editor-help" class="help">
         Underlined words have a suggestion. Click one, or move the cursor onto it
@@ -177,7 +182,7 @@
           <span id="ai-suggestions-note"></span>
         </span>
       </div>
-      <p id="status" role="status" aria-live="polite"></p>
+      <output id="status" aria-live="polite"></output>
       <form id="write">
         <h2>Write or rewrite with a prompt</h2>
         <label for="prompt">Prompt</label>
@@ -195,7 +200,7 @@
           one back.
         </span>
         <button type="submit">Run</button>
-        <p id="write-status" role="status" aria-live="polite"></p>
+        <output id="write-status" aria-live="polite"></output>
       </form>
       <section id="review" hidden>
         <h2>Issues Witty found in the draft</h2>

@@ -3,7 +3,17 @@
 // Its limits come from the page (a JSON block the server fills in).
 const CONFIG = JSON.parse(document.getElementById("page-config").textContent);
 
-const status = document.getElementById("status");
+const checkStatus = document.getElementById("status");
+
+function checkMessage(next) {
+  if (next.state === "idle") {
+    return next.alerts + (next.alerts === 1 ? " alert" : " alerts");
+  }
+  if (next.state === "unauthorized") {
+    return "Enter a valid API key to check the text.";
+  }
+  return "Checking failed: " + next.message;
+}
 const apiKey = document.getElementById("api-key");
 const aiSuggestions = document.getElementById("ai-suggestions");
 const aiNote = document.getElementById("ai-suggestions-note");
@@ -18,12 +28,7 @@ const editor = WittyEditor.mount(document.getElementById("editor"), {
   // Long enough for a local model through Ollama, not only a hosted one.
   llmTimeoutMs: 30000,
   onStatus(next) {
-    status.textContent =
-      next.state === "idle"
-        ? next.alerts + (next.alerts === 1 ? " alert" : " alerts")
-        : next.state === "unauthorized"
-          ? "Enter a valid API key to check the text."
-          : "Checking failed: " + next.message;
+    checkStatus.textContent = checkMessage(next);
   },
   // The editor's own settings panel has the same switch; both follow it.
   onSettingsChange(next) {
@@ -113,16 +118,13 @@ const TEXT_MAX = CONFIG.textMax;
 applyInputState();
 
 // The dashboard's getColor, onto the editor's own underline classes.
-const tone = (alert) =>
-  alert.subcategory === "corporate_rules"
-    ? "corporate"
-    : !alert.gravity
-      ? "inclusive"
-      : alert.gravity < 1.5
-        ? "severe"
-        : alert.gravity > 2.5
-          ? "style"
-          : "bias";
+const tone = (alert) => {
+  if (alert.subcategory === "corporate_rules") return "corporate";
+  if (!alert.gravity) return "inclusive";
+  if (alert.gravity < 1.5) return "severe";
+  if (alert.gravity > 2.5) return "style";
+  return "bias";
+};
 
 // Read out, not shown: what colour and strike-through say on screen.
 const hidden = (text) => {
@@ -205,11 +207,9 @@ const failure = (status, body) => {
   }
   if (status === 422 && detail) {
     const field = detail.loc?.[1];
-    return field === "text"
-      ? "The text is too long to rewrite with a prompt."
-      : field === "prompt"
-        ? "The prompt is too long."
-        : "The request was not accepted (422).";
+    if (field === "text") return "The text is too long to rewrite with a prompt.";
+    if (field === "prompt") return "The prompt is too long.";
+    return "The request was not accepted (422).";
   }
   return "The prompt failed (" + status + ").";
 };

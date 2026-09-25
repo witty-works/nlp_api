@@ -140,7 +140,7 @@ def test_page_structure_for_assistive_technology():
 
     # Results are announced rather than only drawn.
     for region in ("status", "write-status"):
-        assert f'<p id="{region}" role="status" aria-live="polite">' in PAGE
+        assert f'<output id="{region}" aria-live="polite">' in PAGE
 
     # Strike-through and colour are spoken as words, new tabs are announced.
     script = page_script()
@@ -599,7 +599,7 @@ def test_a_missing_key_is_said_where_it_cannot_be_missed(textarea):
         page = client.get("/textarea").text
 
     assert "Using it needs an API key." in page
-    notice = re.search(r'<p id="key-required".*?</p>', page, re.S).group(0)
+    notice = re.search(r'<output id="key-required".*?</output>', page, re.S).group(0)
     assert "Enter your API key above to use this" in notice
     assert 'href="#get-a-key"' in notice
 
