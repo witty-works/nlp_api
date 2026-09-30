@@ -19,6 +19,7 @@ EXCEPTIONS_CSV = (
     / "de"
     / "inklusivum_nouns.csv"
 )
+NEUTRAL_CSV = EXCEPTIONS_CSV.with_name("inklusivum_neutral_nouns.csv")
 
 
 def _exceptions():
@@ -27,6 +28,11 @@ def _exceptions():
             row["Masculine"]: (row["Singular"], row["Plural"])
             for row in csv.DictReader(fh)
         }
+
+
+def _neutral():
+    with open(NEUTRAL_CSV, newline="", encoding="utf-8") as fh:
+        return {row["Word"] for row in csv.DictReader(fh)}
 
 
 def _lexicon(exceptions=None, neutral=None):
@@ -124,6 +130,11 @@ def test_no_plural_umlaut_matches_compounds():
         ("Bräutigam", "Braute", "Bräuterne"),
         ("Hexer", "Hexere", "Hexerne"),
         ("Witwer", "Witwere", "Witwerne"),
+        # Masculine in -e with an endingless variant: only the article
+        # changes, and the plural is not the one the -re rule would give.
+        ("Ahne", "Ahne", "Ahnerne"),
+        ("Nachfahre", "Nachfahre", "Nachfahrne"),
+        ("Vorfahre", "Vorfahre", "Vorfahrne"),
         # -mann/-frau compounds are replaced outright, never suffixed.
         ("Kaufmann", "Kaufperson", "Kaufleute"),
         ("Fachmann", "Fachperson", "Fachleute"),
@@ -160,9 +171,20 @@ def test_missing_masculine_returns_none():
 
 
 def test_exception_csv_rows_are_well_formed():
+    neutral = _neutral()
     for masculine, (singular_form, plural_form) in _exceptions().items():
         assert masculine and singular_form and plural_form
-        assert singular_form != masculine, masculine
+        # An unchanged singular is only right for a word whose article is
+        # reported through the neutral list instead.
+        assert singular_form != masculine or masculine in neutral, masculine
+
+
+def test_exception_wins_over_the_neutral_list_in_the_plural():
+    lexicon = _lexicon(_exceptions(), _neutral())
+
+    assert inklusivum.noun("Nachfahre", "Nachfahrin", "sg_nom", "", lexicon) == "Nachfahre"
+    assert inklusivum.noun("Nachfahre", "Nachfahrin", "pl_nom", "", lexicon) == "Nachfahrne"
+    assert inklusivum.noun("Nachfahre", "Nachfahrin", "pl_dat", "", lexicon) == "Nachfahrnen"
 
 
 @pytest.mark.parametrize("masculine,feminine,_sg,_pl", REGULAR)
