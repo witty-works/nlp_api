@@ -82,7 +82,7 @@ It is not small. `alternatives.py` is around 1,400 lines shared by three languag
 
 ## Remaining work
 
-Ordered by impact. Most are gaps, but two emit wrong output rather than nothing: the address forms in §2, where the absence of a rule lets the generic path answer for it, and the standalone genitive pronoun in §8.
+Ordered by impact. Most are gaps, but one emits wrong output rather than nothing: the address forms in §2, where the absence of a rule lets the generic path answer for it.
 
 ### 1. The relative pronoun genitive
 
@@ -92,7 +92,9 @@ The pronominal `einey` is done, so this entry is now only about the relative pro
 
 ### 2. Address forms
 
-`Sehr geehrte` → `Sehr geehrtey`, `Liebe`/`Lieber` → `Liebey`, `Herr`/`Frau` → `Person [Nachname]`, and `Sehr geehrte Damen und Herren` → `Sehr geehrtes Team von [Organisation]`. None are implemented.
+`Sehr geehrte` → `Sehr geehrtey`, `Liebe`/`Lieber` → `Liebey`, `Herr`/`Frau` → `Person [Nachname]`, and `Sehr geehrte Damen und Herren` → `Guten Tag!`. None are implemented as Inklusivum forms.
+
+The nearest thing is not Inklusivum-specific: the formality rule on `Sehr geehrte`/`Sehr geehrter`/`Sehr verehrte`/`Sehr verehrter` already offers `Guten Tag`, second after deleting the phrase, in every German gender setting. It covers only those two words, though. On `Sehr geehrte Damen und Herren` the gender rule on `Damen und Herren` reports separately and points the other way (`Geehrte Gäste`, `Team`), so reaching `Guten Tag!` means accepting one finding and deleting the rest by hand. What is missing is one finding across the whole phrase, which is the same problem as the pair formulas in §6.
 
 This is the one gap that is worse than nothing. With no address rule the generic gendered-denomination path still fires on the salutation, and in the `..._function_words` fixture it offers `Herr` → `Erwachseney` and `Frau` → `Partnere`. Those are not address forms at all, and `Partnere` reads as a claim about the person. Suppressing the generic path on a salutation is worth doing even before the real forms land.
 
@@ -102,13 +104,13 @@ The forms are not the hard part — the [Anredeformen](https://geschlechtsneutra
 | --- | --- | --- |
 | `Herr`/`Frau [Nachname]` | `[Vorname] [Nachname]` | `Person [Nachname]` when the first name is unknown |
 | `Sehr geehrte(r) Herr/Frau X` | `Guten Tag, [Vorname] [Nachname]!` | `Sehr geehrtey X`, `Sehr geehrte Person X` |
-| `Sehr geehrte Damen und Herren` | `Sehr geehrtes Team von [Organisation]`, `Sehr geehrtes [Organisation]-Team` | `Guten Tag!` |
+| `Sehr geehrte Damen und Herren` | `Guten Tag!` | `Sehr geehrtes Team von [Organisation]`, `Sehr geehrtes [Organisation]-Team` |
 | Addressing an audience | `Sehr geehrtes Publikum`, `Sehr geehrte Versammelte` | `Ich begrüße Sie herzlich!` |
 | `Liebe`/`Lieber [Vorname]` | `Liebey [Vorname]` | `Hallo`/`Hi [Vorname]!` |
 
 Note that the page prefers avoiding the formula over inflecting it — `Guten Tag, …` ahead of `Sehr geehrtey` — which is the opposite of what a mechanical ending swap would produce.
 
-The reference implementation takes the simpler route: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute`, which the page does not list at all. That divergence is raised in [inklusivum-feedback.md](./inklusivum-feedback.md).
+The reference implementation takes the simpler route: it marks a salutation by the adjective in front of the name (`PERSON_ADJECTIVES = ["lieb", "geehrt", "verehrt", "wert"]`), rewrites `Herr`/`Frau`/`Dame` to `Person`, and renders `Sehr geehrte Damen und Herren` as `Sehr geehrte Leute`, which the page does not list at all. The association settled it in direct exchange: for a tool that shows a single suggestion, `Guten Tag!` is the recommended form, although the page lists the Team forms first. Recorded in [inklusivum-feedback.md](./inklusivum-feedback.md).
 
 ### 3. Neologisms
 
@@ -128,7 +130,7 @@ Prefer finding the rule over adding a row. Two classes that were listed word by 
 
 `Kolleginnen und Kollegen` → `Kollegerne`, where the whole coordination collapses into one word. We report the two conjuncts separately, which leaves the reader to delete the rest of the phrase by hand.
 
-[inklusivum-feedback.md](./inklusivum-feedback.md) records why this was left out: the replacement does not correspond to a single token, so it does not fit a suggestion anchored on one span. The reference implementation sidesteps that by rewriting whole text rather than offering findings, and marks the entire coordination as one selectable unit. Anything we do here needs a finding whose span covers both conjuncts and the conjunction.
+It was left out because the replacement does not correspond to a single token, so it does not fit a suggestion anchored on one span. The association will not publish a list of pair formulas: any person noun with a feminine and a masculine form can form one, so they have to be detected, not looked up. The reference implementation sidesteps that by rewriting whole text rather than offering findings, and marks the entire coordination as one selectable unit. Anything we do here needs a finding whose span covers both conjuncts and the conjunction.
 
 ### 7. A correct suggestion that changes nothing drops the whole finding
 
@@ -136,21 +138,13 @@ After an article, the Inklusivum form of `Vorgesetzte(r)` is `Vorgesetzte`, whic
 
 Only the article actually needs changing here, and that is now reported separately, so what is left is the loss of the replacement suggestions rather than the missing article. Reporting nothing is at least better than the previous behaviour, which offered the article-less `Vorgesetztey` after an article.
 
-### 8. The standalone genitive pronoun is a form the system does not have
-
-`PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) holds `einers`, and there is no such form. The Artikelpronomen table on the Deklinationstabellen page prints `—` in the genitive row for **all four** genders, not only the Inklusivum, which makes the dash a statement that the standalone genitive is not provided rather than a cell nobody filled in. The `einers` that *is* attested — *die Tasche einers Schüleres* — is the attributive article, a different slot, and the Gemischte Deklination table gives it there.
-
-So this is the second entry in this list that emits wrong output rather than nothing. It is last because it is also the least likely to fire: reaching it needs `eines` tagged `PRON` with `Case=Gen`, and a standalone genitive pronoun is close to extinct in modern German ("der Vorschlag eines von euch"). No fixture produces it, which is why it has never shown up in a snapshot.
-
-The fix is to report nothing in that slot rather than to invent a form — a guard where `RuleCheck.inklusivum_articles` builds the pronominal suggestion, not a change to the table, since the table is also read for the cases that do exist. Left undone deliberately: it is a behaviour change on a path no test covers, so it wants its own fixture proving the finding disappears rather than being folded into a documentation pass.
-
-### 9. Switching out of the Inklusivum
+### 8. Switching out of the Inklusivum
 
 The switch only goes into the Inklusivum. Out of it, `de Lehrere` would have to become `die*der Lehrer*in`, which needs the rules to read Inklusivum forms as findings: detection currently makes sure they are *not* reported. An Inklusivum noun is confirmed against the lexicon already, so the reading is there; what is missing is emitting it as a mismatch with the separator form, and choosing between the feminine and masculine plural base (`Lehrerne` → `Lehrer*innen`) from the lexicon rather than the ending. Until then a client switching an Inklusivum text to a separator format converts nothing, which is safe.
 
 ## Forms the sources did not settle
 
-These were inferred by analogy while the association's web pages were the only source, and the code depends on them. All of them are now confirmed against the reference implementation, so they are no longer assumptions — except where noted. [inklusivum-feedback.md](./inklusivum-feedback.md) keeps what is still worth putting to the association.
+These were inferred by analogy while the association's web pages were the only source, and the code depends on them. All of them are now confirmed by the association in direct exchange, and against the reference implementation. [inklusivum-feedback.md](./inklusivum-feedback.md) records what was settled that way but is not on the pages yet, and what is still open.
 
 - **Genitive plural of nouns** — confirmed as identical to the nominative plural. `lexicon.py` gives the plural `-rne` for every case but the dative, which takes `-rnen`. Our `apply_case` does the same.
 - **The article before a genitive plural** — we had this one wrong in prose. `neutralize_article` returns the input unchanged when the parse carries `Pl`, so it is *der Schülerne*, not *ders Schülerne*: in the plural the ordinary German article stays. The code was never wrong here, because the plural findings match the bare noun and prepend no article; only this document claimed otherwise. `test_api_gender_ending_inklusivum_plural` pins the behaviour.
@@ -158,8 +152,10 @@ These were inferred by analogy while the association's web pages were the only s
 - **The reflexive pronoun** — confirmed unchanged. `sich` appears in the reference implementation only as a guard, never as something rewritten.
 - **Genitive and dative singular of the exception nouns** — confirmed to follow the regular rule. The irregular nouns run through the same case branch as the derived ones, so the genitive singular is `+s`.
 - **The n-declension** — confirmed dropped. There is no weak-declension branch; *den Studenten* becomes *de Studente*.
-- **Genitive of the standalone article pronoun** — not `einers`, and this one we got wrong. The Artikelpronomen table prints `—` in the genitive row for *all four* genders, not only the Inklusivum, so the dash says the standalone genitive is not provided at all rather than that the Inklusivum cell is unfilled. The `einers` that is attested (*die Tasche einers Schüleres*) is the attributive article, which the Gemischte Deklination table gives. `PRONOMINAL["genitiv"]` in [inklusivum.py](../app/alternatives_engine/inklusivum.py) is therefore unsupported; `eines` reaches it through `PRONOMINAL_FORMS`, so the safer behaviour is to report nothing in that slot. Tracked as §8 of Remaining work.
+- **Genitive of the standalone article pronoun** — `einers`, the same as the attributive article. The Artikelpronomen table printed `—` in the genitive row when we first read it; the association has since added `einers` there.
 - **`deselben` in the nominative slot** — confirmed a typo on the website. The nominative is `deselbe`; every other case is the `der` article ending plus `selben`.
+- **Which of two forms is recommended** — where a page names several without an explicit recommendation, the first one named; an explicit recommendation wins over the order. `Freunde`, `Wanderne` and `Enkele` are first named, `Torererne` is recommended outright and pinned in `inklusivum_nouns.csv`.
+- **Masculines in -e with an endingless variant** — `Ahne`, `Nachfahre`, `Vorfahre` keep the word and change only the article, so they are in `inklusivum_neutral_nouns.csv`; their plurals (`Ahnerne`, but `Nachfahrne`, `Vorfahrne`) come from the Ausnahmeformen page and are in `inklusivum_nouns.csv`, which `noun()` consults first. The two plural patterns do not agree with each other; that, and the plurals of `Elfe`, `Geselle` and `Titane`, are still open.
 
 ---
 
@@ -202,6 +198,6 @@ from this API's contract:
 
 ## See Also
 
-- [Rückfragen zum Inklusivum](./inklusivum-feedback.md), open questions for the association
+- [Annahmen aus dem direkten Austausch](./inklusivum-feedback.md), what the association settled outside its pages, and what is still open
 - [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
 - [Training Data & Lookups](./training-data.md)
