@@ -47,6 +47,21 @@
         margin-top: 0.5rem;
         padding: 0.25rem 1rem;
       }
+      /* The text's language and the example, in one row above the editor. */
+      .text-options {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 0.5rem 1rem;
+        margin-top: 1rem;
+      }
+      .text-options select {
+        font: inherit;
+        padding: 0.25rem 0.5rem;
+      }
+      .text-options button {
+        margin: 0;
+      }
       #editor {
         border: 1px solid #bbb;
         border-radius: 4px;
@@ -160,6 +175,22 @@
         <span id="key-required-text">Enter your API key above to use this
         page.</span><!--key-request-->
       </output>
+      <div class="text-options">
+        <span>
+          <label for="lang">Language</label>
+          <select id="lang" aria-describedby="lang-help">
+            <option value="auto">Detect</option>
+            <option value="de">German</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+          </select>
+        </span>
+        <button type="button" id="example">Example text</button>
+      </div>
+      <span id="lang-help" class="help">
+        The language Witty checks the text in. Detect lets it tell from the
+        text.
+      </span>
       <div id="editor"></div>
       <p id="editor-help" class="help">
         Underlined words have a suggestion. Click one, or move the cursor onto it

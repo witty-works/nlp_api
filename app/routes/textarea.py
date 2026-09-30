@@ -56,6 +56,9 @@ CSP_HEADER = {"Content-Security-Policy": CONTENT_SECURITY_POLICY}
 PAGE_DIR = Path(__file__).resolve().parent.parent / "textarea"
 PAGE = (PAGE_DIR / "page.html").read_text(encoding="utf-8")
 PAGE_SCRIPT = PAGE_DIR / "page.js"
+# The example texts of the dashboard's former Witty Editor, per language, as
+# plain text: a blank line between paragraphs, a newline for a line break.
+EXAMPLES = json.loads((PAGE_DIR / "examples.json").read_text(encoding="utf-8"))
 
 MISSING_BUNDLE = """<!doctype html>
 <html lang="en">
@@ -92,7 +95,11 @@ def _render_page(text_max_length: int, contact: str, imprint: str) -> str:
     # The limits the script needs, as data: a JSON block is not executed, so
     # it needs no inline script. `<` is escaped so the block cannot be closed.
     config = json.dumps(
-        {"checkMax": text_max_length, "textMax": text_max_length}
+        {
+            "checkMax": text_max_length,
+            "textMax": text_max_length,
+            "examples": EXAMPLES,
+        }
     ).replace("<", "\\u003c")
     page = PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH)).replace(
         "__CONFIG__", config

@@ -515,10 +515,14 @@ def test_page_limits_match_the_api(textarea):
     )
     # The editor splits long texts into requests the API checks whole, and a
     # prompt can rewrite as much as one of them.
-    assert config == {
-        "checkMax": context.settings.text_max_length,
-        "textMax": context.settings.text_max_length,
-    }
+    assert config["checkMax"] == context.settings.text_max_length
+    assert config["textMax"] == context.settings.text_max_length
+    # An example text per language the switcher offers, each short enough to
+    # be checked in one request and rewritten by a prompt.
+    assert set(config["examples"]) == {"de", "en", "fr"}
+    for example in config["examples"].values():
+        assert 0 < len(example) <= context.settings.text_max_length
+    assert re.findall(r'<option value="([a-z]+)"', page) == ["auto", "de", "en", "fr"]
     script = page_script()
     assert "maxRequestLength: CONFIG.checkMax," in script
     assert "const TEXT_MAX = CONFIG.textMax;" in script
