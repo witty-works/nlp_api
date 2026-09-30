@@ -131,10 +131,12 @@ def test_no_plural_umlaut_matches_compounds():
         ("Hexer", "Hexere", "Hexerne"),
         ("Witwer", "Witwere", "Witwerne"),
         # Masculine in -e with an endingless variant: only the article
-        # changes, and the plural is not the one the -re rule would give.
+        # changes, and the plural is built from that unchanged singular,
+        # -re taking only an -n- (Nachfahrne) and anything else -rne (Ahnerne).
         ("Ahne", "Ahne", "Ahnerne"),
         ("Nachfahre", "Nachfahre", "Nachfahrne"),
         ("Vorfahre", "Vorfahre", "Vorfahrne"),
+        ("Geselle", "Geselle", "Gesellerne"),
         # -mann/-frau compounds are replaced outright, never suffixed.
         ("Kaufmann", "Kaufperson", "Kaufleute"),
         ("Fachmann", "Fachperson", "Fachleute"),
@@ -177,6 +179,12 @@ def test_exception_csv_rows_are_well_formed():
         # An unchanged singular is only right for a word whose article is
         # reported through the neutral list instead.
         assert singular_form != masculine or masculine in neutral, masculine
+
+
+def test_neutral_singular_plurals_follow_the_plural_rule():
+    for masculine, (singular_form, plural_form) in _exceptions().items():
+        if singular_form == masculine:
+            assert inklusivum.plural(singular_form) == plural_form, masculine
 
 
 def test_exception_wins_over_the_neutral_list_in_the_plural():
