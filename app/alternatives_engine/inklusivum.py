@@ -271,16 +271,18 @@ def noun(
 
     lexicon = lexicon or Lexicon()
 
-    if is_already_neutral(masculine, lexicon.neutral):
-        return add_german_prefix(masculine, prefix)
-
     is_plural = target_form in PLURAL_FORMS
 
+    # Ahne, Nachfahre and Vorfahre are neutral in the singular but still
+    # take an Inklusivum plural, so an exception wins over the neutral list.
     override = lexicon.exceptions.get(masculine)
     if override is not None:
         singular_form, plural_form = override
         form = plural_form if is_plural else singular_form
         return add_german_prefix(apply_case(form, target_form), prefix)
+
+    if is_already_neutral(masculine, lexicon.neutral):
+        return add_german_prefix(masculine, prefix)
 
     if is_substantivized_adjective(masculine, feminine):
         return substantivized_adjective(masculine, target_form, prefix, has_article)
@@ -428,11 +430,7 @@ def possessive_pair(tilde_word: str) -> str | None:
 PRONOMINAL = {
     "nominativ": "einey",
     "akkusativ": "einey",
-    # Unsupported, and kept only until the reporting side stops asking for it:
-    # the Artikelpronomen table prints "—" in the genitive for every gender,
-    # not just this one, so the standalone genitive is not provided at all.
-    # The attested "einers" (die Tasche einers Schüleres) is the attributive
-    # article, a different slot. See docs/inklusivum.md.
+    # Same as the attributive form; the Artikelpronomen table gives it too.
     "genitiv": "einers",
     "dativ": "einerm",
 }
