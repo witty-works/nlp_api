@@ -17,27 +17,69 @@ function checkMessage(next) {
 const apiKey = document.getElementById("api-key");
 const aiSuggestions = document.getElementById("ai-suggestions");
 const aiNote = document.getElementById("ai-suggestions-note");
-const editor = WittyEditor.mount(document.getElementById("editor"), {
-  // Long texts are checked in requests of this API's size.
-  maxRequestLength: CONFIG.checkMax,
-  // The visible help below the editor, after the editor's own hint.
-  describedBy: "editor-help",
-  // The popover's LLM rewrites (/v1.0/rephrase): each one is an LLM
-  // request, so they are off until the "AI suggestions" box is ticked.
-  llmAlternatives: false,
-  // Long enough for a local model through Ollama, not only a hosted one.
-  llmTimeoutMs: 30000,
-  onStatus(next) {
-    checkStatus.textContent = checkMessage(next);
-  },
-  // The editor's own settings panel has the same switch; both follow it.
-  onSettingsChange(next) {
-    aiSuggestions.checked = next.llmAlternatives;
-  },
-});
+const editorElement = document.getElementById("editor");
+const langSelect = document.getElementById("lang");
+const exampleButton = document.getElementById("example");
+
+// The editor takes the text's language when it is mounted, so choosing
+// another one mounts it again (see below).
+const mountEditor = (lang, content) =>
+  WittyEditor.mount(editorElement, {
+    lang,
+    content,
+    // A remounted editor checks its text straight away, so it needs the key
+    // from the start rather than from a setApiKey afterwards.
+    ...(apiKey.value && { apiKey: apiKey.value }),
+    // Long texts are checked in requests of this API's size.
+    maxRequestLength: CONFIG.checkMax,
+    // The visible help below the editor, after the editor's own hint.
+    describedBy: "editor-help",
+    // The popover's LLM rewrites (/v1.0/rephrase): each one is an LLM
+    // request, so they are off until the "AI suggestions" box is ticked.
+    llmAlternatives: false,
+    // Long enough for a local model through Ollama, not only a hosted one.
+    llmTimeoutMs: 30000,
+    onStatus(next) {
+      checkStatus.textContent = checkMessage(next);
+    },
+    // The editor's own settings panel has the same switch; both follow it.
+    onSettingsChange(next) {
+      aiSuggestions.checked = next.llmAlternatives;
+    },
+  });
+let editor = mountEditor(langSelect.value);
 
 aiSuggestions.addEventListener("change", () => {
   editor.updateSettings({ llmAlternatives: aiSuggestions.checked });
+});
+
+// The example texts of the dashboard's former Witty Editor. Detect shows
+// the English one. `shownExample` is the editor's text right after one was
+// put in, so a language change can tell an untouched example from a text
+// someone wrote.
+const EXAMPLES = CONFIG.examples || {};
+let shownExample = null;
+function showExample() {
+  const text = EXAMPLES[langSelect.value] || EXAMPLES.en;
+  if (!text) return;
+  // One transaction, so undo brings the previous text back.
+  editor.editor.commands.setContent(toDoc(text));
+  shownExample = editor.getText();
+}
+exampleButton.addEventListener("click", showExample);
+
+langSelect.addEventListener("change", () => {
+  const untouched = shownExample !== null && editor.getText() === shownExample;
+  // The editor's own HTML, so nothing from outside it is parsed as markup.
+  const content = editor.editor.getHTML();
+  const { config, ...settings } = editor.getSettings();
+  editor.destroy();
+  editor = mountEditor(langSelect.value, content);
+  editor.updateSettings(config ? { config, ...settings } : settings);
+  applyInputState();
+  // An example nobody changed follows the language; a text someone wrote
+  // stays and is checked in the new language.
+  if (untouched) showExample();
 });
 
 // Nothing can be typed or run until the key is known to work; while a
@@ -250,6 +292,7 @@ form.addEventListener("submit", async (event) => {
       body: JSON.stringify({
         prompt: prompt.value,
         text,
+        lang: langSelect.value,
         ...(Object.keys(config).length && { config }),
       }),
     });
@@ -308,3 +351,7 @@ prompt.addEventListener("keydown", (event) => {
     form.requestSubmit();
   }
 });
+
+// The page opens with the example, as the dashboard's editor did (after
+// toDoc above is defined).
+showExample();
