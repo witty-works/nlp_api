@@ -144,7 +144,7 @@ The switch only goes into the Inklusivum. Out of it, `de Lehrere` would have to 
 
 ## Forms the sources did not settle
 
-These were inferred by analogy while the association's web pages were the only source, and the code depends on them. All of them are now confirmed by the association in direct exchange, and against the reference implementation. [inklusivum-feedback.md](./inklusivum-feedback.md) records what was settled that way but is not on the pages yet, and what is still open.
+These were inferred by analogy while the association's web pages were the only source, and the code depends on them. All of them are now confirmed by the association in direct exchange, and against the reference implementation. [inklusivum-feedback.md](./inklusivum-feedback.md) records what was settled that way but is not on the pages yet.
 
 - **Genitive plural of nouns** — confirmed as identical to the nominative plural. `lexicon.py` gives the plural `-rne` for every case but the dative, which takes `-rnen`. Our `apply_case` does the same.
 - **The article before a genitive plural** — we had this one wrong in prose. `neutralize_article` returns the input unchanged when the parse carries `Pl`, so it is *der Schülerne*, not *ders Schülerne*: in the plural the ordinary German article stays. The code was never wrong here, because the plural findings match the bare noun and prepend no article; only this document claimed otherwise. `test_api_gender_ending_inklusivum_plural` pins the behaviour.
@@ -155,7 +155,7 @@ These were inferred by analogy while the association's web pages were the only s
 - **Genitive of the standalone article pronoun** — `einers`, the same as the attributive article. The Artikelpronomen table printed `—` in the genitive row when we first read it; the association has since added `einers` there.
 - **`deselben` in the nominative slot** — confirmed a typo on the website. The nominative is `deselbe`; every other case is the `der` article ending plus `selben`.
 - **Which of two forms is recommended** — where a page names several without an explicit recommendation, the first one named; an explicit recommendation wins over the order. `Freunde`, `Wanderne` and `Enkele` are first named, `Torererne` is recommended outright and pinned in `inklusivum_nouns.csv`.
-- **Masculines in -e with an endingless variant** — `Ahne`, `Nachfahre`, `Vorfahre` keep the word and change only the article, so they are in `inklusivum_neutral_nouns.csv`; their plurals (`Ahnerne`, but `Nachfahrne`, `Vorfahrne`) come from the Ausnahmeformen page and are in `inklusivum_nouns.csv`, which `noun()` consults first. The two plural patterns do not agree with each other; that, and the plurals of `Elfe`, `Geselle` and `Titane`, are still open.
+- **Masculines in -e with an endingless variant** — `Ahne`, `Nachfahre`, `Vorfahre` keep the word and change only the article, so they are in `inklusivum_neutral_nouns.csv`; their plurals (`Ahnerne`, `Nachfahrne`, `Vorfahrne`) come from the Ausnahmeformen page and are in `inklusivum_nouns.csv`, which `noun()` consults first. The two patterns are one rule: the plural is built from the Inklusivum singular, and a singular in `-re` takes only an `-n-` (`Nachfahrne`, like `Schülerne`), anything else `-rne`. `Elfe`, `Geselle` and `Titane` are on the association's list of already neutral words; the same rule gives `Elferne`, `Gesellerne`, `Titanerne`.
 
 ---
 
@@ -198,6 +198,6 @@ from this API's contract:
 
 ## See Also
 
-- [Annahmen aus dem direkten Austausch](./inklusivum-feedback.md), what the association settled outside its pages, and what is still open
+- [Annahmen aus dem direkten Austausch](./inklusivum-feedback.md), what the association settled outside its pages
 - [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
 - [Training Data & Lookups](./training-data.md)
