@@ -623,3 +623,28 @@ def test_a_placeholder_left_unfilled_stops_the_page(monkeypatch):
             module.render_page(context.settings)
     finally:
         module._render_page.cache_clear()
+
+
+@pytest.mark.parametrize(
+    "accept_language,selected",
+    [
+        (None, "en"),
+        ("de-CH,de;q=0.9,en;q=0.8", "de"),
+        ("fr-FR,fr;q=0.9", "fr"),
+        ("en-US,en;q=0.9,de;q=0.8", "en"),
+        # The first the page offers, by weight; others are passed over.
+        ("it,de;q=0.5", "de"),
+        ("de;q=0,fr;q=0.2", "fr"),
+        ("es", "en"),
+    ],
+)
+def test_the_text_language_follows_the_browser(textarea, accept_language, selected):
+    """English unless the browser prefers German or French; the page opens with
+    that language chosen, so its example is the one shown."""
+    headers = {"accept-language": accept_language} if accept_language else {}
+    with TestClient(app) as client:
+        response = client.get("/textarea", headers=headers)
+
+    assert response.headers["vary"] == "Accept-Language"
+    chosen = re.findall(r'<option value="([a-z]+)" selected>', response.text)
+    assert chosen == [selected]

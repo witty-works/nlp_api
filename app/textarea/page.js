@@ -54,13 +54,13 @@ aiSuggestions.addEventListener("change", () => {
 });
 
 // The example texts of the dashboard's former Witty Editor. Detect shows
-// the German one. `shownExample` is the editor's text right after one was
+// the English one. `shownExample` is the editor's text right after one was
 // put in, so a language change can tell an untouched example from a text
 // someone wrote.
 const EXAMPLES = CONFIG.examples || {};
 let shownExample = null;
 function showExample() {
-  const text = EXAMPLES[langSelect.value] || EXAMPLES.de;
+  const text = EXAMPLES[langSelect.value] || EXAMPLES.en;
   if (!text) return;
   // One transaction, so undo brings the previous text back.
   editor.editor.commands.setContent(toDoc(text));

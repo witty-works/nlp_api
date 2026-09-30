@@ -79,19 +79,49 @@ MISSING_BUNDLE = """<!doctype html>
 </html>"""
 
 
-def render_page(settings: Settings) -> str:
+# The text languages the page offers besides Detect; English unless the
+# browser prefers one of the others.
+PAGE_LANGUAGES = ("en", "de", "fr")
+DEFAULT_PAGE_LANGUAGE = "en"
+
+
+def negotiate_language(accept_language: str) -> str:
+    """The language the browser prefers most among the page's, by the
+    Accept-Language weights (`de-CH,de;q=0.9,en;q=0.8` is German), else
+    English. Ties keep the header's order."""
+    ranked = []
+    for position, part in enumerate(accept_language.split(",")):
+        tag, _, params = part.strip().partition(";")
+        weight = 1.0
+        for param in params.split(";"):
+            name, _, value = param.strip().partition("=")
+            if name == "q":
+                try:
+                    weight = float(value)
+                except ValueError:
+                    weight = 0.0
+        primary = tag.strip().lower().split("-")[0]
+        if primary in PAGE_LANGUAGES and weight > 0:
+            ranked.append((-weight, position, primary))
+
+    return min(ranked)[2] if ranked else DEFAULT_PAGE_LANGUAGE
+
+
+def render_page(settings: Settings, lang: str = DEFAULT_PAGE_LANGUAGE) -> str:
     """The page, pointing people without a key to the deployment's contact,
-    and to its imprint where it has one. It depends on nothing but these
-    settings, so it is built once per combination of them."""
+    and to its imprint where it has one, with `lang` chosen as the text's
+    language. It depends on nothing but these, so it is built once per
+    combination of them."""
     return _render_page(
         settings.text_max_length,
         settings.textarea_contact or "",
         settings.textarea_imprint_url or "",
+        lang if lang in PAGE_LANGUAGES else DEFAULT_PAGE_LANGUAGE,
     )
 
 
-@lru_cache(maxsize=8)
-def _render_page(text_max_length: int, contact: str, imprint: str) -> str:
+@lru_cache(maxsize=16)
+def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) -> str:
     # The limits the script needs, as data: a JSON block is not executed, so
     # it needs no inline script. `<` is escaped so the block cannot be closed.
     config = json.dumps(
@@ -103,6 +133,10 @@ def _render_page(text_max_length: int, contact: str, imprint: str) -> str:
     ).replace("<", "\\u003c")
     page = PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH)).replace(
         "__CONFIG__", config
+    )
+    # The negotiated language is the one selected, and its example is shown.
+    page = page.replace(
+        f'<option value="{lang}">', f'<option value="{lang}" selected>'
     )
 
     # Only a web address becomes a link, so a mistyped setting cannot put a
@@ -179,7 +213,9 @@ def textarea_enabled(context: AppContext = Depends(get_app_context)) -> None:
     include_in_schema=False,
     dependencies=[Depends(textarea_enabled)],
 )
-def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse:
+def get_textarea(
+    request: Request, context: AppContext = Depends(get_app_context)
+) -> HTMLResponse:
     if not EDITOR_BUNDLE.is_file():
         return HTMLResponse(
             content=MISSING_BUNDLE,
@@ -187,7 +223,12 @@ def get_textarea(context: AppContext = Depends(get_app_context)) -> HTMLResponse
             headers=CSP_HEADER,
         )
 
-    return HTMLResponse(content=render_page(context.settings), headers=CSP_HEADER)
+    lang = negotiate_language(request.headers.get("accept-language", ""))
+    return HTMLResponse(
+        content=render_page(context.settings, lang),
+        # The selected language depends on the browser's.
+        headers={**CSP_HEADER, "Vary": "Accept-Language"},
+    )
 
 
 @router.get(
