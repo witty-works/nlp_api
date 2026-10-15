@@ -269,6 +269,12 @@ class Settings(BaseSettings):
     # (2 for the BFH inference server), so this times WORKERS should stay
     # within that. 0 for no limit.
     llm_max_concurrency: int = 2
+    # LLM calls the whole deployment makes per minute, counted in Redis so
+    # every worker shares the one budget. Providers limit requests per key
+    # (60 a minute for the BFH inference server), and an account that keeps
+    # exceeding it risks being blocked; past this the API answers 503 with
+    # Retry-After until the next minute instead of calling. 0 for no limit.
+    llm_max_requests_per_minute: int = 0
 
     # Who the deployment is willing to spend LLM tokens on. `users` — the
     # default — means anyone the request resolves to a user for.

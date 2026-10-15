@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 
 import litellm
 
@@ -18,7 +19,11 @@ litellm.suppress_debug_info = True
 
 class LlmUnavailable(Exception):
     """The provider is busy, rate limited, unreachable or too slow: worth
-    trying again shortly (503)."""
+    trying again shortly (503), after `retry_after` seconds."""
+
+    def __init__(self, message: str, retry_after: int = 10):
+        super().__init__(message)
+        self.retry_after = retry_after
 
 
 class LlmCutOff(Exception):
@@ -41,13 +46,38 @@ class Prompt:
     settings: Settings
     alternatives: Alternatives
 
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, redis_db=None):
         self.settings = settings
+        # Where the per-minute count is kept, shared by every worker; without
+        # it there is no per-minute limit.
+        self.redis_db = redis_db
         self._slots = (
             asyncio.Semaphore(settings.llm_max_concurrency)
             if settings.llm_max_concurrency > 0
             else None
         )
+
+    def _count_request(self) -> None:
+        """Count this call against LLM_MAX_REQUESTS_PER_MINUTE, refusing it
+        once the minute's budget is spent. A fixed window per wall-clock
+        minute: it can let up to twice the limit through around a minute's
+        turn, which the provider's own limit absorbs; what matters is that a
+        steady stream cannot exceed it."""
+        limit = self.settings.llm_max_requests_per_minute
+        if limit <= 0 or self.redis_db is None:
+            return
+
+        now = time.time()
+        key = f"llm_requests:{int(now // 60)}"
+        pipe = self.redis_db.pipeline()
+        pipe.incr(key)
+        pipe.expire(key, 120)
+        count = pipe.execute()[0]
+        if count > limit:
+            raise LlmUnavailable(
+                f"{limit} LLM requests this minute (LLM_MAX_REQUESTS_PER_MINUTE)",
+                retry_after=60 - int(now % 60),
+            )
 
     def _credentials(self, model: str) -> dict:
         """Provider credentials, keyed off the provider prefix in the model id.
@@ -122,6 +152,8 @@ class Prompt:
         ]
 
         timeout = self.settings.llm_timeout
+        # Before waiting for a slot, so a refused call does not hold one.
+        self._count_request()
         try:
             if self._slots is not None:
                 await asyncio.wait_for(self._slots.acquire(), timeout)
@@ -191,7 +223,7 @@ def llm_error(error: Exception, route: str) -> tuple[int, dict, str]:
         logger.warning("%s: LLM unavailable: %s", route, error)
         return (
             503,
-            {"Retry-After": "10"},
+            {"Retry-After": str(error.retry_after)},
             "The language model is busy or unreachable, try again shortly",
         )
     if isinstance(error, LlmCutOff):
