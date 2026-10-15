@@ -67,13 +67,7 @@ For a local model through Ollama, Mistral Small 24B handled the rephrase prompt 
 
 ### Docker
 
-The image contains the editor script only when built with the `TEXTAREA` build argument, which runs the same download during the build:
-
-```bash
-TEXTAREA=true docker compose build
-```
-
-and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned npm release.
+Every image contains the editor script: the build runs the same download in a stage of its own. Serving the page is then only `TEXTAREA_ENABLED=true` in the environment, so the published image needs no rebuild for it. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned npm release.
 
 ## Security
 
@@ -94,7 +88,7 @@ python bin/fetch_editor.py --pin 2.0.2
 python bin/fetch_editor.py
 ```
 
-`--pin` installs that version into a throwaway npm project (with `--ignore-scripts`, so nothing from the package runs) and has `npm audit signatures` verify its registry signature and its provenance. It then requires the provenance to name the browser-extension repository's `.github/workflows/publish-editor.yaml`, run from the tag named after the version, and only then writes the version and the integrity npm verified into `bin/editor-pin.json`. A version published any other way, for instance from a leaked token, is refused. The second command installs it; check the page against it before committing the new pin. An install writes its files under temporary names and moves them into place together, so an interrupted one leaves the previous install whole. The Docker image downloads the editor in a stage of its own (`--build-arg TEXTAREA=true`), which a change to the app does not invalidate.
+`--pin` installs that version into a throwaway npm project (with `--ignore-scripts`, so nothing from the package runs) and has `npm audit signatures` verify its registry signature and its provenance. It then requires the provenance to name the browser-extension repository's `.github/workflows/publish-editor.yaml`, run from the tag named after the version, and only then writes the version and the integrity npm verified into `bin/editor-pin.json`. A version published any other way, for instance from a leaked token, is refused. The second command installs it; check the page against it before committing the new pin. An install writes its files under temporary names and moves them into place together, so an interrupted one leaves the previous install whole. The Docker image downloads the editor in a stage of its own, which a change to the app does not invalidate.
 
 The pin is what protects every later install: the download is checked against the integrity in the script, which changes only through a reviewed commit. That is why installs need no npm.
 

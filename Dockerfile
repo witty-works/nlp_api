@@ -97,17 +97,16 @@ RUN python -m venv /opt/venv \
 RUN /opt/venv/bin/python -c "import spacy, httpx; print('spacy', spacy.__version__, 'ok')"
 
 # ----------------------------------------------------------------- editor ---
-# The editor script for the /textarea page, only when asked for: the page is
-# off by default (TEXTAREA_ENABLED), and an image without it carries nothing of
-# it. Downloads the npm release pinned in bin/editor-pin.json (no npm needed)
-# and checks it against the integrity the registry published. A stage of its
-# own, so a change to the app does not download it again.
+# The editor script for the /textarea page. Always in the image, so that one
+# image serves every deployment: whether the page is served is TEXTAREA_ENABLED
+# at runtime, off by default, and the script is under 1 MB. Downloads the npm
+# release pinned in bin/editor-pin.json (no npm needed) and checks it against
+# the integrity the registry published. A stage of its own, so a change to the
+# app does not download it again.
 FROM python:${PYTHON_VERSION}-slim-bookworm AS editor
 
-ARG TEXTAREA=false
 COPY ./bin/fetch_editor.py ./bin/editor-pin.json /tmp/
-RUN mkdir -p /editor \
-    && if [ "$TEXTAREA" = "true" ]; then python /tmp/fetch_editor.py --dest /editor; fi
+RUN mkdir -p /editor && python /tmp/fetch_editor.py --dest /editor
 
 # ---------------------------------------------------------------- runtime ---
 FROM python:${PYTHON_VERSION}-slim-bookworm AS runtime
@@ -131,7 +130,6 @@ COPY ./app /code/app
 COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# Empty unless the image was built with TEXTAREA=true (see the editor stage).
 COPY --from=editor /editor/ /code/app/static/
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R appuser /code

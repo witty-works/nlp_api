@@ -99,7 +99,6 @@ def test_missing_script_says_how_to_install_it(textarea):
         response = client.get("/textarea")
         assert response.status_code == 503
         assert "bin/fetch_editor.py" in response.text
-        assert "TEXTAREA=true" in response.text
 
         assert client.get("/textarea/witty-editor.js").status_code == 404
 
