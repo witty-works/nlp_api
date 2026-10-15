@@ -147,11 +147,13 @@ class Settings(BaseSettings):
     # up a route it needs - /slack/commands, say, which authenticates itself by
     # signature and would otherwise be unreachable for Slack. The category list
     # and the config options are the same for everyone and let an options page
-    # render before a key has been entered.
+    # render before a key has been entered; so is the feature list without a
+    # key (with one, it checks the key itself).
     public_paths: list[str] = [
         "/health",
         "/v2.0/categories",
         "/v2.0/config-options",
+        "/v2.0/features",
     ]
 
     # The /textarea page: Witty's editor and a prompt, for checking and

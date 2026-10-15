@@ -1378,6 +1378,21 @@ class CategoriesOut(BaseModel):
     groups: list[CategoryGroupOut]
 
 
+class FeatureOut(BaseModel):
+    """One feature of this deployment. `available` whether it is there at all;
+    `allowed` whether the requesting key may use it, only where a key was sent
+    and only for features some keys are refused; `values` what it offers,
+    where that is a list (the loaded languages)."""
+
+    available: bool
+    allowed: Optional[bool] = None
+    values: Optional[list[str]] = None
+
+
+class FeaturesOut(BaseModel):
+    features: dict[str, FeatureOut]
+
+
 class ConfigOptionOut(BaseModel):
     values: list[str]
     default: Optional[str] = None
