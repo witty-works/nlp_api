@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import pytest
 import logging
 import json
@@ -3018,6 +3019,31 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
             settings.require_api_key = False
             settings.management_auth_enabled = False
             settings.api_docs_username, settings.api_docs_password = previous
+
+
+def test_version_reports_the_rules_file(tmp_path, monkeypatch):
+    """A dump mounted over the image's own changes every finding, so /version
+    says which file was loaded and whether it is the one the image carries."""
+    with open("./database/dump.sql", "rb") as f:
+        expected = hashlib.sha256(f.read()).hexdigest()
+
+    with TestClient(app) as client:
+        rules = client.get("/version").json()["rules"]
+        assert rules == {
+            "file": "./database/dump.sql",
+            "sha256": expected,
+            # Outside an image there is nothing to compare with.
+            "bundled": None,
+        }
+
+        bundled = tmp_path / "dump.sql.sha256"
+        monkeypatch.setattr("app.db.BUNDLED_DUMP_SHA256_FILE", str(bundled))
+
+        bundled.write_text(expected + "\n")
+        assert client.get("/version").json()["rules"]["bundled"] is True
+
+        bundled.write_text("0" * 64 + "\n")
+        assert client.get("/version").json()["rules"]["bundled"] is False
 
 
 def test_require_api_key_public_paths_are_configurable():

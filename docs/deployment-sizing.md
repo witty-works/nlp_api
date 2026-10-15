@@ -12,9 +12,9 @@ The short version: the resident memory is almost entirely spaCy word vectors, so
 | `redis` | `redis:7-alpine` | API keys, user and organization config |
 | `languagetool` | built from [languagetool/](../languagetool/) | spell and grammar checking; **not started by default**, see below |
 
-Plus two mounts into `nlpapi`:
+The image carries the release's rule database (`dump.sql`, ~8 MB, read into an in-memory SQLite at startup) and the `/textarea` editor script, so a deployment needs no checkout. Two mounts are optional:
 
-- `./database` (read-only) — the rule database, ~8 MB as `dump.sql`, read into an in-memory SQLite at startup.
+- over `/code/database/dump.sql` (read-only) — a custom rule database instead of the release's. The local `compose.yml` mounts the checkout's `./database` there for development.
 - `./models` (read-only) — SetFit context-checker weights, ~1.5 GB, only read when the context checker is on.
 
 **Redis is not optional.** With no `REDIS_HOST` the app falls back to an in-process `FakeStrictRedis`, which is empty. Nothing errors: the API answers `200` with `{"results": []}` for every request, because no user has a config. This is easy to mistake for "the rules are broken" — it cost time while writing this document. The compose file wires it up so a fresh `docker compose up` does not land in that state.
@@ -259,7 +259,7 @@ Four things that cost time to find, all of which fail quietly:
 
 **The context checker needs a bigger `/dev/shm`.** Torch's `share_memory()` moves the model into shared memory, and Docker's default `/dev/shm` is 64 MB — a ~1 GB SetFit model overruns it and the process dies of SIGBUS. What you see is exit code 135, no log line, and `OOMKilled=false`, which looks like anything but a full `/dev/shm`. `compose.yml` sets `shm_size: 2gb`; a plain `docker run` needs `--shm-size=2g`. Harmless when the context checker is off, which is why it does not show up until the day you enable it.
 
-**Two files are gitignored and must be provisioned separately.** `training_data/lid.176.bin` (126 MB, fastText language detection) and the rule database under `database/`. The Dockerfile copies the first from the build context, so the image is only correct if that file is present at build time; the second is mounted at runtime. Neither is in the repository.
+**One file is gitignored and must be present to build.** `training_data/lid.176.bin` (126 MB, fastText language detection) is copied from the build context, and the build fails without it rather than producing an image that breaks on the first language detection. The release workflow downloads it; a local build needs the `wget` from [setup.md](./setup.md). The rule database is in the repository as `database/dump.sql` and goes into the image; only `db.sqlite3`, used with `IMPORT_FROM_DUMP=false`, is gitignored.
 
 **Startup is slow and that is normal.** Loading the models takes roughly 10–20 s per container before the first request can be served, longer with the context checker on. The `HEALTHCHECK` in the Dockerfile has `--start-period=120s` for that reason; shortening it makes Docker kill containers that are still coming up. The same applies to any load balancer in front: give it a slow-start or readiness delay, or a rolling restart will take the service down.
 

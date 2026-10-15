@@ -130,6 +130,17 @@ COPY ./app /code/app
 COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
+# gitignored, so a build from a fresh checkout would otherwise ship an image
+# that only fails once language detection is first used.
+RUN test -s /code/training_data/lid.176.bin \
+    || { echo "training_data/lid.176.bin is missing, see docs/setup.md" >&2; exit 1; }
+
+# The release's rules. A file mounted over /code/database/dump.sql replaces
+# them without a rebuild; the hash recorded beside it is how /version tells
+# the two apart (see Db.rules_info).
+COPY ./database/dump.sql /code/database/dump.sql
+RUN sha256sum /code/database/dump.sql | cut -d' ' -f1 > /code/dump.sql.sha256
+
 COPY --from=editor /editor/ /code/app/static/
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R appuser /code

@@ -154,8 +154,11 @@ services:
           # checker off) with headroom. Raise before raising WORKERS.
           memory: ${API_MEM_LIMIT:-6g}
     volumes:
-      # The image does not COPY the rule database; the app reads
-      # ./database/dump.sql (or db.sqlite3) relative to /code at startup.
+      # The image carries its release's dump.sql; this replaces it with the
+      # checkout's (and adds db.sqlite3, for IMPORT_FROM_DUMP=false), which is
+      # what local work wants. A deployment that wants its own rules mounts a
+      # single file over /code/database/dump.sql instead; /version then
+      # reports "bundled": false.
       - ./database:/code/database:ro
       # SetFit weights are mounted rather than baked in, so the image is the
       # same whether or not the context checker is enabled.
