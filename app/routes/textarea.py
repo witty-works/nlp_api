@@ -24,7 +24,6 @@ from markdown_it import MarkdownIt
 from starlette.requests import Request
 from starlette.responses import FileResponse, HTMLResponse, Response
 
-from app.config_manager import llm_available
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.models import WRITE_PROMPT_MAX_LENGTH
@@ -124,7 +123,6 @@ def render_page(settings: Settings, lang: str = DEFAULT_PAGE_LANGUAGE) -> str:
         settings.textarea_contact or "",
         imprint,
         lang if lang in PAGE_LANGUAGES else DEFAULT_PAGE_LANGUAGE,
-        llm_available(settings),
     )
 
 
@@ -172,9 +170,7 @@ def render_imprint(path: str) -> str:
 
 
 @lru_cache(maxsize=16)
-def _render_page(
-    text_max_length: int, contact: str, imprint: str, lang: str, llm: bool
-) -> str:
+def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) -> str:
     # The limits the script needs, as data: a JSON block is not executed, so
     # it needs no inline script. `<` is escaped so the block cannot be closed.
     config = json.dumps(
@@ -182,10 +178,8 @@ def _render_page(
             "checkMax": text_max_length,
             "textMax": text_max_length,
             "examples": EXAMPLES,
-            # Whether this server has a language model at all, so a key it
-            # refuses can be told where to ask for it (LLM_ALLOWED_USERS)
-            # rather than being sent to ask for something nobody can grant.
-            "llmAvailable": llm,
+            # Where a key refused the language model asks for it
+            # (LLM_ALLOWED_USERS); whether it is refused, /v2.0/auth says.
             "llmAccessRequest": (
                 mailto(contact, "Access to the language model") if contact else ""
             ),

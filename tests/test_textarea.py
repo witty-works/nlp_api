@@ -163,7 +163,7 @@ def test_page_explains_itself_and_where_to_get_a_key(textarea):
     ) in page
     # The hints are tied to their fields for screen readers.
     for hint in ("api-key-help", "prompt-help"):
-        assert f'aria-describedby="{hint}"' in page
+        assert re.search(rf'aria-describedby="[^"]*\b{hint}\b[^"]*"', page)
         assert f'id="{hint}"' in page
 
 
@@ -206,14 +206,17 @@ def test_the_key_goes_only_into_x_key():
 
 
 def test_the_page_calls_routes_that_exist():
-    """Every API path the page fetches is a POST route of this API."""
-    called = set(re.findall(r'fetch\("(/[^"]+)"', page_script()))
-    assert called, "the page fetches nothing"
+    """Every API path the page fetches is a route of this API, with the
+    method the page uses (GET where a fetch names none)."""
+    calls = re.findall(r'fetch\("(/[^"]+)"(, \{[^}]*\})?', page_script())
+    assert calls, "the page fetches nothing"
 
-    posts = {
-        route.path for route in app.routes if "POST" in getattr(route, "methods", set())
-    }
-    assert called <= posts, called - posts
+    methods = {}
+    for route in app.routes:
+        methods.setdefault(route.path, set()).update(getattr(route, "methods", set()))
+    for path, options in calls:
+        method = "POST" if 'method: "POST"' in options else "GET"
+        assert method in methods.get(path, set()), (path, method)
 
 
 def load_fetch_editor():
@@ -543,13 +546,7 @@ def test_a_refused_key_is_told_where_to_ask(textarea, monkeypatch):
     monkeypatch.setattr(context.settings, "textarea_contact", "lukas.smith@bfh.ch")
 
     with TestClient(app) as client:
-        monkeypatch.setattr(context.settings, "llm_model", "")
         config = page_config(client.get("/textarea").text)
-        assert config["llmAvailable"] is False
-
-        monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
-        config = page_config(client.get("/textarea").text)
-        assert config["llmAvailable"] is True
         assert config["llmAccessRequest"] == (
             "mailto:lukas.smith@bfh.ch?subject=Access%20to%20the%20language%20model"
         )
@@ -558,10 +555,48 @@ def test_a_refused_key_is_told_where_to_ask(textarea, monkeypatch):
         assert page_config(client.get("/textarea").text)["llmAccessRequest"] == ""
 
     script = page_script()
-    assert "if (CONFIG.llmAvailable && CONFIG.llmAccessRequest) {" in script
-    # Both refusals carry it: the checkbox's note and the prompt's 403.
-    assert "llmRefusal(aiNote, LLM_UNAVAILABLE);" in script
-    assert "llmRefusal(writeStatus, failure(response.status, body));" in script
+    # What the key may do comes from /v2.0/features, not from inferring it.
+    assert 'fetch("/v2.0/features", { headers })' in script
+    assert "(await features.json()).features?.llm ?? capability" in script
+    assert "if (llm.available && CONFIG.llmAccessRequest) {" in script
+    # Both the checkbox and the prompt say so, before anything is run, next
+    # to their labels and read out with them.
+    assert "for (const note of [aiNote, promptNote]) {" in script
+    assert "llmRefusal(note);" in script
+    checkbox = re.search(r'<span class="checkbox">.*?</span>\s*</span>', PAGE, re.S).group(0)
+    assert 'id="ai-suggestions-note"' in checkbox
+    assert 'aria-describedby="ai-suggestions-note ai-suggestions-help"' in PAGE
+    label_row = re.search(r'<span class="label-row">.*?</span>\s*</span>', PAGE, re.S).group(0)
+    assert '<label for="prompt">' in label_row and 'id="prompt-note"' in label_row
+    assert 'aria-describedby="prompt-note prompt-help"' in PAGE
+    # Refused anyway (access changed since): the key is checked again.
+    assert "if (response.status === 403) checkApiKey();" in script
+
+
+def test_the_page_says_what_this_server_offers():
+    """Asked without a key, so it shows before one is entered; hidden until
+    the server has answered."""
+    block = re.search(r'<div id="server-features".*?</div>', PAGE, re.S).group(0)
+    assert "hidden" in block and "<ul></ul>" in block
+    assert ".help[hidden] {" in PAGE
+
+    script = page_script()
+    assert 'fetch("/v2.0/features")\n' in script
+    # Every language the menu offers is listed, missing ones too, by the
+    # names the menu shows; then spelling and grammar, and the model.
+    assert "[...langSelect.options]" in script
+    assert 'option.value !== "auto"' in script
+    assert "loaded.includes(option.value)" in script
+    for wording in ('"Spelling and grammar"', '"AI suggestions and prompts"'):
+        assert wording in script
+    assert '(available ? "available" + mark : "not available")' in script
+    # The model is marked: available here does not mean for every key.
+    assert '["AI suggestions and prompts", features.llm.available, "*"]' in script
+    assert 'id="server-features-note" hidden' in PAGE
+    assert "depends on its permissions" in PAGE
+    # The checkbox sits right below the list it belongs to.
+    assert PAGE.index('id="server-features"') < PAGE.index('id="ai-suggestions"')
+    assert PAGE.index('id="ai-suggestions"') < PAGE.index('id="api-key"')
 
 
 def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
@@ -678,9 +713,8 @@ def test_ai_suggestions_are_off_until_ticked():
     assert "llmAlternatives: false" in script
     assert "editor.updateSettings({ llmAlternatives: aiSuggestions.checked })" in script
     assert "aiSuggestions.checked = next.llmAlternatives" in script
-    # The server reports a refused LLM as forced off.
+    # The server reports what the key may do with the language model.
     assert 'fetch("/v2.0/auth"' in script
-    assert 'setting?.status === "force" && setting.value === false' in script
 
     box = re.search(r'<input\s[^>]*id="ai-suggestions"[^>]*>', PAGE).group(0)
     assert 'type="checkbox"' in box
@@ -690,12 +724,14 @@ def test_ai_suggestions_are_off_until_ticked():
 def test_nothing_can_be_typed_or_run_without_a_working_key():
     """The editor, the prompt and its button stay disabled until /v2.0/auth
     accepts the key, and are disabled again when it is changed to one that
-    does not work."""
+    does not work. The prompt and AI suggestions also need the key to be
+    allowed the language model."""
     script = page_script()
 
-    assert "prompt.disabled = !keyValid;" in script
-    assert "run.disabled = !keyValid || running;" in script
-    assert "aiSuggestions.disabled = !(keyValid && llmAllowed);" in script
+    assert "const llmUsable = keyValid && llm.allowed;" in script
+    assert "prompt.disabled = !llmUsable;" in script
+    assert "run.disabled = !llmUsable || running;" in script
+    assert "aiSuggestions.disabled = !llmUsable;" in script
     # Applied once before any key is checked, so the page starts disabled.
     startup = "// Disabled until a key is checked and works.\napplyInputState();"
     assert script.index(startup) > script.index("const TEXT_MAX")

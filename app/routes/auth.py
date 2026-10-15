@@ -19,6 +19,8 @@ from app.models import (
     Config,
     ConfigOptionsOut,
     ErrorMessage,
+    FeatureOut,
+    FeaturesOut,
     LangType,
     LangVariantType,
     LangWithAutoType,
@@ -30,6 +32,7 @@ from app.config_manager import (
     fetch_configs_for_request,
     fetch_result_conf,
     llm_alternatives_allowed,
+    llm_available,
 )
 from app.auth_service import fetch_user
 from app.api_keys import (
@@ -120,6 +123,70 @@ CONFIG_OPTION_FIELDS = (
     "french_gender_separator",
     "gendered_roles_format",
 )
+
+
+@router.get(
+    "/v2.0/features",
+    response_model=FeaturesOut,
+    response_model_exclude_none=True,
+    dependencies=[
+        Depends(HTTPBearer(auto_error=False)),
+        Depends(APIKeyHeader(name="x-key", auto_error=False)),
+    ],
+)
+async def get_features_2_0(
+    request: Request,
+    response: Response,
+    context: AppContext = Depends(get_app_context),
+):
+    """What this deployment offers, and with a key, what that key may use.
+
+    One place to discover the features that differ between deployments, so a
+    client can show or hide them instead of finding out from a refused
+    request. Without a credential it reports `available` only, the same for
+    everyone, and is public like /v2.0/categories so a client can render its
+    UI before a key exists. With one it adds `allowed` where some keys are
+    refused a feature; a credential that does not resolve is a 401 rather
+    than an anonymous answer, so a client can tell a wrong key from none.
+
+    - `llm`: the language model behind the prompt and AI suggestions
+      (LLM_MODEL; LLM_ACCESS and LLM_ALLOWED_USERS decide `allowed`).
+    - `spelling_grammar`: LanguageTool's findings (LANGUAGETOOL_API).
+    - `languages`: the languages this server checks (MODELS).
+    """
+    sent = "x-key" in request.headers or request.headers.get(
+        "authorization", ""
+    ).lower().startswith("bearer")
+    user_email = (
+        await fetch_user(request, context.settings, context.redis, context.http)
+        if sent
+        else None
+    )
+    if sent and user_email is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="A valid API key is required in the x-key header.",
+        )
+
+    settings = context.settings
+    llm = FeatureOut(available=llm_available(settings))
+    if sent:
+        llm.allowed = llm_alternatives_allowed(settings, user_email)
+
+    # The same for everyone without a key; per key, it must not be shared.
+    response.headers["Cache-Control"] = (
+        "private, no-store" if sent else "public, max-age=300"
+    )
+
+    return FeaturesOut(
+        features={
+            "llm": llm,
+            "spelling_grammar": FeatureOut(available=bool(settings.languagetool_api)),
+            "languages": FeatureOut(
+                available=True, values=sorted(context.model.models)
+            ),
+        }
+    )
 
 
 @router.get("/v2.0/config-options", response_model=ConfigOptionsOut)

@@ -3072,6 +3072,69 @@ def test_version_reports_the_rules_file(tmp_path, monkeypatch):
         assert client.get("/version").json()["rules"]["bundled"] is False
 
 
+def test_features_without_a_key_say_what_the_deployment_offers(monkeypatch):
+    """The same for everyone, so public and cacheable; no `allowed`."""
+    monkeypatch.setattr(context.settings, "llm_model", "")
+    monkeypatch.setattr(context.settings, "languagetool_api", "")
+
+    with TestClient(app) as client:
+        response = client.get("/v2.0/features")
+        assert response.status_code == 200
+        assert response.headers["cache-control"] == "public, max-age=300"
+        assert response.json() == {
+            "features": {
+                "llm": {"available": False},
+                "spelling_grammar": {"available": False},
+                "languages": {
+                    "available": True,
+                    "values": sorted(context.model.models),
+                },
+            }
+        }
+
+        monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
+        monkeypatch.setattr(context.settings, "languagetool_api", "http://lt:8010/v2")
+        features = client.get("/v2.0/features").json()["features"]
+        assert features["llm"] == {"available": True}
+        assert features["spelling_grammar"] == {"available": True}
+
+
+def test_features_with_a_key_say_what_it_may_use(monkeypatch):
+    """`allowed` follows LLM_ALLOWED_USERS, so a client can offer the prompt
+    and AI suggestions only where the server will not refuse them."""
+    context.redis.set_api_key("features-key", "default@gmail.com")
+    monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
+
+    def llm():
+        response = client.get("/v2.0/features", headers={"x-key": "features-key"})
+        assert response.status_code == 200
+        assert response.headers["cache-control"] == "private, no-store"
+        return response.json()["features"]["llm"]
+
+    with TestClient(app) as client:
+        assert llm() == {"available": True, "allowed": True}
+
+        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        assert llm() == {"available": True, "allowed": False}
+
+        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        assert llm() == {"available": True, "allowed": True}
+
+        monkeypatch.setattr(context.settings, "llm_model", "")
+        assert llm() == {"available": False, "allowed": False}
+
+
+def test_features_refuse_a_key_that_does_not_work(monkeypatch):
+    """A wrong key is a 401, not the anonymous answer, so a client can tell
+    it from none; and the endpoint stays public behind REQUIRE_API_KEY."""
+    monkeypatch.setattr(context.settings, "require_api_key", True)
+
+    with TestClient(app) as client:
+        assert client.get("/v2.0/features").status_code == 200
+        response = client.get("/v2.0/features", headers={"x-key": "no-such-key"})
+        assert response.status_code == 401
+
+
 def test_root_redirect():
     """ROOT_REDIRECT picks the landing page; "/" then needs no key, its
     target still does."""

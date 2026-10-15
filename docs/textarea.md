@@ -61,9 +61,9 @@ LLM_API_BASE=http://localhost:11434
 DEFAULT_USER_LLM_ALTERNATIVES=true
 ```
 
-To keep the model to some keys, list their emails in `LLM_ALLOWED_USERS`. A key outside the list still checks text; the page disables AI suggestions for it, refuses the prompt, and in both places links "Ask for access" to `TEXTAREA_CONTACT` (a mail with the subject "Access to the language model"). Where the server has no model at all, it says so instead, without the link.
+The page learns what a key may do from [`/v2.0/features`](./api.md) as soon as the key is entered. To keep the model to some keys, list their emails in `LLM_ALLOWED_USERS`. A key outside the list still checks text; the page disables AI suggestions and the prompt for it straight away, and in both places links "Ask for access" to `TEXTAREA_CONTACT` (a mail with the subject "Access to the language model"). To stay within the provider's per-key limit, set `LLM_MAX_REQUESTS_PER_MINUTE`; past it, the prompt says the model is busy until the next minute.
 
-Without an LLM the page still checks and highlights; the prompt answers "This API key may not use the LLM." and the popover shows no rewrites.
+Without an LLM the page still checks and highlights; AI suggestions and the prompt are disabled with "Not available on this server.", without the link.
 
 For a local model through Ollama, Mistral Small 24B handled the rephrase prompt on a hand-checked sample of German and English sentences (French was wrong for every model tried). Apertus 1.5 8B does not follow that prompt when the flagged words start the sentence, so its popover rewrites mostly come back empty. Mistral Small at its default 32k context takes about 19 GB of memory.
 
