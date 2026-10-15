@@ -16,6 +16,7 @@ from app.main import (
 )
 from app.categories import get_category_keys
 from app.prompt import Prompt
+from app.settings import Settings
 from app.config_manager import (
     debug_configs,
     fetch_configs_for_request,
@@ -3044,6 +3045,38 @@ def test_version_reports_the_rules_file(tmp_path, monkeypatch):
 
         bundled.write_text("0" * 64 + "\n")
         assert client.get("/version").json()["rules"]["bundled"] is False
+
+
+def test_root_redirect():
+    """ROOT_REDIRECT picks the landing page; "/" then needs no key, its
+    target still does."""
+    with TestClient(app) as client:
+        context.settings.root_redirect = "/textarea"
+        context.settings.require_api_key = True
+        try:
+            response = client.get("/", follow_redirects=False)
+            assert response.status_code == 302
+            assert response.headers["location"] == "/textarea"
+
+            context.settings.root_redirect = "/docs"
+            response = client.get("/", follow_redirects=False)
+            assert response.headers["location"] == "/docs"
+            assert client.get("/docs").status_code == 401
+
+            context.settings.root_redirect = ""
+            assert client.get("/", follow_redirects=False).status_code == 401
+        finally:
+            context.settings.root_redirect = ""
+            context.settings.require_api_key = False
+
+
+@pytest.mark.parametrize(
+    "target", ["//evil.example", "/\\evil.example", "https://evil.example", "textarea"]
+)
+def test_root_redirect_stays_on_this_host(monkeypatch, target):
+    monkeypatch.setenv("ROOT_REDIRECT", target)
+    with pytest.raises(ValueError, match="ROOT_REDIRECT"):
+        Settings.factory()
 
 
 def test_require_api_key_public_paths_are_configurable():

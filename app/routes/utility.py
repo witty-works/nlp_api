@@ -131,6 +131,9 @@ def get_openapi_json(request: Request) -> dict:  # pragma: no cover
 
 @router.get("/", include_in_schema=False)
 def get_root(context: AppContext = Depends(get_app_context)):
+    if context.settings.root_redirect:
+        return RedirectResponse(url=context.settings.root_redirect, status_code=302)
+
     if (
         not context.settings.is_prod and context.settings.testing is False
     ):  # pragma: no cover

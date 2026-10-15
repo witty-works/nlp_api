@@ -156,12 +156,22 @@ class Settings(BaseSettings):
     # the page footer. Empty leaves it out; only http(s) addresses are linked.
     textarea_imprint_url: str = ""
 
+    # Where "/" sends a visitor, e.g. "/textarea" or "/docs". Empty keeps the
+    # default: the docs outside production, a line of text in it. A path on
+    # this host only, so it cannot be made an open redirect. When set, "/" is
+    # open behind require_api_key, since it reveals only where it points; the
+    # target is gated as usual.
+    root_redirect: str = ""
+
     def open_paths(self) -> list[str]:
         """The paths the require_api_key gate lets through without a key."""
-        if not self.textarea_enabled:
-            return self.public_paths
+        paths = list(self.public_paths)
+        if self.textarea_enabled:
+            paths.extend(TEXTAREA_PATHS)
+        if self.root_redirect:
+            paths.append("/")
 
-        return [*self.public_paths, *TEXTAREA_PATHS]
+        return paths
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a
@@ -280,6 +290,15 @@ class Settings(BaseSettings):
         """
         settings = Settings()
         settings.is_prod = settings.platform_environment_type == "production"
+
+        # "//host" and "/\host" are read by browsers as another host.
+        redirect = settings.root_redirect
+        if redirect and (
+            not redirect.startswith("/") or redirect.startswith("//") or "\\" in redirect
+        ):
+            raise ValueError(
+                f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"
+            )
 
         settings.sso_configs = {
             "aadb2c": {
