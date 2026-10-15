@@ -586,6 +586,7 @@ def test_imprint_from_a_markdown_file(imprint_file):
 
         response = client.get("/textarea/imprint")
         assert response.status_code == 200
+        assert '<html lang="en">' in response.text
         assert "<h1>Impressum</h1>" in response.text
         assert '<a href="mailto:dsl@bfh.ch">Kontakt</a>' in response.text
         assert response.headers["content-security-policy"].startswith(

@@ -126,8 +126,10 @@ def render_page(settings: Settings, lang: str = DEFAULT_PAGE_LANGUAGE) -> str:
     )
 
 
+# English like the rest of the page, so the imprint file is expected to be
+# written in English too.
 IMPRINT_PAGE = """<!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
