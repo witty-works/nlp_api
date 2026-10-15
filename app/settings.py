@@ -2,9 +2,9 @@ from typing import Optional
 from functools import lru_cache
 import json
 import base64
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType, LlmAccessType
-from platformshconfig import Config
 
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
 TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
@@ -16,8 +16,17 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    platform_environment_type: str = "development"
-    platform_environment: str = "local"
+    # "production" turns off what only development wants (see is_prod). The
+    # PLATFORM_* names are what Platform.sh/Upsun sets by itself, so they still
+    # count; the plain names win where both are set.
+    environment_type: str = Field(
+        "development",
+        validation_alias=AliasChoices("ENVIRONMENT_TYPE", "PLATFORM_ENVIRONMENT_TYPE"),
+    )
+    # The environment's name, as Sentry reports it.
+    environment: str = Field(
+        "local", validation_alias=AliasChoices("ENVIRONMENT", "PLATFORM_ENVIRONMENT")
+    )
     languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
@@ -289,7 +298,7 @@ class Settings(BaseSettings):
         environment variables and Platform.sh configuration.
         """
         settings = Settings()
-        settings.is_prod = settings.platform_environment_type == "production"
+        settings.is_prod = settings.environment_type == "production"
 
         # "//host" and "/\host" are read by browsers as another host.
         redirect = settings.root_redirect
@@ -339,29 +348,31 @@ class Settings(BaseSettings):
             )
 
         if settings.platform_relationships:
-            settings.platform_relationships = json.loads(
-                base64.b64decode(settings.platform_relationships)
-            )
-
-            if "languagetool" in settings.platform_relationships:
-                endpoint = settings.platform_relationships["languagetool"][0]
-                settings.languagetool_api = (
-                    f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
-                )
-                settings.languagetool_verify_ssl = False
-
-        if (
-            settings.platform_relationships
-            and "rediscache" in settings.platform_relationships
-        ):
-            platform_config = Config()
-            redis_credentials = platform_config.credentials("rediscache")
-
-            settings.redis_host = redis_credentials["host"]
-            settings.redis_port = redis_credentials["port"]
-            settings.redis_verify_ssl = False
+            apply_platform_relationships(settings)
 
         return settings
+
+
+def apply_platform_relationships(settings: Settings) -> None:
+    """Platform.sh/Upsun: point LanguageTool and Redis at the services
+    PLATFORM_RELATIONSHIPS describes (base64 JSON, a list of endpoints per
+    relationship name, see .upsun/config.yaml). Elsewhere the variable is not
+    set and LANGUAGETOOL_API and REDIS_* are used as given."""
+    relationships = json.loads(base64.b64decode(settings.platform_relationships))
+    settings.platform_relationships = relationships
+
+    if "languagetool" in relationships:
+        endpoint = relationships["languagetool"][0]
+        settings.languagetool_api = (
+            f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
+        )
+        settings.languagetool_verify_ssl = False
+
+    if "rediscache" in relationships:
+        endpoint = relationships["rediscache"][0]
+        settings.redis_host = endpoint["host"]
+        settings.redis_port = endpoint["port"]
+        settings.redis_verify_ssl = False
 
 
 @lru_cache(maxsize=1)

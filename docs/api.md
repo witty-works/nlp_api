@@ -359,7 +359,7 @@ Response:
 
 ## Debug Endpoints
 
-Only listed in the schema when `PLATFORM_ENVIRONMENT_TYPE != "production"`, but
+Only listed in the schema when `ENVIRONMENT_TYPE != "production"`, but
 routed in every environment — the switches below are what actually guards them.
 
 Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:

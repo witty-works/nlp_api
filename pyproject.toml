@@ -47,7 +47,6 @@ dependencies = [
     "aiohttp",
     "sentry-sdk",
     "redis",
-    "platformshconfig",
     "fakeredis",
     # Inference-only fastText build (SearXNG-maintained), no numpy dependency;
     # Meta archived fastText upstream in 2024. See docs/spacy-review.md.
