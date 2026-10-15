@@ -272,6 +272,40 @@ A different rules file changes every finding without anything else showing it, s
 
 where `bundled` is `true` for the image's own dump, `false` for a mounted one, and `null` outside an image.
 
+## After deploying
+
+A first check from outside, for the configuration in [What we are deploying](#what-we-are-deploying) with the textarea page and `ROOT_REDIRECT=/textarea`. Set `HOST` to the deployment's address and `KEY` to its `DEFAULT_API_KEY`:
+
+    HOST=https://witty.digisus-lab.ch; KEY=...
+
+1. Up, and running what you meant to deploy: `/health` answers `200`, and `/version` (behind the key) names the release's `git_revision` and `"bundled": true`, or `false` if a custom rule database is mounted on purpose.
+
+       curl -fsS $HOST/health
+       curl -fsS $HOST/version -H "x-key: $KEY"
+
+2. Only https: `http://` answers with a redirect to `https://`.
+
+       curl -sI http://witty.digisus-lab.ch/ | head -1
+
+3. The public pages load without a key: `/` redirects to `/textarea`, and `/textarea/imprint`, `/docs` and `/v2.0/features` answer `200`.
+
+       curl -sI $HOST/ | grep -i '^location'
+       for p in /textarea /textarea/imprint /docs /openapi.json /v2.0/features; do
+         echo "$p $(curl -s -o /dev/null -w '%{http_code}' $HOST$p)"; done
+
+4. The key gate holds: a check without a key is `401`, with the key it returns findings (two for this sentence).
+
+       curl -s -o /dev/null -w '%{http_code}\n' -X POST $HOST/v2.4/check \
+           -H 'Content-Type: application/json' -d '{"text":"Der Lehrer gibt dem Schüler den Stift."}'
+       curl -s -X POST $HOST/v2.4/check -H "x-key: $KEY" \
+           -H 'Content-Type: application/json' -d '{"text":"Der Lehrer gibt dem Schüler den Stift."}'
+
+5. What the key may do: `/v2.0/features` with the key reports `"llm": {"available": true, "allowed": true}` where the deployment has a model and the key is in `LLM_ALLOWED_USERS`. Then open `/textarea` in a browser, enter the key, and try the example text, an AI suggestion and a short prompt.
+
+       curl -s $HOST/v2.0/features -H "x-key: $KEY"
+
+Then the monitoring: the blackbox probe of `/health` turns green, and `docker stats` on the host shows the API near the measured idle figure for its configuration (3.9 GiB for three languages at two workers), which is worth noting down as the first x86_64 measurement (see [Re-measuring](#re-measuring)).
+
 ## Operational notes
 
 **The context checker needs a bigger `/dev/shm`.** Torch's `share_memory()` moves the model into shared memory, and Docker's default `/dev/shm` is 64 MB — a ~1 GB SetFit model overruns it and the process dies of SIGBUS. What you see is exit code 135, no log line, and `OOMKilled=false`, which looks like anything but a full `/dev/shm`. `compose.yml` sets `shm_size: 2gb`; a plain `docker run` needs `--shm-size=2g`. Harmless when the context checker is off, which is why it does not show up until the day you enable it.
