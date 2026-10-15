@@ -145,7 +145,7 @@ async def lifespan(app: FastAPI, context: AppContext):
         context.categories,
         context.http,
     )
-    context.prompt = Prompt(context.settings)
+    context.prompt = Prompt(context.settings, context.redis.db)
     context.llm_alternatives = LlmAlternatives(
         context.settings, context.alternatives, context.prompt
     )

@@ -510,6 +510,7 @@ config change:
 | `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
 | `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
 | `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
+| `LLM_MAX_REQUESTS_PER_MINUTE` | 0 | LLM calls the whole deployment makes per minute, counted in Redis so all workers share one budget. Past it, a call is refused with 503 and a `Retry-After` up to the next minute, without reaching the provider. Set it below the provider's per-key limit (60 for the BFH inference server) so the account is never the one that hits it. `0` for no limit; without a real Redis each process counts on its own. |
 
 ```bash
 # Anthropic directly
