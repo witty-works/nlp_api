@@ -529,6 +529,41 @@ def test_page_limits_match_the_api(textarea):
     assert "__" not in page
 
 
+def page_config(page):
+    return json.loads(
+        re.search(
+            r'<script id="page-config" type="application/json">(.*?)</script>', page
+        ).group(1)
+    )
+
+
+def test_a_refused_key_is_told_where_to_ask(textarea, monkeypatch):
+    """LLM_ALLOWED_USERS keeps a key from the language model; the page then
+    says whom to ask, but only where the server has a model to grant."""
+    monkeypatch.setattr(context.settings, "textarea_contact", "lukas.smith@bfh.ch")
+
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.settings, "llm_model", "")
+        config = page_config(client.get("/textarea").text)
+        assert config["llmAvailable"] is False
+
+        monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
+        config = page_config(client.get("/textarea").text)
+        assert config["llmAvailable"] is True
+        assert config["llmAccessRequest"] == (
+            "mailto:lukas.smith@bfh.ch?subject=Access%20to%20the%20language%20model"
+        )
+
+        monkeypatch.setattr(context.settings, "textarea_contact", "")
+        assert page_config(client.get("/textarea").text)["llmAccessRequest"] == ""
+
+    script = page_script()
+    assert "if (CONFIG.llmAvailable && CONFIG.llmAccessRequest) {" in script
+    # Both refusals carry it: the checkbox's note and the prompt's 403.
+    assert "llmRefusal(aiNote, LLM_UNAVAILABLE);" in script
+    assert "llmRefusal(writeStatus, failure(response.status, body));" in script
+
+
 def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     script = page_script()
     # Ctrl/Cmd+Enter submits past a disabled button, so the handler checks.
