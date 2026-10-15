@@ -567,17 +567,19 @@ def test_a_refused_key_is_told_where_to_ask(textarea, monkeypatch):
     assert 'id="ai-suggestions-note"' in checkbox
     assert 'aria-describedby="ai-suggestions-note ai-suggestions-help"' in PAGE
     label_row = re.search(r'<span class="label-row">.*?</span>\s*</span>', PAGE, re.S).group(0)
-    assert '<label for="prompt">' in label_row and 'id="prompt-note"' in label_row
+    assert '<label for="prompt">' in label_row
+    assert 'id="prompt-note"' in label_row
     assert 'aria-describedby="prompt-note prompt-help"' in PAGE
     # Refused anyway (access changed since): the key is checked again.
-    assert "if (response.status === 403) checkApiKey();" in script
+    assert "if (response.status === 403) await checkApiKey();" in script
 
 
 def test_the_page_says_what_this_server_offers():
     """Asked without a key, so it shows before one is entered; hidden until
     the server has answered."""
     block = re.search(r'<div id="server-features".*?</div>', PAGE, re.S).group(0)
-    assert "hidden" in block and "<ul></ul>" in block
+    assert "hidden" in block
+    assert "<ul></ul>" in block
     assert ".help[hidden] {" in PAGE
 
     script = page_script()
