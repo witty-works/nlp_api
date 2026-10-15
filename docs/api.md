@@ -29,6 +29,7 @@ These are the main endpoints for checking and rephrasing text.
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
 | `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
 | `/v2.0/config-options` | GET | No        | List the values the enumerated `config` fields accept         |
+| `/v2.0/features` | GET    | Optional      | What this deployment offers, and with a key, what that key may use |
 
 Example `/v2.4/check` request:
 
@@ -160,6 +161,30 @@ the raw value.
 
 See [Request Configuration](./request-configuration.md#gender-inclusive-formatting)
 for what each value renders as.
+
+Example `/v2.0/features` request:
+
+```bash
+curl 'http://127.0.0.1:8000/v2.0/features' -H 'x-key: your-api-key'
+```
+
+```jsonc
+{
+  "features": {
+    "llm": { "available": true, "allowed": false },
+    "spelling_grammar": { "available": false },
+    "languages": { "available": true, "values": ["de", "en", "fr"] }
+  }
+}
+```
+
+The features that differ between deployments, so a client can show or hide them instead of finding out from a refused request. `available` says whether the deployment has the feature at all. `allowed` says whether the key sent may use it; it is only there when a key was sent, and only for features some keys are refused. `values` lists what a feature offers where that is a list.
+
+- `llm`: the language model behind `/v1.0/write`, `/v1.0/rephrase` and AI suggestions (`LLM_MODEL`). `LLM_ACCESS` and `LLM_ALLOWED_USERS` decide `allowed`; the `/textarea` page disables its prompt and AI suggestions where it is false, and links to `TEXTAREA_CONTACT` to ask for access.
+- `spelling_grammar`: LanguageTool's spelling, grammar and style findings (`LANGUAGETOOL_API`); without it a check returns no orthography results.
+- `languages`: the languages this server checks (`MODELS`).
+
+Without a key the answer is the same for everyone: it is public, like the two lists above (in the default `PUBLIC_PATHS`), and served with `Cache-Control: public, max-age=300`. With a key it is `private, no-store`. A key that does not resolve is answered `401` rather than with the anonymous answer, so a client can tell a wrong key from none. The server enforces all of this on every request either way: the list is for clients to adapt, not a permission in itself. A new feature is added as a new key, so clients ignore what they do not know.
 
 ## LanguageTool-compatible API
 
@@ -359,7 +384,7 @@ Response:
 
 ## Debug Endpoints
 
-Only listed in the schema when `PLATFORM_ENVIRONMENT_TYPE != "production"`, but
+Only listed in the schema when `ENVIRONMENT_TYPE != "production"`, but
 routed in every environment — the switches below are what actually guards them.
 
 Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:

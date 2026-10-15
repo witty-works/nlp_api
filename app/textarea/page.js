@@ -17,6 +17,27 @@ function checkMessage(next) {
 const apiKey = document.getElementById("api-key");
 const aiSuggestions = document.getElementById("ai-suggestions");
 const aiNote = document.getElementById("ai-suggestions-note");
+const promptNote = document.getElementById("prompt-note");
+
+// What the language model is for the key in the field, as /v2.0/auth
+// reports it: whether the server has one, and whether this key may use it.
+let llm = { available: false, allowed: false };
+
+// Why the key may not use it, with where to ask for access. Only where the
+// server has a model: otherwise there is nothing to grant.
+function llmRefusal(element) {
+  element.replaceChildren(
+    llm.available
+      ? "Not available with this API key."
+      : "Not available on this server."
+  );
+  if (llm.available && CONFIG.llmAccessRequest) {
+    const link = document.createElement("a");
+    link.href = CONFIG.llmAccessRequest;
+    link.textContent = "Ask for access";
+    element.append(" ", link, ".");
+  }
+}
 const editorElement = document.getElementById("editor");
 const langSelect = document.getElementById("lang");
 const exampleButton = document.getElementById("example");
@@ -48,6 +69,43 @@ const mountEditor = (lang, content) =>
     },
   });
 let editor = mountEditor(langSelect.value);
+
+// What this server offers, the same for everyone (asked without a key), as
+// a list of everything this page can do, each available or not: every
+// language the menu offers, spelling and grammar, the language model. What
+// is missing is listed too, so nobody looks for it. Left out if the server
+// does not say.
+const serverFeatures = document.getElementById("server-features");
+fetch("/v2.0/features")
+  .then((response) => (response.ok ? response.json() : null))
+  .then((body) => {
+    const features = body?.features;
+    if (!features) return;
+    const loaded = features.languages?.values ?? [];
+    const items = [...langSelect.options]
+      .filter((option) => option.value !== "auto")
+      .map((option) => [option.textContent, loaded.includes(option.value)]);
+    if (features.spelling_grammar) {
+      items.push(["Spelling and grammar", features.spelling_grammar.available]);
+    }
+    // Available on the server, but not to every key: marked, with the
+    // footnote saying so (the note beside the checkbox says it per key).
+    if (features.llm) {
+      items.push(["AI suggestions and prompts", features.llm.available, "*"]);
+    }
+    serverFeatures.querySelector("ul").replaceChildren(
+      ...items.map(([name, available, mark = ""]) => {
+        const item = document.createElement("li");
+        item.textContent =
+          name + ": " + (available ? "available" + mark : "not available");
+        if (!available) item.className = "missing";
+        return item;
+      })
+    );
+    document.getElementById("server-features-note").hidden = !features.llm?.available;
+    serverFeatures.hidden = false;
+  })
+  .catch(() => {});
 
 aiSuggestions.addEventListener("change", () => {
   editor.updateSettings({ llmAlternatives: aiSuggestions.checked });
@@ -87,13 +145,15 @@ langSelect.addEventListener("change", () => {
 const keyRequired = document.getElementById("key-required");
 const keyRequiredText = document.getElementById("key-required-text");
 let keyValid = false;
-let llmAllowed = false;
 let running = false;
 function applyInputState() {
+  const llmUsable = keyValid && llm.allowed;
   editor.editor.setEditable(keyValid && !running);
-  prompt.disabled = !keyValid;
-  run.disabled = !keyValid || running;
-  aiSuggestions.disabled = !(keyValid && llmAllowed);
+  // The prompt is a language model request, so it is refused up front
+  // rather than after it was written.
+  prompt.disabled = !llmUsable;
+  run.disabled = !llmUsable || running;
+  aiSuggestions.disabled = !llmUsable;
   if (aiSuggestions.disabled && aiSuggestions.checked) {
     editor.updateSettings({ llmAlternatives: false });
   }
@@ -101,28 +161,33 @@ function applyInputState() {
   keyRequiredText.textContent = apiKey.value
     ? "This API key doesn't work. Check it for typos."
     : "Enter your API key above to use this page.";
-  aiNote.textContent =
-    keyValid && !llmAllowed ? "Not available with this API key." : "";
+  // Beside each control's label, so the reason is where the control is.
+  for (const note of [aiNote, promptNote]) {
+    if (keyValid && !llm.allowed) {
+      llmRefusal(note);
+    } else {
+      note.replaceChildren();
+    }
+  }
 }
 
-// Whether the key works, and whether it may use the language model:
-// /v2.0/auth reports llm_alternatives as forced off where the server
-// would refuse it.
+// Whether the key works (/v2.0/auth: it also needs a config), and what the
+// language model is for it (/v2.0/features), asked at the same time.
 let keyCheck = 0;
 async function checkApiKey() {
   const current = ++keyCheck;
   let valid = false;
-  let llm = false;
+  let capability = { available: false, allowed: false };
   if (apiKey.value) {
+    const headers = { "x-key": apiKey.value };
     try {
-      const response = await fetch("/v2.0/auth", {
-        method: "POST",
-        headers: { "x-key": apiKey.value },
-      });
-      if (response.ok) {
-        valid = true;
-        const setting = (await response.json()).config?.llm_alternatives;
-        llm = !(setting?.status === "force" && setting.value === false);
+      const [auth, features] = await Promise.all([
+        fetch("/v2.0/auth", { method: "POST", headers }),
+        fetch("/v2.0/features", { headers }),
+      ]);
+      valid = auth.ok;
+      if (valid && features.ok) {
+        capability = (await features.json()).features?.llm ?? capability;
       }
     } catch {
       valid = false;
@@ -131,7 +196,7 @@ async function checkApiKey() {
   if (current !== keyCheck) return;
 
   keyValid = valid;
-  llmAllowed = llm;
+  llm = capability;
   applyInputState();
 }
 
@@ -299,6 +364,9 @@ form.addEventListener("submit", async (event) => {
     if (!response.ok) {
       const body = await response.json().catch(() => null);
       writeStatus.textContent = failure(response.status, body);
+      // Refused although the key check allowed it: access changed since.
+      // Asking again shows the refusal with where to ask for access.
+      if (response.status === 403) await checkApiKey();
       return;
     }
 

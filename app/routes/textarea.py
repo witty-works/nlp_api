@@ -20,13 +20,14 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from markdown_it import MarkdownIt
 from starlette.requests import Request
 from starlette.responses import FileResponse, HTMLResponse, Response
 
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.models import WRITE_PROMPT_MAX_LENGTH
-from app.settings import Settings
+from app.settings import TEXTAREA_IMPRINT_PATH, Settings
 
 
 router = APIRouter()
@@ -71,8 +72,8 @@ MISSING_BUNDLE = """<!doctype html>
       <h1>The editor is not installed</h1>
       <p>
         TEXTAREA_ENABLED is on, but app/static/witty-editor.js is missing. Install
-        it with <code>python bin/fetch_editor.py</code>, or build the image with
-        <code>--build-arg TEXTAREA=true</code>. See docs/textarea.md.
+        it with <code>python bin/fetch_editor.py</code>; the Docker image
+        carries it already. See docs/textarea.md.
       </p>
     </main>
   </body>
@@ -112,12 +113,60 @@ def render_page(settings: Settings, lang: str = DEFAULT_PAGE_LANGUAGE) -> str:
     and to its imprint where it has one, with `lang` chosen as the text's
     language. It depends on nothing but these, so it is built once per
     combination of them."""
+    imprint = (
+        TEXTAREA_IMPRINT_PATH
+        if settings.textarea_imprint_file
+        else settings.textarea_imprint_url or ""
+    )
     return _render_page(
         settings.text_max_length,
         settings.textarea_contact or "",
-        settings.textarea_imprint_url or "",
+        imprint,
         lang if lang in PAGE_LANGUAGES else DEFAULT_PAGE_LANGUAGE,
     )
+
+
+def mailto(contact: str, subject: str) -> str:
+    return f"mailto:{quote(contact, safe='@')}?subject={quote(subject)}"
+
+
+# English like the rest of the page, so the imprint file is expected to be
+# written in English too.
+IMPRINT_PAGE = """<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Imprint</title>
+    <style>
+      body {{
+        font: 16px/1.5 system-ui, sans-serif;
+        max-width: 48rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }}
+    </style>
+  </head>
+  <body>
+    <main>
+{content}
+    </main>
+    <footer>
+      <p><a href="/textarea">Back to the check</a></p>
+    </footer>
+  </body>
+</html>"""
+
+
+@lru_cache(maxsize=4)
+def render_imprint(path: str) -> str:
+    """The deployment's imprint, from Markdown. The js-default preset leaves
+    raw HTML as text and refuses javascript: and similar links, so the file
+    cannot put a script on the page even before the CSP would stop it."""
+    markdown = Path(path).read_text(encoding="utf-8")
+    content = MarkdownIt("js-default").render(markdown)
+
+    return IMPRINT_PAGE.format(content=content)
 
 
 @lru_cache(maxsize=16)
@@ -129,6 +178,11 @@ def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) ->
             "checkMax": text_max_length,
             "textMax": text_max_length,
             "examples": EXAMPLES,
+            # Where a key refused the language model asks for it
+            # (LLM_ALLOWED_USERS); whether it is refused, /v2.0/auth says.
+            "llmAccessRequest": (
+                mailto(contact, "Access to the language model") if contact else ""
+            ),
         }
     ).replace("<", "\\u003c")
     page = PAGE.replace("__PROMPT_MAX__", str(WRITE_PROMPT_MAX_LENGTH)).replace(
@@ -139,9 +193,12 @@ def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) ->
         f'<option value="{lang}">', f'<option value="{lang}" selected>'
     )
 
-    # Only a web address becomes a link, so a mistyped setting cannot put a
-    # `javascript:` URL on the page.
-    if imprint and urlparse(imprint).scheme in ("http", "https"):
+    # Only a web address (or the page rendered from TEXTAREA_IMPRINT_FILE)
+    # becomes a link, so a mistyped setting cannot put a `javascript:` URL on
+    # the page.
+    if imprint == TEXTAREA_IMPRINT_PATH or (
+        imprint and urlparse(imprint).scheme in ("http", "https")
+    ):
         page = page.replace(
             "<!--imprint-->", f'<p><a href="{escape(imprint)}">Imprint</a></p>'
         )
@@ -152,9 +209,7 @@ def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) ->
         page = page.replace("<!--key-request-->", "").replace("<!--key-contact-->", "")
     else:
         address = escape(contact)
-        mailto = escape(
-            f"mailto:{quote(contact, safe='@')}?subject={quote('API key request')}"
-        )
+        key_request = escape(mailto(contact, "API key request"))
         page = page.replace(
             "<!--key-request-->",
             ' No key yet? <a href="#get-a-key">Request one</a>.',
@@ -162,7 +217,7 @@ def _render_page(text_max_length: int, contact: str, imprint: str, lang: str) ->
             "<!--key-contact-->",
             f"""<h2 id="get-a-key">Getting an API key</h2>
         <p>
-          Write to <a href="{mailto}">{address}</a> and tell us what you would
+          Write to <a href="{key_request}">{address}</a> and tell us what you would
           like to use it for.
         </p>""",
         )
@@ -228,6 +283,22 @@ def get_textarea(
         content=render_page(context.settings, lang),
         # The selected language depends on the browser's.
         headers={**CSP_HEADER, "Vary": "Accept-Language"},
+    )
+
+
+@router.get(
+    TEXTAREA_IMPRINT_PATH,
+    include_in_schema=False,
+    dependencies=[Depends(textarea_enabled)],
+)
+def get_imprint(context: AppContext = Depends(get_app_context)) -> HTMLResponse:
+    """The imprint from TEXTAREA_IMPRINT_FILE; a 404 without one."""
+    if not context.settings.textarea_imprint_file:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    return HTMLResponse(
+        content=render_imprint(context.settings.textarea_imprint_file),
+        headers=CSP_HEADER,
     )
 
 

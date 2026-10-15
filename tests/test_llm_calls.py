@@ -102,6 +102,51 @@ def test_no_free_slot_in_time_is_unavailable(monkeypatch):
     assert any(isinstance(result, LlmUnavailable) for result in results)
 
 
+def test_calls_beyond_the_minute_budget_are_refused(monkeypatch):
+    """LLM_MAX_REQUESTS_PER_MINUTE: shared through Redis, so two workers (two
+    Prompt instances) spend one budget; past it, a 503 until the next minute,
+    and the provider is not called."""
+    import fakeredis
+
+    calls = []
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return answer("ok")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    monkeypatch.setattr("app.prompt.time.time", lambda: 1_000_040.0)  # 20 s in
+    db = fakeredis.FakeStrictRedis()
+    settings = Settings(llm_model="openai/test", llm_max_requests_per_minute=3)
+    workers = [Prompt(settings, db), Prompt(settings, db)]
+
+    for i in range(3):
+        assert asyncio.run(workers[i % 2].handle("hi")) == "ok"
+    over_budget = workers[1].handle("hi")
+    with pytest.raises(LlmUnavailable) as refused:
+        asyncio.run(over_budget)
+    assert len(calls) == 3
+    assert refused.value.retry_after == 40
+    assert llm_error(refused.value, "/test")[1] == {"Retry-After": "40"}
+
+    # The next minute has its own budget.
+    monkeypatch.setattr("app.prompt.time.time", lambda: 1_000_100.0)
+    assert asyncio.run(workers[0].handle("hi")) == "ok"
+
+
+def test_no_minute_budget_without_the_setting_or_redis(monkeypatch):
+    import fakeredis
+
+    prompt, calls = prompt_with(monkeypatch, answer("ok"))
+    prompt.redis_db = fakeredis.FakeStrictRedis()
+    for _ in range(5):
+        asyncio.run(prompt.handle("hi"))
+
+    limited, _ = prompt_with(monkeypatch, answer("ok"), llm_max_requests_per_minute=1)
+    for _ in range(3):
+        asyncio.run(limited.handle("hi"))  # no Redis given: not limited
+
+
 def test_parse_json_keeps_umlauts():
     """A single escaped character used to garble every raw umlaut."""
     prompt = Prompt(Settings())

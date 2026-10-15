@@ -20,8 +20,8 @@ only then writes the version and its integrity into this file.
 
 Only the standard library, and no npm: it downloads the package tarball from
 the registry and checks it against the integrity npm published for it, so it
-runs in the Docker build (--build-arg TEXTAREA=true) without adding anything to
-the image. See docs/textarea.md.
+runs in the Docker build (the editor stage) without adding anything to the
+image. See docs/textarea.md.
 """
 
 import argparse

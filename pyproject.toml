@@ -45,9 +45,10 @@ dependencies = [
     "pandas",
     "aiofiles",
     "aiohttp",
+    # Renders a deployment's imprint (TEXTAREA_IMPRINT_FILE) for /textarea.
+    "markdown-it-py>=4.0.0",
     "sentry-sdk",
     "redis",
-    "platformshconfig",
     "fakeredis",
     # Inference-only fastText build (SearXNG-maintained), no numpy dependency;
     # Meta archived fastText upstream in 2024. See docs/spacy-review.md.
