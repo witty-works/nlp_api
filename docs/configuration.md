@@ -597,6 +597,7 @@ Opt-in page for checking and rewriting text by hand with an API key: Witty's edi
 | TEXTAREA_ENABLED | false   | Serve `/textarea`. Opens it and its script without a key behind `REQUIRE_API_KEY`; checks stay gated. |
 | TEXTAREA_CONTACT | api@witty.works | Where the page tells visitors to request an API key (a mailto link). Empty leaves the section out. |
 | TEXTAREA_IMPRINT_URL | (empty) | Link to the deployment's legal information (imprint), shown in the page footer. Empty leaves it out; only http(s) addresses are linked. |
+| TEXTAREA_IMPRINT_FILE | (empty) | Instead of a link: a Markdown file with the imprint, rendered at `/textarea/imprint` (public, like the page) and linked from the footer. Raw HTML in it stays text. Setting both, or a file that cannot be read, stops the start; read once, so a change needs a restart. |
 
 The editor script is installed separately with `python bin/fetch_editor.py`; the Docker image always carries it.
 

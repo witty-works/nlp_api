@@ -21,6 +21,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app, context
 from app.routes.textarea import PAGE, PAGE_SCRIPT
+from app.settings import Settings
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -561,6 +562,75 @@ def test_imprint_link_is_the_deployments(textarea, monkeypatch):
         page = client.get("/textarea").text
         assert "Imprint" not in page
         assert "javascript:" not in page
+
+
+@pytest.fixture
+def imprint_file(textarea, monkeypatch, tmp_path):
+    imprint = tmp_path / "imprint.md"
+    imprint.write_text(
+        "# Impressum\n\nBerner Fachhochschule, [Kontakt](mailto:dsl@bfh.ch)\n\n"
+        '<script>alert(1)</script>\n\n[click](javascript:alert(1))\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(context.settings, "textarea_imprint_file", str(imprint))
+
+    return imprint
+
+
+def test_imprint_from_a_markdown_file(imprint_file):
+    """A deployment with no imprint page of its own gets one rendered here,
+    linked from the footer."""
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+        assert '<a href="/textarea/imprint">Imprint</a>' in page
+
+        response = client.get("/textarea/imprint")
+        assert response.status_code == 200
+        assert "<h1>Impressum</h1>" in response.text
+        assert '<a href="mailto:dsl@bfh.ch">Kontakt</a>' in response.text
+        assert response.headers["content-security-policy"].startswith(
+            "default-src 'self'"
+        )
+
+
+def test_imprint_file_cannot_put_a_script_on_the_page(imprint_file):
+    with TestClient(app) as client:
+        imprint = client.get("/textarea/imprint").text
+        assert "<script>" not in imprint
+        assert "&lt;script&gt;" in imprint
+        assert 'href="javascript:' not in imprint
+
+
+def test_imprint_is_public_only_where_there_is_one(textarea, key_gate, monkeypatch, tmp_path):
+    with TestClient(app) as client:
+        # Without a file it is an unknown path, closed like any other.
+        assert client.get("/textarea/imprint").status_code == 401
+
+        imprint = tmp_path / "imprint.md"
+        imprint.write_text("Imprint", encoding="utf-8")
+        monkeypatch.setattr(context.settings, "textarea_imprint_file", str(imprint))
+        assert client.get("/textarea/imprint").status_code == 200
+
+
+def test_imprint_without_a_file_is_not_found(textarea):
+    with TestClient(app) as client:
+        assert client.get("/textarea/imprint").status_code == 404
+
+
+def test_imprint_misconfiguration_stops_the_start(monkeypatch, tmp_path):
+    """Both an address and a file, or a file that is not there."""
+    imprint = tmp_path / "imprint.md"
+    imprint.write_text("Imprint", encoding="utf-8")
+
+    monkeypatch.setenv("TEXTAREA_IMPRINT_FILE", str(imprint))
+    monkeypatch.setenv("TEXTAREA_IMPRINT_URL", "https://www.witty.works/impressum")
+    with pytest.raises(ValueError, match="both set"):
+        Settings.factory()
+
+    monkeypatch.delenv("TEXTAREA_IMPRINT_URL")
+    monkeypatch.setenv("TEXTAREA_IMPRINT_FILE", str(tmp_path / "missing.md"))
+    with pytest.raises(ValueError, match="cannot be read"):
+        Settings.factory()
 
 
 def test_ai_suggestions_are_off_until_ticked():

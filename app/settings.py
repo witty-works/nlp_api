@@ -2,12 +2,14 @@ from typing import Optional
 from functools import lru_cache
 import json
 import base64
+import os
 from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType, LlmAccessType
 
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
 TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
+TEXTAREA_IMPRINT_PATH = "/textarea/imprint"
 
 
 class Settings(BaseSettings):
@@ -164,6 +166,11 @@ class Settings(BaseSettings):
     # A link to the deployment's legal information (imprint, "Impressum") in
     # the page footer. Empty leaves it out; only http(s) addresses are linked.
     textarea_imprint_url: str = ""
+    # Or the imprint itself, as a Markdown file this server renders at
+    # /textarea/imprint, for a deployment with no page of its own to link to.
+    # One or the other: both set, or a file that cannot be read, stops the
+    # start. Read once, so a change needs a restart.
+    textarea_imprint_file: str = ""
 
     # Where "/" sends a visitor, e.g. "/textarea" or "/docs". Empty keeps the
     # default: the docs outside production, a line of text in it. A path on
@@ -177,6 +184,8 @@ class Settings(BaseSettings):
         paths = list(self.public_paths)
         if self.textarea_enabled:
             paths.extend(TEXTAREA_PATHS)
+            if self.textarea_imprint_file:
+                paths.append(TEXTAREA_IMPRINT_PATH)
         if self.root_redirect:
             paths.append("/")
 
@@ -308,6 +317,18 @@ class Settings(BaseSettings):
             raise ValueError(
                 f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"
             )
+
+        # A broken imprint is a legal problem, not a cosmetic one, so it stops
+        # the start rather than leaving the footer without it.
+        if settings.textarea_imprint_file:
+            if settings.textarea_imprint_url:
+                raise ValueError(
+                    "TEXTAREA_IMPRINT_URL and TEXTAREA_IMPRINT_FILE are both set; use one"
+                )
+            if not os.access(settings.textarea_imprint_file, os.R_OK):
+                raise ValueError(
+                    f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
+                )
 
         settings.sso_configs = {
             "aadb2c": {
