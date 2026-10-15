@@ -226,7 +226,8 @@ class RuleCheck:
                         Alternative(
                             upperfirst(replacement)
                             if token.text[0].isupper()
-                            else replacement
+                            else replacement,
+                            in_gender_format=True,
                         )
                     ],
                     explanation=language.translate("INKLUSIVUM_ARTICLE"),
@@ -287,7 +288,8 @@ class RuleCheck:
                     Alternative(
                         upperfirst(replacement)
                         if token.text[0].isupper()
-                        else replacement
+                        else replacement,
+                        in_gender_format=True,
                     )
                 ],
                 explanation=language.translate("INKLUSIVUM_ARTICLE"),
@@ -386,7 +388,8 @@ class RuleCheck:
                     Alternative(
                         upperfirst(replacement)
                         if token.text[0].isupper()
-                        else replacement
+                        else replacement,
+                        in_gender_format=True,
                     )
                 ],
                 explanation=language.translate("INKLUSIVUM_ADJECTIVE"),
