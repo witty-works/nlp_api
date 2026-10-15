@@ -45,6 +45,8 @@ dependencies = [
     "pandas",
     "aiofiles",
     "aiohttp",
+    # Renders a deployment's imprint (TEXTAREA_IMPRINT_FILE) for /textarea.
+    "markdown-it-py>=4.0.0",
     "sentry-sdk",
     "redis",
     "fakeredis",
