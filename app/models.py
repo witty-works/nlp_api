@@ -322,6 +322,11 @@ class Alternative(Lemma):
     female_form: Optional[str] = None
     gender_role: Optional[GenderedRolesFormatBasicType] = None
     is_plural: Optional[bool] = None
+    # Rendered in the configured gender format: from a gender pair ("sie~er"
+    # is "En" in the Inklusivum) or as an Inklusivum form of its own. A
+    # neutral rewording ("Arbeitsstunden") is not. Decides whether a finding
+    # carries the format's logo; not part of the response.
+    in_gender_format: bool = False
 
     def __init__(
         self,
@@ -335,6 +340,7 @@ class Alternative(Lemma):
         is_collective_noun: list = False,
         is_gendered_noun: list = False,
         label: str | None = None,
+        in_gender_format: bool = False,
     ):
         super().__init__(lemma, words, word_types)
 
@@ -345,6 +351,14 @@ class Alternative(Lemma):
         self.is_collective_noun = is_collective_noun
         self.is_gendered_noun = is_gendered_noun
         self.label = label
+        self.in_gender_format = in_gender_format
+
+    def is_in_gender_format(self) -> bool:
+        """See `in_gender_format`; a noun's inclusive form counts too."""
+        return (
+            self.in_gender_format
+            or self.gender_role == GenderedRolesFormatType.INCLUSIVE_GENDER
+        )
 
 
 class ResultSource(BaseModel):
@@ -1072,13 +1086,14 @@ class ResultOut(BaseModel):
             and category == "gender-orientation"
             and language.lang == LangType.DE
             and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
+            and any(alternative.is_in_gender_format() for alternative in alternatives or [])
         ):
-            # The ending's own logo replaces the emoji on every gendered
-            # finding once the Inklusivum is the configured ending: the
+            # The ending's own logo replaces the emoji on a finding whose
             # suggestions are in the user's chosen system, whichever rule
-            # produced them. Data comes from the dashboard via
-            # config_options.json; clients without icon_image support keep
-            # the emoji icon.
+            # produced them ("De Lehrere", "En"); a neutral rewording
+            # ("Mannstunden" -> "Arbeitsstunden") keeps the emoji. Data comes
+            # from the dashboard via config_options.json; clients without
+            # icon_image support keep the emoji icon.
             icon_image = (
                 get_config_option_labels()
                 .get("german_gender_ending", {})
@@ -1361,6 +1376,21 @@ class CategoryOut(CategoryGroupOut):
 class CategoriesOut(BaseModel):
     categories: list[CategoryOut]
     groups: list[CategoryGroupOut]
+
+
+class FeatureOut(BaseModel):
+    """One feature of this deployment. `available` whether it is there at all;
+    `allowed` whether the requesting key may use it, only where a key was sent
+    and only for features some keys are refused; `values` what it offers,
+    where that is a list (the loaded languages)."""
+
+    available: bool
+    allowed: Optional[bool] = None
+    values: Optional[list[str]] = None
+
+
+class FeaturesOut(BaseModel):
+    features: dict[str, FeatureOut]
 
 
 class ConfigOptionOut(BaseModel):

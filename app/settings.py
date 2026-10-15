@@ -2,12 +2,14 @@ from typing import Optional
 from functools import lru_cache
 import json
 import base64
+import os
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType, LlmAccessType
-from platformshconfig import Config
 
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
 TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
+TEXTAREA_IMPRINT_PATH = "/textarea/imprint"
 
 
 class Settings(BaseSettings):
@@ -16,8 +18,17 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    platform_environment_type: str = "development"
-    platform_environment: str = "local"
+    # "production" turns off what only development wants (see is_prod). The
+    # PLATFORM_* names are what Platform.sh/Upsun sets by itself, so they still
+    # count; the plain names win where both are set.
+    environment_type: str = Field(
+        "development",
+        validation_alias=AliasChoices("ENVIRONMENT_TYPE", "PLATFORM_ENVIRONMENT_TYPE"),
+    )
+    # The environment's name, as Sentry reports it.
+    environment: str = Field(
+        "local", validation_alias=AliasChoices("ENVIRONMENT", "PLATFORM_ENVIRONMENT")
+    )
     languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
@@ -136,11 +147,13 @@ class Settings(BaseSettings):
     # up a route it needs - /slack/commands, say, which authenticates itself by
     # signature and would otherwise be unreachable for Slack. The category list
     # and the config options are the same for everyone and let an options page
-    # render before a key has been entered.
+    # render before a key has been entered; so is the feature list without a
+    # key (with one, it checks the key itself).
     public_paths: list[str] = [
         "/health",
         "/v2.0/categories",
         "/v2.0/config-options",
+        "/v2.0/features",
     ]
 
     # The /textarea page: Witty's editor and a prompt, for checking and
@@ -155,13 +168,30 @@ class Settings(BaseSettings):
     # A link to the deployment's legal information (imprint, "Impressum") in
     # the page footer. Empty leaves it out; only http(s) addresses are linked.
     textarea_imprint_url: str = ""
+    # Or the imprint itself, as a Markdown file this server renders at
+    # /textarea/imprint, for a deployment with no page of its own to link to.
+    # One or the other: both set, or a file that cannot be read, stops the
+    # start. Read once, so a change needs a restart.
+    textarea_imprint_file: str = ""
+
+    # Where "/" sends a visitor, e.g. "/textarea" or "/docs". Empty keeps the
+    # default: the docs outside production, a line of text in it. A path on
+    # this host only, so it cannot be made an open redirect. When set, "/" is
+    # open behind require_api_key, since it reveals only where it points; the
+    # target is gated as usual.
+    root_redirect: str = ""
 
     def open_paths(self) -> list[str]:
         """The paths the require_api_key gate lets through without a key."""
-        if not self.textarea_enabled:
-            return self.public_paths
+        paths = list(self.public_paths)
+        if self.textarea_enabled:
+            paths.extend(TEXTAREA_PATHS)
+            if self.textarea_imprint_file:
+                paths.append(TEXTAREA_IMPRINT_PATH)
+        if self.root_redirect:
+            paths.append("/")
 
-        return [*self.public_paths, *TEXTAREA_PATHS]
+        return paths
 
     # Config this deployment starts from, as JSON, for the fields a request does
     # not set itself. Without a dashboard there is nowhere else to say it, and a
@@ -241,6 +271,12 @@ class Settings(BaseSettings):
     # (2 for the BFH inference server), so this times WORKERS should stay
     # within that. 0 for no limit.
     llm_max_concurrency: int = 2
+    # LLM calls the whole deployment makes per minute, counted in Redis so
+    # every worker shares the one budget. Providers limit requests per key
+    # (60 a minute for the BFH inference server), and an account that keeps
+    # exceeding it risks being blocked; past this the API answers 503 with
+    # Retry-After until the next minute instead of calling. 0 for no limit.
+    llm_max_requests_per_minute: int = 0
 
     # Who the deployment is willing to spend LLM tokens on. `users` — the
     # default — means anyone the request resolves to a user for.
@@ -279,7 +315,8 @@ class Settings(BaseSettings):
         environment variables and Platform.sh configuration.
         """
         settings = Settings()
-        settings.is_prod = settings.platform_environment_type == "production"
+        settings.is_prod = settings.environment_type == "production"
+        validate_pages(settings)
 
         settings.sso_configs = {
             "aadb2c": {
@@ -320,29 +357,61 @@ class Settings(BaseSettings):
             )
 
         if settings.platform_relationships:
-            settings.platform_relationships = json.loads(
-                base64.b64decode(settings.platform_relationships)
-            )
-
-            if "languagetool" in settings.platform_relationships:
-                endpoint = settings.platform_relationships["languagetool"][0]
-                settings.languagetool_api = (
-                    f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
-                )
-                settings.languagetool_verify_ssl = False
-
-        if (
-            settings.platform_relationships
-            and "rediscache" in settings.platform_relationships
-        ):
-            platform_config = Config()
-            redis_credentials = platform_config.credentials("rediscache")
-
-            settings.redis_host = redis_credentials["host"]
-            settings.redis_port = redis_credentials["port"]
-            settings.redis_verify_ssl = False
+            apply_platform_relationships(settings)
 
         return settings
+
+
+def validate_pages(settings: Settings) -> None:
+    """Stop the start on a ROOT_REDIRECT or imprint that cannot work, rather
+    than serving a page that sends visitors elsewhere or lacks its imprint."""
+    # "//host" and "/\host" are read by browsers as another host, and they
+    # drop tabs and newlines first, so "/\t/host" is one too.
+    redirect = settings.root_redirect
+    if redirect and (
+        not redirect.startswith("/")
+        or redirect.startswith("//")
+        or "\\" in redirect
+        or any(c.isspace() or not c.isprintable() for c in redirect)
+    ):
+        raise ValueError(
+            f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"
+        )
+
+    # A broken imprint is a legal problem, not a cosmetic one, so it stops
+    # the start rather than leaving the footer without it.
+    if not settings.textarea_imprint_file:
+        return
+    if settings.textarea_imprint_url:
+        raise ValueError(
+            "TEXTAREA_IMPRINT_URL and TEXTAREA_IMPRINT_FILE are both set; use one"
+        )
+    if not os.access(settings.textarea_imprint_file, os.R_OK):
+        raise ValueError(
+            f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
+        )
+
+
+def apply_platform_relationships(settings: Settings) -> None:
+    """Platform.sh/Upsun: point LanguageTool and Redis at the services
+    PLATFORM_RELATIONSHIPS describes (base64 JSON, a list of endpoints per
+    relationship name, see .upsun/config.yaml). Elsewhere the variable is not
+    set and LANGUAGETOOL_API and REDIS_* are used as given."""
+    relationships = json.loads(base64.b64decode(settings.platform_relationships))
+    settings.platform_relationships = relationships
+
+    if "languagetool" in relationships:
+        endpoint = relationships["languagetool"][0]
+        settings.languagetool_api = (
+            f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
+        )
+        settings.languagetool_verify_ssl = False
+
+    if "rediscache" in relationships:
+        endpoint = relationships["rediscache"][0]
+        settings.redis_host = endpoint["host"]
+        settings.redis_port = endpoint["port"]
+        settings.redis_verify_ssl = False
 
 
 @lru_cache(maxsize=1)

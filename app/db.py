@@ -22,13 +22,29 @@ from app.query_definitions import (
 from app.settings import Settings
 import aiosqlite
 import aiofiles
+import hashlib
 import json
+import os
 from spacy.tokens import Token
 from copy import deepcopy
+from typing import Optional
+
+# Relative to the working directory, /code in the image. The image carries its
+# release's dump at this path; a file mounted over it replaces those rules.
+DUMP_FILE = "./database/dump.sql"
+SQLITE_FILE = "./database/db.sqlite3"
+# Written by the Dockerfile: the hash of the dump the image was built with, so
+# that /version can tell it apart from one mounted over it. Absent outside an
+# image.
+BUNDLED_DUMP_SHA256_FILE = "./dump.sql.sha256"
 
 
 class Db:
     sqlite_db: aiosqlite.Connection
+    # Which rules this process serves: the file they were read from and its
+    # sha256. Logged at startup and reported by /version.
+    rules_file: Optional[str] = None
+    rules_sha256: Optional[str] = None
     male_to_female_normativ: dict
     substring_rules: dict = {}
     source_map: dict = {}
@@ -60,18 +76,42 @@ class Db:
 
         if len(tables_exist) == 0:
             if settings.import_from_dump:
-                async with aiofiles.open("./database/dump.sql", "r") as f:
-                    sql_script = await f.read()
-                await sqlite_db.executescript(sql_script)
+                async with aiofiles.open(DUMP_FILE, "rb") as f:
+                    content = await f.read()
+                await sqlite_db.executescript(content.decode("utf-8"))
+                Db.rules_file = DUMP_FILE
             else:
-                source = await aiosqlite.connect("./database/db.sqlite3")
+                async with aiofiles.open(SQLITE_FILE, "rb") as f:
+                    content = await f.read()
+                source = await aiosqlite.connect(SQLITE_FILE)
                 await source.backup(sqlite_db)
                 await source.close()
+                Db.rules_file = SQLITE_FILE
+            # The in-memory database outlives a second factory call (it is
+            # shared by name), so what was loaded is recorded on the class,
+            # where that call still finds it.
+            Db.rules_sha256 = hashlib.sha256(content).hexdigest()
 
         db = Db(sqlite_db, languages)
         await db.init(settings)
 
         return db
+
+    @staticmethod
+    def rules_info() -> dict:
+        """The rules this process serves. `bundled` says whether they are the
+        dump the image was built with: false means a file mounted over it (or
+        IMPORT_FROM_DUMP=false), None that there is no image to compare with."""
+        bundled = None
+        if os.path.exists(BUNDLED_DUMP_SHA256_FILE):
+            with open(BUNDLED_DUMP_SHA256_FILE, encoding="utf-8") as f:
+                bundled = f.read().strip() == Db.rules_sha256
+
+        return {
+            "file": Db.rules_file,
+            "sha256": Db.rules_sha256,
+            "bundled": bundled,
+        }
 
     async def init(self, settings: Settings):
         query = f"SELECT base_form, plural FROM rules_frenchnoun WHERE male_form IS NOT NULL"

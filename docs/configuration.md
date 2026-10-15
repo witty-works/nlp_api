@@ -73,8 +73,9 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
-| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
+| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod. Falls back to `PLATFORM_ENVIRONMENT_TYPE`, which Platform.sh/Upsun sets.         |
+| ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment). Falls back to `PLATFORM_ENVIRONMENT`.                                                                    |
+| ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
 | TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
@@ -319,6 +320,8 @@ needed. `/openapi.json` is served unguarded either way.
 | API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
 | API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
 
+Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` asks for the password instead, and the page loads `/openapi.json`, which needs one too: add `"/openapi.json"` to `PUBLIC_PATHS`, or the docs page renders without any endpoints. Add `"/docs"` as well to make the docs public.
+
 ## Protecting the management endpoints
 
 Separate from the docs switch, because reading the schema and minting a
@@ -353,7 +356,7 @@ Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=tru
 | SENTRY_TRACES_SAMPLE_RATE   | 0.0     | Performance tracing sample rate (0.0–1.0). |
 | SENTRY_PROFILES_SAMPLE_RATE | 0.0     | Profiling sample rate (0.0–1.0).           |
 
-Sentry uses `PLATFORM_ENVIRONMENT` as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
+Sentry uses `ENVIRONMENT` (or `PLATFORM_ENVIRONMENT`) as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
 
 ## LanguageTool
 
@@ -507,6 +510,7 @@ config change:
 | `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
 | `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
 | `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
+| `LLM_MAX_REQUESTS_PER_MINUTE` | 0 | LLM calls the whole deployment makes per minute, counted in Redis so all workers share one budget. Past it, a call is refused with 503 and a `Retry-After` up to the next minute, without reaching the provider. Set it below the provider's per-key limit (60 for the BFH inference server) so the account is never the one that hits it. `0` for no limit; without a real Redis each process counts on its own. |
 
 ```bash
 # Anthropic directly
@@ -594,8 +598,9 @@ Opt-in page for checking and rewriting text by hand with an API key: Witty's edi
 | TEXTAREA_ENABLED | false   | Serve `/textarea`. Opens it and its script without a key behind `REQUIRE_API_KEY`; checks stay gated. |
 | TEXTAREA_CONTACT | api@witty.works | Where the page tells visitors to request an API key (a mailto link). Empty leaves the section out. |
 | TEXTAREA_IMPRINT_URL | (empty) | Link to the deployment's legal information (imprint), shown in the page footer. Empty leaves it out; only http(s) addresses are linked. |
+| TEXTAREA_IMPRINT_FILE | (empty) | Instead of a link: a Markdown file with the imprint, rendered at `/textarea/imprint` (public, like the page) and linked from the footer. Write it in English: the page around it is, and says so (`lang="en"`). Raw HTML in it stays text. Setting both, or a file that cannot be read, stops the start; read once, so a change needs a restart. |
 
-The editor script is installed separately: `python bin/fetch_editor.py`, or `--build-arg TEXTAREA=true` (`TEXTAREA=true docker compose build`) for the image.
+The editor script is installed separately with `python bin/fetch_editor.py`; the Docker image always carries it.
 
 ## Authentication
 
@@ -670,10 +675,11 @@ anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
 
 ## Platform.sh
 
-The app auto-detects Platform.sh relationships and environment:
+Nothing in the app requires Platform.sh/Upsun; every setting has a plain name. What it does there is pick up the variables the platform sets by itself, so [.upsun/config.yaml](../.upsun/config.yaml) needs no extra configuration:
 
-- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis.
-- `PLATFORM_APPLICATION_NAME` is used when Blackfire continuous profiling is enabled.
+- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis, overriding `LANGUAGETOOL_API` and `REDIS_HOST`/`REDIS_PORT`. Elsewhere it is unset and those are used as given.
+- `PLATFORM_ENVIRONMENT_TYPE` and `PLATFORM_ENVIRONMENT` stand in for `ENVIRONMENT_TYPE` and `ENVIRONMENT` where those are not set.
+- `PLATFORM_APPLICATION_NAME` stands in for `BLACKFIRE_APPLICATION_NAME`.
 
 ## Optional profiling (Blackfire)
 
@@ -681,7 +687,7 @@ To enable continuous profiling in supported environments, set:
 
 ```bash
 BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
-PLATFORM_APPLICATION_NAME=app
+BLACKFIRE_APPLICATION_NAME=app
 ```
 
 ## Testing variables

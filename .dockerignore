@@ -23,8 +23,10 @@ __pycache__/
 # the image stays the same whether or not the context checker is enabled.
 models/
 
-# The rule database is mounted, not copied (see compose.yml)
-database/
+# The rule database: only the dump goes into the image (a mount can replace
+# it, see compose.yml); the binary db.sqlite3 stays out.
+database/*
+!database/dump.sql
 
 # Test suite and coverage output
 tests/
@@ -46,7 +48,7 @@ sonar-project.properties
 make-release
 .env
 
-# A locally installed editor script (bin/fetch_editor.py); an image gets one
-# only through --build-arg TEXTAREA=true.
+# A locally installed editor script (bin/fetch_editor.py); the image downloads
+# the pinned release itself, in its editor stage.
 app/static/witty-editor.js
 app/static/witty-editor.js.LICENSE.txt

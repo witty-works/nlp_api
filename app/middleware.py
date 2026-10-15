@@ -72,7 +72,7 @@ def is_public_path(path: str, public_paths) -> bool:
     """
     candidate = path.rstrip("/") or "/"
 
-    return any(entry.rstrip("/") == candidate for entry in public_paths)
+    return any((entry.rstrip("/") or "/") == candidate for entry in public_paths)
 
 
 def _depends_on(dependant, call) -> bool:

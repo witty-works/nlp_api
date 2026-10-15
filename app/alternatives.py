@@ -1325,6 +1325,7 @@ class Alternatives:
         alternative.lemma = " ".join(words)
         if alternative.words:
             alternative.words[-1] = words[-1]
+        alternative.in_gender_format = True
 
         return True
 
@@ -1352,6 +1353,10 @@ class Alternatives:
             if word.count("~") == 1:
                 pre = []
                 slash = False
+                # A pair ("sie~er") is rendered in the configured format; a
+                # leading "~" only marks a German prefix.
+                if not word.startswith("~"):
+                    alternative.in_gender_format = True
 
                 if word.startswith("~"):
                     word, pre = utils.add_german_prefix(word[1:], prefix), []
