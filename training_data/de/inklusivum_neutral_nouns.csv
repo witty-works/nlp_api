@@ -23,6 +23,12 @@ Person,feminine but generic
 Waise,feminine but generic
 Geisel,feminine but generic
 Koryphäe,feminine but generic
+Ahne,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
+Nachfahre,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
+Vorfahre,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
+Elfe,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
+Geselle,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
+Titane,masculine in -e with an endingless variant; plural in inklusivum_nouns.csv
 Charakter,not exclusively a person word
 Wache,not exclusively a person word
 Begleitung,not exclusively a person word
@@ -57,12 +63,14 @@ Freak,English loan
 Nerd,English loan
 Hooligan,English loan
 Model,English loan
+Yuppie,English loan
 Profi,clipped form
 Studi,clipped form
 Schiri,clipped form
 Ami,clipped form
 Azubi,clipped form
 Admin,clipped form
+Nazi,clipped form
 Judoka,same form for any gender
 Aikidoka,same form for any gender
 Karateka,same form for any gender

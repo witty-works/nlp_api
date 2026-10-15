@@ -33,7 +33,9 @@ async def lifespan(app: FastAPI, context: AppContext):
         try:
             from blackfire_conprof.profiler import Profiler
 
-            app_name = os.environ.get("PLATFORM_APPLICATION_NAME")
+            app_name = os.environ.get("BLACKFIRE_APPLICATION_NAME") or os.environ.get(
+                "PLATFORM_APPLICATION_NAME"
+            )
             profiler = Profiler(application_name=app_name)
             profiler.start()
 
@@ -54,6 +56,16 @@ async def lifespan(app: FastAPI, context: AppContext):
 
     # Initialize database
     context.db = await Db.factory(context.settings, context.languages)
+    # A mounted dump changes every finding without anything else showing it.
+    rules = Db.rules_info()
+    context.logger.info(
+        "rules loaded from %s, sha256 %s%s",
+        rules["file"],
+        rules["sha256"],
+        {True: ", the image's own", False: ", not the image's own"}.get(
+            rules["bundled"], ""
+        ),
+    )
     context.model.db = context.db
     context.model.ambiguous_number_lookup = (
         await context.db.fetch_ambiguous_number_forms()
@@ -133,7 +145,7 @@ async def lifespan(app: FastAPI, context: AppContext):
         context.categories,
         context.http,
     )
-    context.prompt = Prompt(context.settings)
+    context.prompt = Prompt(context.settings, context.redis.db)
     context.llm_alternatives = LlmAlternatives(
         context.settings, context.alternatives, context.prompt
     )

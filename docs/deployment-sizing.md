@@ -12,9 +12,9 @@ The short version: the resident memory is almost entirely spaCy word vectors, so
 | `redis` | `redis:7-alpine` | API keys, user and organization config |
 | `languagetool` | built from [languagetool/](../languagetool/) | spell and grammar checking; **not started by default**, see below |
 
-Plus two mounts into `nlpapi`:
+The image carries the release's rule database (`dump.sql`, ~8 MB, read into an in-memory SQLite at startup) and the `/textarea` editor script, so a deployment needs no checkout. Two mounts are optional:
 
-- `./database` (read-only) — the rule database, ~8 MB as `dump.sql`, read into an in-memory SQLite at startup.
+- over `/code/database/dump.sql` (read-only) — a custom rule database instead of the release's. The local `compose.yml` mounts the checkout's `./database` there for development.
 - `./models` (read-only) — SetFit context-checker weights, ~1.5 GB, only read when the context checker is on.
 
 **Redis is not optional.** With no `REDIS_HOST` the app falls back to an in-process `FakeStrictRedis`, which is empty. Nothing errors: the API answers `200` with `{"results": []}` for every request, because no user has a config. This is easy to mistake for "the rules are broken" — it cost time while writing this document. The compose file wires it up so a fresh `docker compose up` does not land in that state.
@@ -238,9 +238,9 @@ returns `Der Lehrer → De Lehrere` and `dem Schüler → derm Schülere`.
 By default an unauthenticated request is answered with `200` and an empty result set rather than refused — deliberate, so that a signed-out client keeps working instead of erroring. For a deployment where nothing should be free, set:
 
     REQUIRE_API_KEY=True
-    PUBLIC_PATHS=["/health","/v2.0/categories","/v2.0/config-options"]
+    PUBLIC_PATHS=["/health","/v2.0/categories","/v2.0/config-options","/v2.0/features"]
 
-Every other route then answers `401` without a credential, including `/version`, `/docs` and paths that do not exist — so the gate cannot be probed for which routes are there. `/health` stays open for monitoring, and `/v2.0/categories` and `/v2.0/config-options` because a client needs them to render its UI before a key has been issued. The [`/textarea` page](./textarea.md) is not listed: it is off by default, and `TEXTAREA_ENABLED=true` opens its two paths by itself.
+Every other route then answers `401` without a credential, including `/version`, `/docs` and paths that do not exist — so the gate cannot be probed for which routes are there. `/health` stays open for monitoring, and `/v2.0/categories`, `/v2.0/config-options` and `/v2.0/features` because a client needs them to render its UI before a key has been issued (`/v2.0/features` checks a key itself when one is sent). The [`/textarea` page](./textarea.md) is not listed: it is off by default, and `TEXTAREA_ENABLED=true` opens its two paths by itself.
 
 Two things it deliberately does not refuse: CORS preflight, which carries no credentials by definition and would break browser clients, and any path named in `PUBLIC_PATHS`. Add `/slack/commands` there if Slack is enabled — it authenticates by signature and cannot send an API key.
 
@@ -255,11 +255,62 @@ Four things that cost time to find, all of which fail quietly:
 
 `POST /user/configs` and `POST /organization/configs` are there for anything beyond one user, gated by `MANAGEMENT_AUTH_ENABLED` — leave that on. Configs created that way live only in Redis, which is why the compose file persists it (`--appendonly yes` and a named volume). `DEFAULT_API_KEY` is rewritten at every start and so survives losing the volume; anything posted to those endpoints does not.
 
+## The published image
+
+A release tag (`3.1.0`) makes [.github/workflows/release-image.yaml](../.github/workflows/release-image.yaml) build the image and push it to `ghcr.io/witty-works/nlp_api` as `3.1.0` and `3.1`, for `linux/amd64`. There is deliberately no `latest`: it would move back to an older release whenever an older line is rebuilt. The repository is public, so once the package is set to public in its GitHub settings, a server pulls it without credentials. The run's summary prints the digest; pin a production deployment to `ghcr.io/witty-works/nlp_api@sha256:…` rather than to a tag.
+
+The image holds no deployment configuration. Everything in this document is environment at runtime, except the two build-time model dimensions, which the workflow leaves at the defaults (all three languages, `lg`). It is built with the revision of the tag, so `/version` reports exactly what runs.
+
+**A custom rule database** replaces the release's without a rebuild: mount it over the file,
+
+    volumes:
+      - /srv/nlp-api/dump.sql:/code/database/dump.sql:ro
+
+A different rules file changes every finding without anything else showing it, so the API says which one it loaded: the startup log names the file and its sha256, and `/version` reports
+
+    "rules": {"file": "./database/dump.sql", "sha256": "…", "bundled": false}
+
+where `bundled` is `true` for the image's own dump, `false` for a mounted one, and `null` outside an image.
+
+## After deploying
+
+A first check from outside, for the configuration in [What we are deploying](#what-we-are-deploying) with the textarea page and `ROOT_REDIRECT=/textarea`. Set `HOST` to the deployment's address and `KEY` to its `DEFAULT_API_KEY`:
+
+    HOST=https://witty.digisus-lab.ch; KEY=...
+
+1. Up, and running what you meant to deploy: `/health` answers `200`, and `/version` (behind the key) names the release's `git_revision` and `"bundled": true`, or `false` if a custom rule database is mounted on purpose.
+
+       curl -fsS $HOST/health
+       curl -fsS $HOST/version -H "x-key: $KEY"
+
+2. Only https: `http://` answers with a redirect to `https://`.
+
+       curl -sI http://witty.digisus-lab.ch/ | head -1
+
+3. The public pages load without a key: `/` redirects to `/textarea`, and `/textarea/imprint`, `/docs` and `/v2.0/features` answer `200`.
+
+       curl -sI $HOST/ | grep -i '^location'
+       for p in /textarea /textarea/imprint /docs /openapi.json /v2.0/features; do
+         echo "$p $(curl -s -o /dev/null -w '%{http_code}' $HOST$p)"; done
+
+4. The key gate holds: a check without a key is `401`, with the key it returns findings (two for this sentence).
+
+       curl -s -o /dev/null -w '%{http_code}\n' -X POST $HOST/v2.4/check \
+           -H 'Content-Type: application/json' -d '{"text":"Der Lehrer gibt dem Schüler den Stift."}'
+       curl -s -X POST $HOST/v2.4/check -H "x-key: $KEY" \
+           -H 'Content-Type: application/json' -d '{"text":"Der Lehrer gibt dem Schüler den Stift."}'
+
+5. What the key may do: `/v2.0/features` with the key reports `"llm": {"available": true, "allowed": true}` where the deployment has a model and the key is in `LLM_ALLOWED_USERS`. Then open `/textarea` in a browser, enter the key, and try the example text, an AI suggestion and a short prompt.
+
+       curl -s $HOST/v2.0/features -H "x-key: $KEY"
+
+Then the monitoring: the blackbox probe of `/health` turns green, and `docker stats` on the host shows the API near the measured idle figure for its configuration (3.9 GiB for three languages at two workers), which is worth noting down as the first x86_64 measurement (see [Re-measuring](#re-measuring)).
+
 ## Operational notes
 
 **The context checker needs a bigger `/dev/shm`.** Torch's `share_memory()` moves the model into shared memory, and Docker's default `/dev/shm` is 64 MB — a ~1 GB SetFit model overruns it and the process dies of SIGBUS. What you see is exit code 135, no log line, and `OOMKilled=false`, which looks like anything but a full `/dev/shm`. `compose.yml` sets `shm_size: 2gb`; a plain `docker run` needs `--shm-size=2g`. Harmless when the context checker is off, which is why it does not show up until the day you enable it.
 
-**Two files are gitignored and must be provisioned separately.** `training_data/lid.176.bin` (126 MB, fastText language detection) and the rule database under `database/`. The Dockerfile copies the first from the build context, so the image is only correct if that file is present at build time; the second is mounted at runtime. Neither is in the repository.
+**One file is gitignored and must be present to build.** `training_data/lid.176.bin` (126 MB, fastText language detection) is copied from the build context, and the build fails without it rather than producing an image that breaks on the first language detection. The release workflow downloads it; a local build needs the `wget` from [setup.md](./setup.md). The rule database is in the repository as `database/dump.sql` and goes into the image; only `db.sqlite3`, used with `IMPORT_FROM_DUMP=false`, is gitignored.
 
 **Startup is slow and that is normal.** Loading the models takes roughly 10–20 s per container before the first request can be served, longer with the context checker on. The `HEALTHCHECK` in the Dockerfile has `--start-period=120s` for that reason; shortening it makes Docker kill containers that are still coming up. The same applies to any load balancer in front: give it a slow-start or readiness delay, or a rolling restart will take the service down.
 

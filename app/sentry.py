@@ -106,7 +106,7 @@ def set_up_sentry_sdk(version: str, settings):
         profiles_sample_rate=settings.sentry_profiles_sample_rate,
         integrations=integrations,
         release=version,
-        environment=settings.platform_environment,
+        environment=settings.environment,
         before_send=sentry_clean_event_data,
         before_send_transaction=sentry_filter_transactions,
     )

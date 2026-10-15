@@ -6,7 +6,7 @@ It is **off by default**. A deployment that does not turn it on serves no page (
 
 ## What it does
 
-The page explains itself to a first-time visitor: what Witty checks, how the key is handled, what the page can be used for, and whom to ask for a key. That contact is `TEXTAREA_CONTACT`, `api@witty.works` by default; a deployment that hands out its own keys sets its own address, or an empty value to leave the section out. A deployment that has to show legal information sets `TEXTAREA_IMPRINT_URL` (e.g. `https://www.witty.works/impressum`), linked as "Imprint" in the footer; it is empty, and the link absent, by default.
+The page explains itself to a first-time visitor: what Witty checks, how the key is handled, what the page can be used for, and whom to ask for a key. That contact is `TEXTAREA_CONTACT`, `api@witty.works` by default; a deployment that hands out its own keys sets its own address, or an empty value to leave the section out. A deployment that has to show legal information sets `TEXTAREA_IMPRINT_URL` (e.g. `https://www.witty.works/impressum`), linked as "Imprint" in the footer; it is empty, and the link absent, by default. A deployment with no such page of its own sets `TEXTAREA_IMPRINT_FILE` to a Markdown file instead, which the API renders at `/textarea/imprint` and links the same way; mounted into the container, it changes without a rebuild (a restart is enough).
 
 - **Nothing works without a key.** The editor, the prompt and the AI suggestions box stay disabled until `/v2.0/auth` accepts the key in the key field, and are disabled again when it is changed to one that does not work.
 - **Checks as you type.** The editor sends the text to `/v2.4/check` and underlines what comes back. A click on an underline, or `Alt+Shift+W`, opens the extension's popover with the explanation and alternatives.
@@ -61,19 +61,15 @@ LLM_API_BASE=http://localhost:11434
 DEFAULT_USER_LLM_ALTERNATIVES=true
 ```
 
-Without an LLM the page still checks and highlights; the prompt answers "This API key may not use the LLM." and the popover shows no rewrites.
+The page learns what a key may do from [`/v2.0/features`](./api.md) as soon as the key is entered. To keep the model to some keys, list their emails in `LLM_ALLOWED_USERS`. A key outside the list still checks text; the page disables AI suggestions and the prompt for it straight away, and in both places links "Ask for access" to `TEXTAREA_CONTACT` (a mail with the subject "Access to the language model"). To stay within the provider's per-key limit, set `LLM_MAX_REQUESTS_PER_MINUTE`; past it, the prompt says the model is busy until the next minute.
+
+Without an LLM the page still checks and highlights; AI suggestions and the prompt are disabled with "Not available on this server.", without the link.
 
 For a local model through Ollama, Mistral Small 24B handled the rephrase prompt on a hand-checked sample of German and English sentences (French was wrong for every model tried). Apertus 1.5 8B does not follow that prompt when the flagged words start the sentence, so its popover rewrites mostly come back empty. Mistral Small at its default 32k context takes about 19 GB of memory.
 
 ### Docker
 
-The image contains the editor script only when built with the `TEXTAREA` build argument, which runs the same download during the build:
-
-```bash
-TEXTAREA=true docker compose build
-```
-
-and `TEXTAREA_ENABLED=true` in `.env`. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned npm release.
+Every image contains the editor script: the build runs the same download in a stage of its own. Serving the page is then only `TEXTAREA_ENABLED=true` in the environment, so the published image needs no rebuild for it. A script installed locally is not copied into the image (`.dockerignore`), so what an image serves is always the pinned npm release.
 
 ## Security
 
@@ -94,7 +90,7 @@ python bin/fetch_editor.py --pin 2.0.2
 python bin/fetch_editor.py
 ```
 
-`--pin` installs that version into a throwaway npm project (with `--ignore-scripts`, so nothing from the package runs) and has `npm audit signatures` verify its registry signature and its provenance. It then requires the provenance to name the browser-extension repository's `.github/workflows/publish-editor.yaml`, run from the tag named after the version, and only then writes the version and the integrity npm verified into `bin/editor-pin.json`. A version published any other way, for instance from a leaked token, is refused. The second command installs it; check the page against it before committing the new pin. An install writes its files under temporary names and moves them into place together, so an interrupted one leaves the previous install whole. The Docker image downloads the editor in a stage of its own (`--build-arg TEXTAREA=true`), which a change to the app does not invalidate.
+`--pin` installs that version into a throwaway npm project (with `--ignore-scripts`, so nothing from the package runs) and has `npm audit signatures` verify its registry signature and its provenance. It then requires the provenance to name the browser-extension repository's `.github/workflows/publish-editor.yaml`, run from the tag named after the version, and only then writes the version and the integrity npm verified into `bin/editor-pin.json`. A version published any other way, for instance from a leaked token, is refused. The second command installs it; check the page against it before committing the new pin. An install writes its files under temporary names and moves them into place together, so an interrupted one leaves the previous install whole. The Docker image downloads the editor in a stage of its own, which a change to the app does not invalidate.
 
 The pin is what protects every later install: the download is checked against the integrity in the script, which changes only through a reviewed commit. That is why installs need no npm.
 

@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import pytest
 import logging
 import json
@@ -15,6 +16,7 @@ from app.main import (
 )
 from app.categories import get_category_keys
 from app.prompt import Prompt
+from app.settings import Settings
 from app.config_manager import (
     debug_configs,
     fetch_configs_for_request,
@@ -343,6 +345,31 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
         # Snapshot the return value.
         snapshot.snapshot_dir = ending_case_dir
         snapshot.assert_match(output, "output.json")
+
+
+def test_inklusivum_logo_only_on_suggestions_in_the_inklusivum(set_redis):
+    """The logo says "this suggestion is in your chosen system": on "De
+    Lehrere" and "En", not on a neutral rewording such as Mannstunden ->
+    Arbeitsstunden, although that is a gendered finding too."""
+    logo = "https://www.witty.works/assets/media/vgd-icon-bunt.svg"
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": "Der Lehrer kam. Er plant 40 Mannstunden.",
+                "config": {"german_gender_ending": "de-e"},
+            },
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        icons = {
+            result["text"]: result["explanation"].get("icon_image")
+            for result in response.json()["results"]
+        }
+
+    assert icons["Der Lehrer"] == logo
+    assert icons["Er"] == logo
+    assert icons["Mannstunden"] != logo
 
 
 def test_api_missing_data():
@@ -3018,6 +3045,130 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
             settings.require_api_key = False
             settings.management_auth_enabled = False
             settings.api_docs_username, settings.api_docs_password = previous
+
+
+def test_version_reports_the_rules_file(tmp_path, monkeypatch):
+    """A dump mounted over the image's own changes every finding, so /version
+    says which file was loaded and whether it is the one the image carries."""
+    with open("./database/dump.sql", "rb") as f:
+        expected = hashlib.sha256(f.read()).hexdigest()
+
+    with TestClient(app) as client:
+        rules = client.get("/version").json()["rules"]
+        assert rules == {
+            "file": "./database/dump.sql",
+            "sha256": expected,
+            # Outside an image there is nothing to compare with.
+            "bundled": None,
+        }
+
+        bundled = tmp_path / "dump.sql.sha256"
+        monkeypatch.setattr("app.db.BUNDLED_DUMP_SHA256_FILE", str(bundled))
+
+        bundled.write_text(expected + "\n")
+        assert client.get("/version").json()["rules"]["bundled"] is True
+
+        bundled.write_text("0" * 64 + "\n")
+        assert client.get("/version").json()["rules"]["bundled"] is False
+
+
+def test_features_without_a_key_say_what_the_deployment_offers(monkeypatch):
+    """The same for everyone, so public and cacheable; no `allowed`."""
+    monkeypatch.setattr(context.settings, "llm_model", "")
+    monkeypatch.setattr(context.settings, "languagetool_api", "")
+
+    with TestClient(app) as client:
+        response = client.get("/v2.0/features")
+        assert response.status_code == 200
+        assert response.headers["cache-control"] == "public, max-age=300"
+        assert response.json() == {
+            "features": {
+                "llm": {"available": False},
+                "spelling_grammar": {"available": False},
+                "languages": {
+                    "available": True,
+                    "values": sorted(context.model.models),
+                },
+            }
+        }
+
+        monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
+        monkeypatch.setattr(context.settings, "languagetool_api", "http://lt:8010/v2")
+        features = client.get("/v2.0/features").json()["features"]
+        assert features["llm"] == {"available": True}
+        assert features["spelling_grammar"] == {"available": True}
+
+
+def test_features_with_a_key_say_what_it_may_use(monkeypatch):
+    """`allowed` follows LLM_ALLOWED_USERS, so a client can offer the prompt
+    and AI suggestions only where the server will not refuse them."""
+    context.redis.set_api_key("features-key", "default@gmail.com")
+    monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
+
+    def llm():
+        response = client.get("/v2.0/features", headers={"x-key": "features-key"})
+        assert response.status_code == 200
+        assert response.headers["cache-control"] == "private, no-store"
+        return response.json()["features"]["llm"]
+
+    with TestClient(app) as client:
+        assert llm() == {"available": True, "allowed": True}
+
+        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        assert llm() == {"available": True, "allowed": False}
+
+        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        assert llm() == {"available": True, "allowed": True}
+
+        monkeypatch.setattr(context.settings, "llm_model", "")
+        assert llm() == {"available": False, "allowed": False}
+
+
+def test_features_refuse_a_key_that_does_not_work(monkeypatch):
+    """A wrong key is a 401, not the anonymous answer, so a client can tell
+    it from none; and the endpoint stays public behind REQUIRE_API_KEY."""
+    monkeypatch.setattr(context.settings, "require_api_key", True)
+
+    with TestClient(app) as client:
+        assert client.get("/v2.0/features").status_code == 200
+        response = client.get("/v2.0/features", headers={"x-key": "no-such-key"})
+        assert response.status_code == 401
+
+
+def test_root_redirect(monkeypatch):
+    """ROOT_REDIRECT picks the landing page; "/" then needs no key, its
+    target still does."""
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.settings, "root_redirect", "/textarea")
+        monkeypatch.setattr(context.settings, "require_api_key", True)
+        response = client.get("/", follow_redirects=False)
+        assert response.status_code == 302
+        assert response.headers["location"] == "/textarea"
+
+        monkeypatch.setattr(context.settings, "root_redirect", "/docs")
+        response = client.get("/", follow_redirects=False)
+        assert response.headers["location"] == "/docs"
+        assert client.get("/docs").status_code == 401
+
+        monkeypatch.setattr(context.settings, "root_redirect", "")
+        assert client.get("/", follow_redirects=False).status_code == 401
+
+
+@pytest.mark.parametrize(
+    "target",
+    [
+        "//evil.example",
+        "/\\evil.example",
+        "/\t/evil.example",
+        "/\n/evil.example",
+        "https://evil.example",
+        "textarea",
+    ],
+)
+def test_root_redirect_stays_on_this_host(monkeypatch, target):
+    monkeypatch.setenv("ROOT_REDIRECT", target)
+    with pytest.raises(ValueError, match="ROOT_REDIRECT"):
+        Settings.factory()
 
 
 def test_require_api_key_public_paths_are_configurable():

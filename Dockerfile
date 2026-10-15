@@ -12,7 +12,9 @@
 #   WORKERS                gunicorn worker processes
 #   CONTEXT_CHECKER_LOCAL  whether the SetFit models under /code/models load
 #
-# See docs/deployment-sizing.md for what each costs.
+# See docs/deployment-sizing.md for what each costs. Nothing else is decided at
+# build time: all configuration is environment at runtime, so the published
+# image (.github/workflows/release-image.yaml) serves every deployment.
 
 ARG PYTHON_VERSION=3.12
 
@@ -97,17 +99,16 @@ RUN python -m venv /opt/venv \
 RUN /opt/venv/bin/python -c "import spacy, httpx; print('spacy', spacy.__version__, 'ok')"
 
 # ----------------------------------------------------------------- editor ---
-# The editor script for the /textarea page, only when asked for: the page is
-# off by default (TEXTAREA_ENABLED), and an image without it carries nothing of
-# it. Downloads the npm release pinned in bin/editor-pin.json (no npm needed)
-# and checks it against the integrity the registry published. A stage of its
-# own, so a change to the app does not download it again.
+# The editor script for the /textarea page. Always in the image, so that one
+# image serves every deployment: whether the page is served is TEXTAREA_ENABLED
+# at runtime, off by default, and the script is under 1 MB. Downloads the npm
+# release pinned in bin/editor-pin.json (no npm needed) and checks it against
+# the integrity the registry published. A stage of its own, so a change to the
+# app does not download it again.
 FROM python:${PYTHON_VERSION}-slim-bookworm AS editor
 
-ARG TEXTAREA=false
 COPY ./bin/fetch_editor.py ./bin/editor-pin.json /tmp/
-RUN mkdir -p /editor \
-    && if [ "$TEXTAREA" = "true" ]; then python /tmp/fetch_editor.py --dest /editor; fi
+RUN mkdir -p /editor && python /tmp/fetch_editor.py --dest /editor
 
 # ---------------------------------------------------------------- runtime ---
 FROM python:${PYTHON_VERSION}-slim-bookworm AS runtime
@@ -131,7 +132,20 @@ COPY ./app /code/app
 COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# Empty unless the image was built with TEXTAREA=true (see the editor stage).
+# gitignored, so a build from a fresh checkout would otherwise ship an image
+# that only fails once language detection is first used. Checked against the
+# hash the Upsun build verifies too, since it is downloaded unsigned.
+RUN test -s /code/training_data/lid.176.bin \
+    || { echo "training_data/lid.176.bin is missing, see docs/setup.md" >&2; exit 1; }
+RUN echo "e613bda316ecb4f5e1924140eedf81b81c087d9a  /code/training_data/lid.176.bin" \
+    | sha1sum -c -
+
+# The release's rules. A file mounted over /code/database/dump.sql replaces
+# them without a rebuild; the hash recorded beside it is how /version tells
+# the two apart (see Db.rules_info).
+COPY ./database/dump.sql /code/database/dump.sql
+RUN sha256sum /code/database/dump.sql | cut -d' ' -f1 > /code/dump.sql.sha256
+
 COPY --from=editor /editor/ /code/app/static/
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R appuser /code

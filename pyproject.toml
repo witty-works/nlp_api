@@ -25,7 +25,7 @@ dev = [
 
 [project]
 name = "witty-works"
-version = "3.0.0"
+version = "3.1.0"
 description = ""
 authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
@@ -45,9 +45,10 @@ dependencies = [
     "pandas",
     "aiofiles",
     "aiohttp",
+    # Renders a deployment's imprint (TEXTAREA_IMPRINT_FILE) for /textarea.
+    "markdown-it-py>=4.0.0",
     "sentry-sdk",
     "redis",
-    "platformshconfig",
     "fakeredis",
     # Inference-only fastText build (SearXNG-maintained), no numpy dependency;
     # Meta archived fastText upstream in 2024. See docs/spacy-review.md.
