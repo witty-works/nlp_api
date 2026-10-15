@@ -17,6 +17,21 @@ function checkMessage(next) {
 const apiKey = document.getElementById("api-key");
 const aiSuggestions = document.getElementById("ai-suggestions");
 const aiNote = document.getElementById("ai-suggestions-note");
+
+// A key the server refuses the language model, with where to ask for it.
+// Only where this server has one: otherwise there is nothing to grant.
+function llmRefusal(element, text) {
+  element.replaceChildren(text);
+  if (CONFIG.llmAvailable && CONFIG.llmAccessRequest) {
+    const link = document.createElement("a");
+    link.href = CONFIG.llmAccessRequest;
+    link.textContent = "Ask for access";
+    element.append(" ", link, ".");
+  }
+}
+const LLM_UNAVAILABLE = CONFIG.llmAvailable
+  ? "Not available with this API key."
+  : "Not available on this server.";
 const editorElement = document.getElementById("editor");
 const langSelect = document.getElementById("lang");
 const exampleButton = document.getElementById("example");
@@ -101,8 +116,11 @@ function applyInputState() {
   keyRequiredText.textContent = apiKey.value
     ? "This API key doesn't work. Check it for typos."
     : "Enter your API key above to use this page.";
-  aiNote.textContent =
-    keyValid && !llmAllowed ? "Not available with this API key." : "";
+  if (keyValid && !llmAllowed) {
+    llmRefusal(aiNote, LLM_UNAVAILABLE);
+  } else {
+    aiNote.replaceChildren();
+  }
 }
 
 // Whether the key works, and whether it may use the language model:
@@ -236,7 +254,11 @@ const toDoc = (text) => ({
 
 const failure = (status, body) => {
   if (status === 401) return "Enter a valid API key to run a prompt.";
-  if (status === 403) return "This API key may not use the language model.";
+  if (status === 403) {
+    return CONFIG.llmAvailable
+      ? "This API key may not use the language model."
+      : "This server has no language model for the prompt.";
+  }
   if (status === 502) {
     return "The language model's answer was cut off. Try a shorter text or prompt.";
   }
@@ -298,7 +320,11 @@ form.addEventListener("submit", async (event) => {
     });
     if (!response.ok) {
       const body = await response.json().catch(() => null);
-      writeStatus.textContent = failure(response.status, body);
+      if (response.status === 403) {
+        llmRefusal(writeStatus, failure(response.status, body));
+      } else {
+        writeStatus.textContent = failure(response.status, body);
+      }
       return;
     }
 
