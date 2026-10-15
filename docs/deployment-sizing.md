@@ -257,7 +257,7 @@ Four things that cost time to find, all of which fail quietly:
 
 ## The published image
 
-A release tag (`3.0.1`) makes [.github/workflows/release-image.yaml](../.github/workflows/release-image.yaml) build the image and push it to `ghcr.io/witty-works/nlp_api` as `3.0.1`, `3.0` and `latest`, for `linux/amd64`. The repository is public, so once the package is set to public in its GitHub settings, a server pulls it without credentials. The run's summary prints the digest; pin a production deployment to `ghcr.io/witty-works/nlp_api@sha256:…` rather than to a tag.
+A release tag (`3.1.0`) makes [.github/workflows/release-image.yaml](../.github/workflows/release-image.yaml) build the image and push it to `ghcr.io/witty-works/nlp_api` as `3.1.0` and `3.1`, for `linux/amd64`. There is deliberately no `latest`: it would move back to an older release whenever an older line is rebuilt. The repository is public, so once the package is set to public in its GitHub settings, a server pulls it without credentials. The run's summary prints the digest; pin a production deployment to `ghcr.io/witty-works/nlp_api@sha256:…` rather than to a tag.
 
 The image holds no deployment configuration. Everything in this document is environment at runtime, except the two build-time model dimensions, which the workflow leaves at the defaults (all three languages, `lg`). It is built with the revision of the tag, so `/version` reports exactly what runs.
 
