@@ -54,6 +54,16 @@ async def lifespan(app: FastAPI, context: AppContext):
 
     # Initialize database
     context.db = await Db.factory(context.settings, context.languages)
+    # A mounted dump changes every finding without anything else showing it.
+    rules = Db.rules_info()
+    context.logger.info(
+        "rules loaded from %s, sha256 %s%s",
+        rules["file"],
+        rules["sha256"],
+        {True: ", the image's own", False: ", not the image's own"}.get(
+            rules["bundled"], ""
+        ),
+    )
     context.model.db = context.db
     context.model.ambiguous_number_lookup = (
         await context.db.fetch_ambiguous_number_forms()
