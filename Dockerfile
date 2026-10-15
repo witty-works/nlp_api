@@ -12,7 +12,9 @@
 #   WORKERS                gunicorn worker processes
 #   CONTEXT_CHECKER_LOCAL  whether the SetFit models under /code/models load
 #
-# See docs/deployment-sizing.md for what each costs.
+# See docs/deployment-sizing.md for what each costs. Nothing else is decided at
+# build time: all configuration is environment at runtime, so the published
+# image (.github/workflows/release-image.yaml) serves every deployment.
 
 ARG PYTHON_VERSION=3.12
 

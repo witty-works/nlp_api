@@ -255,6 +255,23 @@ Four things that cost time to find, all of which fail quietly:
 
 `POST /user/configs` and `POST /organization/configs` are there for anything beyond one user, gated by `MANAGEMENT_AUTH_ENABLED` — leave that on. Configs created that way live only in Redis, which is why the compose file persists it (`--appendonly yes` and a named volume). `DEFAULT_API_KEY` is rewritten at every start and so survives losing the volume; anything posted to those endpoints does not.
 
+## The published image
+
+A release tag (`3.0.1`) makes [.github/workflows/release-image.yaml](../.github/workflows/release-image.yaml) build the image and push it to `ghcr.io/witty-works/nlp_api` as `3.0.1`, `3.0` and `latest`, for `linux/amd64`. The repository is public, so once the package is set to public in its GitHub settings, a server pulls it without credentials. The run's summary prints the digest; pin a production deployment to `ghcr.io/witty-works/nlp_api@sha256:…` rather than to a tag.
+
+The image holds no deployment configuration. Everything in this document is environment at runtime, except the two build-time model dimensions, which the workflow leaves at the defaults (all three languages, `lg`). It is built with the revision of the tag, so `/version` reports exactly what runs.
+
+**A custom rule database** replaces the release's without a rebuild: mount it over the file,
+
+    volumes:
+      - /srv/nlp-api/dump.sql:/code/database/dump.sql:ro
+
+A different rules file changes every finding without anything else showing it, so the API says which one it loaded: the startup log names the file and its sha256, and `/version` reports
+
+    "rules": {"file": "./database/dump.sql", "sha256": "…", "bundled": false}
+
+where `bundled` is `true` for the image's own dump, `false` for a mounted one, and `null` outside an image.
+
 ## Operational notes
 
 **The context checker needs a bigger `/dev/shm`.** Torch's `share_memory()` moves the model into shared memory, and Docker's default `/dev/shm` is 64 MB — a ~1 GB SetFit model overruns it and the process dies of SIGBUS. What you see is exit code 135, no log line, and `OOMKilled=false`, which looks like anything but a full `/dev/shm`. `compose.yml` sets `shm_size: 2gb`; a plain `docker run` needs `--shm-size=2g`. Harmless when the context checker is off, which is why it does not show up until the day you enable it.
