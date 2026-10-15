@@ -71,8 +71,8 @@ MISSING_BUNDLE = """<!doctype html>
       <h1>The editor is not installed</h1>
       <p>
         TEXTAREA_ENABLED is on, but app/static/witty-editor.js is missing. Install
-        it with <code>python bin/fetch_editor.py</code>, or build the image with
-        <code>--build-arg TEXTAREA=true</code>. See docs/textarea.md.
+        it with <code>python bin/fetch_editor.py</code>; the Docker image
+        carries it already. See docs/textarea.md.
       </p>
     </main>
   </body>
