@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:d49b8a1c08e2a6d4cc871354341d13a888ac9c1e68d99d3e1407264ac5770b6a"
+content_hash = "sha256:e044dce7602c9141efec05ebd64b349e43c963d775b373918af672912aff7ae9"
 
 [[metadata.targets]]
 requires_python = ">3.12,<3.15"
@@ -2343,16 +2343,6 @@ groups = ["dev"]
 files = [
     {file = "platformdirs-4.5.0-py3-none-any.whl", hash = "sha256:e578a81bb873cbb89a41fcc904c7ef523cc18284b7e3b3ccf06aca1403b7ebd3"},
     {file = "platformdirs-4.5.0.tar.gz", hash = "sha256:70ddccdd7c99fc5942e9fc25636a8b34d04c24b335100223152c2803e4063312"},
-]
-
-[[package]]
-name = "platformshconfig"
-version = "2.4.0"
-summary = "Small helper to access Platform.sh environment variables."
-groups = ["default"]
-files = [
-    {file = "platformshconfig-2.4.0-py3-none-any.whl", hash = "sha256:ff1e29719d2789f6d164e1abd42dbecec1c535e5e741161ba177cec34bfdd6de"},
-    {file = "platformshconfig-2.4.0.tar.gz", hash = "sha256:3eb95a514de57ce3341690fd3e0a61e6fa8c858a0793810a29fcce40691254a2"},
 ]
 
 [[package]]

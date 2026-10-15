@@ -73,8 +73,8 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| PLATFORM_ENVIRONMENT_TYPE   | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
-| PLATFORM_ENVIRONMENT        | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
+| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod. Falls back to `PLATFORM_ENVIRONMENT_TYPE`, which Platform.sh/Upsun sets.         |
+| ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment). Falls back to `PLATFORM_ENVIRONMENT`.                                                                    |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
@@ -356,7 +356,7 @@ Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=tru
 | SENTRY_TRACES_SAMPLE_RATE   | 0.0     | Performance tracing sample rate (0.0–1.0). |
 | SENTRY_PROFILES_SAMPLE_RATE | 0.0     | Profiling sample rate (0.0–1.0).           |
 
-Sentry uses `PLATFORM_ENVIRONMENT` as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
+Sentry uses `ENVIRONMENT` (or `PLATFORM_ENVIRONMENT`) as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
 
 ## LanguageTool
 
@@ -673,10 +673,11 @@ anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
 
 ## Platform.sh
 
-The app auto-detects Platform.sh relationships and environment:
+Nothing in the app requires Platform.sh/Upsun; every setting has a plain name. What it does there is pick up the variables the platform sets by itself, so [.upsun/config.yaml](../.upsun/config.yaml) needs no extra configuration:
 
-- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis.
-- `PLATFORM_APPLICATION_NAME` is used when Blackfire continuous profiling is enabled.
+- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis, overriding `LANGUAGETOOL_API` and `REDIS_HOST`/`REDIS_PORT`. Elsewhere it is unset and those are used as given.
+- `PLATFORM_ENVIRONMENT_TYPE` and `PLATFORM_ENVIRONMENT` stand in for `ENVIRONMENT_TYPE` and `ENVIRONMENT` where those are not set.
+- `PLATFORM_APPLICATION_NAME` stands in for `BLACKFIRE_APPLICATION_NAME`.
 
 ## Optional profiling (Blackfire)
 
@@ -684,7 +685,7 @@ To enable continuous profiling in supported environments, set:
 
 ```bash
 BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
-PLATFORM_APPLICATION_NAME=app
+BLACKFIRE_APPLICATION_NAME=app
 ```
 
 ## Testing variables
