@@ -309,10 +309,14 @@ class Settings(BaseSettings):
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
 
-        # "//host" and "/\host" are read by browsers as another host.
+        # "//host" and "/\host" are read by browsers as another host, and they
+        # drop tabs and newlines first, so "/\t/host" is one too.
         redirect = settings.root_redirect
         if redirect and (
-            not redirect.startswith("/") or redirect.startswith("//") or "\\" in redirect
+            not redirect.startswith("/")
+            or redirect.startswith("//")
+            or "\\" in redirect
+            or any(c.isspace() or not c.isprintable() for c in redirect)
         ):
             raise ValueError(
                 f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"

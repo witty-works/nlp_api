@@ -3071,7 +3071,15 @@ def test_root_redirect():
 
 
 @pytest.mark.parametrize(
-    "target", ["//evil.example", "/\\evil.example", "https://evil.example", "textarea"]
+    "target",
+    [
+        "//evil.example",
+        "/\\evil.example",
+        "/\t/evil.example",
+        "/\n/evil.example",
+        "https://evil.example",
+        "textarea",
+    ],
 )
 def test_root_redirect_stays_on_this_host(monkeypatch, target):
     monkeypatch.setenv("ROOT_REDIRECT", target)
