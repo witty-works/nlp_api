@@ -347,6 +347,31 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
         snapshot.assert_match(output, "output.json")
 
 
+def test_inklusivum_logo_only_on_suggestions_in_the_inklusivum(set_redis):
+    """The logo says "this suggestion is in your chosen system": on "De
+    Lehrere" and "En", not on a neutral rewording such as Mannstunden ->
+    Arbeitsstunden, although that is a gendered finding too."""
+    logo = "https://www.witty.works/assets/media/vgd-icon-bunt.svg"
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.4/check",
+            json={
+                "text": "Der Lehrer kam. Er plant 40 Mannstunden.",
+                "config": {"german_gender_ending": "de-e"},
+            },
+            headers={"X-TESTING-AUTH": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        icons = {
+            result["text"]: result["explanation"].get("icon_image")
+            for result in response.json()["results"]
+        }
+
+    assert icons["Der Lehrer"] == logo
+    assert icons["Er"] == logo
+    assert icons["Mannstunden"] != logo
+
+
 def test_api_missing_data():
     with TestClient(app) as client:
         response = client.post("/v2.4/check")
