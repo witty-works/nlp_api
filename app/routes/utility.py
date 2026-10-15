@@ -79,7 +79,8 @@ async def get_health(
 @router.get("/version")
 async def get_version(context: AppContext = Depends(get_app_context)) -> dict:
     """Identify exactly what this service runs: app version, git revision,
-    spaCy version and the loaded model versions. Clients stamp evaluation
+    spaCy version, the loaded model versions and the rules file (with
+    whether it is the image's own, see Db.rules_info). Clients stamp evaluation
     state with this so results computed against an older build are
     recognizably stale instead of silently outdated."""
     models = {}
@@ -95,6 +96,7 @@ async def get_version(context: AppContext = Depends(get_app_context)) -> dict:
         "git_revision": context.settings.git_revision,
         "spacy_version": spacy.__version__,
         "models": models,
+        "rules": context.db.rules_info(),
     }
 
 
@@ -129,6 +131,9 @@ def get_openapi_json(request: Request) -> dict:  # pragma: no cover
 
 @router.get("/", include_in_schema=False)
 def get_root(context: AppContext = Depends(get_app_context)):
+    if context.settings.root_redirect:
+        return RedirectResponse(url=context.settings.root_redirect, status_code=302)
+
     if (
         not context.settings.is_prod and context.settings.testing is False
     ):  # pragma: no cover

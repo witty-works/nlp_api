@@ -21,6 +21,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app, context
 from app.routes.textarea import PAGE, PAGE_SCRIPT
+from app.settings import Settings
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -99,7 +100,6 @@ def test_missing_script_says_how_to_install_it(textarea):
         response = client.get("/textarea")
         assert response.status_code == 503
         assert "bin/fetch_editor.py" in response.text
-        assert "TEXTAREA=true" in response.text
 
         assert client.get("/textarea/witty-editor.js").status_code == 404
 
@@ -163,7 +163,7 @@ def test_page_explains_itself_and_where_to_get_a_key(textarea):
     ) in page
     # The hints are tied to their fields for screen readers.
     for hint in ("api-key-help", "prompt-help"):
-        assert f'aria-describedby="{hint}"' in page
+        assert re.search(rf'aria-describedby="[^"]*\b{hint}\b[^"]*"', page)
         assert f'id="{hint}"' in page
 
 
@@ -206,14 +206,17 @@ def test_the_key_goes_only_into_x_key():
 
 
 def test_the_page_calls_routes_that_exist():
-    """Every API path the page fetches is a POST route of this API."""
-    called = set(re.findall(r'fetch\("(/[^"]+)"', page_script()))
-    assert called, "the page fetches nothing"
+    """Every API path the page fetches is a route of this API, with the
+    method the page uses (GET where a fetch names none)."""
+    calls = re.findall(r'fetch\("(/[^"]+)"(, \{[^}]*\})?', page_script())
+    assert calls, "the page fetches nothing"
 
-    posts = {
-        route.path for route in app.routes if "POST" in getattr(route, "methods", set())
-    }
-    assert called <= posts, called - posts
+    methods = {}
+    for route in app.routes:
+        methods.setdefault(route.path, set()).update(getattr(route, "methods", set()))
+    for path, options in calls:
+        method = "POST" if 'method: "POST"' in options else "GET"
+        assert method in methods.get(path, set()), (path, method)
 
 
 def load_fetch_editor():
@@ -529,6 +532,75 @@ def test_page_limits_match_the_api(textarea):
     assert "__" not in page
 
 
+def page_config(page):
+    return json.loads(
+        re.search(
+            r'<script id="page-config" type="application/json">(.*?)</script>', page
+        ).group(1)
+    )
+
+
+def test_a_refused_key_is_told_where_to_ask(textarea, monkeypatch):
+    """LLM_ALLOWED_USERS keeps a key from the language model; the page then
+    says whom to ask, but only where the server has a model to grant."""
+    monkeypatch.setattr(context.settings, "textarea_contact", "lukas.smith@bfh.ch")
+
+    with TestClient(app) as client:
+        config = page_config(client.get("/textarea").text)
+        assert config["llmAccessRequest"] == (
+            "mailto:lukas.smith@bfh.ch?subject=Access%20to%20the%20language%20model"
+        )
+
+        monkeypatch.setattr(context.settings, "textarea_contact", "")
+        assert page_config(client.get("/textarea").text)["llmAccessRequest"] == ""
+
+    script = page_script()
+    # What the key may do comes from /v2.0/features, not from inferring it.
+    assert 'fetch("/v2.0/features", { headers })' in script
+    assert "(await features.json()).features?.llm ?? capability" in script
+    assert "if (llm.available && CONFIG.llmAccessRequest) {" in script
+    # Both the checkbox and the prompt say so, before anything is run, next
+    # to their labels and read out with them.
+    assert "for (const note of [aiNote, promptNote]) {" in script
+    assert "llmRefusal(note);" in script
+    checkbox = re.search(r'<span class="checkbox">.*?</span>\s*</span>', PAGE, re.S).group(0)
+    assert 'id="ai-suggestions-note"' in checkbox
+    assert 'aria-describedby="ai-suggestions-note ai-suggestions-help"' in PAGE
+    label_row = re.search(r'<span class="label-row">.*?</span>\s*</span>', PAGE, re.S).group(0)
+    assert '<label for="prompt">' in label_row
+    assert 'id="prompt-note"' in label_row
+    assert 'aria-describedby="prompt-note prompt-help"' in PAGE
+    # Refused anyway (access changed since): the key is checked again.
+    assert "if (response.status === 403) await checkApiKey();" in script
+
+
+def test_the_page_says_what_this_server_offers():
+    """Asked without a key, so it shows before one is entered; hidden until
+    the server has answered."""
+    block = re.search(r'<div id="server-features".*?</div>', PAGE, re.S).group(0)
+    assert "hidden" in block
+    assert "<ul></ul>" in block
+    assert ".help[hidden] {" in PAGE
+
+    script = page_script()
+    assert 'fetch("/v2.0/features")\n' in script
+    # Every language the menu offers is listed, missing ones too, by the
+    # names the menu shows; then spelling and grammar, and the model.
+    assert "[...langSelect.options]" in script
+    assert 'option.value !== "auto"' in script
+    assert "loaded.includes(option.value)" in script
+    for wording in ('"Spelling and grammar"', '"AI suggestions and prompts"'):
+        assert wording in script
+    assert '(available ? "available" + mark : "not available")' in script
+    # The model is marked: available here does not mean for every key.
+    assert '["AI suggestions and prompts", features.llm.available, "*"]' in script
+    assert 'id="server-features-note" hidden' in PAGE
+    assert "depends on its permissions" in PAGE
+    # The checkbox sits right below the list it belongs to.
+    assert PAGE.index('id="server-features"') < PAGE.index('id="ai-suggestions"')
+    assert PAGE.index('id="ai-suggestions"') < PAGE.index('id="api-key"')
+
+
 def test_a_prompt_run_is_one_at_a_time_and_keeps_the_editor_still():
     script = page_script()
     # Ctrl/Cmd+Enter submits past a disabled button, so the handler checks.
@@ -564,6 +636,76 @@ def test_imprint_link_is_the_deployments(textarea, monkeypatch):
         assert "javascript:" not in page
 
 
+@pytest.fixture
+def imprint_file(textarea, monkeypatch, tmp_path):
+    imprint = tmp_path / "imprint.md"
+    imprint.write_text(
+        "# Impressum\n\nBerner Fachhochschule, [Kontakt](mailto:dsl@bfh.ch)\n\n"
+        '<script>alert(1)</script>\n\n[click](javascript:alert(1))\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(context.settings, "textarea_imprint_file", str(imprint))
+
+    return imprint
+
+
+def test_imprint_from_a_markdown_file(imprint_file):
+    """A deployment with no imprint page of its own gets one rendered here,
+    linked from the footer."""
+    with TestClient(app) as client:
+        page = client.get("/textarea").text
+        assert '<a href="/textarea/imprint">Imprint</a>' in page
+
+        response = client.get("/textarea/imprint")
+        assert response.status_code == 200
+        assert '<html lang="en">' in response.text
+        assert "<h1>Impressum</h1>" in response.text
+        assert '<a href="mailto:dsl@bfh.ch">Kontakt</a>' in response.text
+        assert response.headers["content-security-policy"].startswith(
+            "default-src 'self'"
+        )
+
+
+def test_imprint_file_cannot_put_a_script_on_the_page(imprint_file):
+    with TestClient(app) as client:
+        imprint = client.get("/textarea/imprint").text
+        assert "<script>" not in imprint
+        assert "&lt;script&gt;" in imprint
+        assert 'href="javascript:' not in imprint
+
+
+def test_imprint_is_public_only_where_there_is_one(textarea, key_gate, monkeypatch, tmp_path):
+    with TestClient(app) as client:
+        # Without a file it is an unknown path, closed like any other.
+        assert client.get("/textarea/imprint").status_code == 401
+
+        imprint = tmp_path / "imprint.md"
+        imprint.write_text("Imprint", encoding="utf-8")
+        monkeypatch.setattr(context.settings, "textarea_imprint_file", str(imprint))
+        assert client.get("/textarea/imprint").status_code == 200
+
+
+def test_imprint_without_a_file_is_not_found(textarea):
+    with TestClient(app) as client:
+        assert client.get("/textarea/imprint").status_code == 404
+
+
+def test_imprint_misconfiguration_stops_the_start(monkeypatch, tmp_path):
+    """Both an address and a file, or a file that is not there."""
+    imprint = tmp_path / "imprint.md"
+    imprint.write_text("Imprint", encoding="utf-8")
+
+    monkeypatch.setenv("TEXTAREA_IMPRINT_FILE", str(imprint))
+    monkeypatch.setenv("TEXTAREA_IMPRINT_URL", "https://www.witty.works/impressum")
+    with pytest.raises(ValueError, match="both set"):
+        Settings.factory()
+
+    monkeypatch.delenv("TEXTAREA_IMPRINT_URL")
+    monkeypatch.setenv("TEXTAREA_IMPRINT_FILE", str(tmp_path / "missing.md"))
+    with pytest.raises(ValueError, match="cannot be read"):
+        Settings.factory()
+
+
 def test_ai_suggestions_are_off_until_ticked():
     """Each AI suggestion is an LLM request, so the editor starts without
     them; the page's own checkbox turns them on, kept in step with the
@@ -573,9 +715,8 @@ def test_ai_suggestions_are_off_until_ticked():
     assert "llmAlternatives: false" in script
     assert "editor.updateSettings({ llmAlternatives: aiSuggestions.checked })" in script
     assert "aiSuggestions.checked = next.llmAlternatives" in script
-    # The server reports a refused LLM as forced off.
+    # The server reports what the key may do with the language model.
     assert 'fetch("/v2.0/auth"' in script
-    assert 'setting?.status === "force" && setting.value === false' in script
 
     box = re.search(r'<input\s[^>]*id="ai-suggestions"[^>]*>', PAGE).group(0)
     assert 'type="checkbox"' in box
@@ -585,12 +726,14 @@ def test_ai_suggestions_are_off_until_ticked():
 def test_nothing_can_be_typed_or_run_without_a_working_key():
     """The editor, the prompt and its button stay disabled until /v2.0/auth
     accepts the key, and are disabled again when it is changed to one that
-    does not work."""
+    does not work. The prompt and AI suggestions also need the key to be
+    allowed the language model."""
     script = page_script()
 
-    assert "prompt.disabled = !keyValid;" in script
-    assert "run.disabled = !keyValid || running;" in script
-    assert "aiSuggestions.disabled = !(keyValid && llmAllowed);" in script
+    assert "const llmUsable = keyValid && llm.allowed;" in script
+    assert "prompt.disabled = !llmUsable;" in script
+    assert "run.disabled = !llmUsable || running;" in script
+    assert "aiSuggestions.disabled = !llmUsable;" in script
     # Applied once before any key is checked, so the page starts disabled.
     startup = "// Disabled until a key is checked and works.\napplyInputState();"
     assert script.index(startup) > script.index("const TEXT_MAX")

@@ -161,15 +161,23 @@ These were inferred by analogy while the association's web pages were the only s
 
 ## Logo instead of the sad-face icon (done)
 
-When the Inklusivum is the configured `german_gender_ending`, **all** gendered
-findings carry the Inklusivum logo in place of the emoji icon — the logo
-signals "this suggestion is in your chosen system", which holds for every
-gendered suggestion under that config, not only for forms the Inklusivum
-engine generated.
+When the Inklusivum is the configured `german_gender_ending`, a gendered
+finding whose suggestions include a form in the Inklusivum carries the
+Inklusivum logo in place of the emoji icon — the logo signals "this
+suggestion is in your chosen system", whichever rule produced it.
 
-This is wired and visible in the snapshots: every `gender-orientation` finding
-under `de-e` carries `explanation.icon_image` pointing at
-`vgd-icon-bunt.svg`, and no finding in another category does. Older clients
+That is decided by the suggestion, not by the subcategory. Until October 2026
+it was every `gender-orientation` finding, which put the logo on neutral
+rewordings that are in no gender system at all: "Mannstunden" →
+"Arbeitsstunden" (`hidden_image`), "Damen und Herren" → "Geehrte Gäste". The
+subcategory cannot tell the two apart: `hidden_image` holds both
+"Mannstunden" and the Inklusivum article pass's "einer" → "einey". So an
+alternative is marked (`Alternative.in_gender_format`, internal) where it is
+rendered in the format: from a gender pair (`sie~er` → "En"), as a noun's
+inclusive form ("De Lehrere"), by the Inklusivum article and adjective passes
+("einey", "Geflüchteten"). A finding with at least one such alternative
+carries `explanation.icon_image` pointing at `vgd-icon-bunt.svg`; the others
+keep their emoji, as does every finding in another category. Older clients
 still fall back to the emoji `icon`.
 
 What remains is client-side QA rather than API work: that `icon_image` renders
