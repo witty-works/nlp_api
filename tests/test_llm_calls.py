@@ -122,8 +122,9 @@ def test_calls_beyond_the_minute_budget_are_refused(monkeypatch):
 
     for i in range(3):
         assert asyncio.run(workers[i % 2].handle("hi")) == "ok"
+    over_budget = workers[1].handle("hi")
     with pytest.raises(LlmUnavailable) as refused:
-        asyncio.run(workers[1].handle("hi"))
+        asyncio.run(over_budget)
     assert len(calls) == 3
     assert refused.value.retry_after == 40
     assert llm_error(refused.value, "/test")[1] == {"Retry-After": "40"}

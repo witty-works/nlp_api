@@ -366,7 +366,7 @@ form.addEventListener("submit", async (event) => {
       writeStatus.textContent = failure(response.status, body);
       // Refused although the key check allowed it: access changed since.
       // Asking again shows the refusal with where to ask for access.
-      if (response.status === 403) checkApiKey();
+      if (response.status === 403) await checkApiKey();
       return;
     }
 

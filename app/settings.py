@@ -316,31 +316,7 @@ class Settings(BaseSettings):
         """
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
-
-        # "//host" and "/\host" are read by browsers as another host, and they
-        # drop tabs and newlines first, so "/\t/host" is one too.
-        redirect = settings.root_redirect
-        if redirect and (
-            not redirect.startswith("/")
-            or redirect.startswith("//")
-            or "\\" in redirect
-            or any(c.isspace() or not c.isprintable() for c in redirect)
-        ):
-            raise ValueError(
-                f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"
-            )
-
-        # A broken imprint is a legal problem, not a cosmetic one, so it stops
-        # the start rather than leaving the footer without it.
-        if settings.textarea_imprint_file:
-            if settings.textarea_imprint_url:
-                raise ValueError(
-                    "TEXTAREA_IMPRINT_URL and TEXTAREA_IMPRINT_FILE are both set; use one"
-                )
-            if not os.access(settings.textarea_imprint_file, os.R_OK):
-                raise ValueError(
-                    f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
-                )
+        validate_pages(settings)
 
         settings.sso_configs = {
             "aadb2c": {
@@ -384,6 +360,36 @@ class Settings(BaseSettings):
             apply_platform_relationships(settings)
 
         return settings
+
+
+def validate_pages(settings: Settings) -> None:
+    """Stop the start on a ROOT_REDIRECT or imprint that cannot work, rather
+    than serving a page that sends visitors elsewhere or lacks its imprint."""
+    # "//host" and "/\host" are read by browsers as another host, and they
+    # drop tabs and newlines first, so "/\t/host" is one too.
+    redirect = settings.root_redirect
+    if redirect and (
+        not redirect.startswith("/")
+        or redirect.startswith("//")
+        or "\\" in redirect
+        or any(c.isspace() or not c.isprintable() for c in redirect)
+    ):
+        raise ValueError(
+            f"ROOT_REDIRECT must be a path on this host such as /textarea, got {redirect!r}"
+        )
+
+    # A broken imprint is a legal problem, not a cosmetic one, so it stops
+    # the start rather than leaving the footer without it.
+    if not settings.textarea_imprint_file:
+        return
+    if settings.textarea_imprint_url:
+        raise ValueError(
+            "TEXTAREA_IMPRINT_URL and TEXTAREA_IMPRINT_FILE are both set; use one"
+        )
+    if not os.access(settings.textarea_imprint_file, os.R_OK):
+        raise ValueError(
+            f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
+        )
 
 
 def apply_platform_relationships(settings: Settings) -> None:
