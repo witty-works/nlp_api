@@ -5,7 +5,8 @@ name: release image
 # everything is environment at runtime - so one image serves every
 # deployment; pin it there by digest. See docs/deployment-sizing.md.
 #
-# The test suite is not repeated here: main.yaml runs on the same push.
+# The test suite does not run here: the tagged commit is the one pushed to
+# main, and main.yaml tested it there (it skips tags for that reason).
 
 on:
   push:

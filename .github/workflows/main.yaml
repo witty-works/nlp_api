@@ -1,6 +1,11 @@
 name: run tests
 
-on: [push]
+on:
+  push:
+    # Branches only. A tag points at a commit that was already pushed to a
+    # branch (main, for a release) and tested there; running the suite again
+    # for the same commit costs a run and tells nothing new.
+    branches: ["**"]
 
 env:
   # Context Checker - using local models in CI, remote API not needed
