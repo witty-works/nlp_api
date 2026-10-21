@@ -25,7 +25,7 @@ The editor itself is built and tested in the [browser-extension](https://github.
 python bin/fetch_editor.py
 ```
 
-This downloads the version of [@witty-works/editor](https://www.npmjs.com/package/@witty-works/editor) pinned in [bin/fetch_editor.py](../bin/fetch_editor.py) from the npm registry, checks the tarball against the `sha512` integrity the registry published for that version, and installs the editor script (`witty-editor.js`) and its licence (`witty-editor.js.LICENSE.txt`) into `app/static/`. Both are ignored by git. It needs only the Python standard library, not npm or Node.js. The package is published with npm provenance: its page on npmjs.com links each version to the browser-extension commit and build it came from.
+This downloads the version of [@witty-works/editor](https://www.npmjs.com/package/@witty-works/editor) pinned in [bin/editor-pin.json](../bin/editor-pin.json) from the npm registry, checks the tarball against the `sha512` integrity the registry published for that version, and installs the editor script (`witty-editor.js`) and its licence (`witty-editor.js.LICENSE.txt`) into `app/static/`. Both are ignored by git. It needs only the Python standard library, not npm or Node.js. The package is published with npm provenance: its page on npmjs.com links each version to the browser-extension commit and build it came from.
 
 To build from a checkout of the browser-extension repository instead, for instance to try an unreleased change (needs Node.js and `npm install` done there):
 
@@ -83,7 +83,9 @@ The page's own markup (landmark, labels, live regions for the check and prompt s
 
 ## Updating the editor
 
-Moving to a new version of `@witty-works/editor` is the one step that uses npm, and only on the maintainer's machine:
+Moving to a new version of `@witty-works/editor` is the one step that uses npm. It is usually done by the [editor pin](../.github/workflows/editor-pin.yaml) workflow: every weekday morning (or on demand, from the Actions tab) it runs `--pin` for the newest release and opens a pull request against `dev` from `chore/editor-pin`. A newer release while that pull request is open moves the same pull request on. Check the page against it before merging, as below. Its push, made with the default `GITHUB_TOKEN`, starts no workflow, so it dispatches the test suite on the branch itself; to rerun it, start "run tests" on `chore/editor-pin` from the Actions tab. "Allow GitHub Actions to create and approve pull requests" has to be on in the repository's Actions settings.
+
+By hand:
 
 ```bash
 python bin/fetch_editor.py --pin 2.0.2
