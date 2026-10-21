@@ -407,6 +407,10 @@ def test_pin_accepts_only_our_publish_workflow():
     with pytest.raises(fetch_editor.FetchError, match="invalid or missing"):
         check(failed)
 
+    # What npm 10 answers for a package it verified.
+    with pytest.raises(fetch_editor.FetchError, match="needs npm 11"):
+        check({"invalid": [], "missing": []})
+
 
 def test_pin_writes_the_pin_file(tmp_path):
     fetch_editor = load_fetch_editor()
