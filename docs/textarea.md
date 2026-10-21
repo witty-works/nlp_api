@@ -83,7 +83,7 @@ The page's own markup (landmark, labels, live regions for the check and prompt s
 
 ## Updating the editor
 
-Moving to a new version of `@witty-works/editor` is the one step that uses npm. It is usually done by the [editor pin](../.github/workflows/editor-pin.yaml) workflow: every weekday morning (or on demand, from the Actions tab) it runs `--pin` for the newest release and opens a pull request against `dev` from `chore/editor-pin`. A newer release while that pull request is open moves the same pull request on. Check the page against it before merging, as below. Its push, made with the default `GITHUB_TOKEN`, starts no workflow, so it dispatches the test suite on the branch itself; to rerun it, start "run tests" on `chore/editor-pin` from the Actions tab. "Allow GitHub Actions to create and approve pull requests" has to be on in the repository's Actions settings.
+Moving to a new version of `@witty-works/editor` is the one step that uses npm, version 11 or later. It is usually done by the [editor pin](../.github/workflows/editor-pin.yaml) workflow: every weekday morning (or on demand, from the Actions tab) it runs `--pin` for the newest release and opens a pull request against `dev` from `chore/editor-pin`. A newer release while that pull request is open moves the same pull request on. Check the page against it before merging, as below. Its push, made with the default `GITHUB_TOKEN`, starts no workflow, so it dispatches the test suite on the branch itself; to rerun it, start "run tests" on `chore/editor-pin` from the Actions tab. "Allow GitHub Actions to create and approve pull requests" has to be on in the repository's Actions settings.
 
 By hand:
 

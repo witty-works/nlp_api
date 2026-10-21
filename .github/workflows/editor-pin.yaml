@@ -37,11 +37,11 @@ jobs:
         with:
           ref: ${{ env.BASE }}
 
-      # --pin needs npm for `npm audit signatures`, and a recent one for its
-      # --include-attestations.
+      # --pin needs npm 11 for `npm audit signatures`: npm 10 (node 22) leaves
+      # the verified packages out of its --json answer.
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - uses: actions/setup-python@v5
         with:

@@ -208,6 +208,13 @@ def _check_provenance(audit: dict, package: str, version: str) -> str:
             + json.dumps({k: audit.get(k) for k in ("invalid", "missing")})
         )
 
+    # npm before 11 reports only the failures, never what it verified.
+    if "verified" not in audit:
+        raise FetchError(
+            "npm audit signatures does not list the verified packages; --pin "
+            "needs npm 11 or later"
+        )
+
     entry = next(
         (
             item
