@@ -1,0 +1,119 @@
+name: editor pin
+
+# Opens a pull request against dev that moves bin/editor-pin.json to the
+# newest @witty-works/editor release, once fetch_editor.py --pin has verified
+# its signature and provenance. One branch, chore/editor-pin, carries the
+# bump: a newer release while the pull request is open moves the same pull
+# request on, so there is never more than one. See docs/textarea.md.
+#
+# A push made with the default GITHUB_TOKEN starts no other workflow, but a
+# workflow_dispatch does, so the test suite (main.yaml) is dispatched on the
+# branch after the push. Its checks show on the pull request.
+
+on:
+  schedule:
+    # Weekdays, early morning in Zurich.
+    - cron: "17 5 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write # to dispatch main.yaml
+
+concurrency:
+  group: editor-pin
+
+env:
+  BRANCH: chore/editor-pin
+  BASE: dev
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BASE }}
+
+      # --pin needs npm for `npm audit signatures`, and a recent one for its
+      # --include-attestations.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Newest release
+        id: release
+        run: |
+          pinned=$(jq -r .version bin/editor-pin.json)
+          latest=$(npm view @witty-works/editor version --prefer-online)
+          echo "pinned $pinned, latest $latest"
+          # Only ever forward: a latest tag moved back is for a person to look at.
+          newest=$(printf '%s\n%s\n' "$pinned" "$latest" | sort -V | tail -n1)
+          if [ "$latest" != "$pinned" ] && [ "$newest" = "$latest" ]; then
+            echo "version=$latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open pull request already at that version
+        id: open
+        if: steps.release.outputs.version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          number=$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number --jq '.[0].number // empty')
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          if [ -n "$number" ] && git fetch --quiet origin "$BRANCH" \
+            && [ "$(git show FETCH_HEAD:bin/editor-pin.json | jq -r .version)" = "$VERSION" ]; then
+            echo "#$number already pins $VERSION"
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pin and install
+        if: steps.release.outputs.version && !steps.open.outputs.current
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          python bin/fetch_editor.py --pin "$VERSION"
+          # The download the Docker build makes, against the new pin.
+          python bin/fetch_editor.py --dest "$RUNNER_TEMP/editor"
+
+      - name: Push and open pull request
+        if: steps.release.outputs.version && !steps.open.outputs.current
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+          NUMBER: ${{ steps.open.outputs.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git commit -m "pin @witty-works/editor $VERSION" bin/editor-pin.json
+          # The branch is this workflow's alone, so it is rewritten from dev.
+          git push --force origin "$BRANCH"
+
+          title="pin @witty-works/editor $VERSION"
+          body=$(cat <<EOF
+          Moves the editor of the /textarea page to [$VERSION](https://www.npmjs.com/package/@witty-works/editor/v/$VERSION), after \`fetch_editor.py --pin\` verified its registry signature and that its provenance names the browser-extension repository's publish workflow and the \`$VERSION\` tag.
+
+          Before merging, check the page against it (see docs/textarea.md, "Updating the editor"):
+
+          \`\`\`bash
+          git switch $BRANCH && python bin/fetch_editor.py
+          \`\`\`
+
+          The page uses the component's \`mount()\` handle and its \`describedBy\`, \`maxRequestLength\` and \`onStatus\` options; a release that changes those needs the page changed with it.
+          EOF
+          )
+          if [ -n "$NUMBER" ]; then
+            gh pr edit "$NUMBER" --title "$title" --body "$body"
+          else
+            gh pr create --base "$BASE" --head "$BRANCH" --title "$title" --body "$body"
+          fi
+
+          gh workflow run main.yaml --ref "$BRANCH"

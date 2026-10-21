@@ -6,6 +6,9 @@ on:
     # branch (main, for a release) and tested there; running the suite again
     # for the same commit costs a run and tells nothing new.
     branches: ["**"]
+  # For a push that started no run: one made with the default GITHUB_TOKEN,
+  # like editor-pin.yaml's, which dispatches this itself.
+  workflow_dispatch:
 
 env:
   # Context Checker - using local models in CI, remote API not needed
