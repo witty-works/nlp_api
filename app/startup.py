@@ -33,9 +33,7 @@ async def lifespan(app: FastAPI, context: AppContext):
         try:
             from blackfire_conprof.profiler import Profiler
 
-            app_name = os.environ.get("BLACKFIRE_APPLICATION_NAME") or os.environ.get(
-                "PLATFORM_APPLICATION_NAME"
-            )
+            app_name = os.environ.get("BLACKFIRE_APPLICATION_NAME")
             profiler = Profiler(application_name=app_name)
             profiler.start()
 

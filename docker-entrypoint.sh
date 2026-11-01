@@ -20,8 +20,7 @@ fi
 # setting addresses the same thing from the other side). It is cheap here
 # precisely because of --preload: the replacement is forked from the master,
 # which still holds the loaded models, so nothing is re-read from disk. The
-# jitter keeps workers from recycling in lockstep. The Upsun deployment ran
-# with both set; 0 disables.
+# jitter keeps workers from recycling in lockstep. 0 disables.
 exec gunicorn app.main:app \
     --preload \
     --bind "0.0.0.0:${PORT:-8081}" \
