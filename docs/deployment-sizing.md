@@ -43,7 +43,7 @@ So the container must be **built**, not pulled. `compose.yml` does that; the ign
 
 **Appending is what rides LanguageTool's own updates — keep it.** The `>>` in the Dockerfile appends our list to the *base image's* `ignore.txt`, and every build starts from a fresh base. So a new LanguageTool release brings its new ignore list and ours goes on top; nothing accumulates, because the merge happens at build time and is never committed. `de_ignore.txt` holds only our own 1,081 words.
 
-The Upsun build hook does the opposite — it *overwrites* `ignore.txt` with ours (`cp`), discarding LanguageTool's ~244,000 German entries. That is the variant that cannot ride updates, and it should report noticeably more spelling errors. Upsun also pins 6.3 where the Dockerfile pinned 6.2, so the two have been drifting.
+The Upsun build hook did the opposite — it *overwrote* `ignore.txt` with ours (`cp`), discarding LanguageTool's ~244,000 German entries. That variant could not ride updates, and it should have reported noticeably more spelling errors.
 
 Redundancy between the two lists is not a problem in practice. Against 6.8, only **10 of our 1,081 German entries and 8 of our 430 English ones** are words LanguageTool now ships itself. Pruning them is optional housekeeping, not maintenance the update depends on — worth a look when bumping `LT_VERSION`, not worth automating at 1%.
 
@@ -180,7 +180,7 @@ From the last Upsun invoice at full browser-extension usage (January 2025, 31 da
 | App memory | 20.9 GB |
 | Services | 0.2 CPU, 0.69 GB |
 
-**Read the memory figure carefully — it is not a working set.** [.upsun/config.yaml](../.upsun/config.yaml) defines *two* applications, `app` and `languagetool`, both on the `HIGHER_MEMORY` profile, so the 20.9 GB covers the API and LanguageTool together. Redis is the separate `rediscache` service, which is the 0.69 GB line. And the figure is a monthly average over a schedule: cron jobs scaled instance counts up at 07:30 and down at 23:30 on weekdays, so the weekday peak allocation was higher than 20.9 GB and the nightly floor lower. Allocated instances × hours, in other words, not what one container needed.
+**Read the memory figure carefully — it is not a working set.** The Upsun configuration defined *two* applications, `app` and `languagetool`, both on the `HIGHER_MEMORY` profile, so the 20.9 GB covers the API and LanguageTool together. Redis is the separate `rediscache` service, which is the 0.69 GB line. And the figure is a monthly average over a schedule: cron jobs scaled instance counts up at 07:30 and down at 23:30 on weekdays, so the weekday peak allocation was higher than 20.9 GB and the nightly floor lower. Allocated instances × hours, in other words, not what one container needed.
 
 Whether the context checker was part of it cannot be settled from the repository. The build hook downloads only the fastText language model, not the SetFit weights, so if the context checker was running it was most likely the remote variant — in which case its cost sits wherever that service was hosted and is not in this invoice at all.
 
