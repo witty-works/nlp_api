@@ -1,9 +1,6 @@
 from typing import Optional
 from functools import lru_cache
-import json
-import base64
 import os
-from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType, LlmAccessType
 
@@ -18,17 +15,10 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    # "production" turns off what only development wants (see is_prod). The
-    # PLATFORM_* names are what Platform.sh/Upsun sets by itself, so they still
-    # count; the plain names win where both are set.
-    environment_type: str = Field(
-        "development",
-        validation_alias=AliasChoices("ENVIRONMENT_TYPE", "PLATFORM_ENVIRONMENT_TYPE"),
-    )
+    # "production" turns off what only development wants (see is_prod).
+    environment_type: str = "development"
     # The environment's name, as Sentry reports it.
-    environment: str = Field(
-        "local", validation_alias=AliasChoices("ENVIRONMENT", "PLATFORM_ENVIRONMENT")
-    )
+    environment: str = "local"
     languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
@@ -39,7 +29,6 @@ class Settings(BaseSettings):
     # as the desktop app pointed at localhost. The /lt/v2/... variant is
     # always on; this only adds the root mount.
     languagetool_compat_root: bool = False
-    platform_relationships: Optional[str] = ""
     api_docs_username: Optional[str] = ""
     api_docs_password: Optional[str] = ""
     # Guards /docs and the development helpers: /save_openapi_json, /lemmatize,
@@ -310,9 +299,8 @@ class Settings(BaseSettings):
     def factory():
         """Construct a fully initialized Settings instance.
 
-        Populates derived fields (is_prod, minimum_versions,
-        platform relationship overrides, and Redis credentials) based on
-        environment variables and Platform.sh configuration.
+        Populates derived fields (is_prod, sso_configs, minimum_versions)
+        based on environment variables.
         """
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
@@ -356,9 +344,6 @@ class Settings(BaseSettings):
                 settings.minimum_version_witty_editor
             )
 
-        if settings.platform_relationships:
-            apply_platform_relationships(settings)
-
         return settings
 
 
@@ -390,28 +375,6 @@ def validate_pages(settings: Settings) -> None:
         raise ValueError(
             f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
         )
-
-
-def apply_platform_relationships(settings: Settings) -> None:
-    """Platform.sh/Upsun: point LanguageTool and Redis at the services
-    PLATFORM_RELATIONSHIPS describes (base64 JSON, a list of endpoints per
-    relationship name, see .upsun/config.yaml). Elsewhere the variable is not
-    set and LANGUAGETOOL_API and REDIS_* are used as given."""
-    relationships = json.loads(base64.b64decode(settings.platform_relationships))
-    settings.platform_relationships = relationships
-
-    if "languagetool" in relationships:
-        endpoint = relationships["languagetool"][0]
-        settings.languagetool_api = (
-            f"{endpoint['scheme']}://{endpoint['host']}:{endpoint['port']}/v2"
-        )
-        settings.languagetool_verify_ssl = False
-
-    if "rediscache" in relationships:
-        endpoint = relationships["rediscache"][0]
-        settings.redis_host = endpoint["host"]
-        settings.redis_port = endpoint["port"]
-        settings.redis_verify_ssl = False
 
 
 @lru_cache(maxsize=1)

@@ -8,8 +8,6 @@
 - [Update dependencies locally](#update-dependencies-locally)
 - [Add new package](#add-new-package)
 - [Docker image](#docker-image)
-- [Install Platform.sh CLI](#install-platformsh-cli)
-  - [Adjust size on platform.sh](#adjust-size-on-platformsh)
 - [Run Locally](#run-locally)
 - [Profiling locally with Blackfire](#profiling-locally-with-blackfire)
 - [Running against a dashboard on Lando](#running-against-a-dashboard-on-lando)
@@ -135,31 +133,6 @@ After making changes in the code or in the Dockerfile, build a fresh image:
 pdm export --prod -o requirements.txt
 DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
 docker run nlpapi
-```
-
-## Install Platform.sh CLI
-
-- Run `platform login`
-- Run `platform project:set-remote`
-- Run `platform list` to find out what commands are available
-- Run `platform help [command]` to find out details about a command
-
-See https://docs.platform.sh/development/cli.html for details
-
-### Adjust size on platform.sh
-
-Adjust server size:
-
-```bash
-platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
-  {"app": {"resources": {"profile_size": "8"}},"languagetool": {"resources": {"profile_size": "4"}}}}'
-```
-
-Adjust instance count:
-
-```bash
-platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
-  {"app": {"resources": {"instance_count": "2"}},"languagetool": {"resources": {"instance_count": "2"}}}}'
 ```
 
 ## Run Locally
@@ -332,15 +305,6 @@ reachable from outside, or keep the endpoints off the public routing.
 ## Production Deployment
 
 Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and set `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
-
-If the build fails due to "No space left on device" while installing dependencies run:
-
-```bash
-platform project:clear-build-cache
-```
-
-See:
-https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
 
 ---
 

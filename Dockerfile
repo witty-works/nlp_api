@@ -133,8 +133,8 @@ COPY ./training_data /code/training_data
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 # gitignored, so a build from a fresh checkout would otherwise ship an image
-# that only fails once language detection is first used. Checked against the
-# hash the Upsun build verifies too, since it is downloaded unsigned.
+# that only fails once language detection is first used. Checked against a
+# pinned hash, since it is downloaded unsigned.
 RUN test -s /code/training_data/lid.176.bin \
     || { echo "training_data/lid.176.bin is missing, see docs/setup.md" >&2; exit 1; }
 RUN echo "e613bda316ecb4f5e1924140eedf81b81c087d9a  /code/training_data/lid.176.bin" \

@@ -21,14 +21,13 @@
 - [Slack](#slack)
 - [Textarea page](#textarea-page)
 - [Authentication](#authentication)
-- [Platform.sh](#platformsh)
 - [Optional profiling (Blackfire)](#optional-profiling-blackfire)
 - [What's configured by default](#whats-configured-by-default)
 - [Changing spaCy models](#changing-spacy-models)
 
 ---
 
-The API is configured via environment variables (loaded from a local .env file and the process environment using pydantic-settings). Below you'll find all relevant options with defaults, what they do, and sample configs for local, Docker, and Platform.sh deployments.
+The API is configured via environment variables (loaded from a local .env file and the process environment using pydantic-settings). Below you'll find all relevant options with defaults, what they do, and sample configs for local and Docker deployments.
 
 ## Notes
 
@@ -73,8 +72,8 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod. Falls back to `PLATFORM_ENVIRONMENT_TYPE`, which Platform.sh/Upsun sets.         |
-| ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment). Falls back to `PLATFORM_ENVIRONMENT`.                                                                    |
+| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
+| ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
@@ -356,7 +355,7 @@ Enable error and performance telemetry. If `SENTRY_DSN` is empty or `TESTING=tru
 | SENTRY_TRACES_SAMPLE_RATE   | 0.0     | Performance tracing sample rate (0.0–1.0). |
 | SENTRY_PROFILES_SAMPLE_RATE | 0.0     | Profiling sample rate (0.0–1.0).           |
 
-Sentry uses `ENVIRONMENT` (or `PLATFORM_ENVIRONMENT`) as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
+Sentry uses `ENVIRONMENT` as the environment name and includes FastAPI/Starlette/AIOHTTP integrations. Sensitive request variables and input text are sanitized before send.
 
 ## LanguageTool
 
@@ -371,8 +370,6 @@ Optional spell/grammar checking. You can use the public API or self-host Languag
 | LANGUAGETOOL_COMPAT_ROOT | false                              | Serve the [LanguageTool-compatible API](./api.md#languagetool-compatible-api) additionally at the root (`/v2/check`, ...), the exact path layout of a real LanguageTool server. Needed for clients that cannot be given a path in their server URL, e.g. the desktop app pointed at localhost. |
 
 Self-hosted: https://github.com/languagetool-org/languagetool
-
-Platform.sh integration: If `PLATFORM_RELATIONSHIPS` is present, the app auto-detects the `languagetool` relationship and rewrites `LANGUAGETOOL_API` to the internal service URL with `LANGUAGETOOL_VERIFY_SSL=false`.
 
 ## Context Checker
 
@@ -410,13 +407,6 @@ Test the CPU model:
 
 ```bash
 pdm run python -m bin.test_cpu -i models/context_aware_model/en
-```
-
-Deployment (Platform.sh)
-
-```bash
-rsync -azP models/ "$(platform ssh -e main --pipe)":models/
-platform environment:redeploy -e main
 ```
 
 #### convert_to_cpu.py reference (optional)
@@ -491,8 +481,6 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
 | TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
-
-Platform.sh integration: When `PLATFORM_RELATIONSHIPS` contains a `rediscache` service, Redis credentials are auto-configured.
 
 ## LLM provider (LLM-assisted alternatives and rephrasing)
 
@@ -672,14 +660,6 @@ has no such job, so the two settings below fill the gap.
 
 Users are still identified by email, so an API-key deployment needs keys before
 anyone can sign in — see [Setup & Deployment](./setup.md#api-keys).
-
-## Platform.sh
-
-Nothing in the app requires Platform.sh/Upsun; every setting has a plain name. What it does there is pick up the variables the platform sets by itself, so [.upsun/config.yaml](../.upsun/config.yaml) needs no extra configuration:
-
-- `PLATFORM_RELATIONSHIPS` (base64 JSON) is parsed to wire internal service URLs for LanguageTool and Redis, overriding `LANGUAGETOOL_API` and `REDIS_HOST`/`REDIS_PORT`. Elsewhere it is unset and those are used as given.
-- `PLATFORM_ENVIRONMENT_TYPE` and `PLATFORM_ENVIRONMENT` stand in for `ENVIRONMENT_TYPE` and `ENVIRONMENT` where those are not set.
-- `PLATFORM_APPLICATION_NAME` stands in for `BLACKFIRE_APPLICATION_NAME`.
 
 ## Optional profiling (Blackfire)
 
