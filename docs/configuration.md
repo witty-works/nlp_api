@@ -645,7 +645,7 @@ has no such job, so the two settings below fill the gap.
 |  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
 | `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
 |       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
-|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it.                                                   |
+|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it, the [guardrail endpoints](./guardrails.md) included.                                                   |
 
 `CLIENT_CONFIG_ENABLED` never overrules a deployment that has an opinion: a
 `force` rule for either flag in a synced user or organisation config still wins.

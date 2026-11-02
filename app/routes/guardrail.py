@@ -40,13 +40,17 @@ async def guardrail_user(
     """The configs of whoever the credential resolves to, with
     `request_in.config` resolved. Unlike /v2.4/check a request without a user
     is refused: a guardrail that passed everything on a mistyped key would
-    look like one that works."""
+    look like one that works. With REQUIRE_AUTH off the deployment answers
+    anyone, as /v2.4/check then does, so there is no mistake to hide."""
     client_version(Client.parse(request_in.client), context.settings.minimum_versions)
 
     user_email = await fetch_user(
         request, context.settings, context.redis, context.http
     )
     if user_email is None:
+        if not context.settings.require_auth:
+            return await fetch_configs_for_request(request_in, None, context)
+
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User not found")
 
     configs = await fetch_configs_for_request(request_in, user_email, context)

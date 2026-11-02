@@ -61,8 +61,10 @@ established **input/output guardrail** pattern:
 
 Both guardrail endpoints authenticate like `/v2.4/check`: `x-key` or Bearer
 resolves to the user/org config, and an optional `config` in the body
-overrides it per request. No `llm_alternatives` / `LLM_ACCESS` gate, since no
-LLM budget is spent. Metrics are stored as `guardrail_input` and
+overrides it per request. A request that resolves to no user is a `401`,
+unlike `/v2.4/check`, unless `REQUIRE_AUTH` is off: then the deployment answers
+anyone, the guardrail endpoints with the default configuration. No
+`llm_alternatives` / `LLM_ACCESS` gate, since no LLM budget is spent. Metrics are stored as `guardrail_input` and
 `guardrail_output`.
 
 ### `POST /v1.0/guardrail/input`
@@ -183,10 +185,11 @@ NLP API:
 - New `docs/guardrails.md`: the pattern and its names, the two endpoints with
   examples, what `fail` can mean (reask once, annotate, log), filtering
   tool calls and structured output, streaming (the output check needs the
-  whole text: buffer, or check after delivery and annotate), and integration
-  recipes for LiteLLM, Portkey and Kong. Each recipe is checked against the
-  gateway's current documentation when written, and states the gateway version
-  it was written against.
+  whole text: buffer, or check after delivery and annotate), and the LiteLLM
+  recipe for the adapter, tested end to end against the LiteLLM proxy and
+  stating the versions it was tested with. Other gateways get one paragraph on
+  using the neutral endpoints; their recipes are left for later (user decision,
+  2026-11-02).
 - `docs/api.md`: core table lists `/v1.0/guardrail/input` and
   `/v1.0/guardrail/output` first; `/v1.0/write` described as the managed loop
   built on them and used by our own clients; `/v1.0/prompt` and the two debug

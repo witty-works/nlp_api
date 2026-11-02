@@ -95,8 +95,8 @@ async def post_guardrail_litellm(
 
 def with_guidance(request_in: LitellmGuardrailIn, text: str) -> LitellmGuardrailOut:
     """The conversation with the guidance in its system message. Left alone
-    where it is there already: a client that keeps its conversation sends it
-    back with every turn, and post_call sends the request again."""
+    where it is there already, as in the next turn of a client that keeps its
+    conversation and sends it back each time."""
     messages = request_in.structured_messages
     if not messages:
         return LitellmGuardrailOut(action="NONE")

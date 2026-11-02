@@ -261,3 +261,37 @@ def test_output_reports_an_unknown_language_as_null(set_redis, llm_calls):  # no
 
     assert "language" in body
     assert body["language"] is None
+
+
+@pytest.fixture
+def open_deployment():
+    """REQUIRE_AUTH off, as a deployment that answers anyone chooses."""
+    from app.main import context
+
+    context.settings.require_auth = False
+    yield
+    context.settings.require_auth = True
+
+
+def test_open_deployment_checks_without_a_key(
+    set_redis, llm_calls, open_deployment  # noqa: F811
+):
+    """With REQUIRE_AUTH off the guardrail answers anyone, as /v2.4/check does:
+    the operator chose that, so there is no mistyped key to hide."""
+    response = check_output({"response": FLAGGED, "lang": "en"}, headers={})
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "fail"
+
+
+def test_open_deployment_adds_guidance_without_a_key(
+    set_redis, llm_calls, open_deployment  # noqa: F811
+):
+    response = post(
+        "/v1.0/guardrail/input",
+        {"messages": [{"role": "user", "content": "Hi"}]},
+        headers={},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["guidance"].startswith(BASE_GUIDANCE)
