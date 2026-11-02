@@ -5,6 +5,7 @@ verdict and a reask after it. No LLM is called here.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
@@ -104,4 +105,10 @@ async def post_guardrail_output(
         config=request_in.config,
     )
 
-    return await review(check_request_in, configs, context, request_in.threshold)
+    outcome = await review(check_request_in, configs, context, request_in.threshold)
+
+    # Without `reask` and the findings' empty fields, but with `language: null`
+    # where it could not be told: a client reads that key on every answer.
+    body = outcome.model_dump(mode="json", exclude_none=True)
+    body["language"] = outcome.language
+    return JSONResponse(body)

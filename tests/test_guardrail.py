@@ -253,3 +253,11 @@ def test_output_makes_no_llm_call(set_redis, llm_calls):  # noqa: F811
 
     assert response.status_code == 200
     assert llm_calls == []
+
+
+def test_output_reports_an_unknown_language_as_null(set_redis, llm_calls):  # noqa: F811
+    """The spec's `language: null`, not a missing key."""
+    body = check_output({"response": ""}).json()
+
+    assert "language" in body
+    assert body["language"] is None

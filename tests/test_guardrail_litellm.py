@@ -114,3 +114,30 @@ def test_requires_a_user(set_redis, llm_calls):  # noqa: F811
 def test_makes_no_llm_call(set_redis, llm_calls):  # noqa: F811
     assert respond([FLAGGED]).status_code == 200
     assert llm_calls == []
+
+
+def test_request_without_system_message_gets_one(set_redis, llm_calls):  # noqa: F811
+    """Prepending changes the conversation's length, so LiteLLM takes the rows
+    as returned: every other message must come back exactly as sent."""
+    messages = [
+        {"role": "user", "content": "hi", "name": "bob"},
+        {"role": "assistant", "content": None, "tool_calls": [{"id": "1"}]},
+    ]
+
+    body = call(
+        {"texts": ["hi"], "input_type": "request", "structured_messages": messages}
+    ).json()
+
+    assert body["structured_messages"][0]["role"] == "system"
+    assert body["structured_messages"][1:] == messages
+
+
+def test_an_earlier_witty_note_is_not_checked_again(set_redis, llm_calls):  # noqa: F811
+    """LiteLLM samples a streamed answer every few chunks and may send back the
+    text Witty annotated before; the notes must not pile up."""
+    annotated = respond([FLAGGED]).json()["texts"][0]
+
+    texts = respond([annotated]).json()["texts"]
+
+    assert texts[0].count("[Witty]") == 1
+    assert texts[0] == annotated

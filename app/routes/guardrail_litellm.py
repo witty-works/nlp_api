@@ -22,6 +22,10 @@ from app.version_validators import REPHRASE_API_VERSION
 
 router = APIRouter()
 
+# What an annotated answer has appended. A streamed answer is sampled every
+# few chunks and may come back with an earlier note: that part is not checked.
+WITTY_NOTE = "\n\n[Witty] "
+
 
 @router.post(
     f"/v{REPHRASE_API_VERSION}/guardrail/litellm/beta/litellm_basic_guardrail_api",
@@ -49,8 +53,9 @@ async def post_guardrail_litellm(
         request, configs, REPHRASE_API_VERSION, "guardrail_output"
     )
 
+    answers = [text.split(WITTY_NOTE, 1)[0] for text in request_in.texts]
     issues = []
-    for text in request_in.texts:
+    for text in answers:
         found = None
         if text.strip():
             outcome = await review(
@@ -82,8 +87,8 @@ async def post_guardrail_litellm(
     return LitellmGuardrailOut(
         action="GUARDRAIL_INTERVENED",
         texts=[
-            text if found is None else f"{text}\n\n[Witty] {found}"
-            for text, found in zip(request_in.texts, issues)
+            text if found is None else f"{answer}{WITTY_NOTE}{found}"
+            for text, answer, found in zip(request_in.texts, answers, issues)
         ],
     )
 

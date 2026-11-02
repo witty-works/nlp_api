@@ -160,8 +160,11 @@ annotate it afterwards.
 
 The LiteLLM proxy can call Witty through its
 [Generic Guardrail API](https://docs.litellm.ai/docs/adding_provider/generic_guardrail_api)
-(a beta feature; checked 2026-11-02 against that page and LiteLLM's
-`generic_guardrail_api.py` on `main`). Witty answers it at
+(a beta feature). Written against LiteLLM 1.106 and checked on 2026-11-02
+against that page and LiteLLM's source. **The guidance needs LiteLLM 1.104 or
+later**: 1.102 and earlier ignore the rewritten conversation Witty returns, so
+the model never sees the guidance, and nothing reports it (1.103 was not
+checked). The answer check works on older releases too. Witty answers it at
 `/v1.0/guardrail/litellm/beta/litellm_basic_guardrail_api`. LiteLLM adds the
 `/beta/…` part to `api_base` itself.
 
@@ -177,6 +180,8 @@ litellm_settings:
         # sent as x-api-key, which Witty does not read.
         headers:
           x-key: "your-witty-api-key"
+        # Check a streamed answer once, when it is complete.
+        streaming_end_of_stream_only: true
         additional_provider_specific_params:
           lang: auto        # or en, de, fr, de-CH, …
           threshold: 1
@@ -185,7 +190,11 @@ litellm_settings:
 
 - **`pre_call`** adds the guidance to the conversation. A conversation that
   already carries it, such as the next turn of a chat that keeps its messages,
-  is left alone.
+  is left alone. **Send a system message of your own** if your messages carry
+  fields beyond the standard ones: where there is none, Witty adds one, and
+  LiteLLM then sends the model the conversation as it came back from Witty,
+  which has been through LiteLLM's message types and has lost any field they
+  do not declare (a user message's `name`, `provider_specific_fields`).
 - **`post_call`** checks each text of the answer. Where one fails, `annotate`
   appends Witty's findings to it, such as
   `[Witty] "chairman" → chair / chairperson / …; "policemen" → police officers / …`.
@@ -193,9 +202,16 @@ litellm_settings:
 - LiteLLM does not reask. To have the model correct its answer, call
   `/v1.0/guardrail/output` from your application or agent and send its `reask`,
   or let `/v1.0/write` run the whole loop.
-- LiteLLM fails closed by default (`fail_on_error: true`): while Witty is
-  unreachable, requests through this guardrail fail. Set `fail_on_error: false`
-  to let them through unchecked instead.
+- **Streaming.** LiteLLM checks a streamed answer every few chunks while it
+  streams, and by then those chunks have reached the client: `annotate`
+  changes nothing the client sees, and `block` cuts the stream off midway.
+  `streaming_end_of_stream_only: true` (as above) checks it once at the end;
+  for the note to reach the client, don't stream.
+- LiteLLM fails closed by default: while Witty cannot be reached, requests
+  through this guardrail fail. `unreachable_fallback: fail_open` lets them
+  through unchecked when Witty is unreachable (timeouts, 502, 503, 504), but
+  not when it refuses the key. LiteLLM 1.106 also has `fail_on_error: false`,
+  which skips the guardrail on any error; 1.83 does not know it.
 
 ## Other gateways
 
