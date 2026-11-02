@@ -134,9 +134,17 @@ An answer with nothing to fix:
   categories `communal`, `d_and_i`, `emotional_security`, `inclusive` and
   `orthography`, which `/v2.4/check` reports.
 
+## Errors
+
+| Status | When |
+| --- | --- |
+| `401` | The credential resolves to no user, while `REQUIRE_AUTH` is on. |
+| `403` | A Bearer token that is not accepted. |
+| `422` | The body does not validate: no `messages`, `threshold` below 1, an unknown `lang`, or for LiteLLM an unknown `on_fail`. |
+
 ## Acting on a fail
 
-Witty never blocks and never rewrites. What a `fail` means is up to you:
+The two endpoints above never block and never rewrite. What a `fail` means is up to you (the [LiteLLM adapter](#litellm) offers `annotate` and `block` for you to choose from):
 
 - **Reask.** Send `reask` to the model and use its answer. `/v1.0/write`
   does this once and does not check the corrected answer again. A loop

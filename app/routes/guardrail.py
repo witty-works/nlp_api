@@ -33,6 +33,10 @@ CREDENTIALS = [
     Depends(APIKeyHeader(name="x-key", auto_error=False)),
 ]
 
+UNAUTHORIZED = {
+    401: {"description": "The credential resolves to no user (REQUIRE_AUTH on)"}
+}
+
 
 async def guardrail_user(
     request: Request, request_in: BaseRequestIn, context: AppContext
@@ -64,6 +68,8 @@ async def guardrail_user(
     f"/v{REPHRASE_API_VERSION}/guardrail/input",
     response_model=GuardrailInputOut,
     dependencies=CREDENTIALS,
+    summary="Add inclusive-language guidance to chat messages",
+    responses=UNAUTHORIZED,
 )
 async def post_guardrail_input(
     request: Request,
@@ -89,6 +95,8 @@ async def post_guardrail_input(
     response_model=GuardrailOutputOut,
     response_model_exclude_none=True,
     dependencies=CREDENTIALS,
+    summary="Check a model's answer: verdict, findings and reask",
+    responses=UNAUTHORIZED,
 )
 async def post_guardrail_output(
     request: Request,

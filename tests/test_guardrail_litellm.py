@@ -30,7 +30,11 @@ def test_request_gets_guidance(set_redis, llm_calls):  # noqa: F811
     user = {"role": "user", "content": "Write a job ad."}
 
     response = call(
-        {"texts": ["Write a job ad."], "input_type": "request", "structured_messages": [user]}
+        {
+            "texts": ["Write a job ad."],
+            "input_type": "request",
+            "structured_messages": [user],
+        }
     )
 
     assert response.status_code == 200
@@ -41,14 +45,24 @@ def test_request_gets_guidance(set_redis, llm_calls):  # noqa: F811
     assert body["structured_messages"][1] == user
 
 
-def test_request_with_guidance_already_is_left_alone(set_redis, llm_calls):  # noqa: F811
+def test_request_with_guidance_already_is_left_alone(
+    set_redis, llm_calls
+):  # noqa: F811
     user = {"role": "user", "content": "Write a job ad."}
     first = call(
-        {"texts": ["Write a job ad."], "input_type": "request", "structured_messages": [user]}
+        {
+            "texts": ["Write a job ad."],
+            "input_type": "request",
+            "structured_messages": [user],
+        }
     ).json()["structured_messages"]
 
     response = call(
-        {"texts": ["Write a job ad."], "input_type": "request", "structured_messages": first}
+        {
+            "texts": ["Write a job ad."],
+            "input_type": "request",
+            "structured_messages": first,
+        }
     )
 
     assert response.json() == {"action": "NONE"}

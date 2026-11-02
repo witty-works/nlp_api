@@ -29,8 +29,8 @@ def register_routes(app):
     # Register rephrase routes
     app.include_router(rephrase.router, tags=["rephrase"])
 
-    # Register prompt routes
-    app.include_router(prompt.router, tags=["prompt"])
+    # Register /v1.0/write, Witty GPT's managed loop
+    app.include_router(prompt.router, tags=["guardrail"])
 
     # Register the guardrail routes, for LLM and agent gateways
     app.include_router(guardrail.router, tags=["guardrail"])

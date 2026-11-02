@@ -22,10 +22,10 @@ These are the main endpoints for checking and rephrasing text.
 
 | Endpoint         | Method | Auth Required | Description                                                   |
 | ---------------- | ------ | ------------- | ------------------------------------------------------------- |
-| `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/guardrail/input` | POST | Yes      | Add Witty's inclusive-language guidance to chat messages ([Guardrails](./guardrails.md)) |
 | `/v1.0/guardrail/output` | POST | Yes     | Check a model's answer: verdict, findings and a reask message ([Guardrails](./guardrails.md)) |
 | `/v1.0/guardrail/litellm/beta/litellm_basic_guardrail_api` | POST | Yes | Both of the above in the format of LiteLLM's Generic Guardrail API ([Guardrails](./guardrails.md#litellm)) |
+| `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
 | `/v1.0/write`    | POST   | Yes           | Write or change a text as a prompt says, then review it (requires `llm_alternatives`) |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |

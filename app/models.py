@@ -174,13 +174,6 @@ class LangWithAutoType(str, Enum):
     frFR = "fr-FR"
 
 
-class ReviewType(str, Enum):
-    INCLUDE_PREVIOUS = "include_previous"
-    EXPLAIN_EDITS = "explain_edits"
-    NO_EXPLANATION = "no_explanation"
-    USE_EXPLANATION = "use_explanation"
-
-
 class RuleType(str, Enum):
     DEFAULT = "default"
     PREFIX = "prefix"
@@ -1478,6 +1471,13 @@ class GuardrailOutputOut(BaseModel):
     # The message to send the model on a fail: it quotes the answer, so it
     # works with or without the conversation before it.
     reask: Optional[dict[str, str]] = None
+
+    # Always in the answer, `null` where the language could not be told.
+    model_config = {
+        "json_schema_extra": {
+            "required": ["verdict", "findings", "language", "limit_reached"]
+        }
+    }
 
 
 class LitellmGuardrailParams(BaseModel):

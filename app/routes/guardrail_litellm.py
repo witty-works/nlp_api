@@ -17,7 +17,7 @@ from app.models import (
     LitellmGuardrailOut,
     ResultOut,
 )
-from app.routes.guardrail import CREDENTIALS, guardrail_user
+from app.routes.guardrail import CREDENTIALS, UNAUTHORIZED, guardrail_user
 from app.version_validators import REPHRASE_API_VERSION
 
 router = APIRouter()
@@ -32,6 +32,8 @@ WITTY_NOTE = "\n\n[Witty] "
     response_model=LitellmGuardrailOut,
     response_model_exclude_none=True,
     dependencies=CREDENTIALS,
+    summary="Both guardrail steps for LiteLLM's Generic Guardrail API",
+    responses=UNAUTHORIZED,
 )
 async def post_guardrail_litellm(
     request: Request,

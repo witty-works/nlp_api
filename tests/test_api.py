@@ -94,7 +94,10 @@ def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
         # The review prompt is what the output guardrail hands back to reask.
         response = client.post(
             "/v1.0/guardrail/output",
-            json={"response": input_json["text"]},
+            json={
+                "response": input_json["text"],
+                **{k: input_json[k] for k in ("lang", "config") if k in input_json},
+            },
             headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
@@ -3413,6 +3416,47 @@ def test_write_system_prompt_is_the_guardrail_guidance(
     assert "Do not make biased assumptions." in system
     assert "When writing German" in system
     assert '"Here is .."' in system
+
+
+def test_write_system_prompt_follows_the_config(llm_access, set_redis, monkeypatch):
+    """The gender format the resolved config asks for reaches the model's
+    guidance: test@gmail.com's organization forces "In", so the request's
+    ":in" gives way to it."""
+    calls = scripted_llm(monkeypatch, ["Die Leitung ruft.", "Die Leitung ruft."])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={
+                "prompt": "Schreib einen Satz.",
+                "lang": "de",
+                "config": {"german_gender_ending": ":in"},
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 200
+    system = calls[0]["messages"][0]["content"]
+    assert '"LehrerIn"' in system
+    assert '"Lehrer:in"' not in system
+    assert "When writing French" not in system
+
+
+def test_write_refuses_a_draft_in_no_language(llm_access, set_redis, monkeypatch):
+    """A draft whose language cannot be told cannot be reviewed."""
+    calls = scripted_llm(monkeypatch, ["12345 67890 !!! ???"])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Write some numbers."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize(

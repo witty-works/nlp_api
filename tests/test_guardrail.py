@@ -13,7 +13,12 @@ from app.guidance import (
     merge_guidance,
 )
 from app.main import app
-from app.models import Config, GermanGenderEndingType, LangWithAutoType
+from app.models import (
+    Config,
+    FrenchGenderSeparatorType,
+    GermanGenderEndingType,
+    LangWithAutoType,
+)
 from tests.test_api import set_redis  # noqa: F401  (fixture)
 from tests.test_llm_calls import answer, prompt_with
 
@@ -152,7 +157,11 @@ def test_input_passes_other_messages_through(set_redis, llm_calls):  # noqa: F81
         "role": "assistant",
         "content": None,
         "tool_calls": [
-            {"id": "1", "type": "function", "function": {"name": "f", "arguments": "{}"}}
+            {
+                "id": "1",
+                "type": "function",
+                "function": {"name": "f", "arguments": "{}"},
+            }
         ],
     }
     messages = [{"role": "user", "content": "Look it up."}, tool_turn]
@@ -295,3 +304,32 @@ def test_open_deployment_adds_guidance_without_a_key(
 
     assert response.status_code == 200
     assert response.json()["guidance"].startswith(BASE_GUIDANCE)
+
+
+def test_guidance_french_example():
+    config = Config(french_gender_separator=FrenchGenderSeparatorType.POINT)
+
+    assert '"étudiant.e"' in guidance(config)
+
+
+def test_input_passes_non_text_parts_through(set_redis, llm_calls):  # noqa: F811
+    user = {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "What is in this picture?"},
+            {"type": "image_url", "image_url": {"url": "data:image/png;base64,AAAA"}},
+        ],
+    }
+
+    response = post("/v1.0/guardrail/input", {"messages": [user]})
+
+    assert response.status_code == 200
+    assert response.json()["messages"][1] == user
+
+
+def test_output_passes_text_in_no_language(set_redis, llm_calls):  # noqa: F811
+    """Not only an empty answer: one whose language cannot be told passes too."""
+    response = check_output({"response": "12345 67890 !!! ???"})
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "pass"

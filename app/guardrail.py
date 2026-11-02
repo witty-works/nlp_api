@@ -5,7 +5,7 @@ for our own clients, makes every model call."""
 from app.context import AppContext
 from app.language_processor import apply_language_rules, fetch_text
 from app.llm_access import with_inclusive_categories_disabled
-from app.models import CheckRequestIn, Client, GuardrailOutputOut, ReviewType
+from app.models import CheckRequestIn, Client, GuardrailOutputOut
 from app.review_prompt import ReviewPrompt
 
 
@@ -39,10 +39,7 @@ async def review(
     )
 
     reask = ReviewPrompt.handle(
-        findings,
-        ReviewType.INCLUDE_PREVIOUS,
-        check_request_in.text,
-        min_changes=threshold - 1,
+        findings, check_request_in.text, min_changes=threshold - 1
     )
 
     return GuardrailOutputOut(

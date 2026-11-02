@@ -86,4 +86,3 @@ def merge_guidance(messages: list[dict], text: str) -> list[dict]:
         system["content"] = text
 
     return [system, *messages[1:]]
-
