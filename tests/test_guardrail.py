@@ -6,7 +6,7 @@ import asyncio
 import pytest
 from fastapi.testclient import TestClient
 
-from app.guardrail import (
+from app.guidance import (
     BARE_TEXT_INSTRUCTION,
     BASE_GUIDANCE,
     guidance,
@@ -177,6 +177,79 @@ def test_input_makes_no_llm_call(set_redis, llm_calls):  # noqa: F811
     response = post(
         "/v1.0/guardrail/input", {"messages": [{"role": "user", "content": "Hi"}]}
     )
+
+    assert response.status_code == 200
+    assert llm_calls == []
+
+
+FLAGGED = "The chairman called the policemen."
+
+
+def check_output(body, headers=AUTH):
+    return post("/v1.0/guardrail/output", body, headers)
+
+
+def test_output_fail_with_reask(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": FLAGGED, "lang": "en"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["verdict"] == "fail"
+    assert body["findings"]
+    assert body["language"] == "en"
+    assert body["reask"]["role"] == "user"
+    assert FLAGGED in body["reask"]["content"]
+
+
+def test_output_pass(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": "We support inclusion, diversity and equity."})
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "pass"
+    assert "reask" not in response.json()
+
+
+def test_output_threshold(set_redis, llm_calls):  # noqa: F811
+    findings = check_output({"response": FLAGGED, "lang": "en"}).json()["findings"]
+    actionable = len([f for f in findings if f.get("alternatives")])
+
+    at = check_output({"response": FLAGGED, "lang": "en", "threshold": actionable})
+    above = check_output(
+        {"response": FLAGGED, "lang": "en", "threshold": actionable + 1}
+    )
+
+    assert at.json()["verdict"] == "fail"
+    assert above.json()["verdict"] == "pass"
+    assert "reask" not in above.json()
+
+
+def test_output_rejects_threshold_below_one(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": FLAGGED, "threshold": 0})
+
+    assert response.status_code == 422
+
+
+def test_output_long_response_is_checked_in_part(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": "The chairman called. " * 100, "lang": "en"})
+
+    assert response.status_code == 200
+    assert response.json()["limit_reached"] is True
+
+
+def test_output_empty_response_passes(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": ""})
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "pass"
+    assert response.json()["findings"] == []
+
+
+def test_output_requires_a_user(set_redis, llm_calls):  # noqa: F811
+    assert check_output({"response": FLAGGED}, headers={}).status_code == 401
+
+
+def test_output_makes_no_llm_call(set_redis, llm_calls):  # noqa: F811
+    response = check_output({"response": FLAGGED, "lang": "en"})
 
     assert response.status_code == 200
     assert llm_calls == []

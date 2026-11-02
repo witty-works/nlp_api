@@ -90,17 +90,16 @@ def test_content_security_policy_is_sent_whole():
 def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = review_prompt_dir.joinpath("input.json").read_text()
-        # Call the tested endpoint.
+        input_json = json.loads(review_prompt_dir.joinpath("input.json").read_text())
+        # The review prompt is what the output guardrail hands back to reask.
         response = client.post(
-            "/debug/review_prompt",
-            json=json.loads(input_json),
+            "/v1.0/guardrail/output",
+            json={"response": input_json["text"]},
             headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
-        # output must be string
         output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+            response.json().get("reask"), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = review_prompt_dir

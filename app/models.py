@@ -1463,6 +1463,25 @@ class ResultsOut(BaseModel):
     bulk_actions: list[str] = Field(default_factory=list)
 
 
+class GuardrailOutputIn(BaseRequestIn):
+    type: str = "guardrail_output"
+    # The model's answer, the part of it a person will read.
+    response: str
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+    # How many findings with alternatives make the answer fail.
+    threshold: Annotated[int, Field(ge=1)] = 1
+
+
+class GuardrailOutputOut(BaseModel):
+    verdict: Literal["pass", "fail"]
+    findings: list[ResultOut]
+    language: Optional[str] = None
+    limit_reached: bool
+    # The message to send the model on a fail: it quotes the answer, so it
+    # works with or without the conversation before it.
+    reask: Optional[dict[str, str]] = None
+
+
 class PrettyJSONResponse(Response):
     media_type = "application/json"
 

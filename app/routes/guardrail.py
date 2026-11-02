@@ -12,8 +12,17 @@ from app.auth_service import fetch_user
 from app.config_manager import fetch_configs_for_request
 from app.context import AppContext
 from app.dependencies import get_app_context
-from app.guardrail import guidance, merge_guidance
-from app.models import BaseRequestIn, Client, GuardrailInputIn, GuardrailInputOut
+from app.guardrail import review
+from app.guidance import guidance, merge_guidance
+from app.models import (
+    BaseRequestIn,
+    CheckRequestIn,
+    Client,
+    GuardrailInputIn,
+    GuardrailInputOut,
+    GuardrailOutputIn,
+    GuardrailOutputOut,
+)
 from app.version_validators import REPHRASE_API_VERSION, client_version
 
 router = APIRouter()
@@ -68,3 +77,31 @@ async def post_guardrail_input(
     return GuardrailInputOut(
         messages=merge_guidance(request_in.messages, text), guidance=text
     )
+
+
+@router.post(
+    f"/v{REPHRASE_API_VERSION}/guardrail/output",
+    response_model=GuardrailOutputOut,
+    response_model_exclude_none=True,
+    dependencies=CREDENTIALS,
+)
+async def post_guardrail_output(
+    request: Request,
+    request_in: GuardrailOutputIn,
+    context: AppContext = Depends(get_app_context),
+) -> GuardrailOutputOut:
+    """Check a model's answer: a verdict, what was found, and on a fail the
+    message for the gateway to send its model."""
+    configs = await guardrail_user(request, request_in, context)
+    context.redis.store_metrics(
+        request, configs, REPHRASE_API_VERSION, "guardrail_output"
+    )
+
+    check_request_in = CheckRequestIn(
+        text=request_in.response,
+        lang=request_in.lang,
+        client=request_in.client,
+        config=request_in.config,
+    )
+
+    return await review(check_request_in, configs, context, request_in.threshold)

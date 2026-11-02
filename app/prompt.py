@@ -6,7 +6,7 @@ import litellm
 
 from app.settings import Settings
 from app.alternatives import Alternatives
-from app.guardrail import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
+from app.guidance import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
 import json_repair
 
 # Providers differ in which parameters they accept, and a request that names one
