@@ -110,8 +110,6 @@ class MetricsType(str, Enum):
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
     REPHRASE_HOST = "rephrase_host"
-    PROMPT_COUNTS = "prompt_counts"
-    PROMPT_HOST = "prompt_host"
     WRITE_COUNTS = "write_counts"
     WRITE_HOST = "write_host"
     GUARDRAIL_INPUT_COUNTS = "guardrail_input_counts"

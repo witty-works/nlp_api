@@ -2924,15 +2924,6 @@ def test_management_auth():
             # The settings object carries every secret the deployment holds.
             assert client.get("/settings").status_code == 401
 
-            # `user_email` is a query parameter here, so the caller picks whose
-            # config applies and whose LLM budget is spent.
-            response = client.post(
-                "/v1.0/prompt",
-                params={"user_email": "test@gmail.com"},
-                json={"text": "Hello world."},
-            )
-            assert response.status_code == 401
-
             # The docs switch is a separate decision and stays where it was.
             assert context.settings.api_docs_auth_enabled is False
         finally:
@@ -3338,7 +3329,7 @@ def test_write(llm_access, set_redis, monkeypatch):
         prompt = calls[0]["messages"][1]["content"]
         assert "Make it more formal." in prompt
         assert "Chairman calls guys tmrw." in prompt
-        # Room for a whole text rather than the 300 tokens of /v1.0/prompt,
+        # Room for a whole text rather than LLM_MAX_TOKENS alone,
         # and asked to stay within what Witty checks at once.
         assert calls[0]["max_tokens"] > 300
         assert f"under {context.settings.text_max_length} characters" in prompt
@@ -3383,6 +3374,60 @@ def test_write(llm_access, set_redis, monkeypatch):
         assert calls == []
 
 
+def scripted_llm(monkeypatch, replies):
+    """Answer each LLM call with the next of `replies`; the calls are returned."""
+    calls = []
+
+    class Response:
+        def __init__(self, content):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response(replies[len(calls) - 1])
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    return calls
+
+
+def test_write_system_prompt_is_the_guardrail_guidance(
+    llm_access, set_redis, monkeypatch
+):
+    """The managed loop puts the same guidance in front of the model as
+    /v1.0/guardrail/input, plus the request for the bare text."""
+    calls = scripted_llm(monkeypatch, ["The chair called.", "The chair called."])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Write one sentence."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 200
+    system = calls[0]["messages"][0]["content"]
+    assert "Do not make biased assumptions." in system
+    assert "When writing German" in system
+    assert '"Here is .."' in system
+
+
+@pytest.mark.parametrize(
+    "path", ["/v1.0/prompt", "/debug/prompt", "/debug/review_prompt"]
+)
+def test_prompt_route_is_gone(path):
+    """/v1.0/write and the guardrail endpoints took their place."""
+    with TestClient(app) as client:
+        response = client.post(
+            path, json={"text": "Hello."}, headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
+
+    assert response.status_code == 404
+
+
 def test_write_refuses_a_text_it_could_only_shorten(llm_access, set_redis):
     """A prompt's result has to fit what Witty checks at once, so a longer text
     would come back cut; it is refused instead, before any LLM call."""
@@ -3423,15 +3468,15 @@ def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog
     assert "provider unreachable" in caplog.text
 
 
-def test_prompt_and_write_metrics_are_counted(monkeypatch):
-    """Each has its own counter; the prompt one used to be dropped."""
+def test_write_and_guardrail_metrics_are_counted(monkeypatch):
+    """Each has its own counter."""
     from starlette.requests import Request
 
     monkeypatch.setattr(context.settings, "log_metrics", True)
     request = Request({"type": "http", "headers": []})
     configs = {"id": "metrics-user"}
 
-    for endpoint in ("prompt", "write", "guardrail_input", "guardrail_output"):
+    for endpoint in ("write", "guardrail_input", "guardrail_output"):
         before = int(
             context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0
         )

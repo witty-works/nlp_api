@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Expose Witty GPT as two LLM-free guardrail endpoints (`/v1.0/guardrail/input`, `/v1.0/guardrail/output`), rebuild `/v1.0/write` on them, retire `/v1.0/prompt` and the debug prompt routes, move the dashboard to `/v1.0/write`, and reframe the docs.
+**Goal:** Expose Witty GPT as two LLM-free guardrail endpoints (`/v1.0/guardrail/input`, `/v1.0/guardrail/output`), rebuild `/v1.0/write` on them, retire `/v1.0/prompt` and the debug prompt routes, and reframe the docs. The dashboard is a follow-up.
 
-**Architecture:** A new `app/guardrail.py` holds the three primitives (guidance text, message merge, output review). A new `app/routes/guardrail.py` exposes them; `app/routes/prompt.py` keeps only `/v1.0/write`, composed from the same primitives. The dashboard calls `/v1.0/write` with management auth and `user_email`.
+**Architecture:** A new `app/guardrail.py` holds the three primitives (guidance text, message merge, output review). A new `app/routes/guardrail.py` exposes them; `app/routes/prompt.py` keeps only `/v1.0/write`, composed from the same primitives. The dashboard is left for a follow-up.
 
-**Tech Stack:** Python 3.12, FastAPI, pydantic v2, pytest + pytest-snapshot (NLP API); Laravel + Livewire, PHPUnit (dashboard); PHP static site (website).
+**Tech Stack:** Python 3.12, FastAPI, pydantic v2, pytest + pytest-snapshot (NLP API); PHP static site (website).
 
 **Spec:** `docs/superpowers/specs/2026-11-02-guardrail-api-design.md`
 
@@ -20,8 +20,8 @@
 - "Prompt injection" does not appear in any doc or copy after this work.
 - `/v1.0/rephrase` and `Prompt.handle()`'s default system prompt (used by `llm_alternatives.py`) keep the same wording; only the indentation whitespace of the old triple-quoted string goes.
 - Language parameters (`LangWithAutoType`) map to a language by their first two letters (`de-CH` → German); `auto` or absent means "not known yet".
-- Work on a `feature/guardrail-api` branch in `nlp_api-flexible` and `dashboard` (both currently on `dev`). Commit messages carry no Claude co-author trailer.
-- Run NLP API tests with `pdm run pytest`; dashboard tests with `php artisan test`.
+- Work on a `feature/guardrail-api` branch in `nlp_api-flexible` (from `dev`). Commit messages carry no Claude co-author trailer.
+- Run NLP API tests with `pdm run pytest`.
 
 ## Review Focus
 
@@ -160,42 +160,50 @@
 
 - [ ] **Step 5: Commit** `git commit -am "refactor: /v1.0/write on the guardrail primitives, drop /v1.0/prompt"`
 
+### Task 4b: LiteLLM adapter (added 2026-11-02, user decision)
+
+LiteLLM's Generic Guardrail API (beta) calls `POST {api_base}/beta/litellm_basic_guardrail_api` and expects its own format. Contract checked against the docs page and `litellm/proxy/guardrails/guardrail_hooks/generic_guardrail_api/generic_guardrail_api.py` on `main`, 2026-11-02: `api_key` goes out as an `x-api-key` header; a `BLOCKED` reply raises; any other reply applies the returned `texts` / `structured_messages`, and rows echoed back unchanged are kept as they were.
+
+**Files:**
+- Create: `app/routes/guardrail_litellm.py` (registered next to `guardrail`)
+- Modify: `app/models.py`
+- Test: `tests/test_guardrail_litellm.py`
+
+**Interfaces:**
+- Consumes: `guardrail_user` (Task 2), `review` (Task 3), `guidance`, `merge_guidance` (Task 1, `app/guidance.py`).
+- Route: `POST /v1.0/guardrail/litellm/beta/litellm_basic_guardrail_api`, so `api_base` is `https://<host>/v1.0/guardrail/litellm`. Auth: Witty's own `x-key`, set through LiteLLM's static `headers` (LiteLLM's `api_key` would arrive as `x-api-key`, which Witty doesn't read).
+- `LitellmGuardrailIn(BaseModel)`: `texts: list[str] = []`, `input_type: Literal["request", "response"]`, `structured_messages: Optional[list[dict[str, Any]]] = None`, `additional_provider_specific_params: dict[str, Any] = {}`. Other fields are ignored.
+- `LitellmGuardrailOut(BaseModel)`: `action: Literal["NONE", "BLOCKED", "GUARDRAIL_INTERVENED"]`, `blocked_reason: Optional[str]`, `texts: Optional[list[str]]`, `structured_messages: Optional[list[dict[str, Any]]]`; `response_model_exclude_none=True`.
+- `additional_provider_specific_params`: `lang` (as `LangWithAutoType`, default auto), `threshold` (int ≥ 1, default 1), `on_fail` (`"annotate"` default, or `"block"`). Invalid values → 422.
+
+Behaviour:
+- `request` with `structured_messages`: `NONE` if the first message is a system message whose text already contains the guidance (multi-turn clients, and post_call sending the input again), else `GUARDRAIL_INTERVENED` with `merge_guidance(...)`. Without `structured_messages`: `NONE`.
+- `response`: each non-blank text goes through `review()` on its own. All pass → `NONE`. Otherwise `on_fail="block"` → `BLOCKED`, `blocked_reason` = `Witty: ` + the issue list; `annotate` → `GUARDRAIL_INTERVENED`, `texts` one-to-one, a failing text gets `\n\n[Witty] ` + the issue list appended.
+- Issue list: findings with alternatives, `"<issue>" → <alt> / <alt>`, joined with `; `; a remove alternative reads `(remove)`.
+
+- [ ] **Step 1: Failing tests:** `test_request_gets_guidance`, `test_request_with_guidance_already_is_left_alone`, `test_request_without_messages_is_left_alone`, `test_response_pass_is_none`, `test_response_fail_is_annotated` (`texts[0]` starts with the original, contains `[Witty]` and `"chairman"`), `test_response_fail_can_block` (`on_fail: "block"`), `test_texts_stay_one_to_one` (a pass and a fail text), `test_params_are_validated` (`on_fail: "rewrite"` → 422), `test_requires_a_user`, `test_makes_no_llm_call`.
+- [ ] **Step 2:** `pdm run pytest tests/test_guardrail_litellm.py -v` — FAIL, 404.
+- [ ] **Step 3:** Implement.
+- [ ] **Step 4:** Same command — PASS.
+- [ ] **Step 5:** Commit `feat: LiteLLM generic guardrail adapter`.
+
 ### Task 5: NLP API docs
 
 **Files:**
 - Create: `docs/guardrails.md`
 - Modify: `docs/api.md` (core table, `/v1.0/write` paragraph at line 76, debug table lines 396-397), `docs/technical-notes.md:58-62`, `docs/configuration.md` (lines ~153, ~329-334), `README.md` (capabilities bullet, docs index)
 
-- [ ] **Step 1: Write `docs/guardrails.md`** with sections: *The pattern* (the three-row table from the spec, "prompt injection" named only as the term not to use); *`/v1.0/guardrail/input`* and *`/v1.0/guardrail/output`* (curl examples using the Task 2/3 test bodies, response examples captured from a local run); *Acting on a fail* (reask once, annotate, log; Witty never blocks or rewrites); *What to send* (only human-facing text, not tool calls or structured output); *Streaming* (buffer, or check after delivery and annotate); *Gateway recipes* — LiteLLM, Portkey, Kong: for each, fetch the gateway's current guardrail/plugin docs (WebFetch), write the config against them, and state the gateway version and doc URL used. If a gateway cannot call an arbitrary HTTP guardrail, say so instead of inventing a config.
+- [ ] **Step 1: Write `docs/guardrails.md`** with sections: *The pattern* (the three-row table from the spec, "prompt injection" named only as the term not to use); *`/v1.0/guardrail/input`* and *`/v1.0/guardrail/output`* (curl examples using the Task 2/3 test bodies, response examples captured from a local run); *Acting on a fail* (reask once, annotate, log; Witty never blocks or rewrites); *What to send* (only human-facing text, not tool calls or structured output); *Streaming* (buffer, or check after delivery and annotate); *LiteLLM* — the `config.yaml` for the Task 4b adapter (`guardrail: generic_guardrail_api`, `mode: [pre_call, post_call]`, `api_base`, `headers: {x-key: ...}`, the three params), what each `on_fail` does, and that reask is not something LiteLLM does: the app, the agent or `/v1.0/write` does it with `/v1.0/guardrail/output`'s `reask`. Name the doc URL and the date it was checked. Other gateways: one paragraph saying they can call the two neutral endpoints through their own HTTP guardrail plugins, with no recipes yet.
 
-- [ ] **Step 2: Update the other docs:** `api.md` core table lists both guardrail rows first and drops `/v1.0/prompt`; the `/v1.0/write` paragraph opens with "the managed loop, built on the guardrail endpoints and used by `/textarea` and the dashboard", documents `user_email` + management auth, and stops calling it a counterpart of `/v1.0/prompt`; remove the two debug rows. `technical-notes.md` "Witty GPT Algorithm" → input guidance / output check / reask, linking `guardrails.md`. `configuration.md`: replace `/v1.0/prompt` with `/v1.0/write` (`user_email` path) in both lists. `README.md`: the bias bullet becomes "Inclusive-language guardrail for LLM and agent gateways — see [Guardrails](docs/guardrails.md)"; add the doc to the index.
+- [ ] **Step 2: Update the other docs:** `api.md` core table lists both guardrail rows first and drops `/v1.0/prompt`; the `/v1.0/write` paragraph opens with "the managed loop, built on the guardrail endpoints and used by `/textarea`" and stops calling it a counterpart of `/v1.0/prompt`; remove the two debug rows. `technical-notes.md` "Witty GPT Algorithm" → input guidance / output check / reask, linking `guardrails.md`. `configuration.md`: drop `/v1.0/prompt` from both lists. `README.md`: the bias bullet becomes "Inclusive-language guardrail for LLM and agent gateways — see [Guardrails](docs/guardrails.md)"; add the doc to the index.
 
 - [ ] **Step 3: Verify** `grep -rniE "prompt.injection|v1\.0/prompt|debug/(review_)?prompt" README.md docs app` → only matches inside `docs/superpowers/`.
 
 - [ ] **Step 4: Commit** `git add docs README.md && git commit -m "docs: document Witty GPT as a guardrail API"`
 
-### Task 6: Dashboard on `/v1.0/write`
+### Task 6: Dashboard — dropped
 
-Repo: `dashboard`, branch `feature/guardrail-api`. Lands after the NLP API change is deployed (both are undeployed today, so order of merge only).
-
-**Files:**
-- Modify: `app/Livewire/Prompt.php:35-98`, `README.md` (Witty GPT section)
-- Test: `tests/Feature/WittyGptPromptTest.php` (new)
-
-- [ ] **Step 1: Write the failing tests** with `Http::fake(['*/v1.0/write*' => Http::response([...])])` and `config(['app.nlp_api_endpoint' => ['urls' => ['http://nlp.test'], 'user' => 'u', 'password' => 'p']])`:
-  - `test_prompt_is_sent_to_write`: `Http::assertSent` with URL `http://nlp.test/v1.0/write?user_email=<user email, urlencoded>`, body exactly `['prompt' => 'Write a job ad.']` (no `client`: `/v1.0/write` runs `client_version()`, and `Client.parse` reads a bare `"dashboard"` as web-ext version "dashboard", which any `MINIMUM_VERSION_WEB_EXT` rejects with a 400), basic auth header present.
-  - `test_responses_are_shown`: fake returns `initial_response: "The chairman calls."`, `reviewed_response: "The chair calls."` → component `orignal_response === "The chairman calls."`, `witty_response === "The chair calls."`.
-  - `test_reviewed_falls_back_to_initial`: no `reviewed_response` → `witty_response === initial_response`.
-  - `test_prompt_over_1000_characters_is_rejected`: `str_repeat('a', 1001)` → `assertHasErrors('prompt')`, nothing sent.
-  - Users need a team with `llm_alternatives` on; reuse `WittyGptToggleTest::signedInUser()` pattern.
-
-- [ ] **Step 2: Run** `php artisan test --filter=WittyGptPromptTest` — expected: FAIL.
-
-- [ ] **Step 3: Implement:** URL `…/v1.0/write?user_email=` + `urlencode($user->email)`; body `['prompt' => $this->prompt]`; read `initial_response`; validate `prompt` as `required|string|max:1000` before the call. README: Witty GPT section says it calls `/v1.0/write`.
-
-- [ ] **Step 4: Run** `php artisan test --filter="WittyGpt"` — expected: PASS (toggle tests included).
-
-- [ ] **Step 5: Commit** `git commit -am "Witty GPT: call /v1.0/write"`
+Out of this work (user, 2026-11-02: the API is not steered by the dashboard's current code). See the spec's "Dashboard (follow-up)" section.
 
 ### Task 7: Website copy
 

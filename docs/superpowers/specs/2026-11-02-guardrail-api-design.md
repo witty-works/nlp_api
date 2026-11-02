@@ -154,13 +154,11 @@ Keeps its request and `PromptOut` response unchanged. Internally:
 3. output check (`threshold` 1);
 4. on `fail`, the reask is sent to the LLM; `edits` diffs draft and review.
 
-Auth gains a second path: management auth (as `/v1.0/prompt` uses today) plus
-a `user_email` query parameter, for the dashboard. The client-credential path
-is unchanged. In both cases `llm_alternatives` and `LLM_ACCESS` gate it as
-now. `/v1.0/write` stays in the management-endpoint list in
-`docs/configuration.md` for the `user_email` path.
+Auth is unchanged: whoever the credential resolves to, gated by
+`llm_alternatives` and `LLM_ACCESS`. There is no named-user variant; the API
+is not shaped around the dashboard's current code, which predates API keys.
 
-Side effect: `/textarea` and the dashboard get the config-aware guidance too.
+Side effect: `/textarea` gets the config-aware guidance too.
 
 ### Removed
 
@@ -169,15 +167,14 @@ Side effect: `/textarea` and the dashboard get the config-aware guidance too.
 - `/debug/prompt` and `/debug/review_prompt`; the guardrail endpoints expose
   the same information.
 
-### Dashboard
+### Dashboard (follow-up, not in this work)
 
-`Prompt.php` calls `/v1.0/write?user_email=…` with `{"prompt": <user prompt>}`
-and no `client`: `/v1.0/write` checks client versions, and a bare name
-without `name:version` parses as an unversioned web-ext. It reads
-`initial_response`, and validates the prompt at the 1000 characters `/write`
-accepts. The `inititial_response` bug goes away with the change. Using the
-server's `edits` instead of `DiffHelper` is possible but not part of this
-work.
+The dashboard's Witty GPT page calls `/v1.0/prompt` with management auth and
+stops working when it is removed. Nothing is deployed, so that is accepted.
+A later change moves it to an API key and `/v1.0/write` (or the guardrail
+endpoints). It also has to drop `client: "dasboard"`, which `/v1.0/write`'s
+client-version check would read as an unversioned web-ext, and fix the
+`inititial_response` typo.
 
 ## Documentation
 
@@ -201,8 +198,6 @@ NLP API:
   `docs/guardrails.md`.
 - `docs/configuration.md`: LLM route and management-endpoint lists updated.
 
-Dashboard: `README.md` Witty GPT section mentions `/v1.0/write`.
-
 Website: `witty-gpt.php` and the en/de blog posts on ChatGPT are reviewed for
 "prompt injection" wording; the product page gains a short "works with your
 LLM gateway" section linking the API docs. Copy changes only.
@@ -221,16 +216,15 @@ LLM gateway" section linking the API docs. Copy changes only.
   change: the debug route defaulted to `EXPLAIN_EDITS`, the reask uses
   `INCLUDE_PREVIOUS` (quotes the response, no explanations); cases that
   returned `WITTYNOCHANGES` now have no `reask`. Regenerated and reviewed.
-- `/v1.0/write`: existing tests kept; new tests for the management-auth +
-  `user_email` path, and that its system prompt contains the guardrail
+- `/v1.0/write`: existing tests kept; new tests and that its system prompt contains the guardrail
   guidance.
 - `/v1.0/prompt` and debug-prompt tests removed or folded into the above.
-- Dashboard: feature test for the Witty GPT component against a faked
-  `/v1.0/write` response.
 
 ## Out of scope
 
-- OpenAI-compatible proxy mode, MCP tool, packaged gateway plugins.
+- OpenAI-compatible proxy mode, MCP tool, adapters for gateways other than
+  LiteLLM (added 2026-11-02, see the plan's Task 4b).
 - Blocking, Witty-side rewriting, streaming checks.
 - Org custom rules / preferred terms in the guidance.
 - `/v1.0/rephrase`.
+- The dashboard (see above).
