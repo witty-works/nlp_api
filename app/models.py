@@ -1480,6 +1480,36 @@ class GuardrailOutputOut(BaseModel):
     reask: Optional[dict[str, str]] = None
 
 
+class LitellmGuardrailParams(BaseModel):
+    """`additional_provider_specific_params` in a LiteLLM guardrail config."""
+
+    lang: LangWithAutoType = LangWithAutoType.AUTO
+    threshold: Annotated[int, Field(ge=1)] = 1
+    # What a failing answer becomes: the answer with Witty's findings appended,
+    # or LiteLLM's refusal.
+    on_fail: Literal["annotate", "block"] = "annotate"
+
+
+class LitellmGuardrailIn(BaseRequestIn):
+    """What LiteLLM's Generic Guardrail API (beta) sends; fields Witty does not
+    use are ignored."""
+
+    type: str = "guardrail_litellm"
+    texts: list[str] = Field(default_factory=list)
+    input_type: Literal["request", "response"]
+    structured_messages: Optional[list[dict[str, Any]]] = None
+    additional_provider_specific_params: LitellmGuardrailParams = Field(
+        default_factory=LitellmGuardrailParams
+    )
+
+
+class LitellmGuardrailOut(BaseModel):
+    action: Literal["NONE", "BLOCKED", "GUARDRAIL_INTERVENED"]
+    blocked_reason: Optional[str] = None
+    texts: Optional[list[str]] = None
+    structured_messages: Optional[list[dict[str, Any]]] = None
+
+
 class PrettyJSONResponse(Response):
     media_type = "application/json"
 
