@@ -57,9 +57,12 @@ The rule engine operates as follows:
 
 ## Witty GPT Algorithm
 
-- Prompt is modified through prompt-injection to get a more inclusive initial response from the model (`Prompt.handle()`)
-- Response from the model is analyzed using the standard rule-engine
-- If the number of issues is below a configurable threshold the initial response is returned otherwise a follow up prompt is generated and the response returned ([app/routes/prompt.py](../app/routes/prompt.py))
+Witty GPT is an input/output guardrail, see [Guardrails](./guardrails.md).
+
+- Input: the inclusive-language guidance, with the gender forms the config asks for, goes into the system message ([app/guidance.py](../app/guidance.py), `guidance()` and `merge_guidance()`)
+- Output: the model's answer is checked by the standard rule engine with the inclusive-language categories disabled; it fails when at least `threshold` findings have alternatives ([app/guardrail.py](../app/guardrail.py), `review()`)
+- Reask: on a fail, `ReviewPrompt` ([app/review_prompt.py](../app/review_prompt.py)) writes the message that has the model apply the alternatives
+- [app/routes/guardrail.py](../app/routes/guardrail.py) and [app/routes/guardrail_litellm.py](../app/routes/guardrail_litellm.py) expose these without calling a model; [app/routes/prompt.py](../app/routes/prompt.py) (`/v1.0/write`) runs all three with the model calls
 
 ## POS tagging corrections
 
