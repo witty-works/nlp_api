@@ -6,6 +6,7 @@ from app.routes import (
     config_routes,
     rephrase,
     prompt,
+    guardrail,
     textarea,
     check,
     lt,
@@ -29,6 +30,9 @@ def register_routes(app):
 
     # Register prompt routes
     app.include_router(prompt.router, tags=["prompt"])
+
+    # Register the guardrail routes, for LLM and agent gateways
+    app.include_router(guardrail.router, tags=["guardrail"])
 
     # Register textarea demo route
     app.include_router(textarea.router, tags=["textarea"])

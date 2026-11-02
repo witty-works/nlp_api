@@ -114,6 +114,10 @@ class MetricsType(str, Enum):
     PROMPT_HOST = "prompt_host"
     WRITE_COUNTS = "write_counts"
     WRITE_HOST = "write_host"
+    GUARDRAIL_INPUT_COUNTS = "guardrail_input_counts"
+    GUARDRAIL_INPUT_HOST = "guardrail_input_host"
+    GUARDRAIL_OUTPUT_COUNTS = "guardrail_output_counts"
+    GUARDRAIL_OUTPUT_HOST = "guardrail_output_host"
 
 
 class LlmAccessType(str, Enum):
@@ -954,6 +958,20 @@ class WriteRequestIn(BaseRequestIn):
     # The text to change. Empty means write a new one from the prompt alone.
     text: Annotated[str, Len(max_length=WRITE_TEXT_MAX_LENGTH)] = ""
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
+class GuardrailInputIn(BaseRequestIn):
+    type: str = "guardrail_input"
+    # Chat messages as the gateway has them. Plain dicts, so that whatever else
+    # a message carries (tool calls, names, a null content) comes back as it was.
+    messages: Annotated[list[dict[str, Any]], Len(min_length=1)]
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
+class GuardrailInputOut(BaseModel):
+    action: Literal["modify"] = "modify"
+    messages: list[dict[str, Any]]
+    guidance: str
 
 
 class CheckRequestIn(BaseRequestIn):

@@ -3432,7 +3432,7 @@ def test_prompt_and_write_metrics_are_counted(monkeypatch):
     request = Request({"type": "http", "headers": []})
     configs = {"id": "metrics-user"}
 
-    for endpoint in ("prompt", "write"):
+    for endpoint in ("prompt", "write", "guardrail_input", "guardrail_output"):
         before = int(
             context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0
         )

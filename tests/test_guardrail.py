@@ -4,6 +4,7 @@ a verdict and a reask for the response, and never an LLM call of their own."""
 import asyncio
 
 import pytest
+from fastapi.testclient import TestClient
 
 from app.guardrail import (
     BARE_TEXT_INSTRUCTION,
@@ -11,7 +12,9 @@ from app.guardrail import (
     guidance,
     merge_guidance,
 )
+from app.main import app
 from app.models import Config, GermanGenderEndingType, LangWithAutoType
+from tests.test_api import set_redis  # noqa: F401  (fixture)
 from tests.test_llm_calls import answer, prompt_with
 
 
@@ -93,3 +96,87 @@ def test_default_system_prompt_unchanged(monkeypatch):
     assert system == BASE_GUIDANCE + "\n\n" + BARE_TEXT_INSTRUCTION
     assert "Do not make biased assumptions." in system
     assert '"Here is .."' in system
+
+
+AUTH = {"X-TESTING-AUTH": "default@gmail.com"}
+
+
+@pytest.fixture
+def llm_calls(monkeypatch):
+    """What the endpoint sent to a model: nothing, if it keeps its promise."""
+    calls = []
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return answer("unexpected")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    return calls
+
+
+def post(path, body, headers=AUTH):
+    with TestClient(app) as client:
+        return client.post(path, json=body, headers=headers)
+
+
+def test_input_adds_guidance(set_redis, llm_calls):  # noqa: F811
+    user = {"role": "user", "content": "Write a job ad."}
+
+    response = post("/v1.0/guardrail/input", {"messages": [user]})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["action"] == "modify"
+    assert body["messages"][0] == {"role": "system", "content": body["guidance"]}
+    assert body["messages"][1] == user
+    assert body["guidance"].startswith(BASE_GUIDANCE)
+
+
+def test_input_respects_config(set_redis, llm_calls):  # noqa: F811
+    response = post(
+        "/v1.0/guardrail/input",
+        {
+            "messages": [{"role": "user", "content": "Schreib ein Inserat."}],
+            "lang": "de",
+            "config": {"german_gender_ending": ":in"},
+        },
+    )
+
+    assert response.status_code == 200
+    assert '"Lehrer:in"' in response.json()["guidance"]
+    assert "When writing French" not in response.json()["guidance"]
+
+
+def test_input_passes_other_messages_through(set_redis, llm_calls):  # noqa: F811
+    tool_turn = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [
+            {"id": "1", "type": "function", "function": {"name": "f", "arguments": "{}"}}
+        ],
+    }
+    messages = [{"role": "user", "content": "Look it up."}, tool_turn]
+
+    response = post("/v1.0/guardrail/input", {"messages": messages})
+
+    assert response.status_code == 200
+    assert response.json()["messages"][1:] == messages
+
+
+def test_input_requires_a_user(set_redis, llm_calls):  # noqa: F811
+    response = post(
+        "/v1.0/guardrail/input",
+        {"messages": [{"role": "user", "content": "Hi"}]},
+        headers={},
+    )
+
+    assert response.status_code == 401
+
+
+def test_input_makes_no_llm_call(set_redis, llm_calls):  # noqa: F811
+    response = post(
+        "/v1.0/guardrail/input", {"messages": [{"role": "user", "content": "Hi"}]}
+    )
+
+    assert response.status_code == 200
+    assert llm_calls == []
