@@ -14,7 +14,7 @@
 
 ---
 
-The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`).
+The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`). A request that carries an `x-key` is authenticated by it alone, whatever `Authorization` header comes with it: a gateway may forward its client's own token next to the key it adds for this API.
 
 ## Core Endpoints
 
@@ -24,6 +24,7 @@ These are the main endpoints for checking and rephrasing text.
 | ---------------- | ------ | ------------- | ------------------------------------------------------------- |
 | `/v1.0/guardrail/input` | POST | Yes      | Add Witty's inclusive-language guidance to chat messages ([Guardrails](./guardrails.md)) |
 | `/v1.0/guardrail/output` | POST | Yes     | Check a model's answer: verdict, findings and a reask message ([Guardrails](./guardrails.md)) |
+| `/v1.0/guardrail/guidance` | GET | Yes | The bare guidance text, for a fixed system prompt ([Guardrails](./guardrails.md)) |
 | `/v1.0/guardrail/litellm/beta/litellm_basic_guardrail_api` | POST | Yes | Both of the above in the format of LiteLLM's Generic Guardrail API ([Guardrails](./guardrails.md#litellm)) |
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |

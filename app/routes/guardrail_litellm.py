@@ -18,7 +18,7 @@ from app.models import (
     ResultOut,
 )
 from app.routes.guardrail import CREDENTIALS, UNAUTHORIZED, guardrail_user
-from app.version_validators import REPHRASE_API_VERSION
+from app.version_validators import GUARDRAIL_API_VERSION
 
 router = APIRouter()
 
@@ -28,7 +28,7 @@ WITTY_NOTE = "\n\n[Witty] "
 
 
 @router.post(
-    f"/v{REPHRASE_API_VERSION}/guardrail/litellm/beta/litellm_basic_guardrail_api",
+    f"/v{GUARDRAIL_API_VERSION}/guardrail/litellm/beta/litellm_basic_guardrail_api",
     response_model=LitellmGuardrailOut,
     response_model_exclude_none=True,
     dependencies=CREDENTIALS,
@@ -47,12 +47,12 @@ async def post_guardrail_litellm(
 
     if request_in.input_type == "request":
         context.redis.store_metrics(
-            request, configs, REPHRASE_API_VERSION, "guardrail_input"
+            request, configs, GUARDRAIL_API_VERSION, "guardrail_input"
         )
         return with_guidance(request_in, guidance(request_in.config, params.lang))
 
     context.redis.store_metrics(
-        request, configs, REPHRASE_API_VERSION, "guardrail_output"
+        request, configs, GUARDRAIL_API_VERSION, "guardrail_output"
     )
 
     answers = [text.split(WITTY_NOTE, 1)[0] for text in request_in.texts]

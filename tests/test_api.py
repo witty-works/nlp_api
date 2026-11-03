@@ -2994,6 +2994,39 @@ def test_require_api_key():
         assert response.json()["results"] == []
 
 
+def test_x_key_wins_over_a_forwarded_bearer_token(set_redis):
+    """Gateways such as agentgateway forward the client's own headers, its
+    `Authorization: Bearer <LLM key>` included, next to the x-key they add for
+    Witty. The x-key decides; the token is not looked at."""
+    context.redis.set_api_key("forwarded-key", "default@gmail.com")
+    headers = {"x-key": "forwarded-key", "Authorization": "Bearer sk-not-for-witty"}
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "fail"
+
+
+def test_an_invalid_x_key_does_not_fall_back_to_bearer(set_redis):
+    """An x-key present decides, as the browser extension's own headers do:
+    a wrong one is a wrong key, not a reason to try the token instead."""
+    headers = {"x-key": "not-a-key", "Authorization": "Bearer sk-not-for-witty"}
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 401
+
+
 def test_require_api_key_leaves_password_protected_routes_to_their_password():
     """An endpoint that asks for a username and password needs no key on top,
     while that password is asked for."""

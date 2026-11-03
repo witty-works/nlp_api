@@ -146,6 +146,19 @@ Response:
 - Only the text a human will read should be sent. Tool calls and structured
   output are the gateway's to filter; the docs say so.
 
+### Additions after review (2026-11-03)
+
+- The guardrail paths take their version from `GUARDRAIL_API_VERSION`, not
+  `REPHRASE_API_VERSION`: gateways are configured with them, so they move with
+  the guardrail contract alone.
+- The output check does not ask LanguageTool. Spelling, grammar and style are
+  not what the guardrail is for, and a LanguageTool outage must not take down
+  every model call behind it.
+- `verdict` may gain values; clients treat anything but `pass` as not passing.
+  A `fail` is always a `200`.
+- `GET /v1.0/guardrail/guidance?lang=` returns the bare guidance for gateways
+  and deployments that can only set a fixed system prompt.
+
 ### `/v1.0/write`, the managed loop
 
 Keeps its request and `PromptOut` response unchanged. Internally:

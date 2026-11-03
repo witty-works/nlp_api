@@ -1454,6 +1454,10 @@ class ResultsOut(BaseModel):
     bulk_actions: list[str] = Field(default_factory=list)
 
 
+class GuardrailGuidanceOut(BaseModel):
+    guidance: str
+
+
 class GuardrailOutputIn(BaseRequestIn):
     type: str = "guardrail_output"
     # The model's answer, the part of it a person will read.

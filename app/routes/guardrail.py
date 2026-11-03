@@ -17,6 +17,8 @@ from app.guardrail import review
 from app.guidance import guidance, merge_guidance
 from app.models import (
     BaseRequestIn,
+    GuardrailGuidanceOut,
+    LangWithAutoType,
     CheckRequestIn,
     Client,
     GuardrailInputIn,
@@ -24,7 +26,7 @@ from app.models import (
     GuardrailOutputIn,
     GuardrailOutputOut,
 )
-from app.version_validators import REPHRASE_API_VERSION, client_version
+from app.version_validators import GUARDRAIL_API_VERSION, client_version
 
 router = APIRouter()
 
@@ -65,7 +67,7 @@ async def guardrail_user(
 
 
 @router.post(
-    f"/v{REPHRASE_API_VERSION}/guardrail/input",
+    f"/v{GUARDRAIL_API_VERSION}/guardrail/input",
     response_model=GuardrailInputOut,
     dependencies=CREDENTIALS,
     summary="Add inclusive-language guidance to chat messages",
@@ -80,7 +82,7 @@ async def post_guardrail_input(
     about to send to its model."""
     configs = await guardrail_user(request, request_in, context)
     context.redis.store_metrics(
-        request, configs, REPHRASE_API_VERSION, "guardrail_input"
+        request, configs, GUARDRAIL_API_VERSION, "guardrail_input"
     )
 
     text = guidance(request_in.config, request_in.lang)
@@ -90,8 +92,32 @@ async def post_guardrail_input(
     )
 
 
+@router.get(
+    f"/v{GUARDRAIL_API_VERSION}/guardrail/guidance",
+    response_model=GuardrailGuidanceOut,
+    dependencies=CREDENTIALS,
+    summary="The bare guidance text, for a fixed system prompt",
+    responses=UNAUTHORIZED,
+)
+async def get_guardrail_guidance(
+    request: Request,
+    lang: LangWithAutoType = LangWithAutoType.AUTO,
+    context: AppContext = Depends(get_app_context),
+) -> GuardrailGuidanceOut:
+    """The guidance /v1.0/guardrail/input adds, for gateways and deployments
+    that can only set a fixed system prompt: Kong's prompt decorator, an Azure
+    policy, a prompt map."""
+    request_in = BaseRequestIn()
+    configs = await guardrail_user(request, request_in, context)
+    context.redis.store_metrics(
+        request, configs, GUARDRAIL_API_VERSION, "guardrail_input"
+    )
+
+    return GuardrailGuidanceOut(guidance=guidance(request_in.config, lang))
+
+
 @router.post(
-    f"/v{REPHRASE_API_VERSION}/guardrail/output",
+    f"/v{GUARDRAIL_API_VERSION}/guardrail/output",
     response_model=GuardrailOutputOut,
     response_model_exclude_none=True,
     dependencies=CREDENTIALS,
@@ -107,7 +133,7 @@ async def post_guardrail_output(
     message for the gateway to send its model."""
     configs = await guardrail_user(request, request_in, context)
     context.redis.store_metrics(
-        request, configs, REPHRASE_API_VERSION, "guardrail_output"
+        request, configs, GUARDRAIL_API_VERSION, "guardrail_output"
     )
 
     check_request_in = CheckRequestIn(

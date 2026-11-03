@@ -20,6 +20,7 @@ async def review(
 
     Never refuses: an answer longer than Witty checks at once is checked in
     part (`limit_reached`), and one whose language cannot be told passes.
+    LanguageTool is not asked.
     """
     with_inclusive_categories_disabled(check_request_in.config)
 
@@ -36,6 +37,9 @@ async def review(
         language,
         text,
         context,
+        # Spelling, grammar and style are not what the guardrail is for, and
+        # a LanguageTool outage must not take down every model call behind it.
+        languagetool=False,
     )
 
     reask = ReviewPrompt.handle(

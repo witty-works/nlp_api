@@ -22,8 +22,11 @@ model call included. `/textarea` uses it.
 
 ## Authentication and configuration
 
-Both endpoints take the same credentials as `/v2.4/check`: an `x-key` header or
-an OAuth2 Bearer token. The key's user and organization configuration applies,
+The endpoints take the same credentials as `/v2.4/check`: an `x-key` header or
+an OAuth2 Bearer token. Where both arrive, the `x-key` decides and the token is
+not looked at: some gateways (agentgateway, Portkey with `forwardHeaders`)
+forward their client's own `Authorization` header, an LLM key, next to the
+`x-key` they add for Witty. The key's user and organization configuration applies,
 including custom rules and the gender format. An optional `config` in the body
 overrides it per request, as on `/v2.4/check`. Unlike `/v2.4/check`, a request
 that resolves to no user gets a `401` rather than an empty answer: a guardrail
@@ -123,6 +126,10 @@ An answer with nothing to fix:
 - `verdict` is `fail` when at least `threshold` findings have alternatives to
   offer. `threshold` is optional, defaults to 1, and must be at least 1.
   `findings` lists everything that was found, actionable or not.
+- More `verdict` values may be added later. Treat any value other than
+  `pass` as not passing. A `fail` is an ordinary `200` answer, never an error
+  status: several gateways read a non-2xx answer as the guardrail failing
+  and may let the request through.
 - `reask` is only there on a `fail`. It is a ready-to-send `user` message that
   quotes the answer, so it works whether or not you send the conversation
   before it again. The model's reply to it is the corrected answer.
@@ -132,7 +139,28 @@ An answer with nothing to fix:
   among them, passes with `language: null`.
 - Like the review in `/v1.0/write`, the output check leaves out the
   categories `communal`, `d_and_i`, `emotional_security`, `inclusive` and
-  `orthography`, which `/v2.4/check` reports.
+  `orthography`, which `/v2.4/check` reports. It does not ask LanguageTool
+  either: no spelling, grammar or style findings, and a LanguageTool outage
+  does not affect it.
+
+## `GET /v1.0/guardrail/guidance`
+
+The bare guidance text that `/v1.0/guardrail/input` adds, for gateways and
+deployments that can only set a fixed system prompt (Kong's prompt decorator,
+an Azure API Management policy, a prompt map). It follows the key's
+configuration like the input endpoint does; `lang` (optional) limits the
+gender line to that language.
+
+```bash
+curl 'http://127.0.0.1:8000/v1.0/guardrail/guidance?lang=de' -H 'x-key: your-api-key'
+```
+
+```json
+{"guidance": "You are an expert in inclusive language.\n…\nWhen writing German, form gender-inclusive person nouns like \"Lehrer*in\"."}
+```
+
+A fixed copy does not follow later changes to the configuration or the
+guidance; fetch it again after those.
 
 ## Errors
 

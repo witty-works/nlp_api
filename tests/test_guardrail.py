@@ -333,3 +333,55 @@ def test_output_passes_text_in_no_language(set_redis, llm_calls):  # noqa: F811
 
     assert response.status_code == 200
     assert response.json()["verdict"] == "pass"
+
+
+def test_guardrail_routes_have_their_own_version():
+    """Gateways are configured with these paths: they move with the guardrail
+    contract, not with /v1.0/rephrase's."""
+    from app.version_validators import GUARDRAIL_API_VERSION
+
+    paths = {route.path for route in app.routes if "/guardrail/" in route.path}
+
+    assert paths
+    assert all(p.startswith(f"/v{GUARDRAIL_API_VERSION}/guardrail/") for p in paths)
+
+
+def test_output_does_not_need_languagetool(set_redis, llm_calls, monkeypatch):  # noqa: F811
+    """The guardrail sits in front of every model call; a LanguageTool outage
+    must not take it down. It does not use LanguageTool at all."""
+    from app.main import context
+
+    monkeypatch.setattr(context.settings, "languagetool_api", "http://127.0.0.1:9/v2")
+
+    response = check_output({"response": "Die Lehrer kommen morgen.", "lang": "de"})
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "fail"
+
+
+def test_guidance_endpoint(set_redis, llm_calls):  # noqa: F811
+    """The bare guidance, for gateways that can only set a fixed system prompt."""
+    with TestClient(app) as client:
+        response = client.get("/v1.0/guardrail/guidance", headers=AUTH)
+
+    assert response.status_code == 200
+    assert response.json()["guidance"] == guidance(Config())
+
+
+def test_guidance_endpoint_follows_the_config(set_redis, llm_calls):  # noqa: F811
+    """test@gmail.com's organization forces the "In" format."""
+    with TestClient(app) as client:
+        response = client.get(
+            "/v1.0/guardrail/guidance",
+            params={"lang": "de"},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 200
+    assert '"LehrerIn"' in response.json()["guidance"]
+    assert "When writing French" not in response.json()["guidance"]
+
+
+def test_guidance_endpoint_requires_a_user(set_redis, llm_calls):  # noqa: F811
+    with TestClient(app) as client:
+        assert client.get("/v1.0/guardrail/guidance").status_code == 401
