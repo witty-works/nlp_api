@@ -146,10 +146,17 @@ An answer with nothing to fix:
 
 The two endpoints above never block and never rewrite. What a `fail` means is up to you (the [LiteLLM adapter](#litellm) offers `annotate` and `block` for you to choose from):
 
-- **Reask.** Send `reask` to the model and use its answer. `/v1.0/write`
-  does this once and does not check the corrected answer again. A loop
-  should have a limit.
-- **Annotate.** Show the answer with the findings, as `/textarea` does.
+- **Reask, and show what Witty changed.** Send `reask` to the model and use
+  its answer. Showing Witty's influence takes three pieces: the model's first
+  answer, the findings with their explanations (what Witty sent back, and
+  why), and the corrected answer, with a word diff between the two answers
+  for the edits. That is what `/v1.0/write` returns and `/textarea` shows.
+  Witty is stateless and never sees the corrected answer, so keeping the
+  pieces together is the caller's job. Once is enough: the findings explain
+  the change, and the final text gets checked where it is shown, the way the
+  `/textarea` editor underlines it through `/v2.4/check`.
+- **Annotate.** Show the answer unchanged, with the findings and their
+  explanations.
 - **Log.** Record the verdict and findings for review, and change nothing.
 - **Block.** Refuse the answer. Rarely the right call for language that is
   merely not inclusive.
@@ -200,6 +207,7 @@ guardrails:
         lang: auto        # or en, de, fr, de-CH, …
         threshold: 1
         on_fail: annotate # or block
+        explain: true     # say why, not only what (the default)
 ```
 
 `guardrails` is a top-level key of the proxy config, next to `model_list`.
@@ -215,8 +223,11 @@ key (`LITELLM_MASTER_KEY`).
   which has been through LiteLLM's message types and has lost any field they
   do not declare (a user message's `name`, `provider_specific_fields`).
 - **`post_call`** checks each text of the answer. Where one fails, `annotate`
-  appends Witty's findings to it, such as
-  `[Witty] "chairman" → chair / chairperson / …; "policemen" → police officers / …`.
+  appends Witty's findings to it, each with its explanation, such as
+  `[Witty] "chairman" → chair / chairperson / … (Generally provokes a mental image of men); "policemen" → …`.
+  `explain: false` leaves the explanations out, for a shorter note. In
+  LiteLLM the answer itself stays as the model wrote it, so the note is
+  where Witty's influence shows.
   `block` makes LiteLLM refuse the answer with the findings as the error
   message: HTTP 400 on LiteLLM 1.106, 500 on 1.83.
 - LiteLLM does not reask. To have the model correct its answer, call

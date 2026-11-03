@@ -155,3 +155,24 @@ def test_an_earlier_witty_note_is_not_checked_again(set_redis, llm_calls):  # no
 
     assert texts[0].count("[Witty]") == 1
     assert texts[0] == annotated
+
+
+def test_note_explains_by_default(set_redis, llm_calls):  # noqa: F811
+    """The note shows why Witty objects, not only what it suggests."""
+    text = respond([FLAGGED]).json()["texts"][0]
+
+    assert '"chairman" → chair' in text
+    assert "(Generally provokes a mental image of men)" in text
+
+
+def test_note_can_leave_explanations_out(set_redis, llm_calls):  # noqa: F811
+    text = respond([FLAGGED], explain=False).json()["texts"][0]
+
+    assert '"chairman" → chair' in text
+    assert "(Generally provokes a mental image of men)" not in text
+
+
+def test_block_reason_explains(set_redis, llm_calls):  # noqa: F811
+    reason = respond([FLAGGED], on_fail="block").json()["blocked_reason"]
+
+    assert "(Generally provokes a mental image of men)" in reason

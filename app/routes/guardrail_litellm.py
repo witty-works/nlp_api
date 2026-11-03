@@ -74,7 +74,7 @@ async def post_guardrail_litellm(
                 params.threshold,
             )
             if outcome.verdict == "fail":
-                found = issue_list(outcome.findings)
+                found = issue_list(outcome.findings, params.explain)
         issues.append(found)
 
     if not any(issues):
@@ -112,9 +112,10 @@ def with_guidance(request_in: LitellmGuardrailIn, text: str) -> LitellmGuardrail
     )
 
 
-def issue_list(findings: list[ResultOut]) -> str:
-    """`"chairman" → chair / chairperson; ...`, for the findings Witty has
-    alternatives for."""
+def issue_list(findings: list[ResultOut], explain: bool = True) -> str:
+    """`"chairman" → chair / chairperson (Generally provokes a mental image of
+    men); ...`, for the findings Witty has alternatives for. Without `explain`
+    the part in brackets is left out."""
     issues = []
     for finding in findings:
         if not finding.alternatives:
@@ -124,6 +125,9 @@ def issue_list(findings: list[ResultOut]) -> str:
             "(remove)" if alternative.remove else alternative.text
             for alternative in finding.alternatives
         )
-        issues.append(f'"{finding.text}" → {alternatives}')
+        issue = f'"{finding.text}" → {alternatives}'
+        if explain and finding.explanation and finding.explanation.text:
+            issue += f" ({finding.explanation.text})"
+        issues.append(issue)
 
     return "; ".join(issues)

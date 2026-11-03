@@ -1488,6 +1488,9 @@ class LitellmGuardrailParams(BaseModel):
     # What a failing answer becomes: the answer with Witty's findings appended,
     # or LiteLLM's refusal.
     on_fail: Literal["annotate", "block"] = "annotate"
+    # Whether the note or the block reason says why, not only what: Witty's
+    # influence on the answer is the point of showing it at all.
+    explain: bool = True
 
 
 class LitellmGuardrailIn(BaseRequestIn):
