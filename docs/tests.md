@@ -22,7 +22,7 @@ Without it the tests call the hosted API, which is a different version. It moved
 
 The image is pinned for the same reason `latest` is not: it would drift too. The heap is set because the default runs out part way through the suite and the container exits, which surfaces as every remaining test failing to connect.
 
-CI runs the same pinned instance as a service container, so a snapshot that holds locally holds there too. Before that it called the hosted API, which is why this matters: the two disagree.
+CI builds and runs the same image, so a snapshot that holds locally holds there too. It is the project's image, from `languagetool/Dockerfile`, not the stock `erikvl87/languagetool` one: the stock image lacks the ignore lists and the `disabledRuleIds` in `languagetool/config.properties`, and with those missing it reports findings a deployment never shows, such as `SEHR_GEEHRTER_NAME`. Before that CI called the hosted API, which is why this matters: the three disagree.
 
 Use `127.0.0.1` rather than `localhost`. If anything else on the machine listens on the IPv6 loopback for that port, `localhost` resolves there first and the requests never reach the container, which looks like LanguageTool returning 404.
 

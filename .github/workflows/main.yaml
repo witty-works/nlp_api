@@ -34,28 +34,6 @@ jobs:
       pull-requests: read
       statuses: write # the commit status of a dispatched run, see below
 
-    services:
-      # The snapshots contain LanguageTool findings, so they only hold still if
-      # LanguageTool does. Pinned to the same version the compose file runs,
-      # because the hosted API is a different one: it moved to 6.9 and stopped
-      # reporting COMMA_COMPOUND_SENTENCE, which changes a snapshot on its own.
-      # The heap is raised because the default runs out part way through the
-      # suite, and the container exiting reads as every later test failing to
-      # connect rather than as one crash.
-      languagetool:
-        image: erikvl87/languagetool:6.8
-        ports:
-          - 8010:8010
-        env:
-          Java_Xms: 512m
-          Java_Xmx: 4g
-        # The image defines its own healthcheck, so the runner waits for it;
-        # only the timings need widening for a cold JVM start.
-        options: >-
-          --health-interval 10s
-          --health-retries 20
-          --health-start-period 30s
-
     steps:
       # A dispatched run is not shown among a pull request's checks, only a
       # push's is, so it reports as a commit status of its own, which is.
@@ -83,8 +61,24 @@ jobs:
           dotnet: true
           haskell: true
           large-packages: true
-          docker-images: false # the LanguageTool service container must survive
+          docker-images: false # keeps docker itself; the LanguageTool image is built below
           swap-storage: true
+
+      # The snapshots contain LanguageTool findings, so they only hold still if
+      # LanguageTool does, and they have to come from the LanguageTool this
+      # project deploys: languagetool/Dockerfile, the image compose.yml builds.
+      # Not the stock erikvl87 image, which lacks the ignore lists and the
+      # disabledRuleIds (SEHR_GEEHRTER_NAME among them), and not the hosted
+      # API, which is a different version. A service container cannot be
+      # built from the checkout, so this builds and starts it here, early, for
+      # the JVM to start while the dependencies install. The heap is raised
+      # because the default runs out part way through the suite, and the
+      # container exiting reads as every later test failing to connect.
+      - name: Start LanguageTool
+        run: |
+          docker build --build-arg LT_VERSION=6.8 -t nlp-languagetool:6.8 languagetool
+          docker run -d --name languagetool -p 8010:8010 \
+            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool:6.8
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: pdm-project/setup-pdm@v3
@@ -112,9 +106,18 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
+      - name: Wait for LanguageTool
+        run: |
+          for i in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:8010/v2/languages > /dev/null && exit 0
+            sleep 5
+          done
+          docker logs languagetool
+          exit 1
+
       - name: Run test suite
         env:
-          LANGUAGETOOL_API: "http://localhost:8010/v2"
+          LANGUAGETOOL_API: "http://127.0.0.1:8010/v2"
         run: |
           export testing=True
           pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
