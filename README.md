@@ -5,7 +5,7 @@
   - Detect issues and surface inclusive alternatives across multiple diversity dimensions (see public overview: https://www.witty.works/en/categories.html)
   - Optional grammar/spell checks via LanguageTool (self-hosted or public API)
   - Optional LLM-powered alternatives and rephrasing
-  - Reducing bias in LLM output (through prompt injection and automatic follow-ups prompts)
+  - Inclusive-language guardrail for LLM and agent gateways: guidance for the request, a verdict and a reask for the answer, with an adapter for LiteLLM — see [Guardrails](docs/guardrails.md)
   - Custom, organization-specific rules
   - LanguageTool-compatible API, so LanguageTool clients (desktop app, add-ons) can use this service as their custom server — see [LanguageTool-compatible API](docs/api.md#languagetool-compatible-api)
 - Integrations:
@@ -26,6 +26,7 @@
   - [app/languagetool.py](app/languagetool.py) — LanguageTool client integration
   - [app/context_checker.py](app/context_checker.py) — local SetFit or remote API context checking
   - [app/prompt.py](app/prompt.py) — the one place an LLM is called; provider comes from `LLM_MODEL` via LiteLLM
+  - [app/guidance.py](app/guidance.py), [app/guardrail.py](app/guardrail.py) — Witty GPT's guardrail: the guidance for a request and the review of an answer, exposed by [app/routes/guardrail.py](app/routes/guardrail.py)
   - [bin/convert_to_cpu.py](bin/convert_to_cpu.py), [bin/download_from_huggingface.py](bin/download_from_huggingface.py), [bin/test_cpu.py](bin/test_cpu.py) — context model utilities
   - [app/auth_service.py](app/auth_service.py), [app/middleware.py](app/middleware.py) — auth (API key/OAuth2) and docs protection
   - [bin/api_key.py](bin/api_key.py) — mint and revoke API keys where no dashboard does it
@@ -40,6 +41,7 @@ To keep this README scannable, detailed sections have moved to `docs/`. Quick li
 - [Configuration & Environment Variables](docs/configuration.md)
 - [Setup & Deployment](docs/setup.md)
 - [API Endpoints](docs/api.md)
+- [Guardrails (Witty GPT)](docs/guardrails.md)
 - [Request Configuration & Categories](docs/request-configuration.md)
 - [Tests](docs/tests.md)
 - [Training Data & Lookups](docs/training-data.md)

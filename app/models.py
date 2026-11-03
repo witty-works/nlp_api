@@ -110,10 +110,12 @@ class MetricsType(str, Enum):
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
     REPHRASE_HOST = "rephrase_host"
-    PROMPT_COUNTS = "prompt_counts"
-    PROMPT_HOST = "prompt_host"
     WRITE_COUNTS = "write_counts"
     WRITE_HOST = "write_host"
+    GUARDRAIL_INPUT_COUNTS = "guardrail_input_counts"
+    GUARDRAIL_INPUT_HOST = "guardrail_input_host"
+    GUARDRAIL_OUTPUT_COUNTS = "guardrail_output_counts"
+    GUARDRAIL_OUTPUT_HOST = "guardrail_output_host"
 
 
 class LlmAccessType(str, Enum):
@@ -170,13 +172,6 @@ class LangWithAutoType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-
-
-class ReviewType(str, Enum):
-    INCLUDE_PREVIOUS = "include_previous"
-    EXPLAIN_EDITS = "explain_edits"
-    NO_EXPLANATION = "no_explanation"
-    USE_EXPLANATION = "use_explanation"
 
 
 class RuleType(str, Enum):
@@ -956,6 +951,20 @@ class WriteRequestIn(BaseRequestIn):
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
 
 
+class GuardrailInputIn(BaseRequestIn):
+    type: str = "guardrail_input"
+    # Chat messages as the gateway has them. Plain dicts, so that whatever else
+    # a message carries (tool calls, names, a null content) comes back as it was.
+    messages: Annotated[list[dict[str, Any]], Len(min_length=1)]
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
+class GuardrailInputOut(BaseModel):
+    action: Literal["modify"] = "modify"
+    messages: list[dict[str, Any]]
+    guidance: str
+
+
 class CheckRequestIn(BaseRequestIn):
     type: str = "check"
     text: str
@@ -1443,6 +1452,69 @@ class ResultsOut(BaseModel):
     # for this language and config. Always sent, unlike an absent `bulk`, so a
     # client can tell an API without bulk actions from a text without any.
     bulk_actions: list[str] = Field(default_factory=list)
+
+
+class GuardrailGuidanceOut(BaseModel):
+    guidance: str
+
+
+class GuardrailOutputIn(BaseRequestIn):
+    type: str = "guardrail_output"
+    # The model's answer, the part of it a person will read.
+    response: str
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+    # How many findings with alternatives make the answer fail.
+    threshold: Annotated[int, Field(ge=1)] = 1
+
+
+class GuardrailOutputOut(BaseModel):
+    verdict: Literal["pass", "fail"]
+    findings: list[ResultOut]
+    language: Optional[str] = None
+    limit_reached: bool
+    # The message to send the model on a fail: it quotes the answer, so it
+    # works with or without the conversation before it.
+    reask: Optional[dict[str, str]] = None
+
+    # Always in the answer, `null` where the language could not be told.
+    model_config = {
+        "json_schema_extra": {
+            "required": ["verdict", "findings", "language", "limit_reached"]
+        }
+    }
+
+
+class LitellmGuardrailParams(BaseModel):
+    """`additional_provider_specific_params` in a LiteLLM guardrail config."""
+
+    lang: LangWithAutoType = LangWithAutoType.AUTO
+    threshold: Annotated[int, Field(ge=1)] = 1
+    # What a failing answer becomes: the answer with Witty's findings appended,
+    # or LiteLLM's refusal.
+    on_fail: Literal["annotate", "block"] = "annotate"
+    # Whether the note or the block reason says why, not only what: Witty's
+    # influence on the answer is the point of showing it at all.
+    explain: bool = True
+
+
+class LitellmGuardrailIn(BaseRequestIn):
+    """What LiteLLM's Generic Guardrail API (beta) sends; fields Witty does not
+    use are ignored."""
+
+    type: str = "guardrail_litellm"
+    texts: list[str] = Field(default_factory=list)
+    input_type: Literal["request", "response"]
+    structured_messages: Optional[list[dict[str, Any]]] = None
+    additional_provider_specific_params: LitellmGuardrailParams = Field(
+        default_factory=LitellmGuardrailParams
+    )
+
+
+class LitellmGuardrailOut(BaseModel):
+    action: Literal["NONE", "BLOCKED", "GUARDRAIL_INTERVENED"]
+    blocked_reason: Optional[str] = None
+    texts: Optional[list[str]] = None
+    structured_messages: Optional[list[dict[str, Any]]] = None
 
 
 class PrettyJSONResponse(Response):

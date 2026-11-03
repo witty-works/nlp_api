@@ -6,6 +6,7 @@ import litellm
 
 from app.settings import Settings
 from app.alternatives import Alternatives
+from app.guidance import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
 import json_repair
 
 # Providers differ in which parameters they accept, and a request that names one
@@ -130,18 +131,7 @@ class Prompt:
         temperature = temperature or 0.1
 
         if system_prompt is None:
-            system_prompt = """
-            You are an expert in inclusive language.
-            Keep gender equality in mind and avoid language that is needlessly gendered (f.e. use truly gender neutral nouns, avoid pronouns).
-            Do not make biased assumptions.
-            Do not rely on social stereotypes.
-            Do not use derogatory language even as a joke.
-            Avoid jargon terms, specially sports or military terms.            
-
-            Specifically make use of communal and inclusive language.
-
-            Follow instructions without mentioning them in your response. Specifically do not add phrases like "Greetings", "Here is .." or "Sure .." to the beginning of your response.
-            """
+            system_prompt = BASE_GUIDANCE + "\n\n" + BARE_TEXT_INSTRUCTION
 
         # A model that has no system role of its own — Bedrock's Mistral ones,
         # among others — gets the system prompt folded into the message by

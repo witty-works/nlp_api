@@ -6,6 +6,8 @@ from app.routes import (
     config_routes,
     rephrase,
     prompt,
+    guardrail,
+    guardrail_litellm,
     textarea,
     check,
     lt,
@@ -27,8 +29,12 @@ def register_routes(app):
     # Register rephrase routes
     app.include_router(rephrase.router, tags=["rephrase"])
 
-    # Register prompt routes
-    app.include_router(prompt.router, tags=["prompt"])
+    # Register /v1.0/write, Witty GPT's managed loop
+    app.include_router(prompt.router, tags=["guardrail"])
+
+    # Register the guardrail routes, for LLM and agent gateways
+    app.include_router(guardrail.router, tags=["guardrail"])
+    app.include_router(guardrail_litellm.router, tags=["guardrail"])
 
     # Register textarea demo route
     app.include_router(textarea.router, tags=["textarea"])

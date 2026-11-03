@@ -118,12 +118,15 @@ class Redis:
         elif endpoint == "rephrase":
             self.db.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
-        elif endpoint == "prompt":
-            self.db.hincrby(MetricsType.PROMPT_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.PROMPT_HOST, version + host, 1)
         elif endpoint == "write":
             self.db.hincrby(MetricsType.WRITE_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.WRITE_HOST, version + host, 1)
+        elif endpoint == "guardrail_input":
+            self.db.hincrby(MetricsType.GUARDRAIL_INPUT_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.GUARDRAIL_INPUT_HOST, version + host, 1)
+        elif endpoint == "guardrail_output":
+            self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_HOST, version + host, 1)
 
     def get_user_logs(
         self,

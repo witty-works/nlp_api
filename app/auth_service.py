@@ -346,6 +346,14 @@ async def fetch_user(
     if resolved is not None:
         return resolved
 
+    # An x-key decides when there is one, before any Bearer token: gateways
+    # such as agentgateway forward the client's own Authorization header (its
+    # LLM key) next to the x-key they add for this API. A wrong x-key is not a
+    # reason to try the token instead. The browser extension orders its own
+    # headers the same way.
+    if "x-key" in request.headers:
+        return redis.get_api_key_email(request.headers["x-key"])
+
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
@@ -414,9 +422,6 @@ async def fetch_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Token provided did not map to a valid client ID",
         )
-
-    elif "x-key" in request.headers:
-        return redis.get_api_key_email(request.headers["x-key"])
 
     if settings.testing:
         # Only use test credentials when the explicit testing header is present

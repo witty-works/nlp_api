@@ -13,6 +13,9 @@ from app.models import Client
 # Typed API version constants
 CHECK_API_VERSION: Final[Literal["2.4"]] = "2.4"
 REPHRASE_API_VERSION: Final[Literal["1.0"]] = "1.0"
+# Gateways are configured with the guardrail paths, so they move with the
+# guardrail contract alone, not with /v1.0/rephrase's.
+GUARDRAIL_API_VERSION: Final[Literal["1.0"]] = "1.0"
 
 
 def rephrase_api_version(version: str) -> None:
