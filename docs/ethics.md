@@ -95,10 +95,36 @@ and the board reviews them as such.
      the remaining risks and why they are acceptable (2.18, 2.19)
    - says what changes for the public: a new data flow, provider or model
      belongs in the transparency report and the privacy policy
+   - records who signed off and why, and any steering (see below)
    - ends with "Flagged for Technology Ethics Board review"
 3. Prefer the design that makes the answer "no": process in memory, keep
    nothing, filter before any egress, make it opt-in rather than default-on,
    keep it deterministic.
+
+## Record sign-offs and steering
+
+What was decided, and by whom, must be traceable from the history alone.
+Git and the PR are the public record of this service, so nothing that only
+happened in a chat or an agent session counts.
+
+- **Sign-offs**: when someone decides that a flagged change may go ahead,
+  name them, give their role (the user, the ethics board, a board member)
+  and the reason, both in the PR's ethics screening section and in the body
+  of the commit that implements the change. "Approved" without a reason is
+  not a sign-off.
+- **Steering**: when an ethics consideration changes a design, record it in
+  the commit body and the PR description, whether a person asked for the
+  change or you proposed it and they agreed. Examples: dropping a field
+  that would have been logged, making something opt-in, choosing a
+  self-hosted provider over a public API. Say what was considered, what was
+  chosen and why. Steering that makes the answer "no" matters too: it is
+  why the answer is "no".
+- **Rejected options**: if a concern was raised and the change went ahead
+  anyway, record the concern and why it was outweighed (2.18, 2.19), not
+  only the outcome.
+
+Write it for a reader who was not there, such as a board member, an auditor
+or a future contributor, and keep it factual.
 
 No "yes"? Say so in one line in the PR description ("Ethics screening: no
 trigger") so that a reviewer can see the screening was done.

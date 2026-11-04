@@ -27,6 +27,10 @@ three questions, raise it anyway. The board's last question is whether there
 are any other ethical issues it forgot to consider. Do not settle a doubt by
 yourself: tell the user what worries you and why, and let them decide.
 
+**Record sign-offs and ethics-related steering** in the commit body and the
+PR description: who decided, what, and why, including design changes made for
+ethical reasons. The history must stand on its own as a transparency record.
+
 **If any of these might apply, read [docs/ethics.md](docs/ethics.md) before
 writing code.** It has the full triggers, what to do (in short: stop, tell
 the user, flag the PR for the board), the invariants to keep and the known
