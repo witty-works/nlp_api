@@ -14,7 +14,7 @@
 
 ---
 
-The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`). A request that carries an `x-key` is authenticated by it alone, whatever `Authorization` header comes with it: a gateway may forward its client's own token next to the key it adds for this API.
+The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`). A request that carries an `x-key` is authenticated by it alone, whatever `Authorization` header comes with it: a gateway may forward its client's own token next to the key it adds for this API. More than one `x-key` header is refused with a `400`.
 
 ## Core Endpoints
 

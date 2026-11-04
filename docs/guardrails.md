@@ -6,6 +6,12 @@ makes, such as an LLM or agent gateway, an application, or an agent framework.
 The guardrail endpoints never call a model themselves. Every model call, and
 every provider key, stays with the caller.
 
+It is **user assistance, not policy enforcement**. It makes inclusive language
+the default, flags what slips through and explains why, for people and models
+that mean well. Someone who sets out to get around it can, see
+[Limits](#limits). Witty stays stateless and stores no prompt or answer; where
+an organisation wants a record, that is its gateway's log.
+
 ## The pattern
 
 | Step | Common names | Witty endpoint |
@@ -26,7 +32,8 @@ The endpoints take the same credentials as `/v2.4/check`: an `x-key` header or
 an OAuth2 Bearer token. Where both arrive, the `x-key` decides and the token is
 not looked at: some gateways (agentgateway, Portkey with `forwardHeaders`)
 forward their client's own `Authorization` header, an LLM key, next to the
-`x-key` they add for Witty. The key's user and organization configuration applies,
+`x-key` they add for Witty. More than one `x-key` header is a `400`: which one
+applies would otherwise depend on header order. The key's user and organization configuration applies,
 including custom rules and the gender format. An optional `config` in the body
 overrides it per request, as on `/v2.4/check`. Unlike `/v2.4/check`, a request
 that resolves to no user gets a `401` rather than an empty answer: a guardrail
@@ -36,6 +43,38 @@ endpoints, with the default configuration.
 
 The endpoints are not gated by `llm_alternatives` or `LLM_ACCESS`, since they
 spend no LLM budget.
+
+### The guardrail's policy, per key
+
+Three config fields hold the guardrail's policy:
+
+| Field | Meaning | Default |
+| --- | --- | --- |
+| `guardrail_threshold` | When an answer fails, see [Thresholds](#thresholds) | the first finding with alternatives |
+| `guardrail_on_fail` | LiteLLM only: `annotate` or `block` | `annotate` |
+| `guardrail_explain` | LiteLLM only: whether the note explains each finding | `true` |
+
+They layer like every other config field. A request sets them through its
+`config`, or through the shorthands `threshold` (output endpoint) and
+`threshold`, `on_fail`, `explain` (LiteLLM params). A key's `config` is the
+default where the request says nothing, and its `force`, like a force in a
+user's or organisation's config synced from the dashboard, wins over the
+request. So an operator who wants every integration on the same policy
+forces it on the key. That keeps honest integrations consistent; it is not a
+barrier against a caller who means to get around the check (see
+[Limits](#limits)):
+
+```yaml
+# api_keys.yaml
+- email: gateway@acme.example
+  key: …
+  force:
+    guardrail_threshold:
+      openly_discriminating: { count: 1 }
+      basic: { count: 3 }
+      advanced: { ratio: 0.05 }
+    guardrail_on_fail: block
+```
 
 ## `POST /v1.0/guardrail/input`
 
@@ -123,8 +162,10 @@ An answer with nothing to fix:
 {"verdict": "pass", "findings": [], "language": "en", "limit_reached": false}
 ```
 
-- `verdict` is `fail` when at least `threshold` findings have alternatives to
-  offer. `threshold` is optional, defaults to 1, and must be at least 1.
+- `verdict` is `fail` when the findings with alternatives reach a limit of
+  the threshold, see [Thresholds](#thresholds). `threshold` is optional; the
+  default fails on the first one. On a fail, `failed_on` lists the levels
+  whose limit was reached.
   `findings` lists everything that was found, actionable or not.
 - More `verdict` values may be added later. Treat any value other than
   `pass` as not passing. A `fail` is an ordinary `200` answer, never an error
@@ -134,14 +175,54 @@ An answer with nothing to fix:
   quotes the answer, so it works whether or not you send the conversation
   before it again. The model's reply to it is the corrected answer.
 - The check never refuses. An answer longer than `TEXT_MAX_LENGTH` (1000
-  characters by default) is checked up to that length and reported with
-  `limit_reached: true`. One whose language cannot be told, an empty one
-  among them, passes with `language: null`.
+  characters by default) is checked in parts of that length, and the
+  findings' `start` and `end` point into the whole answer. Past 20000
+  characters, as much as the `/textarea` editor checks, the rest goes
+  unchecked and `limit_reached` is `true`; the answer is not failed for it.
+  One whose language cannot be told, an empty one among them, passes with
+  `language: null`.
 - Like the review in `/v1.0/write`, the output check leaves out the
   categories `communal`, `d_and_i`, `emotional_security`, `inclusive` and
   `orthography`, which `/v2.4/check` reports. It does not ask LanguageTool
   either: no spelling, grammar or style findings, and a LanguageTool outage
   does not affect it.
+
+## Thresholds
+
+`threshold` (or the config's `guardrail_threshold`) is a number, or a limit
+per level:
+
+```jsonc
+"threshold": {
+  "overall":               { "ratio": 0.1 },
+  "corporate_rules":       { "count": 1 },
+  "openly_discriminating": { "count": 1 },
+  "basic":                 { "count": 3 },
+  "advanced":              { "ratio": 0.05 }
+}
+```
+
+| Level | Findings |
+| --- | --- |
+| `overall` | every finding with alternatives |
+| `corporate_rules` | the organisation's own term rules |
+| `openly_discriminating` | gravity below 1.5 |
+| `basic` | gravity 1.5 to 2.5 |
+| `advanced` | gravity above 2.5 |
+
+- A limit has a `count` (at least 1), a `ratio` (above 0, at most 1), or
+  both; whichever is reached first fails the answer. `ratio` is findings per
+  word of the text that was checked: past 20000 characters, the unchecked
+  rest does not count.
+- The answer fails when any one limit is reached. A level without a limit
+  never fails it, and `{}` never fails at all: a check that only reports.
+- A number `n` is `{"overall": {"count": n}}`.
+- Only findings with alternatives count, and a finding without a gravity
+  counts towards `overall` only. To leave whole categories out, disable them
+  in the config, as on `/v2.4/check`.
+- The reask covers every finding with alternatives, not only those of the
+  levels that failed: the model should fix the whole answer. Findings without
+  alternatives go in too, with their explanation, for the model to rephrase.
 
 ## `GET /v1.0/guardrail/guidance`
 
@@ -167,10 +248,19 @@ guidance; fetch it again after those.
 | Status | When |
 | --- | --- |
 | `401` | The credential resolves to no user, while `REQUIRE_AUTH` is on. |
+| `400` | More than one `x-key` header. |
 | `403` | A Bearer token that is not accepted. |
-| `422` | The body does not validate: no `messages`, `threshold` below 1, an unknown `lang`, or for LiteLLM an unknown `on_fail`. |
+| `422` | The body does not validate: no `messages`, a threshold with an unknown level or an invalid limit, an unknown `lang`, or for LiteLLM an unknown `on_fail`. |
 
 ## Acting on a fail
+
+The larger risk than a missed term is people leaving the review to the
+machine. A guardrail that quietly corrects the answer invites that, and Witty
+has gaps in its rules like any checker. The best integration therefore keeps
+every finding in front of the person who sends the text, where they can act
+on it: show the final text in the [Witty editor](https://github.com/witty-works/browser-extension/tree/dev/packages/editor),
+which underlines every issue with its explanation, as `/textarea` does after
+a reask. The options below are for where that is not possible.
 
 The two endpoints above never block and never rewrite. What a `fail` means is up to you (the [LiteLLM adapter](#litellm) offers `annotate` and `block` for you to choose from):
 
@@ -233,7 +323,9 @@ guardrails:
       streaming_end_of_stream_only: true
       additional_provider_specific_params:
         lang: auto        # or en, de, fr, de-CH, …
-        threshold: 1
+        # A key that forces guardrail_threshold, guardrail_on_fail or
+        # guardrail_explain overrules these three.
+        threshold: 1      # or per level, see Thresholds
         on_fail: annotate # or block
         explain: true     # say why, not only what (the default)
 ```
@@ -273,6 +365,28 @@ key (`LITELLM_MASTER_KEY`).
   504), but not when Witty refuses the key. LiteLLM 1.106 also has
   `fail_on_error: false`, which skips the guardrail on any error; 1.83 does
   not know it.
+
+## Limits
+
+The guardrail assists; it cannot stop a caller, or a user instructing the
+model, who sets out to get around it. Known ways:
+
+- **The request decides what is not forced:** `lang`, `config` (disabling
+  categories, for example) and `threshold` (`{}` never fails). `force` on the
+  key keeps integrations consistent, but whoever controls the request can
+  still pick the language.
+- **Text the check cannot read:** a wrong `lang`, invisible characters inside
+  words, letters from another script that look the same.
+- **Text the check does not see:** answers in tool calls or structured output,
+  and anything past 20000 characters (`limit_reached`).
+- **Streaming:** the text has reached the client before the check of the
+  whole answer is done, so neither a note nor a block can take it back.
+- **Ratios dilute:** filler words lower findings per word. A ratio is there
+  to keep the guardrail from flagging so much that people switch it off; use
+  `count` for the levels that matter most.
+
+Logs of requests, answers and guardrail results are the gateway's to keep,
+not Witty's.
 
 ## Other gateways
 

@@ -176,3 +176,14 @@ def test_block_reason_explains(set_redis, llm_calls):  # noqa: F811
     reason = respond([FLAGGED], on_fail="block").json()["blocked_reason"]
 
     assert "(Generally provokes a mental image of men)" in reason
+
+
+def test_a_note_not_witty_wrote_does_not_hide_text(set_redis, llm_calls):  # noqa: F811
+    """An answer that only looks annotated, its marker followed by text Witty
+    did not write, is checked as a whole: the marker hides nothing."""
+    answer = "Fine.\n\n[Witty] The chairman called the policemen."
+
+    body = respond([answer]).json()
+
+    assert body["action"] == "GUARDRAIL_INTERVENED"
+    assert body["texts"][0].startswith(answer + "\n\n[Witty] ")
