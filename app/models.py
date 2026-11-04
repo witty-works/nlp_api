@@ -1,4 +1,4 @@
-from pydantic import field_validator, BaseModel, Field
+from pydantic import field_validator, model_validator, BaseModel, ConfigDict, Field
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
@@ -566,6 +566,47 @@ def _article_form(separator: str) -> re.Pattern:
     )
 
 
+class GuardrailLimit(BaseModel):
+    """When one level fails an answer: at `count` findings, at `ratio`
+    findings per word checked, or at whichever of the two comes first."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    count: Optional[Annotated[int, Field(ge=1)]] = None
+    ratio: Optional[Annotated[float, Field(gt=0, le=1)]] = None
+
+    @model_validator(mode="after")
+    def has_a_limit(self) -> "GuardrailLimit":
+        if self.count is None and self.ratio is None:
+            raise ValueError("a limit needs a count, a ratio or both")
+        return self
+
+
+class GuardrailThreshold(BaseModel):
+    """When the guardrail fails an answer, per level of finding. A level
+    without a limit never fails it; a number `n` is `{"overall": {"count":
+    n}}`. Field order is the order `failed_on` reports levels in."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    overall: Optional[GuardrailLimit] = None
+    corporate_rules: Optional[GuardrailLimit] = None
+    openly_discriminating: Optional[GuardrailLimit] = None
+    basic: Optional[GuardrailLimit] = None
+    advanced: Optional[GuardrailLimit] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def from_number(cls, data):
+        if isinstance(data, int) and not isinstance(data, bool):
+            return {"overall": {"count": data}}
+        return data
+
+    @classmethod
+    def parse(cls, value) -> "GuardrailThreshold":
+        return cls.model_validate(value)
+
+
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
@@ -646,6 +687,12 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
+    # The guardrail's policy, so that a key's config can fix it: when an
+    # answer fails (None: at the first finding with alternatives), and for
+    # LiteLLM what a failing answer becomes and whether the note explains.
+    guardrail_threshold: Optional[GuardrailThreshold] = None
+    guardrail_on_fail: Literal["annotate", "block"] = "annotate"
+    guardrail_explain: bool = True
 
     def get_gender_separators_from_config(self, lang: LangType):
         return Config.get_gender_separators(self.get_gender_separator(lang))
@@ -1463,8 +1510,9 @@ class GuardrailOutputIn(BaseRequestIn):
     # The model's answer, the part of it a person will read.
     response: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
-    # How many findings with alternatives make the answer fail.
-    threshold: Annotated[int, Field(ge=1)] = 1
+    # When the answer fails: read as the request setting the config's
+    # `guardrail_threshold`, so a key that forces one overrules it.
+    threshold: Optional[GuardrailThreshold] = None
 
 
 class GuardrailOutputOut(BaseModel):
@@ -1475,6 +1523,8 @@ class GuardrailOutputOut(BaseModel):
     # The message to send the model on a fail: it quotes the answer, so it
     # works with or without the conversation before it.
     reask: Optional[dict[str, str]] = None
+    # On a fail, the levels whose limit was reached.
+    failed_on: Optional[list[str]] = None
 
     # Always in the answer, `null` where the language could not be told.
     model_config = {
@@ -1488,13 +1538,16 @@ class LitellmGuardrailParams(BaseModel):
     """`additional_provider_specific_params` in a LiteLLM guardrail config."""
 
     lang: LangWithAutoType = LangWithAutoType.AUTO
-    threshold: Annotated[int, Field(ge=1)] = 1
+    # These three are read as the request setting the config's
+    # `guardrail_threshold`, `guardrail_on_fail` and `guardrail_explain`, so a
+    # key that forces one overrules them. Unset, the key's config applies.
+    threshold: Optional[GuardrailThreshold] = None
     # What a failing answer becomes: the answer with Witty's findings appended,
     # or LiteLLM's refusal.
-    on_fail: Literal["annotate", "block"] = "annotate"
+    on_fail: Optional[Literal["annotate", "block"]] = None
     # Whether the note or the block reason says why, not only what: Witty's
     # influence on the answer is the point of showing it at all.
-    explain: bool = True
+    explain: Optional[bool] = None
 
 
 class LitellmGuardrailIn(BaseRequestIn):

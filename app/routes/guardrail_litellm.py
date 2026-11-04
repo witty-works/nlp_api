@@ -42,8 +42,19 @@ async def post_guardrail_litellm(
 ) -> LitellmGuardrailOut:
     """Guidance for a request LiteLLM is about to send, a note or a block for
     the answer it got back."""
-    configs = await guardrail_user(request, request_in, context)
     params = request_in.additional_provider_specific_params
+    # As the request setting them in its config, before the layers are
+    # applied, so that a key forcing them overrules them.
+    for param, field in (
+        ("threshold", "guardrail_threshold"),
+        ("on_fail", "guardrail_on_fail"),
+        ("explain", "guardrail_explain"),
+    ):
+        value = getattr(params, param)
+        if value is not None:
+            setattr(request_in.config, field, value)
+    configs = await guardrail_user(request, request_in, context)
+    policy = request_in.config
 
     if request_in.input_type == "request":
         context.redis.store_metrics(
@@ -55,32 +66,46 @@ async def post_guardrail_litellm(
         request, configs, GUARDRAIL_API_VERSION, "guardrail_output"
     )
 
-    answers = [text.split(WITTY_NOTE, 1)[0] for text in request_in.texts]
+    async def issues_of(text: str) -> str | None:
+        """The note for `text`, None where it passes."""
+        if not text.strip():
+            return None
+        outcome = await review(
+            CheckRequestIn(
+                text=text,
+                lang=params.lang,
+                client=request_in.client,
+                # Each text is reviewed on its own, and a review changes the
+                # config it is given.
+                config=request_in.config.model_copy(deep=True),
+            ),
+            configs,
+            context,
+        )
+        if outcome.verdict != "fail":
+            return None
+        return issue_list(outcome.findings, policy.guardrail_explain)
+
+    answers = []
     issues = []
-    for text in answers:
-        found = None
-        if text.strip():
-            outcome = await review(
-                CheckRequestIn(
-                    text=text,
-                    lang=params.lang,
-                    client=request_in.client,
-                    # Each text is reviewed on its own, and a review changes the
-                    # config it is given.
-                    config=request_in.config.model_copy(deep=True),
-                ),
-                configs,
-                context,
-                params.threshold,
-            )
-            if outcome.verdict == "fail":
-                found = issue_list(outcome.findings, params.explain)
-        issues.append(found)
+    for text in request_in.texts:
+        # A note at the end is Witty's own, left by an earlier check of the
+        # same answer, only if it is exactly the note Witty writes for the text
+        # before it; anything else after a marker is part of the answer.
+        if WITTY_NOTE in text:
+            before, note = text.rsplit(WITTY_NOTE, 1)
+            found = await issues_of(before)
+            if found is not None and found == note:
+                answers.append(before)
+                issues.append(found)
+                continue
+        answers.append(text)
+        issues.append(await issues_of(text))
 
     if not any(issues):
         return LitellmGuardrailOut(action="NONE")
 
-    if params.on_fail == "block":
+    if policy.guardrail_on_fail == "block":
         return LitellmGuardrailOut(
             action="BLOCKED",
             blocked_reason="Witty: " + "; ".join(i for i in issues if i),

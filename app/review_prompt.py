@@ -10,8 +10,9 @@ class ReviewPrompt:
         min_changes: int = 0,
     ) -> str | None:
         """The reask: a message that quotes the model's answer and asks it to
-        apply Witty's alternatives to what was flagged. None where no more than
-        `min_changes` findings have alternatives to offer."""
+        apply Witty's alternatives to what was flagged, and to rephrase what
+        Witty has no alternative for, with the explanation as the reason. None
+        where no more than `min_changes` findings have alternatives to offer."""
         prompt = (
             'You are an expert in inclusive language. You are tasked with editing the "previous response".'
             + "\n"
@@ -32,8 +33,17 @@ Do not include the "issues list" in your response.
         prompt += "Only respond with the edited version, so not provide a before/after. Do not explain the changes in the edits."
 
         changes = []
+        rephrase = []
         for result in results:
-            if len(result.alternatives) == 0:
+            if not result.alternatives:
+                if result.explanation and result.explanation.text:
+                    rephrase.append(
+                        {
+                            "issue": result.text,
+                            "alternatives": [],
+                            "explanation": result.explanation.text,
+                        }
+                    )
                 continue
 
             change = {
@@ -55,5 +65,5 @@ Do not include the "issues list" in your response.
         return (
             prompt
             + '\nBelow is the "issues list":\n'
-            + json.dumps(changes, ensure_ascii=False)
+            + json.dumps(changes + rephrase, ensure_ascii=False)
         )

@@ -3012,6 +3012,22 @@ def test_x_key_wins_over_a_forwarded_bearer_token(set_redis):
     assert response.json()["verdict"] == "fail"
 
 
+def test_two_x_keys_are_refused(set_redis):
+    """Behind a gateway that forwards its client's headers, a client's own
+    x-key could otherwise come first and pick the configuration."""
+    context.redis.set_api_key("forwarded-key", "default@gmail.com")
+    headers = [("x-key", "forwarded-key"), ("x-key", "forwarded-key")]
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 400
+
+
 def test_an_invalid_x_key_does_not_fall_back_to_bearer(set_redis):
     """An x-key present decides, as the browser extension's own headers do:
     a wrong one is a wrong key, not a reason to try the token instead."""

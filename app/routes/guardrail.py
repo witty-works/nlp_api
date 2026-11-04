@@ -131,6 +131,10 @@ async def post_guardrail_output(
 ) -> GuardrailOutputOut:
     """Check a model's answer: a verdict, what was found, and on a fail the
     message for the gateway to send its model."""
+    # As the request setting it in its config, before the layers are applied,
+    # so that a key forcing a threshold overrules it.
+    if request_in.threshold is not None:
+        request_in.config.guardrail_threshold = request_in.threshold
     configs = await guardrail_user(request, request_in, context)
     context.redis.store_metrics(
         request, configs, GUARDRAIL_API_VERSION, "guardrail_output"
@@ -143,7 +147,7 @@ async def post_guardrail_output(
         config=request_in.config,
     )
 
-    outcome = await review(check_request_in, configs, context, request_in.threshold)
+    outcome = await review(check_request_in, configs, context)
 
     # Without `reask` and the findings' empty fields, but with `language: null`
     # where it could not be told: a client reads that key on every answer.

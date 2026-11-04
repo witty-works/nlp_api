@@ -2,6 +2,7 @@
 a verdict and a reask for the response, and never an LLM call of their own."""
 
 import asyncio
+import json
 
 import pytest
 from fastapi.testclient import TestClient
@@ -238,11 +239,34 @@ def test_output_rejects_threshold_below_one(set_redis, llm_calls):  # noqa: F811
     assert response.status_code == 422
 
 
-def test_output_long_response_is_checked_in_part(set_redis, llm_calls):  # noqa: F811
-    response = check_output({"response": "The chairman called. " * 100, "lang": "en"})
+NEUTRAL = "This is a perfectly neutral sentence about the weather today. "
 
-    assert response.status_code == 200
-    assert response.json()["limit_reached"] is True
+
+def test_a_long_answer_is_checked_in_full(set_redis, llm_calls):  # noqa: F811
+    """Past TEXT_MAX_LENGTH the answer is checked in parts, and the findings
+    point into the whole answer."""
+    answer = NEUTRAL * 20 + "The chairman called the policemen."
+
+    body = check_output({"response": answer, "lang": "en"}).json()
+
+    assert body["verdict"] == "fail"
+    assert body["limit_reached"] is False
+    texts = {answer[f["start"] : f["end"]] for f in body["findings"]}
+    assert {"chairman", "policemen"} <= texts
+
+
+def test_an_answer_over_the_cap_is_checked_up_to_it(
+    set_redis, llm_calls, monkeypatch
+):  # noqa: F811
+    """Beyond GUARDRAIL_MAX_LENGTH the rest goes unchecked, which
+    `limit_reached` says; the guardrail assists, so that is not a fail."""
+    monkeypatch.setattr("app.guardrail.GUARDRAIL_MAX_LENGTH", 2000)
+    answer = NEUTRAL * 40 + "The chairman called the policemen."
+
+    body = check_output({"response": answer, "lang": "en"}).json()
+
+    assert body["verdict"] == "pass"
+    assert body["limit_reached"] is True
 
 
 def test_output_empty_response_passes(set_redis, llm_calls):  # noqa: F811
@@ -385,3 +409,24 @@ def test_guidance_endpoint_follows_the_config(set_redis, llm_calls):  # noqa: F8
 def test_guidance_endpoint_requires_a_user(set_redis, llm_calls):  # noqa: F811
     with TestClient(app) as client:
         assert client.get("/v1.0/guardrail/guidance").status_code == 401
+
+
+def test_reask_asks_to_rephrase_what_has_no_alternative(
+    set_redis, llm_calls
+):  # noqa: F811
+    """A finding without alternatives does not fail the answer, but where the
+    answer fails anyway the model is asked to rephrase it too, and why."""
+    body = check_output({"response": "Die Lehrer sind #diebesten!", "lang": "de"}).json()
+
+    assert body["verdict"] == "fail"
+    issues = json.loads(body["reask"]["content"].split('"issues list":\n', 1)[1])
+    rephrase = [i for i in issues if i["issue"] == "#diebesten"]
+    assert rephrase and rephrase[0]["alternatives"] == []
+    assert rephrase[0]["explanation"]
+
+
+def test_no_alternative_alone_does_not_fail(set_redis, llm_calls):  # noqa: F811
+    body = check_output({"response": "Wir sind #diebesten!", "lang": "de"}).json()
+
+    assert body["verdict"] == "pass"
+    assert body["findings"]

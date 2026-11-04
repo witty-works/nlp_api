@@ -232,6 +232,16 @@ The switch also genders roles written in the generic masculine: a job title, fun
 
 `alternatives_max_count`: Maximum number of alternatives to return per result (defaults to server setting).
 
+### Guardrail Settings
+
+| Field                 | Type                       | Default      |
+| --------------------- | -------------------------- | ------------ |
+| `guardrail_threshold` | integer or object          | `null`       |
+| `guardrail_on_fail`   | `"annotate"` or `"block"`  | `"annotate"` |
+| `guardrail_explain`   | boolean                    | `true`       |
+
+The policy of the [guardrail endpoints](./guardrails.md#the-guardrails-policy-per-key): when an answer fails (`null`: at the first finding with alternatives; see [Thresholds](./guardrails.md#thresholds)), and for the LiteLLM adapter what a failing answer becomes and whether its note explains each finding. They have no effect on `/v2.4/check`. As fields of the config they can be set or forced per API key.
+
 ## Supported Categories
 
 The API checks text against multiple diversity dimensions and language categories. You can selectively disable categories using the `disabled_categories` configuration option.

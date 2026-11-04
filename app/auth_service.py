@@ -352,6 +352,14 @@ async def fetch_user(
     # reason to try the token instead. The browser extension orders its own
     # headers the same way.
     if "x-key" in request.headers:
+        # Several would leave it to header order which configuration applies,
+        # and behind a gateway that forwards its client's headers the client's
+        # own may come first.
+        if len(request.headers.getlist("x-key")) > 1:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Send one x-key header, not several.",
+            )
         return redis.get_api_key_email(request.headers["x-key"])
 
     if "authorization" in request.headers and request.headers[
