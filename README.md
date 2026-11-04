@@ -42,6 +42,7 @@ To keep this README scannable, detailed sections have moved to `docs/`. Quick li
 - [Setup & Deployment](docs/setup.md)
 - [API Endpoints](docs/api.md)
 - [Guardrails (Witty GPT)](docs/guardrails.md)
+- [Ethics Screening](docs/ethics.md)
 - [Request Configuration & Categories](docs/request-configuration.md)
 - [Tests](docs/tests.md)
 - [Training Data & Lookups](docs/training-data.md)
