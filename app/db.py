@@ -64,8 +64,13 @@ class Db:
 
     @staticmethod
     async def factory(settings: Settings, languages: dict[LangType, Language]):
-        in_memory_url = "file:db?mode=memory&cache=shared&uri=true"
-        sqlite_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
+        # A URI, opened as one: without uri=True SQLite takes the string for a
+        # file name and writes the rules to a file of that name in the working
+        # directory, where the next start finds them instead of the dump.
+        in_memory_url = "file:db?mode=memory&cache=shared"
+        sqlite_db = await aiosqlite.connect(
+            in_memory_url, uri=True, check_same_thread=False
+        )
 
         query = (
             "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
