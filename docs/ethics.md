@@ -96,6 +96,8 @@ and the board reviews them as such.
    - says what changes for the public: a new data flow, provider or model
      belongs in the transparency report and the privacy policy
    - records who signed off and why, and any steering (see below)
+   - lists what was cut or dropped during review, with the reason, in a
+     "Cut or dropped during review" section (see below)
    - ends with "Flagged for Technology Ethics Board review"
 3. Prefer the design that makes the answer "no": process in memory, keep
    nothing, filter before any egress, make it opt-in rather than default-on,
@@ -103,25 +105,29 @@ and the board reviews them as such.
 
 ## Record sign-offs and steering
 
-What was decided, and by whom, must be traceable from the history alone.
-Git and the PR are the public record of this service, so nothing that only
-happened in a chat or an agent session counts.
+What was decided, and by whom, must be traceable from the PR alone. The PR
+description is the public record of this service, so nothing that only
+happened in a chat or an agent session counts. Commits stay about the code.
 
 - **Sign-offs**: when someone decides that a flagged change may go ahead,
   name them, give their role (the user, the ethics board, a board member)
-  and the reason, both in the PR's ethics screening section and in the body
-  of the commit that implements the change. "Approved" without a reason is
-  not a sign-off.
+  and the reason in the PR's ethics screening section. "Approved" without a
+  reason is not a sign-off.
 - **Steering**: when an ethics consideration changes a design, record it in
-  the commit body and the PR description, whether a person asked for the
-  change or you proposed it and they agreed. Examples: dropping a field
-  that would have been logged, making something opt-in, choosing a
-  self-hosted provider over a public API. Say what was considered, what was
+  the PR description, whether a person asked for the change or you proposed
+  it and they agreed. Examples: dropping a field that would have been
+  logged, making something opt-in, choosing a self-hosted provider over a
+  public API. Say what was considered, what was
   chosen and why. Steering that makes the answer "no" matters too: it is
   why the answer is "no".
 - **Rejected options**: if a concern was raised and the change went ahead
   anyway, record the concern and why it was outweighed (2.18, 2.19), not
   only the outcome.
+- **Cut features**: what was built and then removed, or proposed and not
+  built, because of the review, each with the reason, in a "Cut or dropped
+  during review" section. Keep apart what the ethics screening cut and what
+  fell away for other reasons. A feature removed before the PR leaves no
+  trace in the diff, so this section is the only record of it.
 
 Write it for a reader who was not there, such as a board member, an auditor
 or a future contributor, and keep it factual.
