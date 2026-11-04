@@ -3089,6 +3089,17 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
             settings.api_docs_username, settings.api_docs_password = previous
 
 
+def test_the_rules_database_stays_in_memory():
+    """Without uri=True SQLite takes "file:db?mode=memory..." for a file name:
+    the rules land in a file of that name in the working directory, and the
+    next start finds them there instead of loading the dump."""
+    with TestClient(app):
+        pass
+
+    assert not Path("file:db?mode=memory&cache=shared&uri=true").exists()
+    assert not Path("file:db?mode=memory&cache=shared").exists()
+
+
 def test_version_reports_the_rules_file(tmp_path, monkeypatch):
     """A dump mounted over the image's own changes every finding, so /version
     says which file was loaded and whether it is the one the image carries."""
