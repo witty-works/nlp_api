@@ -177,6 +177,9 @@ async def get_features_2_0(
     response.headers["Cache-Control"] = (
         "private, no-store" if sent else "public, max-age=300"
     )
+    # One URL, answered per credential: without Vary a browser serves the
+    # cached keyless answer, which has no `allowed`, to a request with a key.
+    response.headers["Vary"] = "x-key, Authorization"
 
     return FeaturesOut(
         features={

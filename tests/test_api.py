@@ -3152,6 +3152,19 @@ def test_features_without_a_key_say_what_the_deployment_offers(monkeypatch):
         assert features["spelling_grammar"] == {"available": True}
 
 
+def test_features_vary_on_the_credential():
+    """The answer without a key is cacheable and the same URL answers per key:
+    without Vary, a browser serves the cached keyless answer, which has no
+    `allowed`, to a request with a key (as /textarea makes both on load)."""
+    context.redis.set_api_key("features-key", "default@gmail.com")
+
+    with TestClient(app) as client:
+        for headers in ({}, {"x-key": "features-key"}):
+            response = client.get("/v2.0/features", headers=headers)
+            vary = {v.strip().lower() for v in response.headers["vary"].split(",")}
+            assert {"x-key", "authorization"} <= vary
+
+
 def test_features_with_a_key_say_what_it_may_use(monkeypatch):
     """`allowed` follows LLM_ALLOWED_USERS, so a client can offer the prompt
     and AI suggestions only where the server will not refuse them."""
