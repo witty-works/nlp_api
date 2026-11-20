@@ -82,6 +82,13 @@ dev = [
     "httpx>=0.25.0",
 ]
 
+[tool.uv]
+# german-nouns requires wiktionary-de-parser, which pins lxml<5 (with known
+# vulnerabilities). The app only uses german_nouns.lookup, which reads the
+# bundled noun list; the parser is only needed to rebuild that list from a
+# Wiktionary dump (german_nouns.parse_dump).
+exclude-dependencies = ["wiktionary-de-parser"]
+
 [tool.uv.sources]
 torch = [{ index = "pytorch-cpu" }]
 

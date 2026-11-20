@@ -10,6 +10,9 @@ resolution-markers = [
     "python_full_version < '3.13' and sys_platform == 'darwin'",
 ]
 
+[manifest]
+excludes = ["wiktionary-de-parser"]
+
 [[package]]
 name = "accelerate"
 version = "1.11.0"
@@ -1066,9 +1069,6 @@ http = [
 name = "german-nouns"
 version = "1.2.5"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "wiktionary-de-parser" },
-]
 sdist = { url = "https://files.pythonhosted.org/packages/bc/b9/3d803c566f752b6c64bd5bed6438b78e5ca31305bf33037a257101a7ccbf/german-nouns-1.2.5.tar.gz", hash = "sha256:1258f2917db364d3661a651a47d1089c8ef40bddbe061e43cb529dae5f13ce54", size = 3073277, upload-time = "2022-07-17T16:48:10.333Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3f/e5/466f9559d9b2a413a1f5de3dac398d36ddafd1abfaa942660277234dc8e1/german_nouns-1.2.5-py3-none-any.whl", hash = "sha256:0f113c59ea331aae750bc03c7b6c7217bae975c6677b4df8d8932093093f509f", size = 3111274, upload-time = "2022-07-17T16:48:15.031Z" },
@@ -1457,21 +1457,6 @@ wheels = [
 ]
 
 [[package]]
-name = "lxml"
-version = "4.9.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/84/14/c2070b5e37c650198de8328467dd3d1681e80986f81ba0fea04fc4ec9883/lxml-4.9.4.tar.gz", hash = "sha256:b1541e50b78e15fa06a2670157a1962ef06591d4c998b998047fff5e3236880e", size = 3576664, upload-time = "2023-12-19T19:37:24.296Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5c/ac/0abe4b25cae50247c5130539d0f45a201dbfe0ba69d3dd844411f90c9930/lxml-4.9.4-cp312-cp312-macosx_11_0_universal2.whl", hash = "sha256:dbcb2dc07308453db428a95a4d03259bd8caea97d7f0776842299f2d00c72fc8", size = 8624172, upload-time = "2023-12-19T19:01:37.711Z" },
-    { url = "https://files.pythonhosted.org/packages/33/e6/47c4675f0c58398c924915379eee8458bf7954644a7907ad8fbc1c42a380/lxml-4.9.4-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:01bf1df1db327e748dcb152d17389cf6d0a8c5d533ef9bab781e9d5037619229", size = 7674086, upload-time = "2023-12-19T19:02:17.492Z" },
-    { url = "https://files.pythonhosted.org/packages/be/9e/5d88b189e91fae65140dc29904946297b3d9cfdf5449d4bc6e657a3ffc2d/lxml-4.9.4-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:e8f9f93a23634cfafbad6e46ad7d09e0f4a25a2400e4a64b1b7b7c0fbaa06d9d", size = 8026189, upload-time = "2023-12-19T19:02:58.387Z" },
-    { url = "https://files.pythonhosted.org/packages/ea/08/ab6c2a803a5d5dce1fbbb32f5c133bbd0ebfe69476ab1eb5ffa3490b0b51/lxml-4.9.4-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:3f3f00a9061605725df1816f5713d10cd94636347ed651abdbc75828df302b20", size = 7516933, upload-time = "2023-12-19T19:03:41.465Z" },
-    { url = "https://files.pythonhosted.org/packages/43/52/b0d387577620af767c73b8b20f28986e5aad70b44053ee296f8a472a12b1/lxml-4.9.4-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:953dd5481bd6252bd480d6ec431f61d7d87fdcbbb71b0d2bdcfc6ae00bb6fb10", size = 7815609, upload-time = "2023-12-19T19:04:12.53Z" },
-    { url = "https://files.pythonhosted.org/packages/be/13/18230c0d567ed282a3d7b61395323e2ef8fc9ad64096fdd3d1b384fa3e3c/lxml-4.9.4-cp312-cp312-win32.whl", hash = "sha256:266f655d1baff9c47b52f529b5f6bec33f66042f65f7c56adde3fcf2ed62ae8b", size = 3460500, upload-time = "2023-12-21T10:40:00.312Z" },
-    { url = "https://files.pythonhosted.org/packages/5f/df/6d15cc415e04724ba4c141051cf43709e09bbcdd9868a6c2e7a7073ef498/lxml-4.9.4-cp312-cp312-win_amd64.whl", hash = "sha256:f1faee2a831fe249e1bae9cbc68d3cd8a30f7e37851deee4d7962b17c410dd56", size = 3773977, upload-time = "2023-12-19T19:04:34.053Z" },
-]
-
-[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1696,19 +1681,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/a0/0c/f9a868eb39751b9dceb9e35d91e8cf321dad8ce9e3e965d067b0fff0547a/murmurhash-1.0.12-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:8bd5524de195991ce3551b14286ec0b730cc9dd2e10565dad2ae470eec082028", size = 124858, upload-time = "2025-01-16T23:03:56.957Z" },
     { url = "https://files.pythonhosted.org/packages/b6/fc/52bcb3afc95733f30ec76e07cae4b5d0081fa049ade418303faeee619766/murmurhash-1.0.12-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:19de30edaaa2217cd0c41b6cf6bbfa418be5d7fdf267ca92e5e3710d4daac593", size = 124686, upload-time = "2025-01-16T23:03:59.544Z" },
     { url = "https://files.pythonhosted.org/packages/cf/99/9cdea62dec8ea26a35a8231ee09c83b16f9dedf16280a7a15f41d2061706/murmurhash-1.0.12-cp313-cp313-win_amd64.whl", hash = "sha256:7dc4ebdfed7ef8ed70519962ac9b704e91978ee14e049f1ff37bca2f579ce84d", size = 24702, upload-time = "2025-01-16T23:04:00.818Z" },
-]
-
-[[package]]
-name = "mwparserfromhell"
-version = "0.6.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/47/aa/358f9af602b743ac8898353f240f678b69722801bd0625507c69d9755936/mwparserfromhell-0.6.6.tar.gz", hash = "sha256:71afec1e9784ba576e95d6f34845582d3c733a3a52ba770dd8a9c3a40e5b649f", size = 138899, upload-time = "2024-01-04T06:40:20.17Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/61/c0/059513420490a2d96b470d4f560445d89f022a4749a20a952bfb002e2915/mwparserfromhell-0.6.6-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:910d36bc70e8bea758380e75c12fd47626b295abec9f73a6099d8f937a649e77", size = 124175, upload-time = "2024-01-04T06:40:23.559Z" },
-    { url = "https://files.pythonhosted.org/packages/bc/ab/da1b51303f0457c8cd343cf2d9a66fd0c5654fe8d0331c8107751459191f/mwparserfromhell-0.6.6-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d2febd92a55a3f19b461833267726cb81429c3d6cb0006ad1691dfa849789e5d", size = 203036, upload-time = "2024-01-04T06:45:52.127Z" },
-    { url = "https://files.pythonhosted.org/packages/7a/39/6bd8d9678e8b3f57babee36b5a9540db8cccba1b81a64ed56576c653994b/mwparserfromhell-0.6.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2b75fae6d01c8fda19dbf127175122d7aa2964ef6454690e6868bbc3d80a7bc1", size = 201886, upload-time = "2024-01-04T06:45:53.526Z" },
-    { url = "https://files.pythonhosted.org/packages/8e/e1/026ea60ac66a8bc9314230cc0c1ad2bf496ceb16a3771d4fcfd6ecc25971/mwparserfromhell-0.6.6-cp312-cp312-win32.whl", hash = "sha256:19e9a4bcd85707c83172405eb2a9a046eff9d38dd7f1a56a5e5ecbbfef4a640a", size = 98748, upload-time = "2024-01-04T07:17:31.283Z" },
-    { url = "https://files.pythonhosted.org/packages/78/09/24c2f37524a3ebc3574975766748c7e4423ecefaa815c9fc4a324cbcf94a/mwparserfromhell-0.6.6-cp312-cp312-win_amd64.whl", hash = "sha256:cdc46c115b2495d4025920b7b30a6885a96d2b797ccc4009bf3cc02940ae55d3", size = 101071, upload-time = "2024-01-04T07:19:37.869Z" },
 ]
 
 [[package]]
@@ -3502,19 +3474,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/86/eb/20b6cdf273913d0ad05a6a14aed4b9a85591c18a987a3d47f20fa13dcc47/websockets-15.0.1-cp313-cp313-win32.whl", hash = "sha256:ba9e56e8ceeeedb2e080147ba85ffcd5cd0711b89576b83784d8605a7df455fa", size = 176393, upload-time = "2025-03-05T20:02:53.814Z" },
     { url = "https://files.pythonhosted.org/packages/1b/6c/c65773d6cab416a64d191d6ee8a8b1c68a09970ea6909d16965d26bfed1e/websockets-15.0.1-cp313-cp313-win_amd64.whl", hash = "sha256:e09473f095a819042ecb2ab9465aee615bd9c2028e4ef7d933600a8401c79561", size = 176837, upload-time = "2025-03-05T20:02:55.237Z" },
     { url = "https://files.pythonhosted.org/packages/fa/a8/5b41e0da817d64113292ab1f8247140aac61cbf6cfd085d6a0fa77f4984f/websockets-15.0.1-py3-none-any.whl", hash = "sha256:f7a866fbc1e97b5c617ee4116daaa09b722101d4a3c170c787450ba409f9736f", size = 169743, upload-time = "2025-03-05T20:03:39.41Z" },
-]
-
-[[package]]
-name = "wiktionary-de-parser"
-version = "0.9.5"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "lxml" },
-    { name = "mwparserfromhell" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d6/e6/d91d18aff8de3b01402413043ea9a53c83ea83d36bed6ba6c47f37be6ab8/wiktionary-de-parser-0.9.5.tar.gz", hash = "sha256:aaae7daaeea75cfacd6cc92eaff09424022584859d59429da908ccbc6dcb7334", size = 15655, upload-time = "2022-07-26T18:45:55.71Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/13/c66118999f751771183385b5cf132f0356d4393d74b6fb5d0be785d152f4/wiktionary_de_parser-0.9.5-py3-none-any.whl", hash = "sha256:b59a8bed19ebdeaac206e99944f2a2540df22520dc325b36a899ec9e73953e8b", size = 18480, upload-time = "2022-07-26T18:45:57.652Z" },
 ]
 
 [[package]]
