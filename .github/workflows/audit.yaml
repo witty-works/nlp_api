@@ -30,6 +30,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Later steps run pip-audit and its dependencies, fetched from PyPI
+          # at run time; none of them needs the token afterwards.
+          persist-credentials: false
 
       - name: Set up uv and Python
         # setup-uv publishes no major-version tags, only full versions.
