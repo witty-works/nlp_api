@@ -38,10 +38,29 @@ WORKDIR /src
 COPY pyproject.toml uv.lock ./
 
 # The dependency set is generated from the lockfile rather than kept as a
-# second, hand-maintained requirements.txt that can drift from it. --locked
-# fails the build if uv.lock no longer matches pyproject.toml.
+# second, hand-maintained requirements.txt that can drift from it.
+# The first export checks that uv.lock still matches pyproject.toml, which
+# means resolving against the indexes; the second reads the checked lock.
 RUN uv export --locked --no-dev --no-hashes --no-emit-project --no-annotate \
-        --no-header --format requirements-txt -o /tmp/requirements.full.txt
+        --no-header --format requirements-txt -o /tmp/requirements.full.txt \
+    && uv export --frozen --no-dev --no-emit-project --no-annotate \
+        --no-header --format requirements-txt -o /tmp/requirements.hashed.txt
+
+# torch comes from the PyTorch CPU index (pyproject.toml, [tool.uv.sources]),
+# so it is installed on its own, from that index alone and checked against the
+# lockfile's hashes. Giving pip the index as an extra one for everything would
+# let it take any package from there.
+RUN set -eux; \
+    python - <<'PY'
+import re
+lines = open("/tmp/requirements.hashed.txt").read().replace("\\\n", " ").splitlines()
+torch = [l for l in lines if re.match(r"^torch==", l)]
+if not torch:
+    raise SystemExit("no torch in the lockfile export")
+open("/tmp/torch.txt", "w").write("\n".join(torch) + "\n")
+kept = [l for l in open("/tmp/requirements.full.txt") if not l.startswith("torch==")]
+open("/tmp/requirements.full.txt", "w").writelines(kept)
+PY
 
 # Drop the model wheels for languages this image does not serve, and rewrite
 # the remaining ones to the requested size. The URLs are versioned by model
@@ -88,17 +107,22 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=deps /tmp/requirements.txt /tmp/models.txt /tmp/
+COPY --from=deps /tmp/requirements.txt /tmp/torch.txt /tmp/models.txt /tmp/
 
 # A venv rather than --prefix, so the target environment starts empty and
 # nothing can be skipped as "already satisfied".
 RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install --no-deps --require-hashes \
+        --index-url https://download.pytorch.org/whl/cpu --requirement /tmp/torch.txt \
     && /opt/venv/bin/pip install --requirement /tmp/requirements.txt
 
 # Fail the build rather than the container if the environment cannot import
-# spacy: this is the check that would have caught the missing httpx.
-RUN /opt/venv/bin/python -c "import spacy, httpx; print('spacy', spacy.__version__, 'ok')"
+# spacy (this is the check that would have caught a missing httpx), or if
+# torch is a CUDA build: the image runs on CPU.
+RUN /opt/venv/bin/python -c "import spacy, httpx, torch; \
+assert torch.version.cuda is None, 'torch is a CUDA build: ' + torch.version.cuda; \
+print('spacy', spacy.__version__, 'torch', torch.__version__, 'ok')"
 
 # ----------------------------------------------------------------- editor ---
 # The editor script for the /textarea page. Always in the image, so that one

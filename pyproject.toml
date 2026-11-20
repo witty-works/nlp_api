@@ -40,6 +40,10 @@ dependencies = [
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
     "setfit>=0.7.0",
+    # Through setfit; listed so it comes from the PyTorch CPU index (see
+    # [tool.uv.sources]): the image runs on CPU, and PyPI's Linux build brings
+    # the CUDA libraries.
+    "torch",
     "eng>=0.1.1",
     "blackfire",
     "blackfire-conprof>=1.0.0",
@@ -72,3 +76,12 @@ dev = [
     "pytest-env>=0.8.1",
     "httpx>=0.25.0",
 ]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+# Only for what [tool.uv.sources] sends there; everything else from PyPI.
+explicit = true
