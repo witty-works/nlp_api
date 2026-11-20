@@ -7,7 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.prompt import LlmCutOff, LlmUnavailable, Prompt, llm_error
+from app.prompt import LlmCutOff, LlmRefused, LlmUnavailable, Prompt, llm_error
 from app.settings import Settings
 from app.models import LlmAccessType
 from tests.test_api import llm_access, set_redis  # noqa: F401  (fixtures)
@@ -60,6 +60,87 @@ def test_provider_trouble_is_unavailable(monkeypatch):
 
     with pytest.raises(LlmUnavailable):
         asyncio.run(prompt.handle("hi"))
+
+
+# The body a LiteLLM proxy sends when one of its guardrails refuses a request
+# before it reaches the model (here the BFH inference server's, 2026-11-20).
+GUARDRAIL_BODY = {
+    "message": "Content blocked: AHV number pattern detected",
+    "type": "invalid_request_error",
+    "param": None,
+    "code": "400",
+    "provider_specific_fields": {
+        "error": "Content blocked: AHV number pattern detected",
+        "pattern": "AHV number",
+        "guardrail_name": "Pattern Matching",
+        "guardrail_mode": "pre_call",
+    },
+}
+
+
+def test_a_gateway_guardrail_refusal_is_refused_with_its_reason(monkeypatch):
+    blocked = litellm.BadRequestError(
+        "OpenAIException - Content blocked: AHV number pattern detected",
+        model="test",
+        llm_provider="openai",
+        body=GUARDRAIL_BODY,
+    )
+    prompt, _ = prompt_with(monkeypatch, blocked)
+
+    with pytest.raises(LlmRefused) as refused:
+        asyncio.run(prompt.handle("hi"))
+
+    assert refused.value.reason == "Content blocked: AHV number pattern detected"
+
+
+def test_a_content_policy_refusal_is_refused(monkeypatch):
+    blocked = litellm.ContentPolicyViolationError(
+        "rejected by the safety system", model="test", llm_provider="openai"
+    )
+    prompt, _ = prompt_with(monkeypatch, blocked)
+
+    with pytest.raises(LlmRefused) as refused:
+        asyncio.run(prompt.handle("hi"))
+
+    assert refused.value.reason is None
+
+
+def test_any_other_bad_request_stays_an_error(monkeypatch):
+    """A wrong model name or parameter is the deployment's fault, not the
+    text's, and must not read as a refusal."""
+    wrong = litellm.BadRequestError(
+        "model not found", model="test", llm_provider="openai", body={"message": "x"}
+    )
+    prompt, _ = prompt_with(monkeypatch, wrong)
+
+    with pytest.raises(litellm.BadRequestError):
+        asyncio.run(prompt.handle("hi"))
+
+
+def test_a_refusal_passes_on_the_providers_reason():
+    code, headers, message = llm_error(
+        LlmRefused("Content blocked: AHV number pattern detected"), "/test"
+    )
+
+    assert code == 422
+    assert headers == {}
+    assert message == "Content blocked: AHV number pattern detected"
+
+
+def test_the_deployments_refusal_message_replaces_the_reason(monkeypatch):
+    """LLM_REFUSED_MESSAGE is the deployment's own explanation of what its
+    provider refuses; Witty has none of its own."""
+    blocked = litellm.BadRequestError(
+        "blocked", model="test", llm_provider="openai", body=GUARDRAIL_BODY
+    )
+    prompt, _ = prompt_with(
+        monkeypatch, blocked, llm_refused_message="Remove personal identifiers."
+    )
+
+    with pytest.raises(LlmRefused) as refused:
+        asyncio.run(prompt.handle("hi"))
+
+    assert llm_error(refused.value, "/test")[2] == "Remove personal identifiers."
 
 
 def test_calls_beyond_the_limit_wait_for_a_slot(monkeypatch):
@@ -158,7 +239,12 @@ def test_parse_json_keeps_umlauts():
 
 @pytest.mark.parametrize(
     "error,status",
-    [(LlmUnavailable("busy"), 503), (LlmCutOff("cut"), 502), (ValueError("x"), 500)],
+    [
+        (LlmUnavailable("busy"), 503),
+        (LlmCutOff("cut"), 502),
+        (LlmRefused(None), 422),
+        (ValueError("x"), 500),
+    ],
 )
 def test_each_failure_has_its_status(error, status):
     code, headers, message = llm_error(error, "/test")
@@ -193,3 +279,53 @@ def test_the_rephrase_route_answers_503_when_the_llm_is_busy(
 
     assert response.status_code == 503
     assert response.headers["Retry-After"] == "10"
+
+
+def test_the_rephrase_route_answers_422_when_the_provider_refuses(
+    llm_access, set_redis, monkeypatch  # noqa: F811
+):
+    llm_access(LlmAccessType.USERS)
+
+    async def refused(*args, **kwargs):
+        raise LlmRefused("Content blocked: AHV number pattern detected")
+
+    with TestClient(app) as client:
+        monkeypatch.setattr(app.state.context.prompt, "handle", refused)
+        response = client.post(
+            "/v1.0/rephrase",
+            json={
+                "sentence": "Hey guys, the chairman will be late.",
+                "text": "guys",
+                "start": 4,
+                "lang": "en",
+                "alternatives": [{"text": "everyone"}],
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert "AHV number" in response.json()["detail"][0]["msg"]
+
+
+def test_a_refusal_is_logged_without_the_providers_reason(monkeypatch, caplog):
+    """A guardrail may quote what it matched, which is the user's text; the
+    log gets only the guardrail's name (AGENTS.md, 1.1)."""
+    body = {
+        "message": "Blocked: found 756.1234.5678.97",
+        "provider_specific_fields": {
+            "error": "Blocked: found 756.1234.5678.97",
+            "guardrail_name": "Pattern Matching",
+        },
+    }
+    blocked = litellm.BadRequestError(
+        "blocked", model="test", llm_provider="openai", body=body
+    )
+    prompt, _ = prompt_with(monkeypatch, blocked)
+
+    with pytest.raises(LlmRefused) as refused:
+        asyncio.run(prompt.handle("hi"))
+    with caplog.at_level("WARNING", "nlp_api"):
+        llm_error(refused.value, "/test")
+
+    assert "Pattern Matching" in caplog.text
+    assert "756" not in caplog.text

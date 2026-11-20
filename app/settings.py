@@ -265,6 +265,11 @@ class Settings(BaseSettings):
     # exceeding it risks being blocked; past this the API answers 503 with
     # Retry-After until the next minute instead of calling. 0 for no limit.
     llm_max_requests_per_minute: int = 0
+    # What a user is told when the provider refuses a text (a guardrail or
+    # content filter of the provider, answered with a 422). Empty: the
+    # provider's own reason, if it gives one. Which texts are refused depends
+    # on the provider, so the wording is the deployment's.
+    llm_refused_message: str = ""
 
     # Who the deployment is willing to spend LLM tokens on. `users` — the
     # default — means anyone the request resolves to a user for.
