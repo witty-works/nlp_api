@@ -70,6 +70,20 @@ def guidance(config: Config, lang: LangWithAutoType | None = None) -> str:
     return "\n".join(lines)
 
 
+def has_guidance(messages: list[dict], text: str) -> bool:
+    """Whether the system message carries `text` already, as in the next turn
+    of a client that keeps its conversation: its content may be a string or a
+    list of content parts."""
+    if not messages or messages[0].get("role") != "system":
+        return False
+    content = messages[0].get("content")
+    if isinstance(content, list):
+        content = "\n".join(
+            part.get("text") or "" for part in content if isinstance(part, dict)
+        )
+    return isinstance(content, str) and text in content
+
+
 def merge_guidance(messages: list[dict], text: str) -> list[dict]:
     """`messages` with `text` added to the system message, or in a new one
     ahead of them. The caller's messages are left as they were."""

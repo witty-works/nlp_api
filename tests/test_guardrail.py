@@ -437,6 +437,23 @@ def test_no_alternative_alone_does_not_fail(set_redis, llm_calls):  # noqa: F811
     assert body["findings"]
 
 
+@pytest.mark.parametrize("parts", [False, True], ids=["string", "content parts"])
+def test_input_leaves_guided_messages_alone(parts, set_redis, llm_calls):  # noqa: F811
+    """A client that keeps its conversation sends the guided messages back;
+    they must not collect a second copy each turn."""
+    user = {"role": "user", "content": "Write a job ad."}
+    system = {"role": "system", "content": "You are helpful."}
+    if parts:
+        system["content"] = [{"type": "text", "text": "You are helpful."}]
+    first = post("/v1.0/guardrail/input", {"messages": [system, user]}).json()
+
+    again = post("/v1.0/guardrail/input", {"messages": first["messages"]}).json()
+
+    assert first["action"] == "modify"
+    assert again["action"] == "none"
+    assert again["messages"] == first["messages"]
+
+
 @pytest.mark.parametrize(
     "path,body",
     [

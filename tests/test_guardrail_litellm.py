@@ -45,15 +45,19 @@ def test_request_gets_guidance(set_redis, llm_calls):  # noqa: F811
     assert body["structured_messages"][1] == user
 
 
+@pytest.mark.parametrize("parts", [False, True], ids=["string", "content parts"])
 def test_request_with_guidance_already_is_left_alone(
-    set_redis, llm_calls
+    parts, set_redis, llm_calls
 ):  # noqa: F811
     user = {"role": "user", "content": "Write a job ad."}
+    system = {"role": "system", "content": "You are helpful."}
+    if parts:
+        system["content"] = [{"type": "text", "text": "You are helpful."}]
     first = call(
         {
             "texts": ["Write a job ad."],
             "input_type": "request",
-            "structured_messages": [user],
+            "structured_messages": [system, user],
         }
     ).json()["structured_messages"]
 

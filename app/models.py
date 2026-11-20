@@ -1014,7 +1014,9 @@ class GuardrailInputIn(BaseRequestIn):
 
 
 class GuardrailInputOut(BaseModel):
-    action: Literal["modify"] = "modify"
+    # "none": the system message carries the guidance already, and the
+    # messages come back unchanged.
+    action: Literal["modify", "none"] = "modify"
     messages: list[dict[str, Any]]
     guidance: str
 

@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Request
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.guardrail import review
-from app.guidance import guidance, merge_guidance
+from app.guidance import guidance, has_guidance, merge_guidance
 from app.models import (
     CheckRequestIn,
     LitellmGuardrailIn,
@@ -128,7 +128,7 @@ def with_guidance(request_in: LitellmGuardrailIn, text: str) -> LitellmGuardrail
     if not messages:
         return LitellmGuardrailOut(action="NONE")
 
-    if messages[0].get("role") == "system" and text in str(messages[0].get("content")):
+    if has_guidance(messages, text):
         return LitellmGuardrailOut(action="NONE")
 
     return LitellmGuardrailOut(
