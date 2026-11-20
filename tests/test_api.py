@@ -1081,9 +1081,9 @@ def test_api_key_validation(set_redis):
         assert response.status_code == 403
 
         # Create a valid API key mapping via management endpoint
-        api_key = "valid-api-key-123"
+        api_key = "valid-api-key-0123456789-0123456789"
         email = "test@gmail.com"
-        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        resp = client.post("/api_key", json={"api_key": api_key, "email": email})
         assert resp.status_code == 204
 
         # Valid API key on auth should pass
@@ -1629,44 +1629,73 @@ def test_user_config_sync_inklusivum(snapshot):
         snapshot.assert_match(output, "output.json")
 
 
-def test_api_key_get_missing():
-    """GET /api_key should return 404 for unknown keys."""
+MINTED_KEY = "minted-key-0123456789-0123456789-x"
+
+
+def test_api_key_create_and_delete(set_redis):
+    """POST and DELETE /api_key take the key in the body, never the URL: a
+    query string ends up in access logs."""
     with TestClient(app) as client:
-        response = client.get("/api_key", params={"api_key": "missing-key-123"})
-        # Endpoint is defined with 404 response on missing key
-        assert response.status_code == 404
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "test@gmail.com"}
+        )
+        assert resp.status_code == 204
+        assert context.redis.get_api_key_email(MINTED_KEY) == "test@gmail.com"
 
+        # The same mapping again changes nothing.
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "test@gmail.com"}
+        )
+        assert resp.status_code == 204
 
-def test_api_key_create_fetch_delete(set_redis):
-    """POST/GET/DELETE flow for /api_key endpoints."""
-    api_key = "test-api-key-123"
-    email = "test@gmail.com"
+        resp = client.request("DELETE", "/api_key", json={"api_key": MINTED_KEY})
+        assert resp.status_code == 204
+        assert context.redis.get_api_key_email(MINTED_KEY) is None
 
-    with TestClient(app) as client:
-        # Ensure it's not there first
-        resp = client.get("/api_key", params={"api_key": api_key})
+        resp = client.request("DELETE", "/api_key", json={"api_key": MINTED_KEY})
         assert resp.status_code == 404
 
-        # Create mapping
-        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
-        assert resp.status_code == 204
 
-        # Fetch mapping
-        resp = client.get("/api_key", params={"api_key": api_key})
-        # The operation is defined with 204 status; presence is asserted via Redis state
-        assert resp.status_code == 204
+def test_api_key_cannot_take_over_another_emails_key(set_redis):
+    with TestClient(app) as client:
+        context.redis.set_api_key(MINTED_KEY, "owner@example.org")
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "thief@example.org"}
+        )
 
-        # Verify Redis contains the mapping
-        stored = context.redis.db.get("api_key:" + api_key)
-        assert stored == email
+        assert resp.status_code == 409
+        assert MINTED_KEY not in resp.text
+        assert context.redis.get_api_key_email(MINTED_KEY) == "owner@example.org"
+        context.redis.delete_api_key(MINTED_KEY)
 
-        # Delete mapping
-        resp = client.delete("/api_key", params={"api_key": api_key})
-        assert resp.status_code == 204
 
-        # Ensure it's gone
-        resp = client.get("/api_key", params={"api_key": api_key})
-        assert resp.status_code == 404
+@pytest.mark.parametrize(
+    "body",
+    [
+        {"api_key": "short-key-0123", "email": "a@b.example"},
+        {"api_key": MINTED_KEY, "email": "not-an-email"},
+        {"api_key": MINTED_KEY},
+    ],
+)
+def test_api_key_refuses_a_bad_request_without_echoing_the_key(body, set_redis):
+    with TestClient(app) as client:
+        resp = client.post("/api_key", json=body)
+
+        assert resp.status_code == 422
+        assert body["api_key"] not in resp.text
+        assert context.redis.get_api_key_email(body["api_key"]) is None
+
+
+def test_api_key_is_not_taken_from_the_url(set_redis):
+    with TestClient(app) as client:
+        resp = client.post(
+            "/api_key", params={"api_key": MINTED_KEY, "email": "a@b.example"}
+        )
+        assert resp.status_code == 422
+        assert context.redis.get_api_key_email(MINTED_KEY) is None
+
+        # No lookup by key either: it would need the key in the URL.
+        assert client.get("/api_key", params={"api_key": MINTED_KEY}).status_code == 405
 
 
 def test_rule_debug():
@@ -2921,7 +2950,7 @@ def test_management_auth():
         context.settings.management_auth_enabled = True
         try:
             response = client.post(
-                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+                "/api_key", json={"api_key": MINTED_KEY, "email": "a@b.example"}
             )
             assert response.status_code == 401
 

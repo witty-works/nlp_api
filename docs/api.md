@@ -340,18 +340,19 @@ curl -X 'POST' \
 
 ### API Key Management
 
-| Endpoint                                    | Method | Description                     |
-| ------------------------------------------- | ------ | ------------------------------- |
-| `POST /api_key?api_key={key}&email={email}` | POST   | Create API key mapping to email |
-| `GET /api_key?api_key={key}`                | GET    | Retrieve email for API key      |
-| `DELETE /api_key?api_key={key}`             | DELETE | Delete API key mapping          |
+Behind the management password (`MANAGEMENT_AUTH_ENABLED`). The key goes in the JSON body, never the URL, which access logs keep; no answer repeats it.
+
+| Endpoint          | Body                       | Answers                                                                                                                          |
+| ----------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api_key`   | `{"api_key": …, "email": …}` | `204` once the key resolves to the email; `409` if it already belongs to another email; `422` for a key shorter than 20 characters (letters, digits, `-`, `_`) or no email |
+| `DELETE /api_key` | `{"api_key": …}`           | `204` once the key is revoked; `404` if there is no such key                                                                     |
 
 Example: Create API key
 
 ```bash
-curl -X 'POST' \
-  'http://127.0.0.1:8000/api_key?api_key=my-secret-key&email=user@example.com' \
-  -u 'admin:password'
+curl -X 'POST' 'http://127.0.0.1:8000/api_key' \
+  -u 'admin:password' -H 'Content-Type: application/json' \
+  -d '{"api_key": "'"$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"'", "email": "user@example.com"}'
 ```
 
 ## Health & Utility Endpoints

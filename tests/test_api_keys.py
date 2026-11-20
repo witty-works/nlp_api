@@ -408,3 +408,11 @@ def test_rehash_reports_keys_it_cannot_tell_from_a_digest(hashed_redis, capsys):
 
     assert "1 entry looks like a digest" in capsys.readouterr().err
 
+
+def test_a_hand_picked_key_must_be_long(hashed_redis):
+    import argparse
+
+    args = argparse.Namespace(api_key="short-0123456789", email="a@b.example")
+
+    assert load_cli().create(hashed_redis, args) == 1
+    assert hashed_redis.get_api_key_email("short-0123456789") is None

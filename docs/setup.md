@@ -310,10 +310,10 @@ NLP_API_USERNAME=… NLP_API_PASSWORD=… \
   `llm_alternatives` for a user `LLM_ACCESS` / `LLM_ALLOWED_USERS` does not let
   spend the LLM budget.
 
-The `/api_key` HTTP endpoints do the same thing, but they are only protected
-when `API_DOCS_AUTH_ENABLED` is `"true"` — with it unset, anyone who can reach
-the API can mint a key for any email. Turn it on for any deployment that is
-reachable from outside, or keep the endpoints off the public routing.
+The `/api_key` HTTP endpoints do the same thing, behind the management password
+(`MANAGEMENT_AUTH_ENABLED`, on unless turned off): anyone with that password can
+mint a key for any email, so keep it out of reach or the endpoints off the
+public routing. They take the key in the request body, never in the URL.
 
 ## Production Deployment
 

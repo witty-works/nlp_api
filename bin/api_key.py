@@ -30,13 +30,19 @@ import sys
 import yaml
 from redis.exceptions import WatchError
 
-from app.api_keys import SYNCED_KEYS, ApiKeyEntry, parse
+from app.api_keys import SYNCED_KEYS, ApiKeyEntry, parse, valid_key
 
 from app.redis import Redis
 from app.settings import get_settings
 
 
 def create(redis: Redis, args) -> int:
+    if args.api_key:
+        try:
+            valid_key(args.api_key)
+        except ValueError as error:
+            print(f"error: {error}", file=sys.stderr)
+            return 1
     api_key = args.api_key or secrets.token_urlsafe(32)
 
     if redis.get_api_key_email(api_key):
