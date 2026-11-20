@@ -50,7 +50,7 @@ dependencies = [
     # Through setfit; listed so it comes from the PyTorch CPU index (see
     # [tool.uv.sources]): the image runs on CPU, and PyPI's Linux build brings
     # the CUDA libraries.
-    "torch>=2.13.0",
+    "torch>=2.15.0",
     "eng>=0.1.1",
     "aiosqlite>=0.19.0",
     "pyjwt>=2.8.0",

@@ -3579,7 +3579,7 @@ requires-dist = [
     { name = "spacy", specifier = ">=3.8.14,<3.9.0" },
     { name = "spacy-lookups-data" },
     { name = "spacymoji", specifier = ">=3.0.1" },
-    { name = "torch", specifier = ">=2.13.0", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "torch", specifier = ">=2.15.0", index = "https://download.pytorch.org/whl/cpu" },
     { name = "uvicorn", extras = ["standard"] },
 ]
 
