@@ -52,3 +52,18 @@ def test_asking_for_a_language_without_a_model_fails(hub):
 
     assert result.exit_code == 1
     assert not os.path.lexists("models/context_aware_model/fr")
+
+
+def test_the_model_is_copied_not_linked(hub):
+    """compose.yml mounts only ./models into the container, so a link to the
+    download cache would point nowhere there."""
+    os.makedirs("models/context_aware_model")
+    os.symlink("/nowhere", "models/context_aware_model/en")  # an old download
+
+    result = CliRunner().invoke(script.download, ["--lang", "en"])
+
+    assert result.exit_code == 0, result.output
+    target = "models/context_aware_model/en"
+    assert not os.path.islink(target)
+    with open(os.path.join(target, "model.safetensors")) as f:
+        assert f.read() == "weights"

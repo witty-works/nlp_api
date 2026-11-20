@@ -65,7 +65,9 @@ def download(lang, repo_id, revision):
                 failed = failed or lang != "all"
                 continue
 
-            # Create symlink or copy to expected location
+            # Copied, not linked: compose.yml mounts only ./models into the
+            # container, where a link into the download cache points nowhere.
+            # copytree follows the cache's own links to the blobs.
             target_dir = f"models/context_aware_model/{language}"
             os.makedirs("models/context_aware_model", exist_ok=True)
 
@@ -77,7 +79,7 @@ def download(lang, repo_id, revision):
                 else:
                     shutil.rmtree(target_dir)
 
-            os.symlink(source_dir, target_dir, target_is_directory=True)
+            shutil.copytree(source_dir, target_dir)
             print(f"✓ {language} model ready at {target_dir}")
 
         except Exception as e:
