@@ -10,7 +10,8 @@ name: release image
 
 on:
   push:
-    tags: ["[0-9]+.[0-9]+.[0-9]+"]
+    # A release (4.0.0) or a release candidate (4.0.0-rc1).
+    tags: ["[0-9]+.[0-9]+.[0-9]+", "[0-9]+.[0-9]+.[0-9]+-rc[0-9]+"]
   # A rebuild of an existing tag, e.g. after a base image security fix. Run it
   # on the tag (the "Use workflow from" selector): on a branch there is no
   # version to tag the image with, and the push fails.
@@ -66,7 +67,8 @@ jobs:
           images: ${{ env.IMAGE }}
           # 3.1.0 and 3.1. No latest: it would move back to an older release
           # on a rebuild or a patch tag of an older line, and deployments pin
-          # by digest anyway.
+          # by digest anyway. A release candidate gets only its full version
+          # (4.0.0-rc1), never 4.0.
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
