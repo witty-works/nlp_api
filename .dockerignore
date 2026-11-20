@@ -13,8 +13,6 @@ __pycache__/
 *$py.class
 .pytest_cache/
 .ruff_cache/
-.pdm-python
-.pdm.toml
 
 # Benchmark corpora (see docs/external-benchmarks.md) - licence-restricted
 .cache/

@@ -122,7 +122,7 @@ By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg
 
 3. Reinstall dependencies:
    ```bash
-   pdm install
+   uv sync
    ```
 
 **Trade-offs:**
@@ -261,7 +261,7 @@ Then run it on LanguageTool's local port, because the desktop app has no host or
 ```bash
 REQUIRE_AUTH=false LANGUAGETOOL_COMPAT_ROOT=true \
   DEFAULT_CONFIG='{"german_gender_ending": "de-e"}' \
-  pdm run uvicorn app.main:app --port 8081
+  uv run uvicorn app.main:app --port 8081
 ```
 
 `DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins. It is checked when the API starts: an option that does not exist or a value that does not validate stops the start with a message naming it.
@@ -302,7 +302,7 @@ REDIS_PORT=6379
 ```
 
 ```bash
-pdm run python -m bin.api_key create you@example.com
+uv run python -m bin.api_key create you@example.com
 ```
 
 The in-memory Redis is per process, so without `REDIS_HOST` that script would write to its own memory and never reach the API. It refuses to run rather than appearing to succeed.
@@ -386,13 +386,13 @@ Option 1: Download from Hugging Face (Recommended)
 
 ```bash
 # Install huggingface-hub if not already installed
-pdm add huggingface-hub
+uv add huggingface-hub
 
 # Download all models (en, de, fr)
-pdm run python -m bin.download_from_huggingface --lang all
+uv run python -m bin.download_from_huggingface --lang all
 
 # Or download a specific language
-pdm run python -m bin.download_from_huggingface --lang en
+uv run python -m bin.download_from_huggingface --lang en
 ```
 
 Why CPU format is required: The API launches multiple worker processes for concurrency. It leverages PyTorch shared memory to avoid duplicating model weights in each worker. GPU tensors cannot be shared with this mechanism out of the box, while CPU tensors can. Using CPU models allows `ContextChecker` to call `share_memory()` on the underlying backbone, reducing RAM and speeding up startup.
@@ -400,7 +400,7 @@ Why CPU format is required: The API launches multiple worker processes for concu
 Test the CPU model:
 
 ```bash
-pdm run python -m bin.test_cpu -i models/context_aware_model/en
+uv run python -m bin.test_cpu -i models/context_aware_model/en
 ```
 
 #### convert_to_cpu.py reference (optional)
@@ -410,7 +410,7 @@ If you obtain raw SetFit model dumps from another source and need to ensure they
 Usage:
 
 ```bash
-pdm run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
+uv run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
 ```
 
 Arguments:

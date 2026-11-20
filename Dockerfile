@@ -19,11 +19,10 @@
 ARG PYTHON_VERSION=3.12
 
 # ------------------------------------------------------------------ deps ---
-# pdm lives in its own stage. Installing it beside the application would put
-# its own dependencies (httpx, certifi, ...) into site-packages, and a later
-# `pip install --prefix` then treats those as already satisfied and leaves
-# them out of the prefix - producing an image that is missing httpx, which
-# spacy imports on `import spacy` by way of spacy.cli -> weasel.
+# The lockfile export runs in its own stage, so nothing installed for it
+# reaches the application's site-packages: a later `pip install --prefix`
+# would take such packages as already satisfied and leave them out of the
+# image.
 FROM python:${PYTHON_VERSION}-slim-bookworm AS deps
 
 ARG SPACY_LANGS="en,de,fr"
@@ -32,14 +31,16 @@ ARG SPACY_MODEL_SIZE="lg"
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1
 
-RUN pip install pdm
+# The same uv as CI (.github/workflows/main.yaml).
+RUN pip install uv==0.13.9
 
 WORKDIR /src
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml uv.lock ./
 
 # The dependency set is generated from the lockfile rather than kept as a
 # second, hand-maintained requirements.txt that can drift from it.
-RUN pdm export --prod --no-hashes -f requirements -o /tmp/requirements.full.txt
+RUN uv export --frozen --no-dev --no-hashes --no-emit-project --no-annotate \
+        --no-header --format requirements-txt -o /tmp/requirements.full.txt
 
 # Drop the model wheels for languages this image does not serve, and rewrite
 # the remaining ones to the requested size. The URLs are versioned by model

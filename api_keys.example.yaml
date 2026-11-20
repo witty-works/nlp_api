@@ -3,7 +3,7 @@
 # and keep it on your machine: it holds the keys themselves.
 #
 # Add a key with
-#   pdm run python -m bin.api_key create <email> --file api_keys.yaml --note "<who and why>"
+#   uv run python -m bin.api_key create <email> --file api_keys.yaml --note "<who and why>"
 # and sync. Revoke one by deleting its entry and syncing.
 
 # Jane Doe (ACME), HR pilot until 2026-12, introduced by Tom

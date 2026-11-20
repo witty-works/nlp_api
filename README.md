@@ -13,7 +13,7 @@
   - Use https://github.com/witty-works/browser-extension and https://github.com/witty-works/world-plugin UI clients
   - Use https://github.com/witty-works/rule-editor to manage the rules
 - Quick start links:
-  - Install and run: see [Installation instructions](docs/setup.md#installation-python-312-using-pdm) (with PDM) and [Run Locally](docs/setup.md#run-locally); containerized setup in [Using Docker](docs/setup.md#using-docker) and [Using docker compose](docs/setup.md#using-docker-compose-recommended-for-local-multi-service-setup)
+  - Install and run: see [Installation instructions](docs/setup.md#installation-python-312-using-uv) (with uv) and [Run Locally](docs/setup.md#run-locally); containerized setup in [Using Docker](docs/setup.md#using-docker) and [Using docker compose](docs/setup.md#using-docker-compose-recommended-for-local-multi-service-setup)
   - Configure the app: see [Configuration](docs/configuration.md) and [Core settings](docs/configuration.md#core-settings); adjust spaCy models in [Changing spaCy models](docs/configuration.md#changing-spacy-models)
   - Explore the API: interactive docs at /docs; see [API Endpoints](docs/api.md) for examples
 - Where to look in the code:

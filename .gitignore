@@ -18,7 +18,6 @@ __pycache__/
 *$py.class
 *.mo
 *Zone.Identifier
-.pdm.toml
 
 database/db.sqlite3
 
@@ -36,9 +35,7 @@ python-probe.log
 openapi.json
 categories.csv
 subcategories.csv
-.python-version
 .blackfire.ini
-.pdm-python
 
 models/context_aware_model/
 
