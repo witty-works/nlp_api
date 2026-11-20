@@ -76,7 +76,10 @@ class Settings(BaseSettings):
     redis_username: Optional[str] = ""
     redis_password: Optional[str] = ""
     redis_log_emails: Optional[str] = ""
+    # Connect over TLS and check the server's certificate (against
+    # redis_ssl_ca_certs if set, else the system's CAs). False: plain TCP.
     redis_verify_ssl: bool = True
+    redis_ssl_ca_certs: Optional[str] = ""
     api_key_hmac_key: Optional[str] = ""
     testing_rules: Optional[str] = ""
     testing_organization_rules: Optional[str] = ""
