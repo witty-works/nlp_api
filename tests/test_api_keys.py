@@ -370,3 +370,49 @@ def test_rehash_needs_a_secret(hashed_redis, monkeypatch):
     monkeypatch.setattr(hashed_redis.settings, "api_key_hmac_key", "")
 
     assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 1
+
+
+def test_rehash_leaves_a_conflict_alone_and_says_so(hashed_redis, capsys):
+    """A plaintext entry left behind next to a digest that has since moved to
+    another email must not take the key back to the old email."""
+    import argparse
+
+    hashed_redis.set_api_key("moved-key-0123456789", "new@example.org")
+    hashed_redis.db.set("api_key:moved-key-0123456789", "old@example.org")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 1
+
+    assert hashed_redis.get_api_key_email("moved-key-0123456789") == "new@example.org"
+    assert hashed_redis.db.get("api_key:moved-key-0123456789") == "old@example.org"
+    assert "1 conflict" in capsys.readouterr().err
+
+
+def test_rehash_drops_a_plaintext_copy_of_a_digest(hashed_redis):
+    import argparse
+
+    hashed_redis.set_api_key("copied-key-0123456789", "tom@example.org")
+    hashed_redis.db.set("api_key:copied-key-0123456789", "tom@example.org")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
+
+    assert hashed_redis.db.get("api_key:copied-key-0123456789") is None
+    assert hashed_redis.get_api_key_email("copied-key-0123456789") == "tom@example.org"
+
+
+def test_rehash_reports_keys_it_cannot_tell_from_a_digest(hashed_redis, capsys):
+    import argparse
+
+    hashed_redis.db.set("api_key:" + "ab" * 32, "hex@example.org")
+
+    load_cli().rehash(hashed_redis, argparse.Namespace())
+
+    assert "1 entry looks like a digest" in capsys.readouterr().err
+
+
+def test_a_hand_picked_key_must_be_long(hashed_redis):
+    import argparse
+
+    args = argparse.Namespace(api_key="short-0123456789", email="a@b.example")
+
+    assert load_cli().create(hashed_redis, args) == 1
+    assert hashed_redis.get_api_key_email("short-0123456789") is None

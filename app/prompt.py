@@ -32,7 +32,7 @@ class LlmCutOff(Exception):
     mean using a truncated sentence or broken JSON."""
 
 
-class LlmRefused(Exception):
+class LlmTextRefused(Exception):
     """The provider refused the text itself: a guardrail of the gateway in
     front of the model, or the provider's content filter. Which texts are
     refused depends on the deployment's provider, not on Witty. `reason` is
@@ -49,17 +49,17 @@ class LlmRefused(Exception):
         self.guardrail = guardrail
 
 
-def _refusal(error: litellm.BadRequestError) -> LlmRefused | None:
-    """An LlmRefused if the bad request is a refusal of the text, else None.
+def _refusal(error: litellm.BadRequestError) -> LlmTextRefused | None:
+    """An LlmTextRefused if the bad request is a refusal of the text, else None.
     A LiteLLM proxy names the guardrail that refused it in the error body; a
     content filter (OpenAI, Azure) arrives as ContentPolicyViolationError."""
     if isinstance(error, litellm.ContentPolicyViolationError):
-        return LlmRefused(None)
+        return LlmTextRefused(None)
     body = error.body if isinstance(error.body, dict) else {}
     fields = body.get("provider_specific_fields")
     if isinstance(fields, dict) and fields.get("guardrail_name"):
         reason = fields.get("error") or body.get("message")
-        return LlmRefused(
+        return LlmTextRefused(
             reason if isinstance(reason, str) else None,
             guardrail=str(fields["guardrail_name"]),
         )
@@ -259,7 +259,7 @@ def llm_error(error: Exception, route: str) -> tuple[int, dict, str]:
     if isinstance(error, LlmCutOff):
         logger.error("%s: %s", route, error)
         return 502, {}, "The language model's answer was cut off"
-    if isinstance(error, LlmRefused):
+    if isinstance(error, LlmTextRefused):
         # Not the reason: a guardrail may quote what it matched, which is the
         # user's text. The user gets it; the log only what refused it.
         logger.warning("%s: refused by the LLM provider (%s)", route, error.guardrail)

@@ -2,11 +2,35 @@ import sentry_sdk
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
 
 from app.privacy_filter import get_privacy_filter
 from app.privacy_filter import PrivacyFilter
 
 from urllib.parse import urlparse
+
+# Sentry's own scrubbing removes headers and fields with these names from every
+# event. Its defaults cover Authorization and X-Api-Key, not the `x-key` header
+# this API authenticates with.
+SENTRY_DENYLIST = [*DEFAULT_DENYLIST, "x-key", "x_key"]
+
+
+def _clean_request(event: dict, privacy_filter: PrivacyFilter) -> None:
+    """No credential and only filtered text in an event's request: the key
+    header goes, the query string goes (the management routes take keys
+    there), and every body field, not only `text`, goes through the privacy
+    filter, since the guardrail routes carry the user's text in `messages`,
+    `response`, `texts` and `prompt`."""
+    request = event.get("request")
+    if not isinstance(request, dict):
+        return
+    headers = request.get("headers")
+    if isinstance(headers, dict):
+        for name in [n for n in headers if n.lower() in ("x-key", "x_key")]:
+            del headers[name]
+    request.pop("query_string", None)
+    if "data" in request:
+        request["data"] = privacy_filter.clean_var(request["data"])
 
 
 def sentry_clean_sensitive_frame(
@@ -55,11 +79,7 @@ def sentry_clean_event_data(event: dict, hint: dict) -> dict:  # pragma: no cove
         for frame in thread.get("stacktrace", {}).get("frames", []):
             sentry_clean_sensitive_frame(frame, privacy_filter)
 
-    # Clean request data
-    if "text" in event.get("request", {}).get("data", {}):
-        event["request"]["data"]["text"] = privacy_filter.clean_var(
-            event["request"]["data"]["text"]
-        )
+    _clean_request(event, privacy_filter)
 
     return event
 
@@ -76,8 +96,11 @@ def sentry_filter_transactions(event: dict, hint: dict) -> dict | None:
     """
     url_string = event["request"]["url"]
     parsed_url = urlparse(url_string)
+    if not parsed_url.path.endswith("/check"):
+        return None
 
-    return event if parsed_url.path.endswith("/check") else None
+    _clean_request(event, get_privacy_filter())
+    return event
 
 
 def set_up_sentry_sdk(version: str, settings):
@@ -109,6 +132,7 @@ def set_up_sentry_sdk(version: str, settings):
         environment=settings.environment,
         before_send=sentry_clean_event_data,
         before_send_transaction=sentry_filter_transactions,
+        event_scrubber=EventScrubber(denylist=SENTRY_DENYLIST, recursive=True),
     )
 
     return sentry_sdk

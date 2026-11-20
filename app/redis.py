@@ -38,8 +38,13 @@ class Redis:
                 port=settings.redis_port,
                 username=settings.redis_username,
                 password=settings.redis_password,
+                # TLS, with the server's certificate checked: one that is not
+                # can be impersonated by anyone on the way, who then reads the
+                # keys, emails and configs. A private CA comes from
+                # REDIS_SSL_CA_CERTS; without it, the system's.
                 ssl=settings.redis_verify_ssl,
-                ssl_cert_reqs="none",
+                ssl_cert_reqs="required",
+                ssl_ca_certs=settings.redis_ssl_ca_certs or None,
                 decode_responses=True,
             )
         else:

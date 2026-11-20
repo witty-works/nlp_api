@@ -110,6 +110,10 @@ curl -X POST 'http://127.0.0.1:8000/v1.0/guardrail/input' \
   part. Otherwise a new `system` message is put in front.
 - Every other message comes back exactly as sent, including tool calls, names
   and a `null` content.
+- If the system message carries the guidance already, as in the next turn of
+  a client that sends its whole conversation back each time, the answer is
+  `"action": "none"` with the messages unchanged, so the guidance is not added
+  a second time.
 - `guidance` is the bare text, for callers that can only append a system
   prompt of their own.
 - The guidance names the gender form the configuration asks for, such as

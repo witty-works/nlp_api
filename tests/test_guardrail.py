@@ -360,19 +360,31 @@ def test_output_passes_text_in_no_language(set_redis, llm_calls):  # noqa: F811
     assert response.json()["verdict"] == "pass"
 
 
-def test_guardrail_routes_have_their_own_version():
+def test_guardrail_routes_have_their_own_version(monkeypatch):
     """Gateways are configured with these paths: they move with the guardrail
-    contract, not with /v1.0/rephrase's."""
-    from app.version_validators import GUARDRAIL_API_VERSION
+    contract, not with /v1.0/rephrase's. Both versions are 1.0 today, so the
+    routes are rebuilt with the guardrail version moved on, to tell them apart."""
+    import importlib
 
-    paths = {
-        prefix + route.path
-        for prefix, route in registered_routes(app)
-        if "/guardrail/" in route.path
-    }
+    import app.routes.guardrail as plain
+    import app.routes.guardrail_litellm as litellm_adapter
+    import app.version_validators as versions
+
+    assert any("/guardrail/" in route.path for _, route in registered_routes(app))
+    monkeypatch.setattr(versions, "GUARDRAIL_API_VERSION", "9.9")
+    try:
+        paths = [
+            route.path
+            for module in (importlib.reload(plain), importlib.reload(litellm_adapter))
+            for route in module.router.routes
+        ]
+    finally:
+        monkeypatch.undo()
+        importlib.reload(plain)
+        importlib.reload(litellm_adapter)
 
     assert paths
-    assert all(p.startswith(f"/v{GUARDRAIL_API_VERSION}/guardrail/") for p in paths)
+    assert all(path.startswith("/v9.9/guardrail/") for path in paths)
 
 
 def test_output_does_not_need_languagetool(set_redis, llm_calls, monkeypatch):  # noqa: F811
@@ -435,3 +447,34 @@ def test_no_alternative_alone_does_not_fail(set_redis, llm_calls):  # noqa: F811
 
     assert body["verdict"] == "pass"
     assert body["findings"]
+
+
+@pytest.mark.parametrize("parts", [False, True], ids=["string", "content parts"])
+def test_input_leaves_guided_messages_alone(parts, set_redis, llm_calls):  # noqa: F811
+    """A client that keeps its conversation sends the guided messages back;
+    they must not collect a second copy each turn."""
+    user = {"role": "user", "content": "Write a job ad."}
+    system = {"role": "system", "content": "You are helpful."}
+    if parts:
+        system["content"] = [{"type": "text", "text": "You are helpful."}]
+    first = post("/v1.0/guardrail/input", {"messages": [system, user]}).json()
+
+    again = post("/v1.0/guardrail/input", {"messages": first["messages"]}).json()
+
+    assert first["action"] == "modify"
+    assert again["action"] == "none"
+    assert again["messages"] == first["messages"]
+
+
+@pytest.mark.parametrize(
+    "path,body",
+    [
+        ("/v1.0/guardrail/input", {"messages": [{"role": "user", "content": "Hi"}]}),
+        ("/v1.0/guardrail/output", {"response": "The chairman is late."}),
+        ("/v2.4/check", {"text": "The chairman is late."}),
+    ],
+)
+def test_a_null_config_means_no_config(path, body, set_redis, llm_calls):  # noqa: F811
+    response = post(path, {**body, "config": None})
+
+    assert response.status_code == 200

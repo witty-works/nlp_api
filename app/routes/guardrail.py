@@ -14,7 +14,7 @@ from app.config_manager import fetch_configs_for_request
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.guardrail import review
-from app.guidance import guidance, merge_guidance
+from app.guidance import guidance, has_guidance, merge_guidance
 from app.models import (
     BaseRequestIn,
     GuardrailGuidanceOut,
@@ -86,6 +86,10 @@ async def post_guardrail_input(
     )
 
     text = guidance(request_in.config, request_in.lang)
+    if has_guidance(request_in.messages, text):
+        return GuardrailInputOut(
+            action="none", messages=request_in.messages, guidance=text
+        )
 
     return GuardrailInputOut(
         messages=merge_guidance(request_in.messages, text), guidance=text
