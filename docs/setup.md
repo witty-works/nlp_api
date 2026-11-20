@@ -229,10 +229,15 @@ points at the deployment's Redis — it refuses to run against the in-memory Red
 the API falls back to, since those writes would vanish on exit.
 
 Set `API_KEY_HMAC_KEY` to store keys as an HMAC-SHA256 digest rather than
-verbatim, so a Redis dump does not hand out working credentials. Keys minted
-before it was set keep working: lookups fall back to the plaintext entry.
-Revoking then needs the key itself rather than the email, because the plaintext
-cannot be recovered from Redis.
+verbatim, so a Redis dump does not hand out working credentials. With it set,
+keys are only looked up by their digest: keys minted before it was set stop
+working until they are stored again, which `bin.api_key rehash` does for every
+key in Redis. Revoking then needs the key itself rather than the email, because
+the plaintext cannot be recovered from Redis.
+
+```bash
+uv run python -m bin.api_key rehash
+```
 
 ### From a local file
 

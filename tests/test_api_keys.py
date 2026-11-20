@@ -333,6 +333,14 @@ def hashed_redis(set_redis, monkeypatch):  # noqa: F811
         yield redis
 
 
+def test_with_a_secret_a_plaintext_entry_does_not_resolve(hashed_redis):
+    """A key stored as written, before API_KEY_HMAC_KEY was set, no longer
+    works once it is: Redis must not hold a working credential in clear."""
+    hashed_redis.db.set("api_key:old-key-0123456789", "tom@example.org")
+
+    assert hashed_redis.get_api_key_email("old-key-0123456789") is None
+
+
 def test_rehash_stores_plaintext_entries_as_digests(hashed_redis, capsys):
     import argparse
 
