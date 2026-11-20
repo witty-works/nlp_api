@@ -3525,6 +3525,25 @@ def scripted_llm(monkeypatch, replies):
     return calls
 
 
+def test_write_with_an_empty_draft_is_the_models_failure(
+    llm_access, set_redis, monkeypatch
+):
+    """An empty answer is the model failing, not the request: 502 at once,
+    without reviewing nothing."""
+    calls = scripted_llm(monkeypatch, ["  "])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Greet the team."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 502
+    assert len(calls) == 1
+
+
 def test_write_system_prompt_is_the_guardrail_guidance(
     llm_access, set_redis, monkeypatch
 ):

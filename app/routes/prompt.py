@@ -74,9 +74,9 @@ async def post_write(
 
     context.redis.store_metrics(request, configs, REPHRASE_API_VERSION, "write")
 
-    # Witty checks this much of a text at once, so a longer draft would only be
-    # reviewed in part; the model is asked to stay inside it, and a draft that
-    # does not is reported through `limit_reached`.
+    # What the editor takes at once, so the model is asked to stay inside it.
+    # A longer draft is still reviewed in full up to GUARDRAIL_MAX_LENGTH;
+    # `limit_reached` says only that a draft went past that.
     length = f" Keep the result under {context.settings.text_max_length} characters."
     # A longer text could only come back shortened, which a request to fix
     # its typos would not expect; refused instead.
@@ -112,6 +112,10 @@ async def post_write(
                 user_prompt, system_prompt, None, 0.4, max_tokens=max_tokens
             )
         )
+        if not draft.strip():
+            # The model failing, not the request: nothing to review.
+            response.status_code = status.HTTP_502_BAD_GATEWAY
+            return Result.factory("The language model returned no text")
         check_request_in = CheckRequestIn(
             text=draft,
             lang=write_request_in.lang,
