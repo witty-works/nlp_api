@@ -36,64 +36,64 @@ with `uv sync --inexact`; `uv run` leaves them in place.
 
 ## Using Docker
 
-1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Start LanguageTool from Docker Hub (erikvl87/languagetool):
+The image is built with BuildKit (the Dockerfile uses heredocs), which is the
+default builder of current Docker versions. The build needs
+`training_data/lid.176.bin` (see above) and checks it against a pinned hash.
 
 ```bash
-# Create an isolated network so containers can talk by name
-docker network create nlp-net
-
-# Start LanguageTool on port 8010
-docker run -d --name lt --network nlp-net -p 8010:8010 erikvl87/languagetool:latest
-```
-
-LanguageTool API will be available at http://localhost:8010/v2
-
-3. Build and run the NLP API locally:
-
-```bash
-# Build the API image from the local Dockerfile
 docker build -t nlpapi .
-
-# Run the API and point it to the LanguageTool container
-docker run -d --name nlp_api --network nlp-net -p 8080:8080 \
-  -e LANGUAGETOOL_API=http://lt:8010/v2 \
-  nlpapi
+docker run -d --name nlp_api -p 8080:8081 -e LANGUAGETOOL_API= nlpapi
 ```
 
-You should see the application running under http://localhost:8080/docs
+The entrypoint serves the API on port 8081 inside the container, so the
+example maps it to 8080 on the host: http://localhost:8080/docs. Two build
+arguments decide which spaCy models go into the image, `SPACY_LANGS`
+(default `en,de,fr`) and `SPACY_MODEL_SIZE` (`sm`, `md` or `lg`, default
+`lg`); see [deployment-sizing.md](./deployment-sizing.md). Without Redis
+(`REDIS_HOST`) the API answers every request with no findings, so for more
+than a smoke test use docker compose.
 
 ## Using docker compose (recommended for local multi-service setup)
 
-A ready-made `compose.yml` is included to start both the NLP API and LanguageTool with one command. It:
+`compose.yml` starts the API with Redis, and LanguageTool on request:
 
-- Launches `erikvl87/languagetool` on port `8010`
-- Builds and runs the API on port `8080`
-- Mounts your local `./models` directory read-only into the container (so local SetFit models can be used if present)
-- Sets `LANGUAGETOOL_API` inside the API container to point to the LanguageTool service
+- **The API** is built from the local Dockerfile and published on port 8080
+  of the host (`API_HOST_PORT`), container port 8081. It reads `.env`.
+- **Redis** (`redis:7-alpine`) keeps API keys and configs, in a named volume.
+- **LanguageTool** is built from [languagetool/](../languagetool/), with this
+  project's ignore lists and disabled rules, and only runs with the
+  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`),
+  container port 8010.
+- `./database` and `./models` are mounted read-only into the API container:
+  the checkout's rules, and the SetFit context-checker models if you
+  downloaded them.
 
 Quick start:
 
 ```bash
-# Start both services in the background
+# The API and Redis
 docker compose up -d
 
-# Check health
-curl http://localhost:8080/health
+# With LanguageTool: start its profile, and point the API at it in .env with
+# LANGUAGETOOL_API=http://languagetool:8010/v2
+docker compose --profile languagetool up -d
 
-# Visit http://localhost:8080/docs in your browser
+curl http://localhost:8080/health
+# http://localhost:8080/docs in your browser
 ```
 
-Enable local context checker models (if you downloaded them):
+`LANGUAGETOOL_API` is empty by default, so the API makes no spelling and
+grammar checks and sends no text to a third party until you set it.
+
+Enable local context checker models (if you downloaded them, see
+[configuration.md](./configuration.md#local-setfit-models)):
 
 ```bash
-# Option 1: temporarily set env when starting
 CONTEXT_CHECKER_LOCAL=true docker compose up -d
-
-# Option 2: uncomment CONTEXT_CHECKER_LOCAL in compose.yml and re-run
 ```
 
-Updating models: any changes you make in `./models` on the host are reflected in the container because of the bind mount. The mount is read-only (`:ro`) to prevent accidental writes from inside the container.
+Changes in `./models` on the host are visible in the container through the
+read-only mount.
 
 Stop and remove services:
 
@@ -112,10 +112,8 @@ Tail logs:
 
 ```bash
 docker compose logs -f nlpapi
-docker compose logs -f languagetool
+docker compose --profile languagetool logs -f languagetool
 ```
-
-If you only need the API without LanguageTool, you can still use the single-container commands above or remove the `languagetool` service from the compose file.
 
 ## Update dependencies locally
 
@@ -139,8 +137,8 @@ uv add <package_name>
 After making changes in the code or in the Dockerfile, build a fresh image:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
-docker run nlpapi
+docker build -t nlpapi . --no-cache
+docker run -p 8080:8081 nlpapi
 ```
 
 ## Run Locally
