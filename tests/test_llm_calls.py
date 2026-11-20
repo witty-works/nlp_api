@@ -329,3 +329,30 @@ def test_a_refusal_is_logged_without_the_providers_reason(monkeypatch, caplog):
 
     assert "Pattern Matching" in caplog.text
     assert "756" not in caplog.text
+
+
+def test_a_prose_answer_is_logged_without_its_text(
+    llm_access, set_redis, monkeypatch, caplog  # noqa: F811
+):
+    """The answer rewrites the user's sentence, so it must not reach the log."""
+    llm_access(LlmAccessType.USERS)
+
+    async def prose(*args, **kwargs):
+        return "Sure! Hey everyone, the chairperson will be late."
+
+    with TestClient(app) as client, caplog.at_level("WARNING", "nlp_api"):
+        monkeypatch.setattr(app.state.context.prompt, "handle", prose)
+        client.post(
+            "/v1.0/rephrase",
+            json={
+                "sentence": "Hey guys, the chairman will be late.",
+                "text": "guys",
+                "start": 4,
+                "lang": "en",
+                "alternatives": [{"text": "everyone"}],
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert "not a JSON object" in caplog.text
+    assert "chair" not in caplog.text

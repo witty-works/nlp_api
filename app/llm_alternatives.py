@@ -106,8 +106,12 @@ class LlmAlternatives:
         # Anything but an object of sentences is no rephrasing: prose, a
         # reasoning model cut off mid-thought, a list. Keep only the strings.
         if not isinstance(parsed, dict):
+            # Not the answer itself: it is the model's rewrite of the user's
+            # sentence, which must not reach the log (AGENTS.md, 1.1).
             logging.getLogger("nlp_api").warning(
-                "LLM rephrasing was not a JSON object: %r", str(answer)[:200]
+                "LLM rephrasing was not a JSON object (%s, %d characters)",
+                type(parsed).__name__,
+                len(str(answer)),
             )
             parsed = {}
         # A mark the model left in is not part of the sentence.
