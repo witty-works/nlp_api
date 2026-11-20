@@ -14,6 +14,7 @@ from app.guidance import (
     merge_guidance,
 )
 from app.main import app
+from app.route_table import registered_routes
 from app.models import (
     Config,
     FrenchGenderSeparatorType,
@@ -364,7 +365,11 @@ def test_guardrail_routes_have_their_own_version():
     contract, not with /v1.0/rephrase's."""
     from app.version_validators import GUARDRAIL_API_VERSION
 
-    paths = {route.path for route in app.routes if "/guardrail/" in route.path}
+    paths = {
+        prefix + route.path
+        for prefix, route in registered_routes(app)
+        if "/guardrail/" in route.path
+    }
 
     assert paths
     assert all(p.startswith(f"/v{GUARDRAIL_API_VERSION}/guardrail/") for p in paths)

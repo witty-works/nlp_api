@@ -6,7 +6,7 @@ authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
 ]
 dependencies = [
-    "fastapi<0.116.0,>=0.115.0",
+    "fastapi>=0.115.0",
     "pydantic<3.0.0,>=2.0.0",
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
@@ -45,8 +45,6 @@ dependencies = [
     # the CUDA libraries.
     "torch",
     "eng>=0.1.1",
-    "blackfire",
-    "blackfire-conprof>=1.0.0",
     "aiosqlite>=0.19.0",
     "pyjwt>=2.8.0",
     "cryptography>=42.0.2",
@@ -64,6 +62,13 @@ requires-python = ">=3.12,<3.15"
 license = "MIT"
 
 [dependency-groups]
+# Blackfire: continuous profiling (BLACKFIRE_ENABLE_CONTINUOUS_PROFILING) and
+# blackfire-python locally. Not in the image: its profiler pins ddtrace, which
+# brings opentelemetry and protobuf.
+profiling = [
+    "blackfire",
+    "blackfire-conprof>=1.0.0",
+]
 dev = [
     "click",
     "polib",
@@ -76,6 +81,13 @@ dev = [
     "pytest-env>=0.8.1",
     "httpx>=0.25.0",
 ]
+
+[tool.uv]
+# german-nouns requires wiktionary-de-parser, which pins lxml<5 (with known
+# vulnerabilities). The app only uses german_nouns.lookup, which reads the
+# bundled noun list; the parser is only needed to rebuild that list from a
+# Wiktionary dump (german_nouns.parse_dump).
+exclude-dependencies = ["wiktionary-de-parser"]
 
 [tool.uv.sources]
 torch = [{ index = "pytorch-cpu" }]

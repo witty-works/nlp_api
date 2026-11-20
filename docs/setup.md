@@ -159,8 +159,11 @@ Alternative docs: http://localhost:8000/redoc
 
 ## Profiling locally with Blackfire
 
+Blackfire is in the `profiling` dependency group, which `uv sync` leaves out
+and the Docker image does not contain:
+
 ```bash
-uv run blackfire-python uvicorn app.main:app --reload
+uv run --group profiling blackfire-python uvicorn app.main:app --reload
 ```
 
 Make sure you have a `.blackfire.ini`, get the settings from

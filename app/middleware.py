@@ -9,6 +9,7 @@ from starlette.routing import Match
 
 from app.auth_service import fetch_user
 from app.dependencies import fetch_current_username, fetch_management_username
+from app.route_table import registered_routes
 
 
 # Security headers configuration
@@ -125,10 +126,14 @@ def _route_for(app, method: str, path: str) -> APIRoute | None:
     if key in _PATH_ROUTES:
         return _PATH_ROUTES[key]
 
-    scope = {"type": "http", "method": method, "path": path}
     found = None
-    for route in app.routes:
-        if isinstance(route, APIRoute) and route.matches(scope)[0] == Match.FULL:
+    for prefix, route in registered_routes(app):
+        if not isinstance(route, APIRoute):
+            continue
+        if prefix and not (path == prefix or path.startswith(prefix + "/")):
+            continue
+        scope = {"type": "http", "method": method, "path": path[len(prefix) :]}
+        if route.matches(scope)[0] == Match.FULL:
             found = route
             break
 

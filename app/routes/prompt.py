@@ -81,7 +81,7 @@ async def post_write(
     # A longer text could only come back shortened, which a request to fix
     # its typos would not expect; refused instead.
     if len(write_request_in.text) > context.settings.text_max_length:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
         return Result.factory(
             f"The text is longer than {context.settings.text_max_length}"
             " characters, the most a prompt can rewrite"
@@ -134,7 +134,7 @@ async def post_write(
         return Result.factory(message)
 
     if outcome.language is None:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
         return Result.factory("Language could not be determined")
 
     return PromptOut(
