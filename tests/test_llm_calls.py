@@ -7,7 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.prompt import LlmCutOff, LlmRefused, LlmUnavailable, Prompt, llm_error
+from app.prompt import LlmCutOff, LlmTextRefused, LlmUnavailable, Prompt, llm_error
 from app.settings import Settings
 from app.models import LlmAccessType
 from tests.test_api import llm_access, set_redis  # noqa: F401  (fixtures)
@@ -87,7 +87,7 @@ def test_a_gateway_guardrail_refusal_is_refused_with_its_reason(monkeypatch):
     )
     prompt, _ = prompt_with(monkeypatch, blocked)
 
-    with pytest.raises(LlmRefused) as refused:
+    with pytest.raises(LlmTextRefused) as refused:
         asyncio.run(prompt.handle("hi"))
 
     assert refused.value.reason == "Content blocked: AHV number pattern detected"
@@ -99,7 +99,7 @@ def test_a_content_policy_refusal_is_refused(monkeypatch):
     )
     prompt, _ = prompt_with(monkeypatch, blocked)
 
-    with pytest.raises(LlmRefused) as refused:
+    with pytest.raises(LlmTextRefused) as refused:
         asyncio.run(prompt.handle("hi"))
 
     assert refused.value.reason is None
@@ -119,7 +119,7 @@ def test_any_other_bad_request_stays_an_error(monkeypatch):
 
 def test_a_refusal_passes_on_the_providers_reason():
     code, headers, message = llm_error(
-        LlmRefused("Content blocked: AHV number pattern detected"), "/test"
+        LlmTextRefused("Content blocked: AHV number pattern detected"), "/test"
     )
 
     assert code == 422
@@ -137,7 +137,7 @@ def test_the_deployments_refusal_message_replaces_the_reason(monkeypatch):
         monkeypatch, blocked, llm_refused_message="Remove personal identifiers."
     )
 
-    with pytest.raises(LlmRefused) as refused:
+    with pytest.raises(LlmTextRefused) as refused:
         asyncio.run(prompt.handle("hi"))
 
     assert llm_error(refused.value, "/test")[2] == "Remove personal identifiers."
@@ -242,7 +242,7 @@ def test_parse_json_keeps_umlauts():
     [
         (LlmUnavailable("busy"), 503),
         (LlmCutOff("cut"), 502),
-        (LlmRefused(None), 422),
+        (LlmTextRefused(None), 422),
         (ValueError("x"), 500),
     ],
 )
@@ -287,7 +287,7 @@ def test_the_rephrase_route_answers_422_when_the_provider_refuses(
     llm_access(LlmAccessType.USERS)
 
     async def refused(*args, **kwargs):
-        raise LlmRefused("Content blocked: AHV number pattern detected")
+        raise LlmTextRefused("Content blocked: AHV number pattern detected")
 
     with TestClient(app) as client:
         monkeypatch.setattr(app.state.context.prompt, "handle", refused)
@@ -322,7 +322,7 @@ def test_a_refusal_is_logged_without_the_providers_reason(monkeypatch, caplog):
     )
     prompt, _ = prompt_with(monkeypatch, blocked)
 
-    with pytest.raises(LlmRefused) as refused:
+    with pytest.raises(LlmTextRefused) as refused:
         asyncio.run(prompt.handle("hi"))
     with caplog.at_level("WARNING", "nlp_api"):
         llm_error(refused.value, "/test")
