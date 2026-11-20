@@ -36,3 +36,19 @@ def test_downloads_the_pinned_revision(hub):
     ]
     assert os.path.isfile("models/context_aware_model/en/model.safetensors")
 
+
+def test_a_language_without_a_model_is_skipped(hub):
+    result = CliRunner().invoke(script.download, ["--lang", "all"])
+
+    assert result.exit_code == 0, result.output
+    assert os.path.isdir("models/context_aware_model/en")
+    assert os.path.isdir("models/context_aware_model/de")
+    assert not os.path.lexists("models/context_aware_model/fr")
+    assert "no fr model" in result.output
+
+
+def test_asking_for_a_language_without_a_model_fails(hub):
+    result = CliRunner().invoke(script.download, ["--lang", "fr"])
+
+    assert result.exit_code == 1
+    assert not os.path.lexists("models/context_aware_model/fr")

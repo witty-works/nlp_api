@@ -378,7 +378,9 @@ Reduces false positives by checking rule hits in their sentence context. Two mod
 | --------------------- | ------- | --------------------------------------------------------------- |
 | CONTEXT_CHECKER_LOCAL | false   | When true, use local SetFit models instead of remote API calls. |
 
-When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use.
+When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use. A language without a model there is not checked locally.
+
+Witty Works publishes models for English and German. No French model has been trained; one placed in `models/context_aware_model/fr/`, for example with [bin/convert_to_cpu.py](../bin/convert_to_cpu.py), is used like the others.
 
 #### Setup Local SetFit Models
 

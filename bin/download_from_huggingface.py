@@ -9,6 +9,9 @@ Usage:
 """
 
 import os
+import shutil
+import sys
+
 import click
 from huggingface_hub import snapshot_download
 
@@ -23,7 +26,8 @@ REVISION = "b8557691da55ab05c44f17b9b972d0c86e143f03"
     "--lang",
     "-l",
     default="all",
-    help="Language to download (en, de, fr, or all)",
+    help="Language to download (en, de, fr, or all). The repository has "
+    "models for en and de; all skips a language it has no model for.",
 )
 @click.option(
     "--repo-id",
@@ -39,6 +43,7 @@ REVISION = "b8557691da55ab05c44f17b9b972d0c86e143f03"
 def download(lang, repo_id, revision):
     """Download SetFit models from Hugging Face Hub."""
     languages = ["en", "de", "fr"] if lang == "all" else [lang]
+    failed = False
 
     for language in languages:
         print(f"\n{'='*50}")
@@ -54,19 +59,22 @@ def download(lang, repo_id, revision):
                 revision=revision,
             )
 
+            source_dir = os.path.join(cache_dir, language)
+            if not os.path.isdir(source_dir):
+                print(f"- no {language} model in {repo_id} at {revision}, skipped")
+                failed = failed or lang != "all"
+                continue
+
             # Create symlink or copy to expected location
             target_dir = f"models/context_aware_model/{language}"
             os.makedirs("models/context_aware_model", exist_ok=True)
 
-            # Use symlink if on Unix, copy on Windows
-            source_dir = os.path.join(cache_dir, language)
-            if os.path.exists(target_dir):
+            # lexists: a symlink left pointing at nothing is replaced too.
+            if os.path.lexists(target_dir):
                 print(f"Removing existing {target_dir}")
                 if os.path.islink(target_dir):
                     os.unlink(target_dir)
                 else:
-                    import shutil
-
                     shutil.rmtree(target_dir)
 
             os.symlink(source_dir, target_dir, target_is_directory=True)
@@ -74,12 +82,15 @@ def download(lang, repo_id, revision):
 
         except Exception as e:
             print(f"✗ Failed to download {language} model: {e}")
+            failed = True
             continue
 
     print(f"\n{'='*50}")
     print("Download complete!")
     print(f"{'='*50}")
     print("\nEnable models by setting: CONTEXT_CHECKER_LOCAL=true")
+    if failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
