@@ -18,8 +18,10 @@ class ReviewPrompt:
             + "\n"
         )
 
-        prompt += 'The "previous response" is the following JSON string: ' + json.dumps(
-            previous_response, ensure_ascii=False
+        prompt += (
+            'The "previous response" is the following JSON string: '
+            + json.dumps(previous_response, ensure_ascii=False)
+            + "\n"
         )
 
         prompt += """For each item in the below "issues list", replace the content provided in "issue" within the "previous response" using any of the provided "alternatives".
@@ -30,7 +32,7 @@ If no "alternatives" are provided, try to rephrase the given text portion.
 Do not include the "issues list" in your response.
 """
 
-        prompt += "Only respond with the edited version, so not provide a before/after. Do not explain the changes in the edits."
+        prompt += "Only respond with the edited version, do not provide a before/after. Do not explain the changes in the edits."
 
         changes = []
         rephrase = []
