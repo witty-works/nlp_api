@@ -3130,6 +3130,18 @@ def test_the_rules_database_stays_in_memory():
     assert not Path("file:db?mode=memory&cache=shared").exists()
 
 
+def test_keys_required_but_stored_in_clear_says_so(monkeypatch, caplog):
+    """With REQUIRE_API_KEY on, keys are the credentials that matter; without
+    API_KEY_HMAC_KEY, Redis holds them as written."""
+    monkeypatch.setattr(context.settings, "require_api_key", True)
+    monkeypatch.setattr(context.settings, "api_key_hmac_key", "")
+
+    with caplog.at_level(logging.WARNING, "nlp_api"), TestClient(app):
+        pass
+
+    assert "API_KEY_HMAC_KEY" in caplog.text
+
+
 def test_profiling_without_blackfire_says_so(monkeypatch, caplog):
     """Blackfire is not in the image: asked for continuous profiling without
     it installed, the start says so rather than doing nothing."""

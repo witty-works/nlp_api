@@ -29,6 +29,12 @@ async def lifespan(app: FastAPI, context: AppContext):
     # Startup
     # Expose context on FastAPI app.state for DI-friendly access
     app.state.context = context
+    if context.settings.require_api_key and not context.settings.api_key_hmac_key:
+        context.logger.warning(
+            "REQUIRE_API_KEY is on but API_KEY_HMAC_KEY is not set: the API keys"
+            " are stored in Redis as written, so a copy of Redis holds working"
+            " credentials"
+        )
     if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
         try:
             from blackfire_conprof.profiler import Profiler
