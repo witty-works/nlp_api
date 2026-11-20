@@ -1,0 +1,58 @@
+# Dependabot reads uv.lock. Security updates are switched on in the
+# repository settings and open pull requests against the default branch,
+# dev; the options below shape them and the weekly version updates.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Only uv.lock: the ranges in pyproject.toml record decisions (spacy below
+    # 3.9 for the pinned models, scikit-learn at the version the context
+    # checker's heads were saved with) and change only by hand.
+    versioning-strategy: lockfile-only
+    # Version updates wait a week after a release, so a compromised or broken
+    # release has time to be pulled before it is proposed here.
+    cooldown:
+      default-days: 7
+    labels:
+      - dependencies
+    ignore:
+      # Pinned with the context-checker model files (pyproject.toml); moves
+      # only together with new models.
+      - dependency-name: scikit-learn
+    groups:
+      # These compute the local context checker's verdicts. A pull request
+      # that moves them triggers ethics question 1.15 (AGENTS.md): measure
+      # the scores before and after and screen it as #1279 did.
+      context-checker:
+        applies-to: version-updates
+        patterns:
+          - torch
+          - transformers
+          - sentence-transformers
+          - setfit
+          - tokenizers
+          - huggingface-hub
+          - safetensors
+      context-checker-security:
+        applies-to: security-updates
+        # The same list as context-checker.
+        patterns:
+          - torch
+          - transformers
+          - sentence-transformers
+          - setfit
+          - tokenizers
+          - huggingface-hub
+          - safetensors
+      # Everything else in one weekly pull request, minor and patch only;
+      # major versions come one pull request each.
+      python:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
