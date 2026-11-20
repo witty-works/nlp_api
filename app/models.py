@@ -960,6 +960,13 @@ class UserConfResponse(ConfRequest):
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
     config: Optional[Config] = Field(default_factory=Config)
+
+    @field_validator("config", mode="before")
+    @classmethod
+    def null_config_is_no_config(cls, config):
+        """`"config": null` means the same as no config, rather than a None
+        the config layers would trip over."""
+        return Config() if config is None else config
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 

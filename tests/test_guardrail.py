@@ -435,3 +435,17 @@ def test_no_alternative_alone_does_not_fail(set_redis, llm_calls):  # noqa: F811
 
     assert body["verdict"] == "pass"
     assert body["findings"]
+
+
+@pytest.mark.parametrize(
+    "path,body",
+    [
+        ("/v1.0/guardrail/input", {"messages": [{"role": "user", "content": "Hi"}]}),
+        ("/v1.0/guardrail/output", {"response": "The chairman is late."}),
+        ("/v2.4/check", {"text": "The chairman is late."}),
+    ],
+)
+def test_a_null_config_means_no_config(path, body, set_redis, llm_calls):  # noqa: F811
+    response = post(path, {**body, "config": None})
+
+    assert response.status_code == 200
