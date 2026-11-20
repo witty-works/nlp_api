@@ -56,8 +56,8 @@ dependencies = [
     # Minimum client versions (app/version_validators.py).
     "packaging>=22.0",
 ]
-requires-python = ">3.12,<3.15"
-license = "Proprietary"
+requires-python = ">=3.12,<3.15"
+license = "MIT"
 
 [dependency-groups]
 dev = [
