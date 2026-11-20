@@ -39,11 +39,18 @@ dependencies = [
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
-    "setfit>=0.7.0",
+    # The local context checker (app/context_checker.py). 1.2 is the first
+    # release that runs on transformers 5.
+    "setfit>=1.2.0",
+    # The classifier head of each context-checker model (model_head.pkl) was
+    # saved with scikit-learn 1.7.2, and scikit-learn does not guarantee the
+    # same results when it loads a model saved by another version. Move it
+    # only together with new model files.
+    "scikit-learn==1.7.2",
     # Through setfit; listed so it comes from the PyTorch CPU index (see
     # [tool.uv.sources]): the image runs on CPU, and PyPI's Linux build brings
     # the CUDA libraries.
-    "torch",
+    "torch>=2.13.0",
     "eng>=0.1.1",
     "aiosqlite>=0.19.0",
     "pyjwt>=2.8.0",
@@ -79,7 +86,8 @@ dev = [
     "pytest-asyncio",
     "pytest-snapshot",
     "pytest-env>=0.8.1",
-    "httpx>=0.25.0",
+    # The test client; Starlette deprecates httpx for it.
+    "httpx2>=2.0.0",
 ]
 
 [tool.uv]
