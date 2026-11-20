@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - [How it's used](#how-its-used)
-- [What's inside](#whats-inside)
 - [Source of truth for rules](#source-of-truth-for-rules)
 - [Regenerating dump.sql](#regenerating-dumpsql)
 - [Verifying changes](#verifying-changes)

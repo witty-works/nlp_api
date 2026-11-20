@@ -79,7 +79,7 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
 | TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
 | CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
-| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                                                                             |
+| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. They must be installed: see [Using Smaller spaCy Models](#using-smaller-spacy-models).                                                                             |
 | IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from [database/dump.sql](../database/dump.sql) (otherwise from [database/db.sqlite3](../database/db.sqlite3)). |
 | LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
 | MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
@@ -108,22 +108,15 @@ By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg
    MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
    ```
 
-2. Update `pyproject.toml` to include the corresponding model wheels:
+2. Install them. The wheels are pinned by hash in
+   [bin/spacy-models.json](../bin/spacy-models.json):
 
-   ```toml
-   [project]
-   dependencies = [
-       # ... other dependencies
-       "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.0/en_core_web_md-3.7.0-py3-none-any.whl",
-       "https://github.com/explosion/spacy-models/releases/download/de_core_news_md-3.7.0/de_core_news_md-3.7.0-py3-none-any.whl",
-       "https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-3.7.0/fr_core_news_md-3.7.0-py3-none-any.whl",
-   ]
-   ```
-
-3. Reinstall dependencies:
    ```bash
-   uv sync
+   uv run python -m bin.install_spacy_models --size md   # or sm
    ```
+
+   The Docker image takes the size as a build argument:
+   `docker build --build-arg SPACY_MODEL_SIZE=md .`
 
 **Trade-offs:**
 
@@ -670,7 +663,7 @@ BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
 BLACKFIRE_APPLICATION_NAME=app
 ```
 
-Blackfire is in the `profiling` dependency group (`uv sync --group profiling`), not in a default install or the Docker image. If the variable is set without it, the app logs a warning at startup and runs without profiling.
+Blackfire is in the `profiling` dependency group (`uv sync --inexact --group profiling`; without `--inexact`, uv removes the spaCy models, which are not in the lock), not in a default install or the Docker image. If the variable is set without it, the app logs a warning at startup and runs without profiling.
 
 Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
 

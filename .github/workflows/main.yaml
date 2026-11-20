@@ -51,7 +51,7 @@ jobs:
             -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             -f description="Running the test suite"
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -97,10 +97,12 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync --locked
+          # Not in the lock: pinned by hash in bin/spacy-models.json.
+          uv run python -m bin.install_spacy_models
 
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-fasttext
         with:

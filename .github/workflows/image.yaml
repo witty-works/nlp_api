@@ -17,6 +17,8 @@ on:
       - uv.lock
       - bin/fetch_editor.py
       - bin/editor-pin.json
+      - bin/install_spacy_models.py
+      - bin/spacy-models.json
       - .github/workflows/image.yaml
   workflow_dispatch:
 
@@ -50,7 +52,7 @@ jobs:
       # the build without it.
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-fasttext
         with:
