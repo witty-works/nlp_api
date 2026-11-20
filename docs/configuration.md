@@ -384,11 +384,10 @@ When enabled, the app loads SetFit models from `models/context_aware_model/{lang
 
 Option 1: Download from Hugging Face (Recommended)
 
-```bash
-# Install huggingface-hub if not already installed
-uv add huggingface-hub
+The script downloads a fixed commit of [witty-works/setfit-context-checker](https://huggingface.co/witty-works/setfit-context-checker), set in `REVISION` in [bin/download_from_huggingface.py](../bin/download_from_huggingface.py), so every deployment runs the same model weights. Moving it is a reviewed change: new weights can change which findings the context checker keeps.
 
-# Download all models (en, de, fr)
+```bash
+# Download every model the repository has (en, de)
 uv run python -m bin.download_from_huggingface --lang all
 
 # Or download a specific language
