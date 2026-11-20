@@ -38,8 +38,9 @@ WORKDIR /src
 COPY pyproject.toml uv.lock ./
 
 # The dependency set is generated from the lockfile rather than kept as a
-# second, hand-maintained requirements.txt that can drift from it.
-RUN uv export --frozen --no-dev --no-hashes --no-emit-project --no-annotate \
+# second, hand-maintained requirements.txt that can drift from it. --locked
+# fails the build if uv.lock no longer matches pyproject.toml.
+RUN uv export --locked --no-dev --no-hashes --no-emit-project --no-annotate \
         --no-header --format requirements-txt -o /tmp/requirements.full.txt
 
 # Drop the model wheels for languages this image does not serve, and rewrite

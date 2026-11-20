@@ -33,6 +33,10 @@ jobs:
       contents: read
       pull-requests: read
       statuses: write # the commit status of a dispatched run, see below
+    env:
+      # No uv cache: the spacy model wheels and torch already crowd the runner
+      # disk, and a cache would hold them a second time.
+      UV_NO_CACHE: "1"
 
     steps:
       # A dispatched run is not shown among a pull request's checks, only a
@@ -87,6 +91,8 @@ jobs:
           # The same uv as the Dockerfile's deps stage.
           version: "0.13.9"
           python-version: "3.12"
+          # Nor a GitHub cache of it, which would upload the same packages.
+          enable-cache: false
 
       - name: Install dependencies
         run: |
