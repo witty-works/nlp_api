@@ -32,9 +32,9 @@ dependencies = [
     "german-nouns",
     "inflex",
     "spacy-lookups-data",
-    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl",
-    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl",
-    "fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl",
+    # The spaCy models are not listed here: they are wheels on GitHub release
+    # pages, which Dependabot cannot resolve. They are pinned by hash in
+    # bin/spacy-models.json and installed by bin/install_spacy_models.py.
     "secure>=0.3.0",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",

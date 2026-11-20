@@ -22,8 +22,17 @@
 
 ```bash
 uv sync
+uv run python -m bin.install_spacy_models
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
+
+The spaCy models are not in `uv.lock`: they are wheels on GitHub release
+pages, which Dependabot cannot resolve. `bin/install_spacy_models.py`
+installs the large English, German and French models from
+[bin/spacy-models.json](../bin/spacy-models.json), checked against the hashes
+pinned there (`--size sm` or `--langs en` for less). `uv sync` removes
+packages that are not in the lock, so run it again after a `uv sync`, or sync
+with `uv sync --inexact`; `uv run` leaves them in place.
 
 ## Using Docker
 
@@ -114,6 +123,7 @@ To update packages locally after `pyproject.toml`/`uv.lock` was changed:
 
 ```bash
 uv sync
+uv run python -m bin.install_spacy_models   # uv sync removes the models
 ```
 
 ## Add new package

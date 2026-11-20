@@ -49,8 +49,8 @@ jobs:
       # stripped: the CPU build has the same version, and the same advisories,
       # as the release it is built from. Without hashes, so pip-audit checks
       # the pinned versions as given (--no-deps) without installing anything
-      # (--disable-pip). The spacy models are URL requirements, which
-      # pip-audit cannot look up and skips.
+      # (--disable-pip). The spaCy models are not in the lock
+      # (bin/spacy-models.json), and are not on PyPI to be looked up.
       - name: Export the lock
         run: |
           uv export --frozen --all-groups --no-hashes --no-emit-project \

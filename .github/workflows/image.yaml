@@ -17,6 +17,8 @@ on:
       - uv.lock
       - bin/fetch_editor.py
       - bin/editor-pin.json
+      - bin/install_spacy_models.py
+      - bin/spacy-models.json
       - .github/workflows/image.yaml
   workflow_dispatch:
 

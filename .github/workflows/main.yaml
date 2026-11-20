@@ -97,6 +97,8 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync --locked
+          # Not in the lock: pinned by hash in bin/spacy-models.json.
+          uv run python -m bin.install_spacy_models
 
       - name: Caching FastText models
         id: cache-fasttext
