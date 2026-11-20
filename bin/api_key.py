@@ -8,6 +8,7 @@ the same Redis and applies the same HMAC hashing.
     uv run python -m bin.api_key create user@example.com
     uv run python -m bin.api_key list
     uv run python -m bin.api_key delete <key>
+    uv run python -m bin.api_key rehash
 
 Or into a local API key file, synced to the API with bin/sync_api_keys.py
 (see app/api_keys.py) rather than written to Redis:
@@ -22,12 +23,13 @@ from Redis. `list` prints the stored entries and the email each maps to.
 
 import argparse
 import os
+import re
 import secrets
 import sys
 
 import yaml
 
-from app.api_keys import ApiKeyEntry, parse
+from app.api_keys import SYNCED_KEYS, ApiKeyEntry, parse
 
 from app.redis import Redis
 from app.settings import get_settings
@@ -135,6 +137,43 @@ def delete(redis: Redis, args) -> int:
     return 0
 
 
+# What set_api_key stores under when API_KEY_HMAC_KEY is set.
+DIGEST = re.compile(r"[0-9a-f]{64}")
+
+
+def rehash(redis: Redis, args) -> int:
+    """Store every key kept as written under its HMAC digest instead, for a
+    deployment that set API_KEY_HMAC_KEY after minting keys: with the secret
+    set, those entries no longer resolve. A key that is itself 64 lowercase
+    hex characters reads as a digest and is left alone."""
+    if not redis.settings.api_key_hmac_key:
+        print("error: API_KEY_HMAC_KEY is not set", file=sys.stderr)
+        return 1
+
+    moved = 0
+    for name in list(redis.db.scan_iter("api_key:*")):
+        if isinstance(name, bytes):  # pragma: no cover
+            name = name.decode("utf-8")
+        api_key = name.removeprefix("api_key:")
+        if DIGEST.fullmatch(api_key):
+            continue
+
+        email = redis.db.get(name)
+        if email is None:  # deleted meanwhile
+            continue
+        with redis.db.pipeline() as pipeline:
+            redis.set_api_key(api_key, email, remove_plaintext=True, db=pipeline)
+            # A key the file sync wrote stays the file's.
+            if redis.db.sismember(SYNCED_KEYS, name):
+                pipeline.srem(SYNCED_KEYS, name)
+                pipeline.sadd(SYNCED_KEYS, redis.api_key_name(api_key))
+            pipeline.execute()
+        moved += 1
+
+    print(f"{moved} key(s) now stored as HMAC digests", file=sys.stderr)
+    return 0
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     commands = parser.add_subparsers(dest="command", required=True)
@@ -164,6 +203,12 @@ def parse_args():
     delete_parser = commands.add_parser("delete", help="revoke a key")
     delete_parser.add_argument("api_key", help="the key to revoke")
     delete_parser.set_defaults(handler=delete)
+
+    rehash_parser = commands.add_parser(
+        "rehash",
+        help="store keys kept as written as HMAC digests (needs API_KEY_HMAC_KEY)",
+    )
+    rehash_parser.set_defaults(handler=rehash)
 
     return parser.parse_args()
 

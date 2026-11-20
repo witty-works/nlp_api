@@ -31,7 +31,7 @@ Authentication and authorization are implemented in [app/auth_service.py](../app
 
 - API keys (fallback and service clients): API-key storage and lookup are centralized in [app/redis.py](../app/redis.py) via `get_api_key_email`, `set_api_key`, and `delete_api_key` helpers. Behavior:
   - When `API_KEY_HMAC_KEY` is configured, API keys are HMAC-SHA256 hashed before lookup/storage.
-  - If no secret is configured, the code falls back to plaintext key lookup for backward compatibility; enabling hashing is recommended for production.
+  - If no secret is configured, keys are stored and looked up as written; enabling hashing is recommended for production. With a secret configured, an entry stored as written does not resolve; `bin/api_key.py rehash` converts such entries to digests.
 
 Testing / local development:
 

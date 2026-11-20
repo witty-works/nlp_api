@@ -203,19 +203,12 @@ class Redis:
         ).hexdigest()
 
     def get_api_key_email(self, api_key: str) -> str | None:
-        """Retrieve the email associated with an API key.
-
-        If HMAC secret is configured, the API key is HMACed before lookup.
-        Falls back to plaintext lookup if no secret configured.
+        """The email an API key resolves to, looked up by its HMAC digest when
+        API_KEY_HMAC_KEY is set and as written otherwise. With the secret set,
+        an entry stored as written does not resolve: Redis must not hold a
+        working credential in clear (`bin/api_key.py rehash` converts them).
         """
-        hashed = self._hash_api_key(api_key)
-        if hashed:
-            val = self.db.get("api_key:" + hashed)
-            if val:
-                return val
-
-        # Fallback to plaintext lookup for backward compatibility
-        return self.db.get("api_key:" + api_key)
+        return self.db.get(self.api_key_name(api_key))
 
     def api_key_name(self, api_key: str) -> str:
         """The Redis entry a key is stored under by set_api_key."""
