@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI, context: AppContext):
             context.logger.warning(
                 "BLACKFIRE_ENABLE_CONTINUOUS_PROFILING is set, but Blackfire"
                 " is not installed: install the `profiling` dependency group"
-                " (uv sync --group profiling)"
+                " (uv sync --inexact --group profiling, which keeps the spaCy models)"
             )
         else:
             try:
