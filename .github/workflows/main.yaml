@@ -33,28 +33,10 @@ jobs:
       contents: read
       pull-requests: read
       statuses: write # the commit status of a dispatched run, see below
-
-    services:
-      # The snapshots contain LanguageTool findings, so they only hold still if
-      # LanguageTool does. Pinned to the same version the compose file runs,
-      # because the hosted API is a different one: it moved to 6.9 and stopped
-      # reporting COMMA_COMPOUND_SENTENCE, which changes a snapshot on its own.
-      # The heap is raised because the default runs out part way through the
-      # suite, and the container exiting reads as every later test failing to
-      # connect rather than as one crash.
-      languagetool:
-        image: erikvl87/languagetool:6.8
-        ports:
-          - 8010:8010
-        env:
-          Java_Xms: 512m
-          Java_Xmx: 4g
-        # The image defines its own healthcheck, so the runner waits for it;
-        # only the timings need widening for a cold JVM start.
-        options: >-
-          --health-interval 10s
-          --health-retries 20
-          --health-start-period 30s
+    env:
+      # No uv cache: the spacy model wheels and torch already crowd the runner
+      # disk, and a cache would hold them a second time.
+      UV_NO_CACHE: "1"
 
     steps:
       # A dispatched run is not shown among a pull request's checks, only a
@@ -69,7 +51,7 @@ jobs:
             -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             -f description="Running the test suite"
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -83,23 +65,44 @@ jobs:
           dotnet: true
           haskell: true
           large-packages: true
-          docker-images: false # the LanguageTool service container must survive
+          docker-images: false # keeps docker itself; the LanguageTool image is built below
           swap-storage: true
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: pdm-project/setup-pdm@v3
+      # The snapshots contain LanguageTool findings, so they only hold still if
+      # LanguageTool does, and they have to come from the LanguageTool this
+      # project deploys: languagetool/Dockerfile, the image compose.yml builds.
+      # Not the stock erikvl87 image, which lacks the ignore lists and the
+      # disabledRuleIds (SEHR_GEEHRTER_NAME among them), and not the hosted
+      # API, which is a different version. A service container cannot be
+      # built from the checkout, so this builds and starts it here, early, for
+      # the JVM to start while the dependencies install. The heap is raised
+      # because the default runs out part way through the suite, and the
+      # container exiting reads as every later test failing to connect.
+      - name: Start LanguageTool
+        run: |
+          docker build --build-arg LT_VERSION=6.8 -t nlp-languagetool:6.8 languagetool
+          docker run -d --name languagetool -p 8010:8010 \
+            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool:6.8
+
+      - name: Set up uv and Python
+        # setup-uv publishes no major-version tags, only full versions.
+        uses: astral-sh/setup-uv@v10.3.3
         with:
+          # The same uv as the Dockerfile's deps stage.
+          version: "0.13.9"
           python-version: "3.12"
+          # Nor a GitHub cache of it, which would upload the same packages.
+          enable-cache: false
 
       - name: Install dependencies
-        env:
-          PIP_NO_CACHE_DIR: "1"
         run: |
-          pdm sync --dev
+          uv sync --locked
+          # Not in the lock: pinned by hash in bin/spacy-models.json.
+          uv run python -m bin.install_spacy_models
 
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-fasttext
         with:
@@ -112,12 +115,21 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
+      - name: Wait for LanguageTool
+        run: |
+          for i in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:8010/v2/languages > /dev/null && exit 0
+            sleep 5
+          done
+          docker logs languagetool
+          exit 1
+
       - name: Run test suite
         env:
-          LANGUAGETOOL_API: "http://localhost:8010/v2"
+          LANGUAGETOOL_API: "http://127.0.0.1:8010/v2"
         run: |
           export testing=True
-          pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
+          uv run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
 
       # The workflow runs on push only, so the scanner cannot tell a branch
       # with an open pull request from any other and files every analysis as a

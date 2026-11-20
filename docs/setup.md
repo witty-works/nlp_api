@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Installation (Python 3.12) using PDM](#installation-python-312-using-pdm)
+- [Installation (Python 3.12) using uv](#installation-python-312-using-uv)
 - [Using Docker](#using-docker)
 - [Using docker compose (recommended for local multi-service setup)](#using-docker-compose-recommended-for-local-multi-service-setup)
 - [Update dependencies locally](#update-dependencies-locally)
@@ -16,76 +16,84 @@
 
 ---
 
-## Installation (Python 3.12) using PDM
+## Installation (Python 3.12) using uv
+
+[uv](https://docs.astral.sh/uv/) creates `.venv` with the Python in `.python-version` and installs the locked dependencies from `uv.lock`, the development ones included:
 
 ```bash
-pdm venv create 3.12
-pdm use
-pdm venv activate
-pdm sync --dev
+uv sync
+uv run python -m bin.install_spacy_models
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
+The spaCy models are not in `uv.lock`: they are wheels on GitHub release
+pages, which Dependabot cannot resolve. `bin/install_spacy_models.py`
+installs the large English, German and French models from
+[bin/spacy-models.json](../bin/spacy-models.json), checked against the hashes
+pinned there (`--size sm` or `--langs en` for less). `uv sync` removes
+packages that are not in the lock, so run it again after a `uv sync`, or sync
+with `uv sync --inexact`; `uv run` leaves them in place.
+
 ## Using Docker
 
-1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Start LanguageTool from Docker Hub (erikvl87/languagetool):
+The image is built with BuildKit (the Dockerfile uses heredocs), which is the
+default builder of current Docker versions. The build needs
+`training_data/lid.176.bin` (see above) and checks it against a pinned hash.
 
 ```bash
-# Create an isolated network so containers can talk by name
-docker network create nlp-net
-
-# Start LanguageTool on port 8010
-docker run -d --name lt --network nlp-net -p 8010:8010 erikvl87/languagetool:latest
-```
-
-LanguageTool API will be available at http://localhost:8010/v2
-
-3. Build and run the NLP API locally:
-
-```bash
-# Build the API image from the local Dockerfile
 docker build -t nlpapi .
-
-# Run the API and point it to the LanguageTool container
-docker run -d --name nlp_api --network nlp-net -p 8080:8080 \
-  -e LANGUAGETOOL_API=http://lt:8010/v2 \
-  nlpapi
+docker run -d --name nlp_api -p 8080:8081 -e LANGUAGETOOL_API= nlpapi
 ```
 
-You should see the application running under http://localhost:8080/docs
+The entrypoint serves the API on port 8081 inside the container, so the
+example maps it to 8080 on the host: http://localhost:8080/docs. Two build
+arguments decide which spaCy models go into the image, `SPACY_LANGS`
+(default `en,de,fr`) and `SPACY_MODEL_SIZE` (`sm`, `md` or `lg`, default
+`lg`); see [deployment-sizing.md](./deployment-sizing.md). Without Redis
+(`REDIS_HOST`) the API answers every request with no findings, so for more
+than a smoke test use docker compose.
 
 ## Using docker compose (recommended for local multi-service setup)
 
-A ready-made `compose.yml` is included to start both the NLP API and LanguageTool with one command. It:
+`compose.yml` starts the API with Redis, and LanguageTool on request:
 
-- Launches `erikvl87/languagetool` on port `8010`
-- Builds and runs the API on port `8080`
-- Mounts your local `./models` directory read-only into the container (so local SetFit models can be used if present)
-- Sets `LANGUAGETOOL_API` inside the API container to point to the LanguageTool service
+- **The API** is built from the local Dockerfile and published on port 8080
+  of the host (`API_HOST_PORT`), container port 8081. It reads `.env`.
+- **Redis** (`redis:7-alpine`) keeps API keys and configs, in a named volume.
+- **LanguageTool** is built from [languagetool/](../languagetool/), with this
+  project's ignore lists and disabled rules, and only runs with the
+  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`),
+  container port 8010.
+- `./database` and `./models` are mounted read-only into the API container:
+  the checkout's rules, and the SetFit context-checker models if you
+  downloaded them.
 
 Quick start:
 
 ```bash
-# Start both services in the background
+# The API and Redis
 docker compose up -d
 
-# Check health
-curl http://localhost:8080/health
+# With LanguageTool: start its profile, and point the API at it in .env with
+# LANGUAGETOOL_API=http://languagetool:8010/v2
+docker compose --profile languagetool up -d
 
-# Visit http://localhost:8080/docs in your browser
+curl http://localhost:8080/health
+# http://localhost:8080/docs in your browser
 ```
 
-Enable local context checker models (if you downloaded them):
+`LANGUAGETOOL_API` is empty by default, so the API makes no spelling and
+grammar checks and sends no text to a third party until you set it.
+
+Enable local context checker models (if you downloaded them, see
+[configuration.md](./configuration.md#local-setfit-models)):
 
 ```bash
-# Option 1: temporarily set env when starting
 CONTEXT_CHECKER_LOCAL=true docker compose up -d
-
-# Option 2: uncomment CONTEXT_CHECKER_LOCAL in compose.yml and re-run
 ```
 
-Updating models: any changes you make in `./models` on the host are reflected in the container because of the bind mount. The mount is read-only (`:ro`) to prevent accidental writes from inside the container.
+Changes in `./models` on the host are visible in the container through the
+read-only mount.
 
 Stop and remove services:
 
@@ -104,17 +112,16 @@ Tail logs:
 
 ```bash
 docker compose logs -f nlpapi
-docker compose logs -f languagetool
+docker compose --profile languagetool logs -f languagetool
 ```
-
-If you only need the API without LanguageTool, you can still use the single-container commands above or remove the `languagetool` service from the compose file.
 
 ## Update dependencies locally
 
-To update packages locally after `pyproject.toml`/`pdm.lock` was changed:
+To update packages locally after `pyproject.toml`/`uv.lock` was changed:
 
 ```bash
-pdm sync --dev
+uv sync
+uv run python -m bin.install_spacy_models   # uv sync removes the models
 ```
 
 ## Add new package
@@ -122,7 +129,7 @@ pdm sync --dev
 When adding a new package to the project, update `pyproject.toml` via:
 
 ```bash
-pdm add <package_name>
+uv add <package_name>
 ```
 
 ## Docker image
@@ -130,9 +137,8 @@ pdm add <package_name>
 After making changes in the code or in the Dockerfile, build a fresh image:
 
 ```bash
-pdm export --prod -o requirements.txt
-DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
-docker run nlpapi
+docker build -t nlpapi . --no-cache
+docker run -p 8080:8081 nlpapi
 ```
 
 ## Run Locally
@@ -146,7 +152,7 @@ cp .env.development.mac .env
 Start the dev server:
 
 ```bash
-pdm run uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 or
@@ -161,8 +167,11 @@ Alternative docs: http://localhost:8000/redoc
 
 ## Profiling locally with Blackfire
 
+Blackfire is in the `profiling` dependency group, which `uv sync` leaves out
+and the Docker image does not contain:
+
 ```bash
-pdm run blackfire-python uvicorn app.main:app --reload
+uv run --group profiling blackfire-python uvicorn app.main:app --reload
 ```
 
 Make sure you have a `.blackfire.ini`, get the settings from
@@ -198,7 +207,7 @@ bundle, not a directory of extras, so concatenate them and point `SSL_CERT_FILE`
 at the result:
 
 ```bash
-cat "$(pdm run python -m certifi)" ~/.lando/certs/LandoCA.crt > .lando-ca-bundle.crt
+cat "$(uv run python -m certifi)" ~/.lando/certs/LandoCA.crt > .lando-ca-bundle.crt
 export SSL_CERT_FILE="$PWD/.lando-ca-bundle.crt"
 ```
 
@@ -218,9 +227,9 @@ An `x-key` header is resolved against `api_key:<key>` entries in Redis, which
 the dashboard normally writes. Where there is no dashboard, mint them with:
 
 ```bash
-pdm run python -m bin.api_key create user@example.com   # prints the new key
-pdm run python -m bin.api_key list
-pdm run python -m bin.api_key delete <key>
+uv run python -m bin.api_key create user@example.com   # prints the new key
+uv run python -m bin.api_key list
+uv run python -m bin.api_key delete <key>
 ```
 
 The CLI reads the same environment as the API, so run it wherever `REDIS_HOST`
@@ -228,10 +237,22 @@ points at the deployment's Redis — it refuses to run against the in-memory Red
 the API falls back to, since those writes would vanish on exit.
 
 Set `API_KEY_HMAC_KEY` to store keys as an HMAC-SHA256 digest rather than
-verbatim, so a Redis dump does not hand out working credentials. Keys minted
-before it was set keep working: lookups fall back to the plaintext entry.
-Revoking then needs the key itself rather than the email, because the plaintext
-cannot be recovered from Redis.
+verbatim, so a Redis dump does not hand out working credentials. With it set,
+keys are only looked up by their digest: keys minted before it was set stop
+working until they are stored again, which `bin.api_key rehash` does for every
+key in Redis. Revoking then needs the key itself rather than the email, because
+the plaintext cannot be recovered from Redis.
+
+```bash
+uv run python -m bin.api_key rehash
+```
+
+Run it before the next key-file sync (below): a sync before it no longer finds
+the synced keys under their old names and revokes them. `rehash` leaves alone,
+and reports, a key stored both ways for two different emails, and an entry it
+cannot tell from a digest (a key of 64 hex characters); its output names no
+key. Changing `API_KEY_HMAC_KEY` later invalidates every key, since a digest
+cannot be converted: mint new ones.
 
 ### From a local file
 
@@ -252,12 +273,12 @@ can come with its own config (see [api_keys.example.yaml](../api_keys.example.ya
 
 ```bash
 # mint a key: appends an entry with the note as its comment, prints the key
-pdm run python -m bin.api_key create jane@acme.example --file api_keys.yaml \
+uv run python -m bin.api_key create jane@acme.example --file api_keys.yaml \
     --note "Jane Doe (ACME), HR pilot until 2026-12"
 
 # make the API match the file: shows what changes and asks first
 NLP_API_USERNAME=… NLP_API_PASSWORD=… \
-    pdm run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
+    uv run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
 ```
 
 - **The sync makes the server match the file** through `PUT /api_keys`: new
@@ -297,10 +318,10 @@ NLP_API_USERNAME=… NLP_API_PASSWORD=… \
   `llm_alternatives` for a user `LLM_ACCESS` / `LLM_ALLOWED_USERS` does not let
   spend the LLM budget.
 
-The `/api_key` HTTP endpoints do the same thing, but they are only protected
-when `API_DOCS_AUTH_ENABLED` is `"true"` — with it unset, anyone who can reach
-the API can mint a key for any email. Turn it on for any deployment that is
-reachable from outside, or keep the endpoints off the public routing.
+The `/api_key` HTTP endpoints do the same thing, behind the management password
+(`MANAGEMENT_AUTH_ENABLED`, on unless turned off): anyone with that password can
+mint a key for any email, so keep it out of reach or the endpoints off the
+public routing. They take the key in the request body, never in the URL.
 
 ## Production Deployment
 

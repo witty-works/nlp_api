@@ -40,6 +40,8 @@ from app.api_keys import (
     ApiKeysIn,
     SyncResult,
     sync,
+    valid_email,
+    valid_key,
     validate_entries,
 )
 
@@ -177,6 +179,9 @@ async def get_features_2_0(
     response.headers["Cache-Control"] = (
         "private, no-store" if sent else "public, max-age=300"
     )
+    # One URL, answered per credential: without Vary a browser serves the
+    # cached keyless answer, which has no `allowed`, to a request with a key.
+    response.headers["Vary"] = "x-key, Authorization"
 
     return FeaturesOut(
         features={
@@ -226,47 +231,96 @@ async def get_config_options_2_0(
     return ConfigOptionsOut(options=options)
 
 
-@router.get(
-    "/api_key",
-    status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": ErrorMessage}},
-)
-async def get_api_key(
-    api_key: str,
-    context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_management_username),
-):
-    email = context.redis.get_api_key_email(api_key)
-    if not email:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
+def _api_key_from(body: dict, with_email: bool) -> tuple[str, str]:
+    """The key (and email) of a /api_key request, checked with the key file's
+    rules (app/api_keys.py) rather than by a model, so that a 422 cannot echo
+    the key back."""
+    api_key = body.get("api_key") if isinstance(body, dict) else None
+    email = body.get("email") if isinstance(body, dict) else None
+    try:
+        api_key = valid_key(api_key if isinstance(api_key, str) else "")
+        email = (
+            valid_email(email if isinstance(email, str) else "") if with_email else ""
         )
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(error)
+        )
+    return api_key, email
 
-    return email
+
+API_KEY_BODY = {
+    "requestBody": {
+        "required": True,
+        "content": {
+            "application/json": {
+                "schema": {
+                    "type": "object",
+                    "required": ["api_key", "email"],
+                    "properties": {
+                        "api_key": {"type": "string", "minLength": 20},
+                        "email": {"type": "string", "format": "email"},
+                    },
+                }
+            }
+        },
+    }
+}
 
 
 @router.post(
     "/api_key",
     status_code=status.HTTP_204_NO_CONTENT,
+    responses={409: {"model": ErrorMessage}, 422: {"model": ErrorMessage}},
+    openapi_extra=API_KEY_BODY,
 )
 async def post_api_key(
-    api_key: str,
-    email: str,
+    body: dict = Body(..., include_in_schema=False),
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_management_username),
 ):
+    """Map a key to an email. The key goes in the body, never the URL, which
+    access logs keep. A key that already belongs to another email is refused
+    rather than taken over."""
+    api_key, email = _api_key_from(body, with_email=True)
+    current = context.redis.get_api_key_email(api_key)
+    if current is not None and current != email:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This API key belongs to another email",
+        )
     context.redis.set_api_key(api_key, email)
 
 
 @router.delete(
     "/api_key",
     status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": ErrorMessage}, 422: {"model": ErrorMessage}},
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "required": ["api_key"],
+                        "properties": {"api_key": {"type": "string"}},
+                    }
+                }
+            },
+        }
+    },
 )
 async def delete_api_key(
-    api_key: str,
+    body: dict = Body(..., include_in_schema=False),
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_management_username),
 ):
+    api_key = body.get("api_key") if isinstance(body, dict) else None
+    if not isinstance(api_key, str) or not context.redis.get_api_key_email(api_key):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
+        )
     context.redis.delete_api_key(api_key)
 
 
@@ -301,7 +355,7 @@ async def put_api_keys(
         result = sync(context.redis, entries, dry_run, allow_empty)
     except ValueError as e:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e)
         )
 
     if result.conflicts:

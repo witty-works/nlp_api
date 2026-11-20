@@ -54,7 +54,10 @@ async def apply_language_rules(
     language: Language,
     text: str,
     context: AppContext,
+    languagetool: bool = True,
 ) -> list:
+    """The findings for `text`. Without `languagetool` LanguageTool is not
+    asked, for a caller that must not depend on it."""
     offsets = utf16_offsets(text)
 
     term_replacements = fetch_term_replacements(configs, language.lang, context)
@@ -78,9 +81,14 @@ async def apply_language_rules(
         ent_spans = [(e.start_char, e.end_char, e.label_) for e in tokens.ents]
         sentences = [(s.end_char, s.text) for s in tokens.sents]
 
-    list_results = await context.languagetool.apply_languagetool_rules(
-        config, client, language, text, ent_spans, offsets
-    ) + await context_false_positives(language.lang, sentences, list_results, context)
+    lt_results = []
+    if languagetool:
+        lt_results = await context.languagetool.apply_languagetool_rules(
+            config, client, language, text, ent_spans, offsets
+        )
+    list_results = lt_results + await context_false_positives(
+        language.lang, sentences, list_results, context
+    )
 
     list_results = apply_false_positives(list_results, configs)
     if BULK_GENDER_FORMAT in bulk_actions(language.lang, config):

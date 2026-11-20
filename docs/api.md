@@ -14,7 +14,7 @@
 
 ---
 
-The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`).
+The API provides several categories of endpoints for different purposes. All authenticated endpoints require either an API key (`x-key` header), OAuth2 Bearer token (`Authorization` header), or testing authentication (when `TESTING=true`). A request that carries an `x-key` is authenticated by it alone, whatever `Authorization` header comes with it: a gateway may forward its client's own token next to the key it adds for this API. More than one `x-key` header is refused with a `400`.
 
 ## Core Endpoints
 
@@ -22,9 +22,12 @@ These are the main endpoints for checking and rephrasing text.
 
 | Endpoint         | Method | Auth Required | Description                                                   |
 | ---------------- | ------ | ------------- | ------------------------------------------------------------- |
+| `/v1.0/guardrail/input` | POST | Yes      | Add Witty's inclusive-language guidance to chat messages ([Guardrails](./guardrails.md)) |
+| `/v1.0/guardrail/output` | POST | Yes     | Check a model's answer: verdict, findings and a reask message ([Guardrails](./guardrails.md)) |
+| `/v1.0/guardrail/guidance` | GET | Yes | The bare guidance text, for a fixed system prompt ([Guardrails](./guardrails.md)) |
+| `/v1.0/guardrail/litellm/beta/litellm_basic_guardrail_api` | POST | Yes | Both of the above in the format of LiteLLM's Generic Guardrail API ([Guardrails](./guardrails.md#litellm)) |
 | `/v2.4/check`    | POST   | Yes           | Check text for inclusive language issues and get alternatives |
 | `/v1.0/rephrase` | POST   | Yes           | Rephrase text using LLM (requires `llm_alternatives`)         |
-| `/v1.0/prompt`   | POST   | Yes           | Generate LLM prompt for inclusive language improvement        |
 | `/v1.0/write`    | POST   | Yes           | Write or change a text as a prompt says, then review it (requires `llm_alternatives`) |
 | `/v2.0/auth`     | POST   | Yes           | Validate authentication and retrieve user configuration       |
 | `/v2.0/categories` | GET  | No            | List the category keys `config.disabled_categories` accepts   |
@@ -73,7 +76,9 @@ curl -X 'POST' \
 }'
 ```
 
-`/v1.0/write` is the client-facing counterpart of `/v1.0/prompt`, which is a management endpoint that names its user in the query string. It sends `prompt` and `text` to the LLM (an empty `text` asks for a new text from the prompt alone), checks the draft, and has the LLM apply Witty's alternatives to what the check flagged. The answer has the same shape as `/v1.0/prompt`: `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters. `text` is limited to `TEXT_MAX_LENGTH` (1000 by default), what Witty checks at once: the result has to fit that too, so a longer text could only come back shortened, and is refused with a `422`. The model is asked to keep a draft within it, and `limit_reached` says when a draft was longer and only partly reviewed. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
+`/v1.0/write` is Witty GPT's managed loop, built on the [guardrail endpoints](./guardrails.md) and used by `/textarea`: Witty makes the model calls itself. It sends `prompt` and `text` to the LLM with the guidance of `/v1.0/guardrail/input` as its system prompt (an empty `text` asks for a new text from the prompt alone), checks the draft as `/v1.0/guardrail/output` does, and on a fail sends the LLM that check's reask. In the answer, `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters. `text` is limited to `TEXT_MAX_LENGTH` (1000 by default), what Witty checks at once: the result has to fit that too, so a longer text could only come back shortened, and is refused with a `422`. The model is asked to keep a draft within it; a draft is reviewed in full up to 20000 characters, and `limit_reached` says when it was longer and the rest went unchecked. An empty draft is the model failing and answered with `502`. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
+
+When the LLM call fails, both routes say what kind of failure it was: `503` with `Retry-After` when the provider is busy, rate limited or unreachable, `502` when its answer was cut off, and `422` when the provider refused the text. LLM providers, and gateways in front of them, can run guardrails of their own that refuse some texts, for example ones containing personal identifiers. Which texts they refuse depends on the deployment's provider, not on Witty. The `422` message is the deployment's `LLM_REFUSED_MESSAGE` if it sets one, otherwise the provider's reason if it gives one.
 
 Example `/v2.0/categories` request:
 
@@ -335,18 +340,19 @@ curl -X 'POST' \
 
 ### API Key Management
 
-| Endpoint                                    | Method | Description                     |
-| ------------------------------------------- | ------ | ------------------------------- |
-| `POST /api_key?api_key={key}&email={email}` | POST   | Create API key mapping to email |
-| `GET /api_key?api_key={key}`                | GET    | Retrieve email for API key      |
-| `DELETE /api_key?api_key={key}`             | DELETE | Delete API key mapping          |
+Behind the management password (`MANAGEMENT_AUTH_ENABLED`). The key goes in the JSON body, never the URL, which access logs keep; no answer repeats it.
+
+| Endpoint          | Body                       | Answers                                                                                                                          |
+| ----------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api_key`   | `{"api_key": …, "email": …}` | `204` once the key resolves to the email; `409` if it already belongs to another email; `422` for a key shorter than 20 characters (letters, digits, `-`, `_`) or no email |
+| `DELETE /api_key` | `{"api_key": …}`           | `204` once the key is revoked; `404` if there is no such key                                                                     |
 
 Example: Create API key
 
 ```bash
-curl -X 'POST' \
-  'http://127.0.0.1:8000/api_key?api_key=my-secret-key&email=user@example.com' \
-  -u 'admin:password'
+curl -X 'POST' 'http://127.0.0.1:8000/api_key' \
+  -u 'admin:password' -H 'Content-Type: application/json' \
+  -d '{"api_key": "'"$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"'", "email": "user@example.com"}'
 ```
 
 ## Health & Utility Endpoints
@@ -393,8 +399,6 @@ Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:
 | ---------------------- | ------ | -------------------------------------------------------------------------------- |
 | `/debug/check`         | POST   | Check text with additional debug information                                   |
 | `/debug/rephrase`      | POST   | Rephrase text with debug output. Accepts a `model` to override `LLM_MODEL`     |
-| `/debug/prompt`        | POST   | Generate prompt with debug information                                         |
-| `/debug/review_prompt` | POST   | Generate review prompt for LLM output                                          |
 | `/debug/rule`          | POST   | Test a specific rule against text                                              |
 | `/debug/spacy`         | GET    | spaCy's tokens for `?text=&lang=`, with the API's own word types. `detailed=true` adds the raw tagger output |
 | `/debug/displacy`      | GET    | The dependency parse of `?text=&lang=` rendered as an SVG                      |

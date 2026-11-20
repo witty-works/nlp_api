@@ -20,6 +20,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app, context
+from app.route_table import registered_routes
 from app.routes.textarea import PAGE, PAGE_SCRIPT
 from app.settings import Settings
 
@@ -212,8 +213,10 @@ def test_the_page_calls_routes_that_exist():
     assert calls, "the page fetches nothing"
 
     methods = {}
-    for route in app.routes:
-        methods.setdefault(route.path, set()).update(getattr(route, "methods", set()))
+    for prefix, route in registered_routes(app):
+        methods.setdefault(prefix + route.path, set()).update(
+            getattr(route, "methods", set())
+        )
     for path, options in calls:
         method = "POST" if 'method: "POST"' in options else "GET"
         assert method in methods.get(path, set()), (path, method)
@@ -792,6 +795,7 @@ def test_the_text_language_follows_the_browser(textarea, accept_language, select
     with TestClient(app) as client:
         response = client.get("/textarea", headers=headers)
 
-    assert response.headers["vary"] == "Accept-Language"
+    # Contains rather than equals: the CORS middleware adds Origin.
+    assert "Accept-Language" in response.headers["vary"].split(", ")
     chosen = re.findall(r'<option value="([a-z]+)" selected>', response.text)
     assert chosen == [selected]

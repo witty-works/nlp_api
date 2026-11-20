@@ -3,6 +3,7 @@ import hashlib
 import pytest
 import logging
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -90,17 +91,19 @@ def test_content_security_policy_is_sent_whole():
 def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = review_prompt_dir.joinpath("input.json").read_text()
-        # Call the tested endpoint.
+        input_json = json.loads(review_prompt_dir.joinpath("input.json").read_text())
+        # The review prompt is what the output guardrail hands back to reask.
         response = client.post(
-            "/debug/review_prompt",
-            json=json.loads(input_json),
+            "/v1.0/guardrail/output",
+            json={
+                "response": input_json["text"],
+                **{k: input_json[k] for k in ("lang", "config") if k in input_json},
+            },
             headers={"X-TESTING-AUTH": "default@gmail.com"},
         )
         assert response.status_code == 200
-        # output must be string
         output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+            response.json().get("reask"), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = review_prompt_dir
@@ -1078,9 +1081,9 @@ def test_api_key_validation(set_redis):
         assert response.status_code == 403
 
         # Create a valid API key mapping via management endpoint
-        api_key = "valid-api-key-123"
+        api_key = "valid-api-key-0123456789-0123456789"
         email = "test@gmail.com"
-        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
+        resp = client.post("/api_key", json={"api_key": api_key, "email": email})
         assert resp.status_code == 204
 
         # Valid API key on auth should pass
@@ -1626,44 +1629,73 @@ def test_user_config_sync_inklusivum(snapshot):
         snapshot.assert_match(output, "output.json")
 
 
-def test_api_key_get_missing():
-    """GET /api_key should return 404 for unknown keys."""
+MINTED_KEY = "minted-key-0123456789-0123456789-x"
+
+
+def test_api_key_create_and_delete(set_redis):
+    """POST and DELETE /api_key take the key in the body, never the URL: a
+    query string ends up in access logs."""
     with TestClient(app) as client:
-        response = client.get("/api_key", params={"api_key": "missing-key-123"})
-        # Endpoint is defined with 404 response on missing key
-        assert response.status_code == 404
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "test@gmail.com"}
+        )
+        assert resp.status_code == 204
+        assert context.redis.get_api_key_email(MINTED_KEY) == "test@gmail.com"
 
+        # The same mapping again changes nothing.
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "test@gmail.com"}
+        )
+        assert resp.status_code == 204
 
-def test_api_key_create_fetch_delete(set_redis):
-    """POST/GET/DELETE flow for /api_key endpoints."""
-    api_key = "test-api-key-123"
-    email = "test@gmail.com"
+        resp = client.request("DELETE", "/api_key", json={"api_key": MINTED_KEY})
+        assert resp.status_code == 204
+        assert context.redis.get_api_key_email(MINTED_KEY) is None
 
-    with TestClient(app) as client:
-        # Ensure it's not there first
-        resp = client.get("/api_key", params={"api_key": api_key})
+        resp = client.request("DELETE", "/api_key", json={"api_key": MINTED_KEY})
         assert resp.status_code == 404
 
-        # Create mapping
-        resp = client.post("/api_key", params={"api_key": api_key, "email": email})
-        assert resp.status_code == 204
 
-        # Fetch mapping
-        resp = client.get("/api_key", params={"api_key": api_key})
-        # The operation is defined with 204 status; presence is asserted via Redis state
-        assert resp.status_code == 204
+def test_api_key_cannot_take_over_another_emails_key(set_redis):
+    with TestClient(app) as client:
+        context.redis.set_api_key(MINTED_KEY, "owner@example.org")
+        resp = client.post(
+            "/api_key", json={"api_key": MINTED_KEY, "email": "thief@example.org"}
+        )
 
-        # Verify Redis contains the mapping
-        stored = context.redis.db.get("api_key:" + api_key)
-        assert stored == email
+        assert resp.status_code == 409
+        assert MINTED_KEY not in resp.text
+        assert context.redis.get_api_key_email(MINTED_KEY) == "owner@example.org"
+        context.redis.delete_api_key(MINTED_KEY)
 
-        # Delete mapping
-        resp = client.delete("/api_key", params={"api_key": api_key})
-        assert resp.status_code == 204
 
-        # Ensure it's gone
-        resp = client.get("/api_key", params={"api_key": api_key})
-        assert resp.status_code == 404
+@pytest.mark.parametrize(
+    "body",
+    [
+        {"api_key": "short-key-0123", "email": "a@b.example"},
+        {"api_key": MINTED_KEY, "email": "not-an-email"},
+        {"api_key": MINTED_KEY},
+    ],
+)
+def test_api_key_refuses_a_bad_request_without_echoing_the_key(body, set_redis):
+    with TestClient(app) as client:
+        resp = client.post("/api_key", json=body)
+
+        assert resp.status_code == 422
+        assert body["api_key"] not in resp.text
+        assert context.redis.get_api_key_email(body["api_key"]) is None
+
+
+def test_api_key_is_not_taken_from_the_url(set_redis):
+    with TestClient(app) as client:
+        resp = client.post(
+            "/api_key", params={"api_key": MINTED_KEY, "email": "a@b.example"}
+        )
+        assert resp.status_code == 422
+        assert context.redis.get_api_key_email(MINTED_KEY) is None
+
+        # No lookup by key either: it would need the key in the URL.
+        assert client.get("/api_key", params={"api_key": MINTED_KEY}).status_code == 405
 
 
 def test_rule_debug():
@@ -2918,21 +2950,12 @@ def test_management_auth():
         context.settings.management_auth_enabled = True
         try:
             response = client.post(
-                "/api_key", params={"api_key": "should-not-exist", "email": "a@b.c"}
+                "/api_key", json={"api_key": MINTED_KEY, "email": "a@b.example"}
             )
             assert response.status_code == 401
 
             # The settings object carries every secret the deployment holds.
             assert client.get("/settings").status_code == 401
-
-            # `user_email` is a query parameter here, so the caller picks whose
-            # config applies and whose LLM budget is spent.
-            response = client.post(
-                "/v1.0/prompt",
-                params={"user_email": "test@gmail.com"},
-                json={"text": "Hello world."},
-            )
-            assert response.status_code == 401
 
             # The docs switch is a separate decision and stays where it was.
             assert context.settings.api_docs_auth_enabled is False
@@ -3001,6 +3024,55 @@ def test_require_api_key():
         assert response.json()["results"] == []
 
 
+def test_x_key_wins_over_a_forwarded_bearer_token(set_redis):
+    """Gateways such as agentgateway forward the client's own headers, its
+    `Authorization: Bearer <LLM key>` included, next to the x-key they add for
+    Witty. The x-key decides; the token is not looked at."""
+    context.redis.set_api_key("forwarded-key", "default@gmail.com")
+    headers = {"x-key": "forwarded-key", "Authorization": "Bearer sk-not-for-witty"}
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 200
+    assert response.json()["verdict"] == "fail"
+
+
+def test_two_x_keys_are_refused(set_redis):
+    """Behind a gateway that forwards its client's headers, a client's own
+    x-key could otherwise come first and pick the configuration."""
+    context.redis.set_api_key("forwarded-key", "default@gmail.com")
+    headers = [("x-key", "forwarded-key"), ("x-key", "forwarded-key")]
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 400
+
+
+def test_an_invalid_x_key_does_not_fall_back_to_bearer(set_redis):
+    """An x-key present decides, as the browser extension's own headers do:
+    a wrong one is a wrong key, not a reason to try the token instead."""
+    headers = {"x-key": "not-a-key", "Authorization": "Bearer sk-not-for-witty"}
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/guardrail/output",
+            json={"response": "The chairman called.", "lang": "en"},
+            headers=headers,
+        )
+
+    assert response.status_code == 401
+
+
 def test_require_api_key_leaves_password_protected_routes_to_their_password():
     """An endpoint that asks for a username and password needs no key on top,
     while that password is asked for."""
@@ -3045,6 +3117,43 @@ def test_require_api_key_leaves_password_protected_routes_to_their_password():
             settings.require_api_key = False
             settings.management_auth_enabled = False
             settings.api_docs_username, settings.api_docs_password = previous
+
+
+def test_the_rules_database_stays_in_memory():
+    """Without uri=True SQLite takes "file:db?mode=memory..." for a file name:
+    the rules land in a file of that name in the working directory, and the
+    next start finds them there instead of loading the dump."""
+    with TestClient(app):
+        pass
+
+    assert not Path("file:db?mode=memory&cache=shared&uri=true").exists()
+    assert not Path("file:db?mode=memory&cache=shared").exists()
+
+
+def test_keys_required_but_stored_in_clear_says_so(monkeypatch, caplog):
+    """With REQUIRE_API_KEY on, keys are the credentials that matter; without
+    API_KEY_HMAC_KEY, Redis holds them as written."""
+    monkeypatch.setattr(context.settings, "require_api_key", True)
+    monkeypatch.setattr(context.settings, "api_key_hmac_key", "")
+
+    with caplog.at_level(logging.WARNING, "nlp_api"), TestClient(app):
+        pass
+
+    assert "API_KEY_HMAC_KEY" in caplog.text
+
+
+def test_profiling_without_blackfire_says_so(monkeypatch, caplog):
+    """Blackfire is not in the image: asked for continuous profiling without
+    it installed, the start says so rather than doing nothing."""
+    monkeypatch.setenv("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING", "1")
+    monkeypatch.setitem(sys.modules, "blackfire_conprof", None)
+    monkeypatch.setitem(sys.modules, "blackfire_conprof.profiler", None)
+
+    with caplog.at_level(logging.WARNING, "nlp_api"), TestClient(app):
+        pass
+
+    assert "BLACKFIRE_ENABLE_CONTINUOUS_PROFILING" in caplog.text
+    assert "profiling" in caplog.text
 
 
 def test_version_reports_the_rules_file(tmp_path, monkeypatch):
@@ -3097,6 +3206,19 @@ def test_features_without_a_key_say_what_the_deployment_offers(monkeypatch):
         features = client.get("/v2.0/features").json()["features"]
         assert features["llm"] == {"available": True}
         assert features["spelling_grammar"] == {"available": True}
+
+
+def test_features_vary_on_the_credential():
+    """The answer without a key is cacheable and the same URL answers per key:
+    without Vary, a browser serves the cached keyless answer, which has no
+    `allowed`, to a request with a key (as /textarea makes both on load)."""
+    context.redis.set_api_key("features-key", "default@gmail.com")
+
+    with TestClient(app) as client:
+        for headers in ({}, {"x-key": "features-key"}):
+            response = client.get("/v2.0/features", headers=headers)
+            vary = {v.strip().lower() for v in response.headers["vary"].split(",")}
+            assert {"x-key", "authorization"} <= vary
 
 
 def test_features_with_a_key_say_what_it_may_use(monkeypatch):
@@ -3339,7 +3461,7 @@ def test_write(llm_access, set_redis, monkeypatch):
         prompt = calls[0]["messages"][1]["content"]
         assert "Make it more formal." in prompt
         assert "Chairman calls guys tmrw." in prompt
-        # Room for a whole text rather than the 300 tokens of /v1.0/prompt,
+        # Room for a whole text rather than LLM_MAX_TOKENS alone,
         # and asked to stay within what Witty checks at once.
         assert calls[0]["max_tokens"] > 300
         assert f"under {context.settings.text_max_length} characters" in prompt
@@ -3384,6 +3506,120 @@ def test_write(llm_access, set_redis, monkeypatch):
         assert calls == []
 
 
+def scripted_llm(monkeypatch, replies):
+    """Answer each LLM call with the next of `replies`; the calls are returned."""
+    calls = []
+
+    class Response:
+        def __init__(self, content):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return Response(replies[len(calls) - 1])
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    return calls
+
+
+def test_write_with_an_empty_draft_is_the_models_failure(
+    llm_access, set_redis, monkeypatch
+):
+    """An empty answer is the model failing, not the request: 502 at once,
+    without reviewing nothing."""
+    calls = scripted_llm(monkeypatch, ["  "])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Greet the team."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 502
+    assert len(calls) == 1
+
+
+def test_write_system_prompt_is_the_guardrail_guidance(
+    llm_access, set_redis, monkeypatch
+):
+    """The managed loop puts the same guidance in front of the model as
+    /v1.0/guardrail/input, plus the request for the bare text."""
+    calls = scripted_llm(monkeypatch, ["The chair called.", "The chair called."])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Write one sentence."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 200
+    system = calls[0]["messages"][0]["content"]
+    assert "Do not make biased assumptions." in system
+    assert "When writing German" in system
+    assert '"Here is .."' in system
+
+
+def test_write_system_prompt_follows_the_config(llm_access, set_redis, monkeypatch):
+    """The gender format the resolved config asks for reaches the model's
+    guidance: test@gmail.com's organization forces "In", so the request's
+    ":in" gives way to it."""
+    calls = scripted_llm(monkeypatch, ["Die Leitung ruft.", "Die Leitung ruft."])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={
+                "prompt": "Schreib einen Satz.",
+                "lang": "de",
+                "config": {"german_gender_ending": ":in"},
+            },
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 200
+    system = calls[0]["messages"][0]["content"]
+    assert '"LehrerIn"' in system
+    assert '"Lehrer:in"' not in system
+    assert "When writing French" not in system
+
+
+def test_write_refuses_a_draft_in_no_language(llm_access, set_redis, monkeypatch):
+    """A draft whose language cannot be told cannot be reviewed."""
+    calls = scripted_llm(monkeypatch, ["12345 67890 !!! ???"])
+    llm_access(LlmAccessType.USERS)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Write some numbers."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+
+    assert response.status_code == 422
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "path", ["/v1.0/prompt", "/debug/prompt", "/debug/review_prompt"]
+)
+def test_prompt_route_is_gone(path):
+    """/v1.0/write and the guardrail endpoints took their place."""
+    with TestClient(app) as client:
+        response = client.post(
+            path, json={"text": "Hello."}, headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
+
+    assert response.status_code == 404
+
+
 def test_write_refuses_a_text_it_could_only_shorten(llm_access, set_redis):
     """A prompt's result has to fit what Witty checks at once, so a longer text
     would come back cut; it is refused instead, before any LLM call."""
@@ -3424,15 +3660,15 @@ def test_write_failures_reach_the_log(llm_access, set_redis, monkeypatch, caplog
     assert "provider unreachable" in caplog.text
 
 
-def test_prompt_and_write_metrics_are_counted(monkeypatch):
-    """Each has its own counter; the prompt one used to be dropped."""
+def test_write_and_guardrail_metrics_are_counted(monkeypatch):
+    """Each has its own counter."""
     from starlette.requests import Request
 
     monkeypatch.setattr(context.settings, "log_metrics", True)
     request = Request({"type": "http", "headers": []})
     configs = {"id": "metrics-user"}
 
-    for endpoint in ("prompt", "write"):
+    for endpoint in ("write", "guardrail_input", "guardrail_output"):
         before = int(
             context.redis.db.hget(f"{endpoint}_counts", "1.0 - metrics-user") or 0
         )

@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - [How it's used](#how-its-used)
-- [What's inside](#whats-inside)
 - [Source of truth for rules](#source-of-truth-for-rules)
 - [Regenerating dump.sql](#regenerating-dumpsql)
 - [Verifying changes](#verifying-changes)
@@ -35,7 +34,7 @@ The application seeds its in-memory SQLite database from [database/dump.sql](../
 # Replace path/to/source.sqlite3 with your updated rules database
 # (e.g., the SQLite file exported from the Rule Editor)
 
-pdm run python -m bin.sync_sqlite_data -f path/to/source.sqlite3
+uv run python -m bin.sync_sqlite_data -f path/to/source.sqlite3
 ```
 
 - The script will:

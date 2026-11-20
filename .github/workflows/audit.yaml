@@ -1,0 +1,62 @@
+name: audit dependencies
+
+# Checks every locked package, in all dependency groups, against the known
+# vulnerabilities pip-audit looks up (PyPI and OSV). Runs when the lock
+# changes, and daily, since a new advisory can make an unchanged lock fail.
+# Dependabot (.github/dependabot.yml) raises alerts and pull requests for the
+# same lock; this check makes a vulnerable lock fail on the branch that
+# brings it in.
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/audit.yaml
+  schedule:
+    # Daily, early morning in Zurich.
+    - cron: "41 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      UV_NO_CACHE: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Later steps run pip-audit and its dependencies, fetched from PyPI
+          # at run time; none of them needs the token afterwards.
+          persist-credentials: false
+
+      - name: Set up uv and Python
+        # setup-uv publishes no major-version tags, only full versions.
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          # The same uv as the Dockerfile's deps stage and main.yaml.
+          version: "0.13.9"
+          python-version: "3.12"
+          enable-cache: false
+
+      # pip-audit does not match a local version such as torch's
+      # "2.15.0+cpu" and reports no vulnerabilities for it, so the suffix is
+      # stripped: the CPU build has the same version, and the same advisories,
+      # as the release it is built from. Without hashes, so pip-audit checks
+      # the pinned versions as given (--no-deps) without installing anything
+      # (--disable-pip). The spaCy models are not in the lock
+      # (bin/spacy-models.json), and are not on PyPI to be looked up.
+      - name: Export the lock
+        run: |
+          uv export --frozen --all-groups --no-hashes --no-emit-project \
+            --format requirements-txt | sed 's/+cpu//' > requirements-audit.txt
+
+      - name: Audit
+        run: |
+          uvx pip-audit==2.10.1 --requirement requirements-audit.txt \
+            --no-deps --disable-pip --progress-spinner off

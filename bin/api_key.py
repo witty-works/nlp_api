@@ -5,14 +5,15 @@ A deployment that runs the NLP API on its own has nothing to write the
 gets its first key. Reads the same environment as the API itself, so it talks to
 the same Redis and applies the same HMAC hashing.
 
-    pdm run python -m bin.api_key create user@example.com
-    pdm run python -m bin.api_key list
-    pdm run python -m bin.api_key delete <key>
+    uv run python -m bin.api_key create user@example.com
+    uv run python -m bin.api_key list
+    uv run python -m bin.api_key delete <key>
+    uv run python -m bin.api_key rehash
 
 Or into a local API key file, synced to the API with bin/sync_api_keys.py
 (see app/api_keys.py) rather than written to Redis:
 
-    pdm run python -m bin.api_key create user@example.com --file api_keys.yaml \
+    uv run python -m bin.api_key create user@example.com --file api_keys.yaml \
         --note "Jane Doe (ACME), HR pilot until 2026-12"
 
 Deleting needs the key itself rather than the email: when API_KEY_HMAC_KEY is
@@ -22,18 +23,26 @@ from Redis. `list` prints the stored entries and the email each maps to.
 
 import argparse
 import os
+import re
 import secrets
 import sys
 
 import yaml
+from redis.exceptions import WatchError
 
-from app.api_keys import ApiKeyEntry, parse
+from app.api_keys import SYNCED_KEYS, ApiKeyEntry, parse, valid_key
 
 from app.redis import Redis
 from app.settings import get_settings
 
 
 def create(redis: Redis, args) -> int:
+    if args.api_key:
+        try:
+            valid_key(args.api_key)
+        except ValueError as error:
+            print(f"error: {error}", file=sys.stderr)
+            return 1
     api_key = args.api_key or secrets.token_urlsafe(32)
 
     if redis.get_api_key_email(api_key):
@@ -135,6 +144,91 @@ def delete(redis: Redis, args) -> int:
     return 0
 
 
+# What set_api_key stores under when API_KEY_HMAC_KEY is set.
+DIGEST = re.compile(r"[0-9a-f]{64}")
+
+
+def rehash(redis: Redis, args) -> int:
+    """Store every key kept as written under its HMAC digest instead, for a
+    deployment that set API_KEY_HMAC_KEY after minting keys: with the secret
+    set, those entries no longer resolve.
+
+    Each entry moves in one watched transaction, so a key revoked meanwhile
+    is not brought back. A plaintext entry whose digest already maps to
+    another email is a conflict and left as it is: the digest is the newer
+    write. A key that is itself 64 lowercase hex characters cannot be told
+    from a digest and is left alone; both are counted in the output, which
+    never names a key."""
+    if not redis.settings.api_key_hmac_key:
+        print("error: API_KEY_HMAC_KEY is not set", file=sys.stderr)
+        return 1
+
+    moved, conflicts, digest_like = 0, 0, 0
+    for name in list(redis.db.scan_iter("api_key:*")):
+        if isinstance(name, bytes):  # pragma: no cover
+            name = name.decode("utf-8")
+        api_key = name.removeprefix("api_key:")
+        if DIGEST.fullmatch(api_key):
+            # set_api_key never writes a 64-hex plaintext name with the secret
+            # set, so only an entry that does not resolve can be one.
+            if redis.db.get(redis.api_key_name(api_key)) is None:
+                digest_like += 1
+            continue
+
+        outcome = _rehash_one(redis, name, api_key)
+        moved += outcome == "moved"
+        conflicts += outcome == "conflict"
+
+    print(f"{moved} key(s) now stored as HMAC digests", file=sys.stderr)
+    if digest_like:
+        print(
+            f"{digest_like} "
+            + ("entry looks" if digest_like == 1 else "entries look")
+            + " like a digest but may be a 64-character hex key stored as"
+            " written: check with `list`",
+            file=sys.stderr,
+        )
+    if conflicts:
+        print(
+            f"{conflicts} conflict(s): a key stored as written and as a digest"
+            " maps to two emails; both left as they are",
+            file=sys.stderr,
+        )
+        return 1
+
+    return 0
+
+
+def _rehash_one(redis: Redis, name: str, api_key: str) -> str:
+    """Move one plaintext entry to its digest: "moved", "conflict" or "gone"."""
+    digest_name = redis.api_key_name(api_key)
+    for _ in range(3):
+        with redis.db.pipeline() as pipeline:
+            try:
+                pipeline.watch(name, digest_name, SYNCED_KEYS)
+                email = pipeline.get(name)
+                if email is None:
+                    return "gone"
+                current = pipeline.get(digest_name)
+                if current is not None and current != email:
+                    return "conflict"
+                synced = pipeline.sismember(SYNCED_KEYS, name)
+
+                pipeline.multi()
+                pipeline.set(digest_name, email)
+                pipeline.delete(name)
+                # A key the file sync wrote stays the file's.
+                if synced:
+                    pipeline.srem(SYNCED_KEYS, name)
+                    pipeline.sadd(SYNCED_KEYS, digest_name)
+                pipeline.execute()
+                return "moved"
+            except WatchError:
+                continue
+
+    raise RuntimeError("an API key kept changing during rehash; run it again")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     commands = parser.add_subparsers(dest="command", required=True)
@@ -164,6 +258,12 @@ def parse_args():
     delete_parser = commands.add_parser("delete", help="revoke a key")
     delete_parser.add_argument("api_key", help="the key to revoke")
     delete_parser.set_defaults(handler=delete)
+
+    rehash_parser = commands.add_parser(
+        "rehash",
+        help="store keys kept as written as HMAC digests (needs API_KEY_HMAC_KEY)",
+    )
+    rehash_parser.set_defaults(handler=rehash)
 
     return parser.parse_args()
 

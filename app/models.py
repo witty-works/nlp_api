@@ -1,4 +1,4 @@
-from pydantic import field_validator, BaseModel, Field
+from pydantic import field_validator, model_validator, BaseModel, ConfigDict, Field
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
@@ -110,10 +110,12 @@ class MetricsType(str, Enum):
     CHECK_HOST = "check_host"
     REPHRASE_COUNTS = "rephrase_counts"
     REPHRASE_HOST = "rephrase_host"
-    PROMPT_COUNTS = "prompt_counts"
-    PROMPT_HOST = "prompt_host"
     WRITE_COUNTS = "write_counts"
     WRITE_HOST = "write_host"
+    GUARDRAIL_INPUT_COUNTS = "guardrail_input_counts"
+    GUARDRAIL_INPUT_HOST = "guardrail_input_host"
+    GUARDRAIL_OUTPUT_COUNTS = "guardrail_output_counts"
+    GUARDRAIL_OUTPUT_HOST = "guardrail_output_host"
 
 
 class LlmAccessType(str, Enum):
@@ -170,13 +172,6 @@ class LangWithAutoType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-
-
-class ReviewType(str, Enum):
-    INCLUDE_PREVIOUS = "include_previous"
-    EXPLAIN_EDITS = "explain_edits"
-    NO_EXPLANATION = "no_explanation"
-    USE_EXPLANATION = "use_explanation"
 
 
 class RuleType(str, Enum):
@@ -571,6 +566,47 @@ def _article_form(separator: str) -> re.Pattern:
     )
 
 
+class GuardrailLimit(BaseModel):
+    """When one level fails an answer: at `count` findings, at `ratio`
+    findings per word checked, or at whichever of the two comes first."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    count: Optional[Annotated[int, Field(ge=1)]] = None
+    ratio: Optional[Annotated[float, Field(gt=0, le=1)]] = None
+
+    @model_validator(mode="after")
+    def has_a_limit(self) -> "GuardrailLimit":
+        if self.count is None and self.ratio is None:
+            raise ValueError("a limit needs a count, a ratio or both")
+        return self
+
+
+class GuardrailThreshold(BaseModel):
+    """When the guardrail fails an answer, per level of finding. A level
+    without a limit never fails it; a number `n` is `{"overall": {"count":
+    n}}`. Field order is the order `failed_on` reports levels in."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    overall: Optional[GuardrailLimit] = None
+    corporate_rules: Optional[GuardrailLimit] = None
+    openly_discriminating: Optional[GuardrailLimit] = None
+    basic: Optional[GuardrailLimit] = None
+    advanced: Optional[GuardrailLimit] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def from_number(cls, data):
+        if isinstance(data, int) and not isinstance(data, bool):
+            return {"overall": {"count": data}}
+        return data
+
+    @classmethod
+    def parse(cls, value) -> "GuardrailThreshold":
+        return cls.model_validate(value)
+
+
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
@@ -651,6 +687,12 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
+    # The guardrail's policy, so that a key's config can fix it: when an
+    # answer fails (None: at the first finding with alternatives), and for
+    # LiteLLM what a failing answer becomes and whether the note explains.
+    guardrail_threshold: Optional[GuardrailThreshold] = None
+    guardrail_on_fail: Literal["annotate", "block"] = "annotate"
+    guardrail_explain: bool = True
 
     def get_gender_separators_from_config(self, lang: LangType):
         return Config.get_gender_separators(self.get_gender_separator(lang))
@@ -918,6 +960,13 @@ class UserConfResponse(ConfRequest):
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
     config: Optional[Config] = Field(default_factory=Config)
+
+    @field_validator("config", mode="before")
+    @classmethod
+    def null_config_is_no_config(cls, config):
+        """`"config": null` means the same as no config, rather than a None
+        the config layers would trip over."""
+        return Config() if config is None else config
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 
@@ -954,6 +1003,22 @@ class WriteRequestIn(BaseRequestIn):
     # The text to change. Empty means write a new one from the prompt alone.
     text: Annotated[str, Len(max_length=WRITE_TEXT_MAX_LENGTH)] = ""
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
+class GuardrailInputIn(BaseRequestIn):
+    type: str = "guardrail_input"
+    # Chat messages as the gateway has them. Plain dicts, so that whatever else
+    # a message carries (tool calls, names, a null content) comes back as it was.
+    messages: Annotated[list[dict[str, Any]], Len(min_length=1)]
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+
+
+class GuardrailInputOut(BaseModel):
+    # "none": the system message carries the guidance already, and the
+    # messages come back unchanged.
+    action: Literal["modify", "none"] = "modify"
+    messages: list[dict[str, Any]]
+    guidance: str
 
 
 class CheckRequestIn(BaseRequestIn):
@@ -1443,6 +1508,75 @@ class ResultsOut(BaseModel):
     # for this language and config. Always sent, unlike an absent `bulk`, so a
     # client can tell an API without bulk actions from a text without any.
     bulk_actions: list[str] = Field(default_factory=list)
+
+
+class GuardrailGuidanceOut(BaseModel):
+    guidance: str
+
+
+class GuardrailOutputIn(BaseRequestIn):
+    type: str = "guardrail_output"
+    # The model's answer, the part of it a person will read.
+    response: str
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
+    # When the answer fails: read as the request setting the config's
+    # `guardrail_threshold`, so a key that forces one overrules it.
+    threshold: Optional[GuardrailThreshold] = None
+
+
+class GuardrailOutputOut(BaseModel):
+    verdict: Literal["pass", "fail"]
+    findings: list[ResultOut]
+    language: Optional[str] = None
+    limit_reached: bool
+    # The message to send the model on a fail: it quotes the answer, so it
+    # works with or without the conversation before it.
+    reask: Optional[dict[str, str]] = None
+    # On a fail, the levels whose limit was reached.
+    failed_on: Optional[list[str]] = None
+
+    # Always in the answer, `null` where the language could not be told.
+    model_config = {
+        "json_schema_extra": {
+            "required": ["verdict", "findings", "language", "limit_reached"]
+        }
+    }
+
+
+class LitellmGuardrailParams(BaseModel):
+    """`additional_provider_specific_params` in a LiteLLM guardrail config."""
+
+    lang: LangWithAutoType = LangWithAutoType.AUTO
+    # These three are read as the request setting the config's
+    # `guardrail_threshold`, `guardrail_on_fail` and `guardrail_explain`, so a
+    # key that forces one overrules them. Unset, the key's config applies.
+    threshold: Optional[GuardrailThreshold] = None
+    # What a failing answer becomes: the answer with Witty's findings appended,
+    # or LiteLLM's refusal.
+    on_fail: Optional[Literal["annotate", "block"]] = None
+    # Whether the note or the block reason says why, not only what: Witty's
+    # influence on the answer is the point of showing it at all.
+    explain: Optional[bool] = None
+
+
+class LitellmGuardrailIn(BaseRequestIn):
+    """What LiteLLM's Generic Guardrail API (beta) sends; fields Witty does not
+    use are ignored."""
+
+    type: str = "guardrail_litellm"
+    texts: list[str] = Field(default_factory=list)
+    input_type: Literal["request", "response"]
+    structured_messages: Optional[list[dict[str, Any]]] = None
+    additional_provider_specific_params: LitellmGuardrailParams = Field(
+        default_factory=LitellmGuardrailParams
+    )
+
+
+class LitellmGuardrailOut(BaseModel):
+    action: Literal["NONE", "BLOCKED", "GUARDRAIL_INTERVENED"]
+    blocked_reason: Optional[str] = None
+    texts: Optional[list[str]] = None
+    structured_messages: Optional[list[dict[str, Any]]] = None
 
 
 class PrettyJSONResponse(Response):

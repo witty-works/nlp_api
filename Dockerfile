@@ -19,11 +19,10 @@
 ARG PYTHON_VERSION=3.12
 
 # ------------------------------------------------------------------ deps ---
-# pdm lives in its own stage. Installing it beside the application would put
-# its own dependencies (httpx, certifi, ...) into site-packages, and a later
-# `pip install --prefix` then treats those as already satisfied and leaves
-# them out of the prefix - producing an image that is missing httpx, which
-# spacy imports on `import spacy` by way of spacy.cli -> weasel.
+# The lockfile export runs in its own stage, so nothing installed for it
+# reaches the application's site-packages: a later `pip install --prefix`
+# would take such packages as already satisfied and leave them out of the
+# image.
 FROM python:${PYTHON_VERSION}-slim-bookworm AS deps
 
 ARG SPACY_LANGS="en,de,fr"
@@ -32,48 +31,42 @@ ARG SPACY_MODEL_SIZE="lg"
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1
 
-RUN pip install pdm
+# The same uv as CI (.github/workflows/main.yaml).
+RUN pip install uv==0.13.9
 
 WORKDIR /src
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml uv.lock ./
+COPY bin/install_spacy_models.py bin/spacy-models.json ./bin/
 
 # The dependency set is generated from the lockfile rather than kept as a
-# second, hand-maintained requirements.txt that can drift from it.
-RUN pdm export --prod --no-hashes -f requirements -o /tmp/requirements.full.txt
+# second, hand-maintained requirements.txt that can drift from it, with the
+# lockfile's hashes. --locked checks that uv.lock still matches pyproject.toml.
+RUN uv export --locked --no-dev --no-emit-project --no-annotate \
+        --no-header --format requirements-txt -o /tmp/requirements.hashed.txt
 
-# Drop the model wheels for languages this image does not serve, and rewrite
-# the remaining ones to the requested size. The URLs are versioned by model
-# release (…_lg-3.8.0/…_lg-3.8.0-py3-none-any.whl), so the substitution has to
-# hit both the directory and the filename.
+# torch comes from the PyTorch CPU index (pyproject.toml, [tool.uv.sources]),
+# so it is installed on its own, from that index alone. Giving pip the index as
+# an extra one for everything would let it take any package from there.
 RUN set -eux; \
-    python - "$SPACY_LANGS" "$SPACY_MODEL_SIZE" <<'PY'
-import re, sys
-langs = {l.strip() for l in sys.argv[1].split(",") if l.strip()}
-size = sys.argv[2].strip()
-if size not in {"sm", "md", "lg"}:
-    raise SystemExit(f"SPACY_MODEL_SIZE must be sm, md or lg, got {size!r}")
-
-kept, dropped = [], []
-for line in open("/tmp/requirements.full.txt"):
-    m = re.match(r"^(en|de|fr)-core-(web|news)-(sm|md|lg)\s*@", line)
-    if m:
-        lang = m.group(1)
-        if lang not in langs:
-            dropped.append(lang)
-            continue
-        line = re.sub(r"_(sm|md|lg)-", f"_{size}-", line)
-        line = re.sub(r"^(\w\w)-core-(web|news)-(sm|md|lg)", rf"\1-core-\2-{size}", line)
-    kept.append(line)
-
-open("/tmp/requirements.txt", "w").writelines(kept)
-# Recorded so the runtime default matches what was actually installed.
-suffix = {"en": "core_web", "de": "core_news", "fr": "core_news"}
-models = [f"{l}_{suffix[l]}_{size}" for l in ("en", "de", "fr") if l in langs]
-if not models:
-    raise SystemExit(f"SPACY_LANGS selected no models: {sys.argv[1]!r}")
-open("/tmp/models.txt", "w").write(",".join(models))
-print(f"installing models: {models}; dropped languages: {sorted(set(dropped))}")
+    python - <<'PY'
+import re
+lines = open("/tmp/requirements.hashed.txt").read().replace("\\\n", " ").splitlines()
+torch = [l for l in lines if re.match(r"^torch==", l)]
+if not torch:
+    raise SystemExit("no torch in the lockfile export")
+open("/tmp/torch.txt", "w").write("\n".join(torch) + "\n")
+rest = [l for l in lines if l.strip() and not re.match(r"^torch==", l)]
+open("/tmp/requirements.txt", "w").write("\n".join(rest) + "\n")
 PY
+
+# The spaCy models are not in the lock (Dependabot cannot resolve their GitHub
+# release URLs): bin/spacy-models.json pins each wheel by hash. This picks the
+# languages and the size, and records the names so the runtime default matches
+# what was installed.
+RUN python bin/install_spacy_models.py \
+        --langs "$SPACY_LANGS" --size "$SPACY_MODEL_SIZE" \
+        --requirements-out /tmp/models-requirements.txt --models-out /tmp/models.txt \
+    && cat /tmp/models.txt
 
 # --------------------------------------------------------------- builder ---
 FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
@@ -86,17 +79,34 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=deps /tmp/requirements.txt /tmp/models.txt /tmp/
+COPY --from=deps /tmp/requirements.txt /tmp/torch.txt /tmp/models.txt \
+    /tmp/models-requirements.txt /tmp/
 
 # A venv rather than --prefix, so the target environment starts empty and
-# nothing can be skipped as "already satisfied".
+# nothing can be skipped as "already satisfied". Every install is --no-deps and
+# checked against hashes: the export already lists every dependency the lock
+# resolved, and a package's own metadata must not add more (german-nouns
+# declares wiktionary-de-parser, which pyproject.toml excludes, and with it an
+# old lxml).
 RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install --requirement /tmp/requirements.txt
+    && /opt/venv/bin/pip install --no-deps --require-hashes \
+        --index-url https://download.pytorch.org/whl/cpu --requirement /tmp/torch.txt \
+    && /opt/venv/bin/pip install --no-deps --require-hashes \
+        --requirement /tmp/requirements.txt \
+    && /opt/venv/bin/pip install --no-deps --require-hashes \
+        --requirement /tmp/models-requirements.txt
 
 # Fail the build rather than the container if the environment cannot import
-# spacy: this is the check that would have caught the missing httpx.
-RUN /opt/venv/bin/python -c "import spacy, httpx; print('spacy', spacy.__version__, 'ok')"
+# spacy (this is the check that would have caught a missing httpx), or if
+# torch is a CUDA build: the image runs on CPU.
+RUN /opt/venv/bin/python -c "import importlib.util, spacy, httpx, torch; \
+assert torch.version.cuda is None, 'torch is a CUDA build: ' + torch.version.cuda; \
+models = open('/tmp/models.txt').read().split(','); \
+missing = [m for m in models if importlib.util.find_spec(m) is None]; \
+assert not missing, 'models not installed: ' + ', '.join(missing); \
+assert importlib.util.find_spec('wiktionary_de_parser') is None, 'excluded package installed'; \
+print('spacy', spacy.__version__, 'torch', torch.__version__, 'models', models, 'ok')"
 
 # ----------------------------------------------------------------- editor ---
 # The editor script for the /textarea page. Always in the image, so that one

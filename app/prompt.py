@@ -6,6 +6,7 @@ import litellm
 
 from app.settings import Settings
 from app.alternatives import Alternatives
+from app.guidance import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
 import json_repair
 
 # Providers differ in which parameters they accept, and a request that names one
@@ -29,6 +30,40 @@ class LlmUnavailable(Exception):
 class LlmCutOff(Exception):
     """The answer hit LLM_MAX_TOKENS before it was complete. Using it would
     mean using a truncated sentence or broken JSON."""
+
+
+class LlmTextRefused(Exception):
+    """The provider refused the text itself: a guardrail of the gateway in
+    front of the model, or the provider's content filter. Which texts are
+    refused depends on the deployment's provider, not on Witty. `reason` is
+    the provider's own explanation, when it gives one; `message` the
+    deployment's (LLM_REFUSED_MESSAGE), when it has one. `guardrail` names
+    what refused it, for the log: the reason may quote the text."""
+
+    def __init__(
+        self, reason: str | None, message: str = "", guardrail: str = "content filter"
+    ):
+        super().__init__(guardrail)
+        self.reason = reason
+        self.message = message
+        self.guardrail = guardrail
+
+
+def _refusal(error: litellm.BadRequestError) -> LlmTextRefused | None:
+    """An LlmTextRefused if the bad request is a refusal of the text, else None.
+    A LiteLLM proxy names the guardrail that refused it in the error body; a
+    content filter (OpenAI, Azure) arrives as ContentPolicyViolationError."""
+    if isinstance(error, litellm.ContentPolicyViolationError):
+        return LlmTextRefused(None)
+    body = error.body if isinstance(error.body, dict) else {}
+    fields = body.get("provider_specific_fields")
+    if isinstance(fields, dict) and fields.get("guardrail_name"):
+        reason = fields.get("error") or body.get("message")
+        return LlmTextRefused(
+            reason if isinstance(reason, str) else None,
+            guardrail=str(fields["guardrail_name"]),
+        )
+    return None
 
 
 # What a provider answers when the fault is load or the network, not the request.
@@ -130,18 +165,7 @@ class Prompt:
         temperature = temperature or 0.1
 
         if system_prompt is None:
-            system_prompt = """
-            You are an expert in inclusive language.
-            Keep gender equality in mind and avoid language that is needlessly gendered (f.e. use truly gender neutral nouns, avoid pronouns).
-            Do not make biased assumptions.
-            Do not rely on social stereotypes.
-            Do not use derogatory language even as a joke.
-            Avoid jargon terms, specially sports or military terms.            
-
-            Specifically make use of communal and inclusive language.
-
-            Follow instructions without mentioning them in your response. Specifically do not add phrases like "Greetings", "Here is .." or "Sure .." to the beginning of your response.
-            """
+            system_prompt = BASE_GUIDANCE + "\n\n" + BARE_TEXT_INSTRUCTION
 
         # A model that has no system role of its own — Bedrock's Mistral ones,
         # among others — gets the system prompt folded into the message by
@@ -174,6 +198,12 @@ class Prompt:
             )
         except _UNAVAILABLE as error:
             raise LlmUnavailable(str(error)) from error
+        except litellm.BadRequestError as error:
+            refused = _refusal(error)
+            if refused is None:
+                raise
+            refused.message = self.settings.llm_refused_message
+            raise refused from error
         finally:
             if self._slots is not None:
                 self._slots.release()
@@ -229,6 +259,11 @@ def llm_error(error: Exception, route: str) -> tuple[int, dict, str]:
     if isinstance(error, LlmCutOff):
         logger.error("%s: %s", route, error)
         return 502, {}, "The language model's answer was cut off"
+    if isinstance(error, LlmTextRefused):
+        # Not the reason: a guardrail may quote what it matched, which is the
+        # user's text. The user gets it; the log only what refused it.
+        logger.warning("%s: refused by the LLM provider (%s)", route, error.guardrail)
+        return 422, {}, error.message or error.reason or "Refused by the provider"
 
     logger.error("%s failed", route, exc_info=error)
     return 500, {}, "An error occurred"

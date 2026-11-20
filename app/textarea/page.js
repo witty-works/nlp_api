@@ -309,8 +309,9 @@ const failure = (status, body) => {
   const detail = Array.isArray(body?.detail) ? body.detail[0] : null;
   // The route's own refusals say what is wrong; FastAPI's validation errors
   // have the same shape but a different type, and name the field instead.
+  // A deployment's own text (LLM_REFUSED_MESSAGE) may end in a full stop.
   if (status === 422 && detail?.type === "value_error.not_supported") {
-    return detail.msg + ".";
+    return /[.!?]$/.test(detail.msg) ? detail.msg : detail.msg + ".";
   }
   if (status === 422 && detail) {
     const field = detail.loc?.[1];

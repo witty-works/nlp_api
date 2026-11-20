@@ -38,8 +38,13 @@ class Redis:
                 port=settings.redis_port,
                 username=settings.redis_username,
                 password=settings.redis_password,
+                # TLS, with the server's certificate checked: one that is not
+                # can be impersonated by anyone on the way, who then reads the
+                # keys, emails and configs. A private CA comes from
+                # REDIS_SSL_CA_CERTS; without it, the system's.
                 ssl=settings.redis_verify_ssl,
-                ssl_cert_reqs="none",
+                ssl_cert_reqs="required",
+                ssl_ca_certs=settings.redis_ssl_ca_certs or None,
                 decode_responses=True,
             )
         else:
@@ -118,12 +123,15 @@ class Redis:
         elif endpoint == "rephrase":
             self.db.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
-        elif endpoint == "prompt":
-            self.db.hincrby(MetricsType.PROMPT_COUNTS, version + user_id, 1)
-            self.db.hincrby(MetricsType.PROMPT_HOST, version + host, 1)
         elif endpoint == "write":
             self.db.hincrby(MetricsType.WRITE_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.WRITE_HOST, version + host, 1)
+        elif endpoint == "guardrail_input":
+            self.db.hincrby(MetricsType.GUARDRAIL_INPUT_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.GUARDRAIL_INPUT_HOST, version + host, 1)
+        elif endpoint == "guardrail_output":
+            self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_COUNTS, version + user_id, 1)
+            self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_HOST, version + host, 1)
 
     def get_user_logs(
         self,
@@ -200,19 +208,12 @@ class Redis:
         ).hexdigest()
 
     def get_api_key_email(self, api_key: str) -> str | None:
-        """Retrieve the email associated with an API key.
-
-        If HMAC secret is configured, the API key is HMACed before lookup.
-        Falls back to plaintext lookup if no secret configured.
+        """The email an API key resolves to, looked up by its HMAC digest when
+        API_KEY_HMAC_KEY is set and as written otherwise. With the secret set,
+        an entry stored as written does not resolve: Redis must not hold a
+        working credential in clear (`bin/api_key.py rehash` converts them).
         """
-        hashed = self._hash_api_key(api_key)
-        if hashed:
-            val = self.db.get("api_key:" + hashed)
-            if val:
-                return val
-
-        # Fallback to plaintext lookup for backward compatibility
-        return self.db.get("api_key:" + api_key)
+        return self.db.get(self.api_key_name(api_key))
 
     def api_key_name(self, api_key: str) -> str:
         """The Redis entry a key is stored under by set_api_key."""

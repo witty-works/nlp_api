@@ -5,8 +5,8 @@ machine; this sends it to the API's `PUT /api_keys`, which makes the server's
 synced keys match it. It shows what would change first and asks before
 changing anything:
 
-    pdm run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
-    pdm run python -m bin.sync_api_keys api_keys.yaml --url … --yes   # no question
+    uv run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
+    uv run python -m bin.sync_api_keys api_keys.yaml --url … --yes   # no question
 
 The API's management credentials (API_DOCS_USERNAME / API_DOCS_PASSWORD on the
 server) come from NLP_API_USERNAME and NLP_API_PASSWORD, or are asked for.

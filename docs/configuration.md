@@ -79,7 +79,7 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
 | TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
 | CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
-| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. If you change these, also align `pyproject.toml` dependencies.                                                                             |
+| MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. They must be installed: see [Using Smaller spaCy Models](#using-smaller-spacy-models).                                                                             |
 | IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from [database/dump.sql](../database/dump.sql) (otherwise from [database/db.sqlite3](../database/db.sqlite3)). |
 | LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
 | MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
@@ -108,22 +108,15 @@ By default, the API loads large spaCy models (`en_core_web_lg`, `de_core_news_lg
    MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
    ```
 
-2. Update `pyproject.toml` to include the corresponding model wheels:
+2. Install them. The wheels are pinned by hash in
+   [bin/spacy-models.json](../bin/spacy-models.json):
 
-   ```toml
-   [project]
-   dependencies = [
-       # ... other dependencies
-       "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.0/en_core_web_md-3.7.0-py3-none-any.whl",
-       "https://github.com/explosion/spacy-models/releases/download/de_core_news_md-3.7.0/de_core_news_md-3.7.0-py3-none-any.whl",
-       "https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-3.7.0/fr_core_news_md-3.7.0-py3-none-any.whl",
-   ]
-   ```
-
-3. Reinstall dependencies:
    ```bash
-   pdm install
+   uv run python -m bin.install_spacy_models --size md   # or sm
    ```
+
+   The Docker image takes the size as a build argument:
+   `docker build --build-arg SPACY_MODEL_SIZE=md .`
 
 **Trade-offs:**
 
@@ -150,7 +143,7 @@ declining them.
 
 - No provider API costs
 - Eliminates external API latency
-- LLM routes (`/v1.0/rephrase`, `/v1.0/prompt`) will return appropriate error responses
+- LLM routes (`/v1.0/rephrase`, `/v1.0/write`) will return appropriate error responses; the guardrail endpoints need no LLM and keep working
 
 **Note:** LLM features are also gated by `LLM_ACCESS` and by the `llm_alternatives` flag in the user/organization config, so even with a provider configured, users need explicit access. See [Who may spend the LLM budget](#who-may-spend-the-llm-budget).
 
@@ -261,7 +254,7 @@ Then run it on LanguageTool's local port, because the desktop app has no host or
 ```bash
 REQUIRE_AUTH=false LANGUAGETOOL_COMPAT_ROOT=true \
   DEFAULT_CONFIG='{"german_gender_ending": "de-e"}' \
-  pdm run uvicorn app.main:app --port 8081
+  uv run uvicorn app.main:app --port 8081
 ```
 
 `DEFAULT_CONFIG` is what makes an option like the gender ending reachable at all. The LanguageTool protocol carries a language, a mother tongue and a list of disabled categories, and nothing else, so every other option would otherwise sit on its built-in default with no way to say so. It applies only to fields a request does not set for itself, so a client that does ask for something still gets it, and a synced user or organisation config layered on afterwards still wins. It is checked when the API starts: an option that does not exist or a value that does not validate stops the start with a message naming it.
@@ -302,7 +295,7 @@ REDIS_PORT=6379
 ```
 
 ```bash
-pdm run python -m bin.api_key create you@example.com
+uv run python -m bin.api_key create you@example.com
 ```
 
 The in-memory Redis is per process, so without `REDIS_HOST` that script would write to its own memory and never reach the API. It refuses to run rather than appearing to succeed.
@@ -325,16 +318,10 @@ Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` ask
 
 Separate from the docs switch, because reading the schema and minting a
 credential are not the same risk. This one guards `/api_key`, `/user/configs`,
-`/organization/configs`, `/user/logs`, `/settings`, `/languagetool_api` and
-`/v1.0/prompt` —
+`/organization/configs`, `/user/logs`, `/settings` and `/languagetool_api` —
 the endpoints that hand out or expose credentials and configuration, or act on
 a named user's behalf — and defaults to **on**, so a deployment nobody
 configured is closed rather than open.
-
-`/v1.0/prompt` is in that list because it takes `user_email` as a query
-parameter: whoever calls it picks whose configuration applies and whose LLM
-budget is spent. A caller that already sends basic auth for `/user/configs`,
-as the dashboard does, needs no change.
 
 | Variable                | Default | Description                                                                             |
 | ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
@@ -384,21 +371,22 @@ Reduces false positives by checking rule hits in their sentence context. Two mod
 | --------------------- | ------- | --------------------------------------------------------------- |
 | CONTEXT_CHECKER_LOCAL | false   | When true, use local SetFit models instead of remote API calls. |
 
-When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use.
+When enabled, the app loads SetFit models from `models/context_aware_model/{lang}/` where `{lang}` is `en`, `de`, or `fr`. Models are loaded into shared memory for multi-process use. A language without a model there is not checked locally.
+
+Witty Works publishes models for English and German. No French model has been trained; one placed in `models/context_aware_model/fr/`, for example with [bin/convert_to_cpu.py](../bin/convert_to_cpu.py), is used like the others.
 
 #### Setup Local SetFit Models
 
 Option 1: Download from Hugging Face (Recommended)
 
-```bash
-# Install huggingface-hub if not already installed
-pdm add huggingface-hub
+The script downloads a fixed commit of [witty-works/setfit-context-checker](https://huggingface.co/witty-works/setfit-context-checker), set in `REVISION` in [bin/download_from_huggingface.py](../bin/download_from_huggingface.py), so every deployment runs the same model weights. Moving it is a reviewed change: new weights can change which findings the context checker keeps.
 
-# Download all models (en, de, fr)
-pdm run python -m bin.download_from_huggingface --lang all
+```bash
+# Download every model the repository has (en, de)
+uv run python -m bin.download_from_huggingface --lang all
 
 # Or download a specific language
-pdm run python -m bin.download_from_huggingface --lang en
+uv run python -m bin.download_from_huggingface --lang en
 ```
 
 Why CPU format is required: The API launches multiple worker processes for concurrency. It leverages PyTorch shared memory to avoid duplicating model weights in each worker. GPU tensors cannot be shared with this mechanism out of the box, while CPU tensors can. Using CPU models allows `ContextChecker` to call `share_memory()` on the underlying backbone, reducing RAM and speeding up startup.
@@ -406,7 +394,7 @@ Why CPU format is required: The API launches multiple worker processes for concu
 Test the CPU model:
 
 ```bash
-pdm run python -m bin.test_cpu -i models/context_aware_model/en
+uv run python -m bin.test_cpu -i models/context_aware_model/en
 ```
 
 #### convert_to_cpu.py reference (optional)
@@ -416,7 +404,7 @@ If you obtain raw SetFit model dumps from another source and need to ensure they
 Usage:
 
 ```bash
-pdm run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
+uv run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
 ```
 
 Arguments:
@@ -477,7 +465,9 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_PORT       | (empty)     | Redis port.                                                                                                                                                   |
 | REDIS_USERNAME   | (empty)     | Redis username.                                                                                                                                               |
 | REDIS_PASSWORD   | (empty)     | Redis password.                                                                                                                                               |
-| REDIS_VERIFY_SSL | true        | Verify TLS certs when connecting to Redis over SSL.                                                                                                           |
+| REDIS_VERIFY_SSL | true        | Connect over TLS and check the server's certificate; a connection to a Redis whose certificate does not check out fails at startup. `false`: plain TCP, for a Redis on the same host or private network, as in `compose.yml`. |
+| API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. With `REQUIRE_API_KEY` on and this empty, the start logs a warning. |
+| REDIS_SSL_CA_CERTS | (empty)   | Path to the CA certificate(s) to check a Redis certificate against, for one signed by a private CA. Empty: the system's CAs.                                     |
 | REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
 | TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
@@ -499,6 +489,9 @@ config change:
 | `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
 | `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
 | `LLM_MAX_REQUESTS_PER_MINUTE` | 0 | LLM calls the whole deployment makes per minute, counted in Redis so all workers share one budget. Past it, a call is refused with 503 and a `Retry-After` up to the next minute, without reaching the provider. Set it below the provider's per-key limit (60 for the BFH inference server) so the account is never the one that hits it. `0` for no limit; without a real Redis each process counts on its own. |
+| `LLM_REFUSED_MESSAGE` | (empty) | What a user is told when the provider refuses a text (`422`): a deployment whose provider filters requests explains here what it refuses. Empty: the provider's own reason, if it gives one. |
+
+A guardrail or content filter of the provider that refuses a text reaches the client as `422` with `LLM_REFUSED_MESSAGE` or the provider's reason, and is logged as a warning that names the guardrail, not the reason, as a guardrail may quote what it matched: it is about the text, not the deployment. Witty recognises a LiteLLM proxy's guardrails and LiteLLM's content-policy error; any other `400` from the provider stays an error (500, logged).
 
 ```bash
 # Anthropic directly
@@ -651,7 +644,7 @@ has no such job, so the two settings below fill the gap.
 |  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
 | `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
 |       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
-|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it.                                                   |
+|                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it, the [guardrail endpoints](./guardrails.md) included.                                                   |
 
 `CLIENT_CONFIG_ENABLED` never overrules a deployment that has an opinion: a
 `force` rule for either flag in a synced user or organisation config still wins.
@@ -670,6 +663,10 @@ BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
 BLACKFIRE_APPLICATION_NAME=app
 ```
 
+Blackfire is in the `profiling` dependency group (`uv sync --inexact --group profiling`; without `--inexact`, uv removes the spaCy models, which are not in the lock), not in a default install or the Docker image. If the variable is set without it, the app logs a warning at startup and runs without profiling.
+
+Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
+
 ## Testing variables
 
 These are fixtures for the test suite, which authenticates as the email they carry. They are only loaded when `TESTING` is set; a deployment that sets them without it gets an error in the log and they are ignored. That guard exists because an entry marked `"status": "force"` in either overrides what a request asks for, so a server that loaded them would quietly answer with something other than what its clients requested.
@@ -683,8 +680,6 @@ The following environment variables are used to seed test data and shortcuts whe
 | `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
 
 These variables are optional and intended for local development or CI scenarios to make it easier to test flows without external Redis or having to manually seed data.
-
-Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
 
 ---
 

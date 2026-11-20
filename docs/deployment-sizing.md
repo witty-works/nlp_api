@@ -105,7 +105,7 @@ Measured on `en_core_web_sm` (see below), four workers cost 1.93 GiB against a 8
 
 The loader calls `share_memory()` on the model body, so it is fork-friendly in the same way the spaCy models are.
 
-Note that torch is in the image whether or not you enable this: spaCy's own backend, thinc, imports torch when it is installed, so it loads at startup regardless. That is ~408 MB of the image and a fixed part of the baseline. Removing it would mean dropping SetFit from the dependency set entirely, which is a code change, not a deployment one.
+Note that torch is in the image whether or not you enable this: spaCy's own backend, thinc, imports torch when it is installed, so it loads at startup regardless. That is ~408 MB of the image and a fixed part of the baseline. The image installs PyTorch's CPU build on every architecture, so it carries no CUDA libraries on `x86_64` either (the build fails if it would). Removing torch would mean dropping SetFit from the dependency set entirely, which is a code change, not a deployment one.
 
 ## Measured numbers
 
