@@ -32,14 +32,23 @@ async def lifespan(app: FastAPI, context: AppContext):
     if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
         try:
             from blackfire_conprof.profiler import Profiler
+        except ImportError:
+            # Blackfire is in the `profiling` dependency group, not in the
+            # image or a default install.
+            context.logger.warning(
+                "BLACKFIRE_ENABLE_CONTINUOUS_PROFILING is set, but Blackfire"
+                " is not installed: install the `profiling` dependency group"
+                " (uv sync --group profiling)"
+            )
+        else:
+            try:
+                app_name = os.environ.get("BLACKFIRE_APPLICATION_NAME")
+                profiler = Profiler(application_name=app_name)
+                profiler.start()
 
-            app_name = os.environ.get("BLACKFIRE_APPLICATION_NAME")
-            profiler = Profiler(application_name=app_name)
-            profiler.start()
-
-            print(f"Profiler started for {app_name}")
-        except Exception:
-            pass
+                print(f"Profiler started for {app_name}")
+            except Exception:
+                pass
 
     # A DEFAULT_CONFIG that does not validate stops the start here, rather
     # than being skipped on every request.

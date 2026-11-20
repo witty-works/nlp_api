@@ -664,6 +664,10 @@ BLACKFIRE_ENABLE_CONTINUOUS_PROFILING=1
 BLACKFIRE_APPLICATION_NAME=app
 ```
 
+Blackfire is in the `profiling` dependency group (`uv sync --group profiling`), not in a default install or the Docker image. If the variable is set without it, the app logs a warning at startup and runs without profiling.
+
+Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
+
 ## Testing variables
 
 These are fixtures for the test suite, which authenticates as the email they carry. They are only loaded when `TESTING` is set; a deployment that sets them without it gets an error in the log and they are ignored. That guard exists because an entry marked `"status": "force"` in either overrides what a request asks for, so a server that loaded them would quietly answer with something other than what its clients requested.
@@ -677,8 +681,6 @@ The following environment variables are used to seed test data and shortcuts whe
 | `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
 
 These variables are optional and intended for local development or CI scenarios to make it easier to test flows without external Redis or having to manually seed data.
-
-Also configure Blackfire credentials in `~/.blackfire.ini` or environment variables as per Blackfire docs.
 
 ---
 

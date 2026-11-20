@@ -3,6 +3,7 @@ import hashlib
 import pytest
 import logging
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -3098,6 +3099,20 @@ def test_the_rules_database_stays_in_memory():
 
     assert not Path("file:db?mode=memory&cache=shared&uri=true").exists()
     assert not Path("file:db?mode=memory&cache=shared").exists()
+
+
+def test_profiling_without_blackfire_says_so(monkeypatch, caplog):
+    """Blackfire is not in the image: asked for continuous profiling without
+    it installed, the start says so rather than doing nothing."""
+    monkeypatch.setenv("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING", "1")
+    monkeypatch.setitem(sys.modules, "blackfire_conprof", None)
+    monkeypatch.setitem(sys.modules, "blackfire_conprof.profiler", None)
+
+    with caplog.at_level(logging.WARNING, "nlp_api"), TestClient(app):
+        pass
+
+    assert "BLACKFIRE_ENABLE_CONTINUOUS_PROFILING" in caplog.text
+    assert "profiling" in caplog.text
 
 
 def test_version_reports_the_rules_file(tmp_path, monkeypatch):

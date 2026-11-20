@@ -45,8 +45,6 @@ dependencies = [
     # the CUDA libraries.
     "torch",
     "eng>=0.1.1",
-    "blackfire",
-    "blackfire-conprof>=1.0.0",
     "aiosqlite>=0.19.0",
     "pyjwt>=2.8.0",
     "cryptography>=42.0.2",
@@ -64,6 +62,13 @@ requires-python = ">=3.12,<3.15"
 license = "MIT"
 
 [dependency-groups]
+# Blackfire: continuous profiling (BLACKFIRE_ENABLE_CONTINUOUS_PROFILING) and
+# blackfire-python locally. Not in the image: its profiler pins ddtrace, which
+# brings opentelemetry and protobuf.
+profiling = [
+    "blackfire",
+    "blackfire-conprof>=1.0.0",
+]
 dev = [
     "click",
     "polib",
