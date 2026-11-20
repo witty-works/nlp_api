@@ -308,3 +308,57 @@ def test_minting_writes_a_private_file_that_stays_valid(tmp_path):
     entries = parse(path.read_text())
     assert [entry.email for entry in entries] == ["[odd]@example.org"]
     assert path.read_text().startswith("# An odd one\n")
+
+
+def load_cli():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("api_key_cli", "bin/api_key.py")
+    cli = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cli)
+    return cli
+
+
+@pytest.fixture
+def hashed_redis(set_redis, monkeypatch):  # noqa: F811
+    """The API's Redis with API_KEY_HMAC_KEY set and no keys stored."""
+    with TestClient(app):
+        monkeypatch.setattr(
+            app.state.context.settings, "api_key_hmac_key", "an-hmac-secret"
+        )
+        redis = app.state.context.redis
+        names = list(redis.db.scan_iter("api_key:*"))
+        if names:
+            redis.db.delete(*names)
+        yield redis
+
+
+def test_rehash_stores_plaintext_entries_as_digests(hashed_redis, capsys):
+    import argparse
+
+    hashed_redis.db.set("api_key:old-key-0123456789", "tom@example.org")
+    hashed_redis.set_api_key("new-key-0123456789", "jane@acme.example")
+    # Synced from the key file before the secret was set.
+    hashed_redis.db.sadd(SYNCED_KEYS, "api_key:old-key-0123456789")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
+
+    assert hashed_redis.get_api_key_email("old-key-0123456789") == "tom@example.org"
+    assert hashed_redis.get_api_key_email("new-key-0123456789") == "jane@acme.example"
+    assert hashed_redis.db.get("api_key:old-key-0123456789") is None
+    assert len(list(hashed_redis.db.scan_iter("api_key:*"))) == 2
+    # Still the file's key, so the next sync manages it rather than leaving
+    # it alone as unmanaged.
+    assert hashed_redis.db.smembers(SYNCED_KEYS) == {
+        hashed_redis.api_key_name("old-key-0123456789")
+    }
+    # The output says how many, never which keys.
+    assert "old-key" not in capsys.readouterr().out
+
+
+def test_rehash_needs_a_secret(hashed_redis, monkeypatch):
+    import argparse
+
+    monkeypatch.setattr(hashed_redis.settings, "api_key_hmac_key", "")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 1
