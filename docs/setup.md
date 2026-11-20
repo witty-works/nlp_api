@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Installation (Python 3.12) using PDM](#installation-python-312-using-pdm)
+- [Installation (Python 3.12) using uv](#installation-python-312-using-uv)
 - [Using Docker](#using-docker)
 - [Using docker compose (recommended for local multi-service setup)](#using-docker-compose-recommended-for-local-multi-service-setup)
 - [Update dependencies locally](#update-dependencies-locally)
@@ -16,13 +16,12 @@
 
 ---
 
-## Installation (Python 3.12) using PDM
+## Installation (Python 3.12) using uv
+
+[uv](https://docs.astral.sh/uv/) creates `.venv` with the Python in `.python-version` and installs the locked dependencies from `uv.lock`, the development ones included:
 
 ```bash
-pdm venv create 3.12
-pdm use
-pdm venv activate
-pdm sync --dev
+uv sync
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
@@ -111,10 +110,10 @@ If you only need the API without LanguageTool, you can still use the single-cont
 
 ## Update dependencies locally
 
-To update packages locally after `pyproject.toml`/`pdm.lock` was changed:
+To update packages locally after `pyproject.toml`/`uv.lock` was changed:
 
 ```bash
-pdm sync --dev
+uv sync
 ```
 
 ## Add new package
@@ -122,7 +121,7 @@ pdm sync --dev
 When adding a new package to the project, update `pyproject.toml` via:
 
 ```bash
-pdm add <package_name>
+uv add <package_name>
 ```
 
 ## Docker image
@@ -130,7 +129,6 @@ pdm add <package_name>
 After making changes in the code or in the Dockerfile, build a fresh image:
 
 ```bash
-pdm export --prod -o requirements.txt
 DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
 docker run nlpapi
 ```
@@ -146,7 +144,7 @@ cp .env.development.mac .env
 Start the dev server:
 
 ```bash
-pdm run uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 or
@@ -162,7 +160,7 @@ Alternative docs: http://localhost:8000/redoc
 ## Profiling locally with Blackfire
 
 ```bash
-pdm run blackfire-python uvicorn app.main:app --reload
+uv run blackfire-python uvicorn app.main:app --reload
 ```
 
 Make sure you have a `.blackfire.ini`, get the settings from
@@ -198,7 +196,7 @@ bundle, not a directory of extras, so concatenate them and point `SSL_CERT_FILE`
 at the result:
 
 ```bash
-cat "$(pdm run python -m certifi)" ~/.lando/certs/LandoCA.crt > .lando-ca-bundle.crt
+cat "$(uv run python -m certifi)" ~/.lando/certs/LandoCA.crt > .lando-ca-bundle.crt
 export SSL_CERT_FILE="$PWD/.lando-ca-bundle.crt"
 ```
 
@@ -218,9 +216,9 @@ An `x-key` header is resolved against `api_key:<key>` entries in Redis, which
 the dashboard normally writes. Where there is no dashboard, mint them with:
 
 ```bash
-pdm run python -m bin.api_key create user@example.com   # prints the new key
-pdm run python -m bin.api_key list
-pdm run python -m bin.api_key delete <key>
+uv run python -m bin.api_key create user@example.com   # prints the new key
+uv run python -m bin.api_key list
+uv run python -m bin.api_key delete <key>
 ```
 
 The CLI reads the same environment as the API, so run it wherever `REDIS_HOST`
@@ -252,12 +250,12 @@ can come with its own config (see [api_keys.example.yaml](../api_keys.example.ya
 
 ```bash
 # mint a key: appends an entry with the note as its comment, prints the key
-pdm run python -m bin.api_key create jane@acme.example --file api_keys.yaml \
+uv run python -m bin.api_key create jane@acme.example --file api_keys.yaml \
     --note "Jane Doe (ACME), HR pilot until 2026-12"
 
 # make the API match the file: shows what changes and asks first
 NLP_API_USERNAME=… NLP_API_PASSWORD=… \
-    pdm run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
+    uv run python -m bin.sync_api_keys api_keys.yaml --url https://nlp-api.example
 ```
 
 - **The sync makes the server match the file** through `PUT /api_keys`: new

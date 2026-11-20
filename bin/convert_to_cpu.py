@@ -16,7 +16,7 @@ Usage
 Download the model first (example Azure ML command omitted here – see README),
 then run:
 
-        pdm run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
+        uv run python -m bin.convert_to_cpu -i path/to/downloaded/model -l en
 
 For German or French replace `-l en` with `-l de` or `-l fr`.
 

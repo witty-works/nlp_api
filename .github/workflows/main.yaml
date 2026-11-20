@@ -33,6 +33,10 @@ jobs:
       contents: read
       pull-requests: read
       statuses: write # the commit status of a dispatched run, see below
+    env:
+      # No uv cache: the spacy model wheels and torch already crowd the runner
+      # disk, and a cache would hold them a second time.
+      UV_NO_CACHE: "1"
 
     steps:
       # A dispatched run is not shown among a pull request's checks, only a
@@ -80,16 +84,19 @@ jobs:
           docker run -d --name languagetool -p 8010:8010 \
             -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool:6.8
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: pdm-project/setup-pdm@v3
+      - name: Set up uv and Python
+        # setup-uv publishes no major-version tags, only full versions.
+        uses: astral-sh/setup-uv@v10.3.3
         with:
+          # The same uv as the Dockerfile's deps stage.
+          version: "0.13.9"
           python-version: "3.12"
+          # Nor a GitHub cache of it, which would upload the same packages.
+          enable-cache: false
 
       - name: Install dependencies
-        env:
-          PIP_NO_CACHE_DIR: "1"
         run: |
-          pdm sync --dev
+          uv sync --locked
 
       - name: Caching FastText models
         id: cache-fasttext
@@ -120,7 +127,7 @@ jobs:
           LANGUAGETOOL_API: "http://127.0.0.1:8010/v2"
         run: |
           export testing=True
-          pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
+          uv run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
 
       # The workflow runs on push only, so the scanner cannot tell a branch
       # with an open pull request from any other and files every analysis as a

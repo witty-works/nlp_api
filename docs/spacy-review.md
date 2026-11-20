@@ -114,7 +114,7 @@ positional indices.
 
 This yields, per proposed change: a token-level diff (what re-tagged, what
 re-lemmatized) alongside the end-to-end diff (which rules changed). A/B recipe
-for any model or pipeline change: scratch worktree → change → `pdm run pytest
+for any model or pipeline change: scratch worktree → change → `uv run pytest
 --snapshot-update` → `git diff --stat tests/`. Requires the pinned local
 LanguageTool 6.8 for the end-to-end groups; the new `/debug/spacy` group needs
 no external service.

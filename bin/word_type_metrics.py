@@ -8,9 +8,9 @@ from the naive table, and how often it fires on top of a model error. That is
 the evidence for retiring a hack, keeping it, or moving it into data.
 
 Usage:
-    pdm run python -m bin.word_type_metrics --tests
-    pdm run python -m bin.word_type_metrics --conllu path/to/de_gsd-ud-dev.conllu --lang de
-    pdm run python -m bin.word_type_metrics --tests --conllu ... --lang de --limit 500
+    uv run python -m bin.word_type_metrics --tests
+    uv run python -m bin.word_type_metrics --conllu path/to/de_gsd-ud-dev.conllu --lang de
+    uv run python -m bin.word_type_metrics --tests --conllu ... --lang de --limit 500
 
 Needs the app context (models + rule db); runs everything through the same
 pipeline the API serves.

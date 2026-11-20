@@ -5,14 +5,14 @@ A deployment that runs the NLP API on its own has nothing to write the
 gets its first key. Reads the same environment as the API itself, so it talks to
 the same Redis and applies the same HMAC hashing.
 
-    pdm run python -m bin.api_key create user@example.com
-    pdm run python -m bin.api_key list
-    pdm run python -m bin.api_key delete <key>
+    uv run python -m bin.api_key create user@example.com
+    uv run python -m bin.api_key list
+    uv run python -m bin.api_key delete <key>
 
 Or into a local API key file, synced to the API with bin/sync_api_keys.py
 (see app/api_keys.py) rather than written to Redis:
 
-    pdm run python -m bin.api_key create user@example.com --file api_keys.yaml \
+    uv run python -m bin.api_key create user@example.com --file api_keys.yaml \
         --note "Jane Doe (ACME), HR pilot until 2026-12"
 
 Deleting needs the key itself rather than the email: when API_KEY_HMAC_KEY is

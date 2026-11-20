@@ -4,8 +4,8 @@ This script downloads pre-converted CPU models for the context checker from
 Hugging Face Hub. Models are cached locally to avoid re-downloading.
 
 Usage:
-    pdm run python -m bin.download_from_huggingface --lang en
-    pdm run python -m bin.download_from_huggingface --lang all
+    uv run python -m bin.download_from_huggingface --lang en
+    uv run python -m bin.download_from_huggingface --lang all
 """
 
 import os
