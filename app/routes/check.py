@@ -89,7 +89,7 @@ async def check(
         )
 
         if language is None:
-            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+            response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
             return Result.factory("Language could not be determined")
 
         results = await apply_language_rules(

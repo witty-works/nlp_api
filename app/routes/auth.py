@@ -301,7 +301,7 @@ async def put_api_keys(
         result = sync(context.redis, entries, dry_run, allow_empty)
     except ValueError as e:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e)
         )
 
     if result.conflicts:
