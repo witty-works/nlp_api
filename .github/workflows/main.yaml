@@ -51,14 +51,14 @@ jobs:
             -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             -f description="Running the test suite"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       # The spacy 3.8 model wheels plus torch overflow the runner disk;
       # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@v2.0.0
         with:
           tool-cache: true
           android: true
@@ -102,7 +102,7 @@ jobs:
 
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           cache-name: cache-fasttext
         with:
@@ -153,7 +153,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: github.actor != 'dependabot[bot]'
-        uses: SonarSource/sonarqube-scan-action@bfd4e558cda28cda6b5defafb9232d191be8c203 # v4.2.1
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
         with:
           args: ${{ steps.pr.outputs.args }}
         env:
