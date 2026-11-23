@@ -3,7 +3,7 @@ Rephrase Routes
 Handles text rephrasing using LLM alternatives.
 """
 
-from typing import Union
+from typing import Annotated, Union
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.security import HTTPBearer
@@ -36,7 +36,7 @@ async def post_rephrase_v1_0(
     request: Request,
     response: Response,
     rephrase_request_in: RephraseRequestIn,
-    context: AppContext = Depends(get_app_context),
+    context: Annotated[AppContext, Depends(get_app_context)],
 ) -> Union[RephrasesOut, Result]:
     return await rephrase_sentence(
         request, response, rephrase_request_in, context, REPHRASE_API_VERSION

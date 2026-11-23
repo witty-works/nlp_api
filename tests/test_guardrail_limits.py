@@ -46,7 +46,8 @@ def test_input_messages_at_and_over_the_count(
 
     response = post("/v1.0/guardrail/input", {"messages": user_messages(4)})
     detail = refused(response, "GUARDRAIL_MESSAGES_MAX_COUNT")
-    assert "4 messages" in detail and "the 3 " in detail
+    assert "4 messages" in detail
+    assert "the 3 " in detail
 
 
 @pytest.mark.parametrize("parts", [False, True], ids=["string", "content parts"])
