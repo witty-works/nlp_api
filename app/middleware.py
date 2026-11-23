@@ -204,11 +204,16 @@ def setup_middleware(app: FastAPI):
     # Security headers middleware
     app.middleware("http")(add_security_headers)
 
-    # CORS middleware
+    # CORS middleware. Any origin, but without credentials: with them,
+    # Starlette echoes whichever origin asks and allows credentials, so a page
+    # an operator visits could call the management endpoints with the Basic
+    # auth the browser has cached for them. The clients send `x-key` or
+    # `Authorization` themselves, which CORS does not count as credentials,
+    # and nothing here sets a cookie.
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
-        allow_credentials=True,
+        allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
     )
