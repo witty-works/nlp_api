@@ -278,10 +278,10 @@ Note that port 8081 is where a real local LanguageTool server would sit, so run 
 
 ### From the browser extension
 
-The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too.
+The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too. It must pass the check `POST /api_key` applies, at least 20 letters, digits, `-` or `_`; anything else, such as the placeholder in `.env.example`, stops the start.
 
 ```bash
-DEFAULT_API_KEY=pick-something-long
+DEFAULT_API_KEY=pick-something-long-and-random
 DEFAULT_USER_EMAIL=you@example.com
 DEFAULT_USER_CONFIG_ENABLED=true
 ```

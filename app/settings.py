@@ -2,6 +2,7 @@ from typing import Optional
 from functools import lru_cache
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from app.api_keys import valid_key
 from app.models import LangType, LlmAccessType
 
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
@@ -314,6 +315,7 @@ class Settings(BaseSettings):
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
         validate_pages(settings)
+        validate_default_api_key(settings)
 
         settings.sso_configs = {
             "aadb2c": {
@@ -384,6 +386,22 @@ def validate_pages(settings: Settings) -> None:
         raise ValueError(
             f"TEXTAREA_IMPRINT_FILE {settings.textarea_imprint_file!r} cannot be read"
         )
+
+
+def validate_default_api_key(settings: Settings) -> None:
+    """Stop the start on a DEFAULT_API_KEY that POST /api_key would refuse,
+    such as the placeholder in .env.example, rather than writing a guessable
+    key to Redis on every start. The message does not quote the key."""
+    if not settings.default_api_key:
+        return
+    try:
+        valid_key(settings.default_api_key)
+    except ValueError as error:
+        raise ValueError(
+            f"DEFAULT_API_KEY is not a usable key: {error}. Mint one with"
+            " `python3 -c 'import secrets; print(secrets.token_urlsafe(32))'`"
+            " or leave it empty."
+        ) from None
 
 
 @lru_cache(maxsize=1)
