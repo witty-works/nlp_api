@@ -39,3 +39,14 @@ def test_without_tls_nothing_is_checked(connect):
     kwargs = connect(redis_verify_ssl=False)
 
     assert kwargs["ssl"] is False
+
+
+def test_the_client_speaks_resp2():
+    """redis-py 8 defaults to RESP3 (HELLO 3), which Redis before 6 and some
+    proxies refuse. Built for real, without connecting: the pool only opens a
+    connection on the first command."""
+    redis = redis_module.Redis.factory(
+        Settings(redis_host="redis.example", redis_verify_ssl=False, default_api_key="")
+    )
+
+    assert redis.db.connection_pool.connection_kwargs["protocol"] == 2
