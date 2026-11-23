@@ -47,6 +47,15 @@ class Settings(BaseSettings):
     sentry_sample_rate: float = 0.0
     sentry_profiles_sample_rate: float = 0.0
     text_max_length: int = 1000
+    # What one guardrail request may ask of the server (docs/guardrails.md,
+    # Request limits); more is refused with a 422. Messages are passed back,
+    # not checked, so their count and size only bound what a request makes
+    # the server hold and return. The LiteLLM adapter checks each of its texts
+    # up to GUARDRAIL_MAX_LENGTH, twice where it carries a Witty note.
+    guardrail_messages_max_count: int = 1000
+    guardrail_texts_max_count: int = 20
+    guardrail_check_max_length: int = 40000
+    guardrail_request_max_length: int = 1000000
     is_prod: bool = False
     terms_of_service: str = ""
     contact: str = ""

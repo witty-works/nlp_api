@@ -9,7 +9,13 @@ from fastapi import APIRouter, Depends, Request
 
 from app.context import AppContext
 from app.dependencies import get_app_context
-from app.guardrail import review
+from app.guardrail import (
+    GUARDRAIL_MAX_LENGTH,
+    at_most,
+    message_length,
+    messages_within_limits,
+    review,
+)
 from app.guidance import guidance, has_guidance, merge_guidance
 from app.models import (
     CheckRequestIn,
@@ -18,6 +24,7 @@ from app.models import (
     ResultOut,
 )
 from app.routes.guardrail import CREDENTIALS, UNAUTHORIZED, guardrail_user
+from app.settings import Settings
 from app.version_validators import GUARDRAIL_API_VERSION
 
 router = APIRouter()
@@ -54,6 +61,7 @@ async def post_guardrail_litellm(
         if value is not None:
             setattr(request_in.config, field, value)
     configs = await guardrail_user(request, request_in, context)
+    within_limits(request_in, context.settings)
     policy = request_in.config
 
     if request_in.input_type == "request":
@@ -117,6 +125,53 @@ async def post_guardrail_litellm(
             text if found is None else f"{answer}{WITTY_NOTE}{found}"
             for text, answer, found in zip(request_in.texts, answers, issues)
         ],
+    )
+
+
+def checked_length(text: str) -> int:
+    """At most how many characters of `text` the answer check reads: up to
+    GUARDRAIL_MAX_LENGTH, and where it carries a Witty note, the part before
+    the note as well."""
+    length = min(len(text), GUARDRAIL_MAX_LENGTH)
+    if WITTY_NOTE in text:
+        before = text.rsplit(WITTY_NOTE, 1)[0]
+        length += min(len(before), GUARDRAIL_MAX_LENGTH)
+    return length
+
+
+def within_limits(request_in: LitellmGuardrailIn, settings: Settings) -> None:
+    """Refuse a request that asks for more than the deployment takes. Texts
+    are only checked in an answer (`response`), so there their count is
+    bounded more tightly, and so are the characters checked."""
+    messages = request_in.structured_messages or []
+    messages_within_limits(messages, settings)
+    at_most(
+        sum(len(text) for text in request_in.texts)
+        + sum(message_length(message) for message in messages),
+        settings.guardrail_request_max_length,
+        "characters",
+        "GUARDRAIL_REQUEST_MAX_LENGTH",
+    )
+    if request_in.input_type == "request":
+        at_most(
+            len(request_in.texts),
+            settings.guardrail_messages_max_count,
+            "texts",
+            "GUARDRAIL_MESSAGES_MAX_COUNT",
+        )
+        return
+
+    at_most(
+        len(request_in.texts),
+        settings.guardrail_texts_max_count,
+        "texts",
+        "GUARDRAIL_TEXTS_MAX_COUNT",
+    )
+    at_most(
+        sum(checked_length(text) for text in request_in.texts),
+        settings.guardrail_check_max_length,
+        "characters to check",
+        "GUARDRAIL_CHECK_MAX_LENGTH",
     )
 
 

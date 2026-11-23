@@ -178,7 +178,7 @@ An answer with nothing to fix:
 - `reask` is only there on a `fail`. It is a ready-to-send `user` message that
   quotes the answer, so it works whether or not you send the conversation
   before it again. The model's reply to it is the corrected answer.
-- The check never refuses. An answer longer than `TEXT_MAX_LENGTH` (1000
+- The check does not refuse a long answer. An answer longer than `TEXT_MAX_LENGTH` (1000
   characters by default) is checked in parts of that length, and the
   findings' `start` and `end` point into the whole answer. Past 20000
   characters, as much as the `/textarea` editor checks, the rest goes
@@ -254,7 +254,33 @@ guidance; fetch it again after those.
 | `401` | The credential resolves to no user, while `REQUIRE_AUTH` is on. |
 | `400` | More than one `x-key` header. |
 | `403` | A Bearer token that is not accepted. |
-| `422` | The body does not validate: no `messages`, a threshold with an unknown level or an invalid limit, an unknown `lang`, or for LiteLLM an unknown `on_fail`. |
+| `422` | The body does not validate: no `messages`, a threshold with an unknown level or an invalid limit, an unknown `lang`, or for LiteLLM an unknown `on_fail`. Also a request over one of the [request limits](#request-limits); the message names the setting. |
+
+## Request limits
+
+One request may ask only so much of the server. A request over a limit is
+refused with a `422` whose message names the setting, without quoting the
+request. `GET /v1.0/guardrail/guidance` takes no text and has no limit.
+
+| Setting | Default | Limits |
+| --- | --- | --- |
+| `GUARDRAIL_MESSAGES_MAX_COUNT` | 1000 | The number of `messages` of `/v1.0/guardrail/input`, and in a LiteLLM request (`pre_call`) the number of `structured_messages` and of `texts`. |
+| `GUARDRAIL_TEXTS_MAX_COUNT` | 20 | The number of `texts` in a LiteLLM answer (`post_call`), each of which is checked. |
+| `GUARDRAIL_CHECK_MAX_LENGTH` | 40000 | The characters a LiteLLM answer has checked, all its `texts` together. Each text counts up to 20000 characters, the most an answer is checked for, and a text that carries a Witty note counts a second time, because it may be checked without the note and whole. |
+| `GUARDRAIL_REQUEST_MAX_LENGTH` | 1000000 | The characters sent: the text of all `messages`, `response`, or the LiteLLM `texts` and `structured_messages` together. A message's text is its `content` string or the `text` of its content parts; images and other parts do not count. |
+
+The defaults are meant to leave every ordinary request alone.
+`GUARDRAIL_CHECK_MAX_LENGTH` is twice the 20000 characters an answer is
+checked for, so the longest answer the check reads passes even when it
+carries an earlier note. `GUARDRAIL_TEXTS_MAX_COUNT` is 20000 divided by
+`TEXT_MAX_LENGTH` (1000), the number of parts the longest answer is checked
+in. Messages are passed back rather than checked, so their limits only bound
+what a request makes the server hold and send back; raise
+`GUARDRAIL_MESSAGES_MAX_COUNT` and `GUARDRAIL_REQUEST_MAX_LENGTH` for
+conversations longer than that.
+
+A LiteLLM proxy treats the `422` as an error: the call through it fails
+unless the guardrail has `fail_on_error: false` (see [LiteLLM](#litellm)).
 
 ## Acting on a fail
 
