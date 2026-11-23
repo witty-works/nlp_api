@@ -399,14 +399,63 @@ def test_rehash_drops_a_plaintext_copy_of_a_digest(hashed_redis):
     assert hashed_redis.get_api_key_email("copied-key-0123456789") == "tom@example.org"
 
 
-def test_rehash_reports_keys_it_cannot_tell_from_a_digest(hashed_redis, capsys):
+def test_rehash_leaves_digests_alone_without_a_warning(hashed_redis, capsys):
+    """Entries already stored as digests are counted as such, not reported as
+    keys that may still be stored as written."""
+    import argparse
+
+    hashed_redis.set_api_key("new-key-0123456789", "jane@acme.example")
+    hashed_redis.set_api_key("other-key-0123456789", "tom@example.org")
+    hashed_redis.db.set("api_key:old-key-0123456789", "ann@example.org")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
+
+    err = capsys.readouterr().err
+    assert "1 key(s) now stored as HMAC digests" in err
+    assert "2 entries already named like a digest, left as they are" in err
+    assert "may be" not in err
+    assert hashed_redis.get_api_key_email("new-key-0123456789") == "jane@acme.example"
+    assert hashed_redis.get_api_key_email("old-key-0123456789") == "ann@example.org"
+
+
+def test_rehash_without_digests_says_nothing_of_them(hashed_redis, capsys):
+    import argparse
+
+    hashed_redis.db.set("api_key:old-key-0123456789", "ann@example.org")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
+
+    assert "named like a digest" not in capsys.readouterr().err
+
+
+def test_rehash_drops_a_hex_key_stored_both_ways(hashed_redis, capsys):
+    """A key of 64 hex characters whose digest is stored too is known to be a
+    key stored as written, and is handled like any other."""
+    import argparse
+
+    hex_key = "ab" * 32
+    hashed_redis.set_api_key(hex_key, "hex@example.org")
+    hashed_redis.db.set("api_key:" + hex_key, "hex@example.org")
+
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
+
+    assert hashed_redis.db.get("api_key:" + hex_key) is None
+    assert hashed_redis.get_api_key_email(hex_key) == "hex@example.org"
+    err = capsys.readouterr().err
+    assert "1 key(s) now stored as HMAC digests" in err
+    # Only its digest is left, which is counted as one.
+    assert "1 entry already named like a digest" in err
+
+
+def test_rehash_cannot_tell_a_lone_hex_key_from_a_digest(hashed_redis, capsys):
     import argparse
 
     hashed_redis.db.set("api_key:" + "ab" * 32, "hex@example.org")
 
-    load_cli().rehash(hashed_redis, argparse.Namespace())
+    assert load_cli().rehash(hashed_redis, argparse.Namespace()) == 0
 
-    assert "1 entry looks like a digest" in capsys.readouterr().err
+    assert hashed_redis.db.get("api_key:" + "ab" * 32) == "hex@example.org"
+    assert "1 entry already named like a digest" in capsys.readouterr().err
 
 
 def test_a_hand_picked_key_must_be_long(hashed_redis):

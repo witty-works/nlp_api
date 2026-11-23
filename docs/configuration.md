@@ -72,10 +72,11 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
+| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod, where the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. |
 | ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
+| GUARDRAIL_MESSAGES_MAX_COUNT, GUARDRAIL_TEXTS_MAX_COUNT, GUARDRAIL_CHECK_MAX_LENGTH, GUARDRAIL_REQUEST_MAX_LENGTH | 1000, 20, 40000, 1000000 | What one guardrail request may ask of the server; more is refused with a `422`. See [Request limits](./guardrails.md#request-limits). |
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
 | TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
 | CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
@@ -277,10 +278,10 @@ Note that port 8081 is where a real local LanguageTool server would sit, so run 
 
 ### From the browser extension
 
-The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too.
+The extension authenticates with an API key, which the LanguageTool clients do not. `DEFAULT_API_KEY` gives the deployment one without a dashboard to mint it or a Redis to keep it in; it is written on every start, so it survives restarts on the in-memory fallback too. It must pass the check `POST /api_key` applies, at least 20 letters, digits, `-` or `_`; anything else, such as the placeholder in `.env.example`, stops the start.
 
 ```bash
-DEFAULT_API_KEY=pick-something-long
+DEFAULT_API_KEY=pick-something-long-and-random
 DEFAULT_USER_EMAIL=you@example.com
 DEFAULT_USER_CONFIG_ENABLED=true
 ```
@@ -474,7 +475,7 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 
 ## LLM provider (LLM-assisted alternatives and rephrasing)
 
-Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). In debug mode you can test locally.
+Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing).
 
 Calls go through [LiteLLM](https://docs.litellm.ai/docs/providers), so the
 provider is the prefix of the model identifier and switching providers is a

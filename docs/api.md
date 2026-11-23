@@ -390,15 +390,16 @@ Response:
 
 ## Debug Endpoints
 
-Only listed in the schema when `ENVIRONMENT_TYPE != "production"`, but
-routed in every environment — the switches below are what actually guards them.
-
-Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:
+The development helpers answer `404` when `ENVIRONMENT_TYPE=production`, as
+if they did not exist, and are left out of the schema there. Outside
+production they are protected by `API_DOCS_AUTH_ENABLED`, which is **off** by
+default. With `REQUIRE_API_KEY=true` and `API_DOCS_AUTH_ENABLED=false`, a
+production request without a key gets the `401` that any other path gets
+before it gets the `404`.
 
 | Endpoint               | Method | Description                                                                    |
 | ---------------------- | ------ | -------------------------------------------------------------------------------- |
 | `/debug/check`         | POST   | Check text with additional debug information                                   |
-| `/debug/rephrase`      | POST   | Rephrase text with debug output. Accepts a `model` to override `LLM_MODEL`     |
 | `/debug/rule`          | POST   | Test a specific rule against text                                              |
 | `/debug/spacy`         | GET    | spaCy's tokens for `?text=&lang=`, with the API's own word types. `detailed=true` adds the raw tagger output |
 | `/debug/displacy`      | GET    | The dependency parse of `?text=&lang=` rendered as an SVG                      |
@@ -409,15 +410,13 @@ Protected by `API_DOCS_AUTH_ENABLED`, which is **off** by default:
 | `/save_openapi_json`   | GET    | Export OpenAPI schema to file                                                  |
 
 Protected by `MANAGEMENT_AUTH_ENABLED`, which is **on** by default, because both
-report configuration back:
+report configuration back. Unlike the helpers above, they are served in
+production too:
 
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
 | `/settings` | GET    | The whole settings object, including every secret it holds      |
 | `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
-
-The LLM-backed ones among these are refused when `LLM_ACCESS=disabled` or no
-`LLM_MODEL` is configured, the same as the client-facing routes.
 
 Example: Test a specific rule
 

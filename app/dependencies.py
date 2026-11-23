@@ -22,6 +22,19 @@ def get_app_context(request: Request) -> AppContext:
     return context
 
 
+def development_only(request: Request) -> None:
+    """Answer 404 in production, as if the route did not exist.
+
+    For the development helpers (/debug/*, /lemmatize, /tokenize, ...): they
+    run whatever text they are given through the models and the rule engine,
+    and API_DOCS_AUTH_ENABLED, the only other thing in their way, is off by
+    default. Read per request rather than at import, so that the route table
+    is the same in every environment and a test can switch it.
+    """
+    if get_app_context(request).settings.is_prod:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
+
 security = HTTPBasic(auto_error=False)
 
 

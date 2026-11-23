@@ -981,7 +981,6 @@ class RephraseAlternative(BaseModel):
 
 class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
-    model: Optional[str] = None
     sentence: Annotated[str, Len(min_length=1, max_length=300)]
     text: str
     start: int

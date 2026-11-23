@@ -35,7 +35,7 @@ dependencies = [
     # The spaCy models are not listed here: they are wheels on GitHub release
     # pages, which Dependabot cannot resolve. They are pinned by hash in
     # bin/spacy-models.json and installed by bin/install_spacy_models.py.
-    "secure>=0.3.0",
+    "secure>=2",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",

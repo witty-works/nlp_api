@@ -156,23 +156,26 @@ def rehash(redis: Redis, args) -> int:
     Each entry moves in one watched transaction, so a key revoked meanwhile
     is not brought back. A plaintext entry whose digest already maps to
     another email is a conflict and left as it is: the digest is the newer
-    write. A key that is itself 64 lowercase hex characters cannot be told
-    from a digest and is left alone; both are counted in the output, which
-    never names a key."""
+    write. An entry named by 64 lowercase hex characters is a digest unless
+    its own digest is stored too, which makes it a key of that shape stored
+    as written; otherwise a digest and such a key cannot be told apart, so it
+    is left alone and counted. The output never names a key."""
     if not redis.settings.api_key_hmac_key:
         print("error: API_KEY_HMAC_KEY is not set", file=sys.stderr)
         return 1
 
-    moved, conflicts, digest_like = 0, 0, 0
+    moved, conflicts, digest_shaped = 0, 0, 0
     for name in list(redis.db.scan_iter("api_key:*")):
         if isinstance(name, bytes):  # pragma: no cover
             name = name.decode("utf-8")
         api_key = name.removeprefix("api_key:")
-        if DIGEST.fullmatch(api_key):
-            # set_api_key never writes a 64-hex plaintext name with the secret
-            # set, so only an entry that does not resolve can be one.
-            if redis.db.get(redis.api_key_name(api_key)) is None:
-                digest_like += 1
+        # Named like a digest: one, unless its own digest is stored as well.
+        # A digest's digest is never written, so that can only be a key of 64
+        # hex characters stored both as written and as a digest.
+        if DIGEST.fullmatch(api_key) and not redis.db.exists(
+            redis.api_key_name(api_key)
+        ):
+            digest_shaped += 1
             continue
 
         outcome = _rehash_one(redis, name, api_key)
@@ -180,12 +183,14 @@ def rehash(redis: Redis, args) -> int:
         conflicts += outcome == "conflict"
 
     print(f"{moved} key(s) now stored as HMAC digests", file=sys.stderr)
-    if digest_like:
+    if digest_shaped:
+        # Not a warning: these are the digests already there. Only a key of
+        # 64 hex characters minted before the secret was set would be among
+        # them unconverted, and nothing in Redis tells it apart.
         print(
-            f"{digest_like} "
-            + ("entry looks" if digest_like == 1 else "entries look")
-            + " like a digest but may be a 64-character hex key stored as"
-            " written: check with `list`",
+            f"{digest_shaped} "
+            + ("entry" if digest_shaped == 1 else "entries")
+            + " already named like a digest, left as they are",
             file=sys.stderr,
         )
     if conflicts:

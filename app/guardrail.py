@@ -2,6 +2,10 @@
 what the model answered. Nothing here calls an LLM; the gateway, or /v1.0/write
 for our own clients, makes every model call."""
 
+from typing import Any
+
+from fastapi import HTTPException, status
+
 from app.context import AppContext
 from app.helper import utf16_offsets
 from app.language_processor import apply_language_rules, fetch_text
@@ -14,11 +18,58 @@ from app.models import (
     ResultOut,
 )
 from app.review_prompt import ReviewPrompt
+from app.settings import Settings
 
 
 # How much of an answer is checked, in parts of TEXT_MAX_LENGTH: as much as the
 # /textarea editor checks. The rest goes unchecked, which `limit_reached` says.
 GUARDRAIL_MAX_LENGTH = 20000
+
+
+def message_length(message: dict[str, Any]) -> int:
+    """The characters of a chat message's text: its `content` as a string, or
+    the `text` of its content parts. Images and other parts do not count; the
+    guardrail neither reads nor checks them."""
+    content = message.get("content")
+    if isinstance(content, str):
+        return len(content)
+    if isinstance(content, list):
+        return sum(
+            len(part["text"])
+            for part in content
+            if isinstance(part, dict) and isinstance(part.get("text"), str)
+        )
+    return 0
+
+
+def at_most(found: int, limit: int, what: str, setting: str) -> None:
+    """Refuse a request with more `what` than `limit` with a 422, as
+    /v1.0/write refuses a text that is too long. The message names the setting
+    for the operator, and quotes nothing of the request."""
+    if found > limit:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"The request has {found} {what}, more than the {limit} this"
+            f" deployment takes per guardrail request ({setting})",
+        )
+
+
+def messages_within_limits(messages: list[dict[str, Any]], settings: Settings) -> None:
+    """Chat messages are passed back, not checked: bounded by count and by
+    the characters of their text."""
+    at_most(
+        len(messages),
+        settings.guardrail_messages_max_count,
+        "messages",
+        "GUARDRAIL_MESSAGES_MAX_COUNT",
+    )
+    at_most(
+        sum(message_length(message) for message in messages),
+        settings.guardrail_request_max_length,
+        "characters",
+        "GUARDRAIL_REQUEST_MAX_LENGTH",
+    )
+
 
 # Where a part may end, best first: after a sentence, else at a space.
 SENTENCE_ENDS = (". ", "! ", "? ", "\n")

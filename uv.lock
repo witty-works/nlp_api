@@ -3597,7 +3597,7 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "redis" },
     { name = "scikit-learn", specifier = "==1.7.2" },
-    { name = "secure", specifier = ">=0.3.0" },
+    { name = "secure", specifier = ">=2" },
     { name = "sentry-sdk" },
     { name = "setfit", specifier = ">=1.2.0" },
     { name = "slack-bolt" },

@@ -13,7 +13,7 @@ from app.auth_service import fetch_user
 from app.config_manager import fetch_configs_for_request
 from app.context import AppContext
 from app.dependencies import get_app_context
-from app.guardrail import review
+from app.guardrail import at_most, messages_within_limits, review
 from app.guidance import guidance, has_guidance, merge_guidance
 from app.models import (
     BaseRequestIn,
@@ -81,6 +81,7 @@ async def post_guardrail_input(
     """Add Witty's inclusive-language guidance to the messages a gateway is
     about to send to its model."""
     configs = await guardrail_user(request, request_in, context)
+    messages_within_limits(request_in.messages, context.settings)
     context.redis.store_metrics(
         request, configs, GUARDRAIL_API_VERSION, "guardrail_input"
     )
@@ -140,6 +141,13 @@ async def post_guardrail_output(
     if request_in.threshold is not None:
         request_in.config.guardrail_threshold = request_in.threshold
     configs = await guardrail_user(request, request_in, context)
+    # Checked up to GUARDRAIL_MAX_LENGTH, but quoted whole in the reask.
+    at_most(
+        len(request_in.response),
+        context.settings.guardrail_request_max_length,
+        "characters",
+        "GUARDRAIL_REQUEST_MAX_LENGTH",
+    )
     context.redis.store_metrics(
         request, configs, GUARDRAIL_API_VERSION, "guardrail_output"
     )
