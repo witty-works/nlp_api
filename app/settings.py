@@ -282,13 +282,6 @@ class Settings(BaseSettings):
     llm_access: LlmAccessType = LlmAccessType.USERS
     llm_allowed_users: list[str] = []
 
-    def resolve_llm_model(self, model: Optional[str] = None) -> str:
-        """The model identifier to hand LiteLLM.
-
-        `model` is the per-request override the debug routes accept.
-        """
-        return model or self.llm_model
-
     def jwks_url(self) -> str:
         """Resolve the dashboard's JWKS document, RFC 8615 path by default."""
         if self.dashboard_jwks_url:

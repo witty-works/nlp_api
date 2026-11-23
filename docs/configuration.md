@@ -72,7 +72,7 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod.                                                                                |
+| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod, where the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. |
 | ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
@@ -474,7 +474,7 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 
 ## LLM provider (LLM-assisted alternatives and rephrasing)
 
-Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing). In debug mode you can test locally.
+Used for LLM-powered features (e.g., grammatically correct alternatives, rephrasing).
 
 Calls go through [LiteLLM](https://docs.litellm.ai/docs/providers), so the
 provider is the prefix of the model identifier and switching providers is a

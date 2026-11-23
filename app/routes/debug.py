@@ -12,7 +12,11 @@ from fastapi.security.api_key import APIKeyHeader
 from spacy import displacy
 
 from app.context import AppContext
-from app.dependencies import fetch_current_username, get_app_context
+from app.dependencies import (
+    development_only,
+    fetch_current_username,
+    get_app_context,
+)
 from app.settings import get_settings
 from app.models import (
     Alternative,
@@ -37,6 +41,7 @@ router = APIRouter()
 @router.post(
     "/debug/rule",
     include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
     response_model=list[ResultOut],
     response_model_exclude_none=True,
 )
@@ -139,6 +144,7 @@ async def post_debug_rule(
 @router.get(
     "/debug/spacy",
     include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
     response_class=PrettyJSONResponse,
 )
 async def get_debug_spacy(
@@ -220,6 +226,7 @@ async def get_debug_spacy(
 @router.get(
     "/debug/displacy",
     include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
 )
 async def get_debug_displacy(
     text: str,
@@ -237,6 +244,7 @@ async def get_debug_displacy(
 @router.get(
     "/debug/german_noun",
     include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
     response_class=PrettyJSONResponse,
 )
 async def get_debug_german_noun(
@@ -252,6 +260,7 @@ async def get_debug_german_noun(
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
     dependencies=[
+        Depends(development_only),
         Depends(HTTPBearer(auto_error=False)),
         Depends(APIKeyHeader(name="x-key", auto_error=False)),
     ],
