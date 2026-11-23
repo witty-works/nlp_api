@@ -140,7 +140,6 @@ class Prompt:
         self,
         user_prompt: str,
         system_prompt: str | None = None,
-        model: str | None = None,
         temperature: float | None = None,
         max_tokens: int | None = None,
     ):
@@ -149,7 +148,6 @@ class Prompt:
         Args:
             user_prompt: The user's prompt text
             system_prompt: Optional system prompt (defaults to inclusive language guidelines)
-            model: LiteLLM model identifier, e.g. `openai/gpt-4o` (defaults to settings)
             temperature: LLM temperature parameter (defaults to 0.1)
             max_tokens: Maximum number of tokens the LLM generates (defaults
                 to LLM_MAX_TOKENS)
@@ -161,7 +159,7 @@ class Prompt:
             LlmUnavailable: busy, rate limited, unreachable or timed out.
             LlmCutOff: the answer hit max_tokens.
         """
-        model = self.settings.resolve_llm_model(model)
+        model = self.settings.llm_model
         temperature = temperature or 0.1
 
         if system_prompt is None:

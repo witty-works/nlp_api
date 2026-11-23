@@ -56,3 +56,41 @@ updates:
         update-types:
           - minor
           - patch
+
+  # The actions the workflows in .github/workflows use.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    labels:
+      - dependencies
+    groups:
+      actions:
+        applies-to: version-updates
+        patterns:
+          - "*"
+
+  # The base images, pinned by tag and digest in Dockerfile and
+  # languagetool/Dockerfile. No cooldown: a new digest of the same tag is how
+  # the base image's security fixes arrive. A new LanguageTool release changes
+  # what is flagged: adjudicate the snapshot diff of its test run before
+  # merging (ethics question 1.14, AGENTS.md).
+  - package-ecosystem: docker
+    directories:
+      - /
+      - /languagetool
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+    ignore:
+      # The Python version follows .python-version and requires-python and
+      # moves by hand; only new digests of 3.12 are proposed.
+      - dependency-name: python
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor

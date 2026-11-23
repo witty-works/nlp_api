@@ -51,14 +51,19 @@ jobs:
             -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             -f description="Running the test suite"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
+          # The whole history for the SonarCloud scan, which reads it locally.
           fetch-depth: 0
+          # No later step uses git with the token: `gh` takes GH_TOKEN from
+          # its own env. Left in .git/config, the token would be readable by
+          # every package the dependency install and the tests run.
+          persist-credentials: false
 
       # The spacy 3.8 model wheels plus torch overflow the runner disk;
       # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@v2.0.0
         with:
           tool-cache: true
           android: true
@@ -80,9 +85,9 @@ jobs:
       # container exiting reads as every later test failing to connect.
       - name: Start LanguageTool
         run: |
-          docker build --build-arg LT_VERSION=6.8 -t nlp-languagetool:6.8 languagetool
+          docker build -t nlp-languagetool languagetool
           docker run -d --name languagetool -p 8010:8010 \
-            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool:6.8
+            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool
 
       - name: Set up uv and Python
         # setup-uv publishes no major-version tags, only full versions.
@@ -102,7 +107,7 @@ jobs:
 
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           cache-name: cache-fasttext
         with:
@@ -136,8 +141,13 @@ jobs:
       # branch. Passing the pull request explicitly gets it analysed as one
       # (its own page in SonarCloud, and a comment on the PR) without a second
       # run of the suite for a pull_request trigger.
+      # Not on Dependabot's runs: they get no repository secrets, so the scan
+      # fails for want of SONAR_TOKEN, and handing it over as a Dependabot
+      # secret would expose it to the not yet reviewed packages the run
+      # installs. Their changes are dependencies, not code to analyse.
       - name: Find pull request
         id: pr
+        if: github.actor != 'dependabot[bot]'
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ github.ref_name }}
@@ -147,7 +157,8 @@ jobs:
             >> "$GITHUB_OUTPUT"
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@bfd4e558cda28cda6b5defafb9232d191be8c203 # v4.2.1
+        if: github.actor != 'dependabot[bot]'
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
         with:
           args: ${{ steps.pr.outputs.args }}
         env:

@@ -347,16 +347,14 @@ def apply_configs(
     check_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
 
-def llm_available(settings: Settings, model: Optional[str] = None) -> bool:
+def llm_available(settings: Settings) -> bool:
     """Whether this deployment can reach an LLM at all, for anybody.
 
     No model configured means there is nothing to reach, which is treated the
     same as having turned LLM use off: refused rather than attempted, so an
     unconfigured deployment answers 403 instead of failing at the provider.
     """
-    return settings.llm_access != LlmAccessType.DISABLED and bool(
-        settings.resolve_llm_model(model)
-    )
+    return settings.llm_access != LlmAccessType.DISABLED and bool(settings.llm_model)
 
 
 def llm_alternatives_allowed(settings: Settings, user_email: Optional[str]) -> bool:

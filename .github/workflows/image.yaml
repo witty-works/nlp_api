@@ -33,12 +33,12 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # As in release-image.yaml: the build needs the layers twice over, more
       # than the runner's free disk.
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@v2.0.0
         with:
           tool-cache: true
           android: true
@@ -52,7 +52,7 @@ jobs:
       # the build without it.
       - name: Caching FastText models
         id: cache-fasttext
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           cache-name: cache-fasttext
         with:
@@ -65,10 +65,10 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64

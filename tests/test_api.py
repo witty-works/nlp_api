@@ -3785,15 +3785,6 @@ async def test_llm_provider_switch(llm_calls, monkeypatch):
     assert "inclusive language" in call["messages"][0]["content"]
 
 
-@pytest.mark.asyncio
-async def test_llm_model_override(llm_calls):
-    """The debug routes' per-request model wins over the configured one."""
-    await Prompt(context.settings).handle("hi", None, "anthropic/some-model")
-
-    assert llm_calls[0]["model"] == "anthropic/some-model"
-    assert "aws_access_key_id" not in llm_calls[0]
-
-
 def test_config_options_accept_a_language_code():
     """`de` as well as `de-DE`: a client that only knows the language gets
     the translated labels instead of a 422."""

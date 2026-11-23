@@ -109,7 +109,7 @@ async def post_write(
     try:
         draft = plain_response(
             await context.prompt.handle(
-                user_prompt, system_prompt, None, 0.4, max_tokens=max_tokens
+                user_prompt, system_prompt, 0.4, max_tokens=max_tokens
             )
         )
         if not draft.strip():

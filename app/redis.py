@@ -46,6 +46,10 @@ class Redis:
                 ssl_cert_reqs="required",
                 ssl_ca_certs=settings.redis_ssl_ca_certs or None,
                 decode_responses=True,
+                # RESP2, as before redis-py 8, which opens every connection
+                # with HELLO 3 by default: Redis before 6 and some proxies
+                # refuse that, and RESP3 changes the shape of some replies.
+                protocol=2,
             )
         else:
             redis_db = FakeStrictRedis(decode_responses=True)

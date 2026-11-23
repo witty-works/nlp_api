@@ -17,14 +17,12 @@ services:
     # gendered-language rules that collide with ours. The same is true of the
     # hosted service, which is why LANGUAGETOOL_API defaults to empty.
     #
-    # LT_VERSION pins the base image. 6.8 is the newest published tag; the
-    # version is pinned rather than floating because LanguageTool retunes
-    # rules between releases and this project filters its output by rule id.
+    # The LanguageTool release is pinned in languagetool/Dockerfile, not
+    # floating, because LanguageTool retunes rules between releases and this
+    # project filters its output by rule id.
     build:
       context: ./languagetool
-      args:
-        - LT_VERSION=${LT_VERSION:-6.8}
-    image: nlp-languagetool:${LT_VERSION:-6.8}
+    image: nlp-languagetool
     container_name: lt
     restart: unless-stopped
     ports:

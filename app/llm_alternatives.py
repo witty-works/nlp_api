@@ -97,11 +97,7 @@ class LlmAlternatives:
 
         user_prompt = json.dumps(input_data, ensure_ascii=False)
 
-        # `model` is a debug-only override; it is None for every other caller,
-        # and Prompt falls back to the configured one.
-        answer = await self.prompt.handle(
-            user_prompt, system_prompt, rephrase_request_in.model
-        )
+        answer = await self.prompt.handle(user_prompt, system_prompt)
         parsed = self.prompt.parse_json(answer)
         # Anything but an object of sentences is no rephrasing: prose, a
         # reasoning model cut off mid-thought, a list. Keep only the strings.

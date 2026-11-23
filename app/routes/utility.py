@@ -14,6 +14,7 @@ from starlette.responses import RedirectResponse
 
 from app.models import LangType
 from app.dependencies import (
+    development_only,
     fetch_current_username,
     fetch_management_username,
     get_app_context,
@@ -145,6 +146,7 @@ def get_root(context: AppContext = Depends(get_app_context)):
 @router.get(
     "/save_openapi_json",
     include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
 )
 def get_save_openapi_json(
     request: Request, username: str = Depends(fetch_current_username)
@@ -158,7 +160,11 @@ def get_save_openapi_json(
         json.dump(openapi_data, file, indent=4, sort_keys=True)
 
 
-@router.get("/lemmatize")
+@router.get(
+    "/lemmatize",
+    include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
+)
 async def get_lemmatize(
     text: str,
     lang: LangType,
@@ -176,7 +182,11 @@ async def get_lemmatize(
     return tokens[0].lemma_
 
 
-@router.get("/tokenize")
+@router.get(
+    "/tokenize",
+    include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
+)
 async def get_tokenize(
     text: str,
     lang: LangType,
@@ -186,7 +196,11 @@ async def get_tokenize(
     return context.model.tokenize(text, lang)
 
 
-@router.get("/parse-word-types")
+@router.get(
+    "/parse-word-types",
+    include_in_schema=not get_settings().is_prod,
+    dependencies=[Depends(development_only)],
+)
 async def get_parse_word_types(
     text: str,
     word_types: str,

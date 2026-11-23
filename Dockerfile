@@ -16,14 +16,18 @@
 # build time: all configuration is environment at runtime, so the published
 # image (.github/workflows/release-image.yaml) serves every deployment.
 
-ARG PYTHON_VERSION=3.12
+# Every stage starts from this one image, pinned by digest so that a build is
+# reproducible. Dependabot (.github/dependabot.yml) proposes the next digest
+# each week, which is how the base image's security fixes arrive; the Python
+# version follows .python-version and moves only by hand.
+FROM python:3.12-slim-bookworm@sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df AS base
 
 # ------------------------------------------------------------------ deps ---
 # The lockfile export runs in its own stage, so nothing installed for it
 # reaches the application's site-packages: a later `pip install --prefix`
 # would take such packages as already satisfied and leave them out of the
 # image.
-FROM python:${PYTHON_VERSION}-slim-bookworm AS deps
+FROM base AS deps
 
 ARG SPACY_LANGS="en,de,fr"
 ARG SPACY_MODEL_SIZE="lg"
@@ -69,7 +73,7 @@ RUN python bin/install_spacy_models.py \
     && cat /tmp/models.txt
 
 # --------------------------------------------------------------- builder ---
-FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
+FROM base AS builder
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1
@@ -115,13 +119,13 @@ print('spacy', spacy.__version__, 'torch', torch.__version__, 'models', models, 
 # release pinned in bin/editor-pin.json (no npm needed) and checks it against
 # the integrity the registry published. A stage of its own, so a change to the
 # app does not download it again.
-FROM python:${PYTHON_VERSION}-slim-bookworm AS editor
+FROM base AS editor
 
 COPY ./bin/fetch_editor.py ./bin/editor-pin.json /tmp/
 RUN mkdir -p /editor && python /tmp/fetch_editor.py --dest /editor
 
 # ---------------------------------------------------------------- runtime ---
-FROM python:${PYTHON_VERSION}-slim-bookworm AS runtime
+FROM base AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
