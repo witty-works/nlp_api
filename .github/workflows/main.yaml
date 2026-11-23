@@ -53,7 +53,12 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          # The whole history for the SonarCloud scan, which reads it locally.
           fetch-depth: 0
+          # No later step uses git with the token: `gh` takes GH_TOKEN from
+          # its own env. Left in .git/config, the token would be readable by
+          # every package the dependency install and the tests run.
+          persist-credentials: false
 
       # The spacy 3.8 model wheels plus torch overflow the runner disk;
       # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
