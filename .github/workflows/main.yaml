@@ -80,9 +80,9 @@ jobs:
       # container exiting reads as every later test failing to connect.
       - name: Start LanguageTool
         run: |
-          docker build --build-arg LT_VERSION=6.8 -t nlp-languagetool:6.8 languagetool
+          docker build -t nlp-languagetool languagetool
           docker run -d --name languagetool -p 8010:8010 \
-            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool:6.8
+            -e Java_Xms=512m -e Java_Xmx=4g nlp-languagetool
 
       - name: Set up uv and Python
         # setup-uv publishes no major-version tags, only full versions.

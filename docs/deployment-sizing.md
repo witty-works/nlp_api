@@ -34,18 +34,15 @@ LanguageTool is a second engine alongside the product's own rules. It is wired i
 
 So the container must be **built**, not pulled. `compose.yml` does that; the ignore lists are appended to LanguageTool's own (245,266 lines for German afterwards, of which 1,082 are ours), so both survive.
 
-**Updating LanguageTool is one variable.** `LT_VERSION` in `.env` is the base image tag that [languagetool/Dockerfile](../languagetool/Dockerfile) builds on, so an update keeps the ignore lists and config:
+**Updating LanguageTool is one line.** The `FROM` line of [languagetool/Dockerfile](../languagetool/Dockerfile) pins the release by tag and digest, and compose and CI build that file, so an update keeps the ignore lists and config. Dependabot proposes a new release or digest as a pull request; its test run shows how the findings change. Adjudicate the snapshot diff before merging one, because LanguageTool retunes rules between releases and this project filters its output by rule and category id. Then rebuild:
 
-    LT_VERSION=6.9
     docker compose --profile languagetool build
-
-6.8 is the newest published tag as of 2026-09 and is what the Dockerfile now defaults to. It previously hardcoded 6.2 (2023-12-07), so enabling LanguageTool means a six-release jump: run the test suite and adjudicate the snapshot diff before trusting it, because LanguageTool retunes rules between releases and this project filters its output by rule and category id.
 
 **Appending is what rides LanguageTool's own updates — keep it.** The `>>` in the Dockerfile appends our list to the *base image's* `ignore.txt`, and every build starts from a fresh base. So a new LanguageTool release brings its new ignore list and ours goes on top; nothing accumulates, because the merge happens at build time and is never committed. `de_ignore.txt` holds only our own 1,081 words.
 
 The Upsun build hook did the opposite — it *overwrote* `ignore.txt` with ours (`cp`), discarding LanguageTool's ~244,000 German entries. That variant could not ride updates, and it should have reported noticeably more spelling errors.
 
-Redundancy between the two lists is not a problem in practice. Against 6.8, only **10 of our 1,081 German entries and 8 of our 430 English ones** are words LanguageTool now ships itself. Pruning them is optional housekeeping, not maintenance the update depends on — worth a look when bumping `LT_VERSION`, not worth automating at 1%.
+Redundancy between the two lists is not a problem in practice. Against 6.8, only **10 of our 1,081 German entries and 8 of our 430 English ones** are words LanguageTool now ships itself. Pruning them is optional housekeeping, not maintenance the update depends on — worth a look when updating LanguageTool, not worth automating at 1%.
 
 The `# Old words (added by LT):` marker at the end of both files comes from the generation script that used to live in `bin/analyze_rules.py` and now lives in the rule editor. It separates generated entries from ones to preserve across a regeneration; both tails are currently empty.
 
