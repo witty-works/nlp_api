@@ -36,6 +36,9 @@ The API is configured via environment variables (loaded from a local .env file a
 ## Quick start: minimal .env for local dev
 
 ```bash
+# The default is production, which hides the development helpers
+ENVIRONMENT_TYPE=development
+
 # Logging
 LOGGING_ENABLED=true
 LOGGING_CONFIG_FILENAME=stdout
@@ -72,7 +75,7 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod, where the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. |
+| ENVIRONMENT_TYPE            | production                                                     | Controls production behavior flags (sets `is_prod`). In production the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. Set `development` explicitly for local work. |
 | ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |

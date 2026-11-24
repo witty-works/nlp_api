@@ -103,8 +103,10 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    # "production" turns off what only development wants (see is_prod).
-    environment_type: str = "development"
+    # "production" turns off what only development wants (see is_prod). The
+    # default, so an image started without configuration serves no
+    # development routes; local work sets ENVIRONMENT_TYPE=development.
+    environment_type: str = "production"
     # The environment's name, as Sentry reports it.
     environment: str = "local"
     languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"

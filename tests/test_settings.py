@@ -16,7 +16,8 @@ def no_environment(monkeypatch):
 
 def test_environment_defaults(no_environment):
     settings = Settings(_env_file=None)
-    assert settings.environment_type == "development"
+    # An image run without configuration serves no development routes.
+    assert settings.environment_type == "production"
     assert settings.environment == "local"
 
 

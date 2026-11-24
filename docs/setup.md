@@ -143,7 +143,9 @@ docker run -p 8080:8081 nlpapi
 
 ## Run Locally
 
-Note for Mac users. Set environment variables with the following snippet:
+The API defaults to `ENVIRONMENT_TYPE=production`, which hides the
+development helpers. `.env.development.mac` sets `development`; on macOS it
+also avoids MKL warnings, so copy it as your `.env`:
 
 ```bash
 cp .env.development.mac .env

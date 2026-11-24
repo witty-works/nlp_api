@@ -40,6 +40,7 @@ To keep this README scannable, detailed sections have moved to `docs/`. Quick li
 - [Database Seed (dump.sql)](docs/database-seed.md)
 - [Configuration & Environment Variables](docs/configuration.md)
 - [Setup & Deployment](docs/setup.md)
+- [Upgrading](docs/upgrading.md)
 - [API Endpoints](docs/api.md)
 - [Guardrails (Witty GPT)](docs/guardrails.md)
 - [Ethics Screening](docs/ethics.md)
