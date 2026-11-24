@@ -121,6 +121,8 @@ class MetricsType(str, Enum):
     # calls it answered, and how many of those were not LLM_EXPECTED_MODEL.
     LLM_SERVED_MODELS = "llm_served_models"
     LLM_MODEL_MISMATCHES = "llm_model_mismatches"
+    # Per answer check (app/answer_checks.py): rephrasings it dropped.
+    REPHRASE_DROPPED = "rephrase_dropped"
 
 
 class LlmAccessType(str, Enum):

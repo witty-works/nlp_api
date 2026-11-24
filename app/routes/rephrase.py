@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
+from app.answer_checks import checked_results
 from app.prompt import llm_error
 from app.llm_access import LlmRefused, llm_user
 from app.context import AppContext
@@ -72,7 +73,8 @@ async def rephrase_sentence(
         outcome = await context.llm_alternatives.handle(rephrase_request_in)
         result = RephrasesOut.factory(
             rephrase_request_in.sentence,
-            outcome.results,
+            # Only what passes the checks against known model mistakes.
+            await checked_results(rephrase_request_in, outcome, configs, context),
             outcome.served_model or context.settings.llm_model,
         )
     except Exception as error:
