@@ -9,6 +9,10 @@ from app.settings import Settings
 from app.models import MetricsType, CheckRequestIn
 import hmac
 import hashlib
+import re
+
+# What set_api_key stores under when API_KEY_HMAC_KEY is set.
+API_KEY_DIGEST = re.compile(r"[0-9a-f]{64}")
 
 
 class Redis:
@@ -218,6 +222,17 @@ class Redis:
         working credential in clear (`bin/api_key.py rehash` converts them).
         """
         return self.db.get(self.api_key_name(api_key))
+
+    def count_plaintext_api_keys(self) -> int:
+        """How many API keys Redis holds as written rather than as a digest.
+
+        An entry named like a digest is counted as one: only a key of 64 hex
+        characters stored before API_KEY_HMAC_KEY was set looks the same."""
+        return sum(
+            1
+            for name in self.db.scan_iter("api_key:*")
+            if not API_KEY_DIGEST.fullmatch(str(name).removeprefix("api_key:"))
+        )
 
     def api_key_name(self, api_key: str) -> str:
         """The Redis entry a key is stored under by set_api_key."""

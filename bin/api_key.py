@@ -23,7 +23,6 @@ from Redis. `list` prints the stored entries and the email each maps to.
 
 import argparse
 import os
-import re
 import secrets
 import sys
 
@@ -32,7 +31,7 @@ from redis.exceptions import WatchError
 
 from app.api_keys import SYNCED_KEYS, ApiKeyEntry, parse, valid_key
 
-from app.redis import Redis
+from app.redis import API_KEY_DIGEST, Redis
 from app.settings import get_settings
 
 
@@ -145,7 +144,7 @@ def delete(redis: Redis, args) -> int:
 
 
 # What set_api_key stores under when API_KEY_HMAC_KEY is set.
-DIGEST = re.compile(r"[0-9a-f]{64}")
+DIGEST = API_KEY_DIGEST
 
 
 def rehash(redis: Redis, args) -> int:

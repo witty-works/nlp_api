@@ -24,17 +24,35 @@ from app.emoji_check import EmojiCheck
 from app.config_manager import parse_default_config, parse_term_replacements
 
 
+def check_api_key_storage(context: AppContext) -> None:
+    """API keys kept in Redis as written are working credentials for anyone
+    with a copy of it. In production that stops the start; elsewhere it is
+    a warning. Names no key."""
+    settings = context.settings
+    if settings.api_key_hmac_key:
+        return
+
+    stored = context.redis.count_plaintext_api_keys()
+    if stored and settings.is_prod:
+        raise RuntimeError(
+            f"{stored} API key(s) are stored in Redis as written and"
+            " API_KEY_HMAC_KEY is not set. Set API_KEY_HMAC_KEY to a random"
+            " secret and run `python -m bin.api_key rehash` with it before"
+            " starting (docs/setup.md, API keys)."
+        )
+    if stored or settings.require_api_key:
+        context.logger.warning(
+            "API_KEY_HMAC_KEY is not set: API keys are stored in Redis as"
+            " written, so a copy of Redis holds working credentials"
+        )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI, context: AppContext):
     # Startup
     # Expose context on FastAPI app.state for DI-friendly access
     app.state.context = context
-    if context.settings.require_api_key and not context.settings.api_key_hmac_key:
-        context.logger.warning(
-            "REQUIRE_API_KEY is on but API_KEY_HMAC_KEY is not set: the API keys"
-            " are stored in Redis as written, so a copy of Redis holds working"
-            " credentials"
-        )
+    check_api_key_storage(context)
     if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
         try:
             from blackfire_conprof.profiler import Profiler

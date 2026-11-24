@@ -17,6 +17,12 @@ listed; the git history has them.
   makes no spelling and grammar checks. To keep them, set `LANGUAGETOOL_API`
   to your LanguageTool server (or, knowing that it sends the text to
   LanguageTool, to `https://api.languagetoolplus.com/v2`).
+- **Production refuses to start with API keys stored as written.** If Redis
+  holds an API key as written (any key minted, synced or set as
+  `DEFAULT_API_KEY` while `API_KEY_HMAC_KEY` was empty), a production start
+  stops with a message saying how many. Set `API_KEY_HMAC_KEY` to a random
+  secret, run `python -m bin.api_key rehash` against the deployment's Redis
+  with it, then start; see [API keys](./setup.md#api-keys).
 
 ---
 

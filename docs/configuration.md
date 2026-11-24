@@ -286,9 +286,14 @@ The extension authenticates with an API key, which the LanguageTool clients do n
 
 ```bash
 DEFAULT_API_KEY=pick-something-long-and-random
+API_KEY_HMAC_KEY=another-long-random-secret
 DEFAULT_USER_EMAIL=you@example.com
 DEFAULT_USER_CONFIG_ENABLED=true
 ```
+
+`API_KEY_HMAC_KEY` keeps the key in Redis as a digest. In production, the
+default `ENVIRONMENT_TYPE`, the API refuses to start while Redis holds a key as
+written and it is empty.
 
 `DEFAULT_USER_CONFIG_ENABLED` belongs with it: the key resolves to an email that has no config stored, and without the fallback `/v2.0/auth` answers 403 and the extension concludes it is signed out. Checking still works if you call it directly, which is what makes that one confusing to diagnose.
 
@@ -474,7 +479,7 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_USERNAME   | (empty)     | Redis username.                                                                                                                                               |
 | REDIS_PASSWORD   | (empty)     | Redis password.                                                                                                                                               |
 | REDIS_VERIFY_SSL | true        | Connect over TLS and check the server's certificate; a connection to a Redis whose certificate does not check out fails at startup. `false`: plain TCP, for a Redis on the same host or private network, as in `compose.yml`. |
-| API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. With `REQUIRE_API_KEY` on and this empty, the start logs a warning. |
+| API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. In production the start is refused while Redis holds a key as written and this is empty; elsewhere, and with `REQUIRE_API_KEY` on, it logs a warning. |
 | REDIS_SSL_CA_CERTS | (empty)   | Path to the CA certificate(s) to check a Redis certificate against, for one signed by a private CA. Empty: the system's CAs.                                     |
 | REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |

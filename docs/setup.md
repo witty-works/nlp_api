@@ -249,6 +249,13 @@ the plaintext cannot be recovered from Redis.
 uv run python -m bin.api_key rehash
 ```
 
+In production (`ENVIRONMENT_TYPE=production`, the default) the API refuses to
+start while Redis holds a key as written and `API_KEY_HMAC_KEY` is empty; the
+message says how many, never which. To move a deployment that has such keys:
+set `API_KEY_HMAC_KEY` in its environment, run `rehash` with that environment
+against its Redis, then start the API. A `DEFAULT_API_KEY` needs no rehash: it
+is written again, as a digest, on every start.
+
 Run it before the next key-file sync (below): a sync before it no longer finds
 the synced keys under their old names and revokes them. `rehash` leaves alone,
 and reports, a key stored both ways for two different emails. It counts the
