@@ -69,6 +69,11 @@ LLM_MODEL=openai/<model> LLM_API_BASE=<base url> LLM_API_KEY=<key> \
 The snapshots record one model's wording, so another model will differ in it;
 read the differences rather than updating them wholesale.
 
+To test the configured model on known cases without comparing wording, use
+`bin/llm_check.py`, which passes when every suggestion survives the API's
+answer checks and avoids the strings a case forbids; see
+[Choosing a language model](./llm-models.md#how-to-test-a-candidate-model).
+
 ---
 
 ## See Also

@@ -1,0 +1,11 @@
+{
+  "sentence": "Les experts rapides sont intelligents.",
+  "text": "Les experts",
+  "start": 0,
+  "alternatives": [
+    {
+      "text": "Les expert·es"
+    }
+  ],
+  "lang": "fr"
+}

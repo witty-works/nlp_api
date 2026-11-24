@@ -78,6 +78,15 @@ Some mistakes pass these checks, such as an added article ("with the all"); test
 
 ## How to test a candidate model
 
+- **Run `bin/llm_check.py` against it.** It sends the stored rephrase cases and one case for each mistake above through the API in-process, with the deployment's settings, so the answer checks apply as for a user:
+
+  ```bash
+  uv run python -m bin.llm_check            # every case once
+  uv run python -m bin.llm_check --repeat 3 # each case three times
+  ```
+
+  A case fails when the API drops a suggestion, a suggestion contains a string the case forbids (`tests/llm_check/<case>/forbidden.json`), or the request fails; the run also fails when the answering model is not `LLM_EXPECTED_MODEL`. It authenticates with the key in `DEFAULT_API_KEY` (`--api-key-env` names another variable) and never prints it, and paces its calls below `LLM_MAX_REQUESTS_PER_MINUTE`, at least 1.1 s apart. A failure is a finding about the model, to read rather than count. Run it on each deploy and periodically, so a change behind the model's name shows up.
+
 - **Run the rephrase cases against it:** `LLM_MODEL=… LLM_API_BASE=… LLM_API_KEY=… uv run pytest tests/test_api.py -k test_rephrase`. The stored answers record one model's wording, so a different model fails the snapshot comparison even when it is right: read the differences instead of counting failures. Add sentences from your own users' texts, in every language you serve.
 - **Run each case more than once.** At the temperature the API uses (0.1) answers still vary between calls, so one run per case can make a model look better or worse than it is.
 - **Watch for cached answers.** A LiteLLM proxy may answer an identical request from its cache, in about 0.1 seconds, which hides both variation and parameter changes. While testing, `"cache": {"no-cache": true}` in `LLM_EXTRA_BODY` makes each call reach the model; leave it out in production.
