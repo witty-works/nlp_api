@@ -163,6 +163,14 @@ def test_old_aws_variable_names_stop_the_start(monkeypatch, name, new_name):
         Settings.factory()
 
 
+def test_unknown_llm_provider_stops_the_start(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "nope")
+    with pytest.raises(ValueError, match="LLM_PROVIDER"):
+        Settings.factory()
+    monkeypatch.setenv("LLM_PROVIDER", "litellm-proxy")
+    Settings.factory()
+
+
 def test_a_dashboard_issuer_is_required(monkeypatch):
     monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1")
     monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")

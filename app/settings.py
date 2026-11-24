@@ -378,6 +378,15 @@ class Settings(BaseSettings):
     # makes rephrasings faster without making them worse (docs/llm-models.md).
     # Empty: nothing extra is sent.
     llm_extra_body: dict[str, Any] = {}
+    # Which adapter handles what differs between providers (app/llm_provider.py):
+    # openai-compatible (the default, today's behaviour), litellm-proxy,
+    # openai. Chosen by name, never guessed from the model id.
+    llm_provider: str = "openai-compatible"
+    # Extra body fields per task (rephrase, write), merged over
+    # llm_extra_body: {"rephrase": {"chat_template_kwargs": {...}}}.
+    llm_task_extra_body: dict[str, dict[str, Any]] = {}
+    # litellm-proxy only: the response header naming the model that answered.
+    llm_served_model_header: str = "x-litellm-model-name"
     # Seconds before an LLM call is given up and answered with a 503.
     llm_timeout: float = 60.0
     # LLM calls one worker process runs at once; the rest wait up to
@@ -440,6 +449,7 @@ class Settings(BaseSettings):
         settings.is_prod = settings.environment_type == "production"
         validate_production(settings)
         validate_aws_names(settings)
+        validate_llm_provider(settings)
         validate_slack(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
@@ -519,6 +529,18 @@ def validate_aws_names(settings: Settings) -> None:
             "AWS_KEY and AWS_SECRET_KEY are no longer read; set AWS_ACCESS_KEY_ID"
             " and AWS_SECRET_ACCESS_KEY instead, or use an AWS profile or"
             " instance role"
+        )
+
+
+def validate_llm_provider(settings: Settings) -> None:
+    """Stop the start on an LLM_PROVIDER no adapter has, naming the known
+    ones, rather than fail every LLM call later."""
+    from app.llm_provider import PROVIDERS
+
+    if settings.llm_provider not in PROVIDERS:
+        raise ValueError(
+            f"LLM_PROVIDER {settings.llm_provider!r} is not one of: "
+            + ", ".join(PROVIDERS)
         )
 
 

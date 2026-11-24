@@ -105,6 +105,17 @@ def test_bedrock_reaches_litellms_aws_credential_lookup(monkeypatch):
     assert seen.get("aws_access_key_id") is None
 
 
+def test_the_task_reaches_the_call_params(monkeypatch):
+    no_thinking = {"chat_template_kwargs": {"enable_thinking": False}}
+    prompt, calls = prompt_with(
+        monkeypatch, answer("ok"), llm_task_extra_body={"rephrase": no_thinking}
+    )
+    asyncio.run(prompt.handle("hi", task="rephrase"))
+    asyncio.run(prompt.handle("hi", task="write"))
+    assert calls[0]["extra_body"] == no_thinking
+    assert "extra_body" not in calls[1]
+
+
 def test_a_cut_off_answer_is_refused(monkeypatch):
     """A reasoning model that ran out of tokens returns its unfinished
     reasoning, or a truncated JSON object; neither may be used."""

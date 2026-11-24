@@ -8,6 +8,22 @@ The API does the swap itself: it puts each alternative in place of the flagged w
 
 `/v1.0/write` uses the same model to write a whole text. Nothing on this page was measured for it.
 
+## Choosing an adapter
+
+What differs between providers is handled by a named adapter, which the deployment picks with `LLM_PROVIDER` ([Configuration](./configuration.md#llm-provider-llm-assisted-alternatives-and-rephrasing)). The API does not guess it from the model id: a LiteLLM proxy, vLLM and OpenAI all answer to `openai/…`.
+
+| Adapter | For | What it adds |
+| --- | --- | --- |
+| `openai-compatible` (default) | vLLM, Ollama, and any provider LiteLLM reaches directly (Anthropic, Bedrock, …) | today's behaviour; the response body names the model |
+| `litellm-proxy` | a LiteLLM proxy in front of the models | the model behind an alias, from a response header (`LLM_SERVED_MODEL_HEADER`) |
+| `openai` | OpenAI | the dated model id from the response body |
+
+A variant of a known provider is adjusted with settings rather than a new adapter: `LLM_EXTRA_BODY` and `LLM_TASK_EXTRA_BODY` for the fields a call sends, `LLM_SERVED_MODEL_HEADER` for where the model is named.
+
+### Adding an adapter
+
+A provider that differs structurally, in how it names the model that answered or how it reports a refused text, gets its own adapter in [app/llm_provider.py](../app/llm_provider.py): a subclass of `LlmProvider` with a unique `name`, overriding only what differs (`call_params`, `served_model`, `same_model`, `classify_error`), added to `PROVIDERS`, with tests in `tests/test_llm_provider.py`. Adapters decide what is sent to the provider, so a new one is screened against ethics question 1.1 ([ethics.md](./ethics.md)).
+
 ## Rephrasing needs no thinking
 
 Reasoning models think before they answer, and for this task the thinking costs time without improving the answer:
@@ -23,7 +39,7 @@ To switch thinking off, send the model server's own parameter with every call th
 LLM_EXTRA_BODY='{"chat_template_kwargs": {"enable_thinking": false}}'
 ```
 
-Check that it took effect: the provider's usage report should show no reasoning tokens. `LLM_EXTRA_BODY` applies to `/v1.0/write` as well.
+Check that it took effect: the provider's usage report should show no reasoning tokens. `LLM_EXTRA_BODY` applies to `/v1.0/write` as well; to switch thinking off for rephrasing only, use `LLM_TASK_EXTRA_BODY='{"rephrase": {"chat_template_kwargs": {"enable_thinking": false}}}'`.
 
 ## Mistakes to look for
 

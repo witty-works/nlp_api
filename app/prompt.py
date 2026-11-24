@@ -16,65 +16,23 @@ litellm.drop_params = True
 # Nothing about a check leaves this process except the request to the model.
 litellm.telemetry = False
 litellm.suppress_debug_info = True
+# The provider's response headers, where a LiteLLM proxy names the model that
+# answered (app/llm_provider.py, response_header).
+litellm.return_response_headers = True
 
 
-class LlmUnavailable(Exception):
-    """The provider is busy, rate limited, unreachable or too slow: worth
-    trying again shortly (503), after `retry_after` seconds."""
-
-    def __init__(self, message: str, retry_after: int = 10):
-        super().__init__(message)
-        self.retry_after = retry_after
-
-
-class LlmCutOff(Exception):
-    """The answer hit LLM_MAX_TOKENS before it was complete. Using it would
-    mean using a truncated sentence or broken JSON."""
-
-
-class LlmTextRefused(Exception):
-    """The provider refused the text itself: a guardrail of the gateway in
-    front of the model, or the provider's content filter. Which texts are
-    refused depends on the deployment's provider, not on Witty. `reason` is
-    the provider's own explanation, when it gives one; `message` the
-    deployment's (LLM_REFUSED_MESSAGE), when it has one. `guardrail` names
-    what refused it, for the log: the reason may quote the text."""
-
-    def __init__(
-        self, reason: str | None, message: str = "", guardrail: str = "content filter"
-    ):
-        super().__init__(guardrail)
-        self.reason = reason
-        self.message = message
-        self.guardrail = guardrail
-
-
-def _refusal(error: litellm.BadRequestError) -> LlmTextRefused | None:
-    """An LlmTextRefused if the bad request is a refusal of the text, else None.
-    A LiteLLM proxy names the guardrail that refused it in the error body; a
-    content filter (OpenAI, Azure) arrives as ContentPolicyViolationError."""
-    if isinstance(error, litellm.ContentPolicyViolationError):
-        return LlmTextRefused(None)
-    body = error.body if isinstance(error.body, dict) else {}
-    fields = body.get("provider_specific_fields")
-    if isinstance(fields, dict) and fields.get("guardrail_name"):
-        reason = fields.get("error") or body.get("message")
-        return LlmTextRefused(
-            reason if isinstance(reason, str) else None,
-            guardrail=str(fields["guardrail_name"]),
-        )
-    return None
-
-
-# What a provider answers when the fault is load or the network, not the request.
-_UNAVAILABLE = (
-    litellm.RateLimitError,
-    litellm.Timeout,
-    litellm.APIConnectionError,
-    litellm.ServiceUnavailableError,
-    litellm.InternalServerError,
-    litellm.BadGatewayError,
+# The exceptions live with the adapters that raise them; imported here too, so
+# `from app.prompt import LlmUnavailable` and the like keep working.
+from app.llm_provider import (  # noqa: E402
+    LlmCutOff,
+    LlmProvider,
+    LlmTask,
+    LlmTextRefused,
+    LlmUnavailable,
+    provider_for,
 )
+
+__all__ = ["LlmCutOff", "LlmTextRefused", "LlmUnavailable", "Prompt", "llm_error"]
 
 
 class Prompt:
@@ -83,6 +41,7 @@ class Prompt:
 
     def __init__(self, settings: Settings, redis_db=None):
         self.settings = settings
+        self.provider: LlmProvider = provider_for(settings)
         # Where the per-minute count is kept, shared by every worker; without
         # it there is no per-minute limit.
         self.redis_db = redis_db
@@ -114,25 +73,13 @@ class Prompt:
                 retry_after=60 - int(now % 60),
             )
 
-    def _credentials(self) -> dict:
-        """What every call passes, whatever the model: nothing is derived from
-        the model id. A provider without a key of ours (Bedrock) gets None and
-        LiteLLM finds its credentials itself; the region only when set, as
-        drop_params removes it for providers that have none."""
-        credentials = {
-            "api_key": self.settings.llm_api_key or None,
-            "api_base": self.settings.llm_api_base or None,
-        }
-        if self.settings.aws_region_name:
-            credentials["aws_region_name"] = self.settings.aws_region_name
-        return credentials
-
     async def handle(
         self,
         user_prompt: str,
         system_prompt: str | None = None,
         temperature: float | None = None,
         max_tokens: int | None = None,
+        task: LlmTask = "other",
     ):
         """Handle LLM prompt generation and response.
 
@@ -142,6 +89,8 @@ class Prompt:
             temperature: LLM temperature parameter (defaults to 0.1)
             max_tokens: Maximum number of tokens the LLM generates (defaults
                 to LLM_MAX_TOKENS)
+            task: what the call is for, so the adapter can send different
+                parameters for each (LLM_TASK_EXTRA_BODY)
 
         Returns:
             The complete LLM response as a string
@@ -183,21 +132,13 @@ class Prompt:
                 # A retry would hold the slot and the provider's quota longer
                 # than the client waits; the client can ask again instead.
                 num_retries=0,
-                **self._credentials(),
-                **(
-                    {"extra_body": self.settings.llm_extra_body}
-                    if self.settings.llm_extra_body
-                    else {}
-                ),
+                **self.provider.call_params(task),
             )
-        except _UNAVAILABLE as error:
-            raise LlmUnavailable(str(error)) from error
-        except litellm.BadRequestError as error:
-            refused = _refusal(error)
-            if refused is None:
+        except Exception as error:
+            classified = self.provider.classify_error(error)
+            if classified is None:
                 raise
-            refused.message = self.settings.llm_refused_message
-            raise refused from error
+            raise classified from error
         finally:
             if self._slots is not None:
                 self._slots.release()

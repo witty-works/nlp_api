@@ -109,7 +109,7 @@ async def post_write(
     try:
         draft = plain_response(
             await context.prompt.handle(
-                user_prompt, system_prompt, 0.4, max_tokens=max_tokens
+                user_prompt, system_prompt, 0.4, max_tokens=max_tokens, task="write"
             )
         )
         if not draft.strip():
@@ -127,7 +127,7 @@ async def post_write(
         if outcome.reask is not None:
             reviewed_response = plain_response(
                 await context.prompt.handle(
-                    outcome.reask["content"], max_tokens=max_tokens
+                    outcome.reask["content"], max_tokens=max_tokens, task="write"
                 )
             )
     except Exception as error:
