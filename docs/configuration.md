@@ -680,6 +680,8 @@ Office/Microsoft 365 SSO
 | OFFICE_SSO_CLIENT_ID | Application (client) ID. |
 | OFFICE_SSO_EXPECTED_SCOPE | Scope expected in access tokens. |
 
+Office tokens come from any Entra tenant, and a tenant's admin can set any address as a user's email. The API therefore takes the user from the `email` claim only when the token also carries `xms_edov: true`, which says the tenant verified the email's domain; otherwise it answers `403`. `preferred_username` is not used. The app registration has to issue both as optional claims in the access token: under **Token configuration**, add the optional claims `email` and `xms_edov` for the access token. Microsoft describes `xms_edov` in its [optional claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims-reference).
+
 If an `Authorization: Bearer <token>` is present, the API validates the token against the configured client(s) and required scope. Alternatively, pass an `x-key` header with a valid API key mapping to a user email in Redis. For local testing you can also use `X-TESTING-AUTH: user@example.com` when `TESTING=true`.
 
 ## Running without the dashboard

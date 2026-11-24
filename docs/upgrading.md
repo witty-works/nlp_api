@@ -15,6 +15,12 @@ listed; the git history has them.
   `/parse-word-types`, `/save_openapi_json` answer `404`) and `/` no longer
   redirects to `/docs`. Set `ENVIRONMENT_TYPE=development` where you want
   them, for local work only.
+- **Office SSO needs a verified email domain.** The Word plugin's tokens are
+  accepted only with `xms_edov: true`, and the user is taken from `email`, no
+  longer from `preferred_username`. Add the optional claims `email` and
+  `xms_edov` to the access token in the Entra app registration (**Token
+  configuration**) before upgrading, or Office sign-in answers `403`. No
+  change to the Word plugin is needed.
 - **`ENVIRONMENT_TYPE` accepts only `production` or `development`.** Any
   other value (`prod`, `Production`) stops the start instead of being read as
   development, which switched production's safeguards off.

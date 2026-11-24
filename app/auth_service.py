@@ -482,6 +482,17 @@ async def fetch_user(
                         config["client_id"],
                         config["expected_scope"],
                     )
+                    # Office SSO accepts tokens from any Entra tenant, and a
+                    # tenant's admin can put any address into a user's email
+                    # ("nOAuth"). Only an email whose domain the tenant
+                    # verified (`xms_edov`, an optional claim the app
+                    # registration has to issue) names the user; never
+                    # preferred_username, which Microsoft calls a display hint.
+                    if claims.get("xms_edov") is not True or not claims.get("email"):
+                        raise AuthError(
+                            "Token error: The email domain is not verified", 403
+                        )
+                    return claims["email"]
                 else:
                     # The client id matched but the token carries nothing this
                     # issuer knows how to verify with.
