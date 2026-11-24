@@ -192,6 +192,20 @@ def test_no_expected_model_means_no_comparison(monkeypatch, caplog):
     assert "expected" not in caplog.text
 
 
+def test_a_cut_off_answer_still_records_its_model(monkeypatch):
+    """An answer cut off at LLM_MAX_TOKENS was still served by some model:
+    it is counted and compared like any other."""
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("Let me think", "length", model="other"),
+        llm_expected_model="expected",
+    )
+    with pytest.raises(LlmCutOff):
+        asyncio.run(prompt.handle("hi"))
+    assert prompt.last_served_model == "other"
+    assert prompt.last_model_matched is False
+
+
 def test_a_cut_off_answer_is_refused(monkeypatch):
     """A reasoning model that ran out of tokens returns its unfinished
     reasoning, or a truncated JSON object; neither may be used."""

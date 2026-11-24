@@ -213,6 +213,11 @@ class Prompt:
             if self._slots is not None:
                 self._slots.release()
 
+        # Recorded first: a cut-off answer was still served by some model, and
+        # a mismatch refused with `refuse` takes precedence over the cut-off.
+        served = self.provider.served_model(response)
+        self._record_served_model(served, task)
+
         choice = response.choices[0]
         if choice.finish_reason == "length":
             raise LlmCutOff(
@@ -220,8 +225,6 @@ class Prompt:
                 " tokens before answering; raise LLM_MAX_TOKENS"
             )
 
-        served = self.provider.served_model(response)
-        self._record_served_model(served, task)
         return LlmAnswer(choice.message.content or "", served)
 
     def parse_json(self, result: str):
