@@ -137,11 +137,6 @@ async def lifespan(app: FastAPI, context: AppContext):
         key = organization_rules["id"]
         context.redis.db.set(key, json.dumps(organization_rules))
 
-    if context.settings.redis_log_emails:
-        log_emails = json.loads(context.settings.redis_log_emails)
-        for email in log_emails:
-            context.redis.db.lpush("debug_emails", email)
-
     # Initialize language processors
     context.nouns = Nouns(
         context.settings,

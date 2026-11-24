@@ -316,7 +316,6 @@ These endpoints manage user and organization configurations. All require HTTP Ba
 | `POST /user/configs`                 | POST   | Create or update user configuration                                         |
 | `GET /user/configs?email={email}`    | GET    | Retrieve user configuration by email                                        |
 | `DELETE /user/configs?email={email}` | DELETE | Delete user configuration                                                   |
-| `GET /user/logs?email={email}`       | GET    | Retrieve request/response logs for user (if enabled via `REDIS_LOG_EMAILS`) |
 
 Example: Store user configuration
 

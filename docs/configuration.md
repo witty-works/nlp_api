@@ -328,7 +328,7 @@ Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` ask
 
 Separate from the docs switch, because reading the schema and minting a
 credential are not the same risk. This one guards `/api_key`, `/user/configs`,
-`/organization/configs`, `/user/logs`, `/settings` and `/languagetool_api` —
+`/organization/configs`, `/settings` and `/languagetool_api` —
 the endpoints that hand out or expose credentials and configuration, or act on
 a named user's behalf — and defaults to **on**, so a deployment nobody
 configured is closed rather than open.
@@ -481,7 +481,6 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_VERIFY_SSL | true        | Connect over TLS and check the server's certificate; a connection to a Redis whose certificate does not check out fails at startup. `false`: plain TCP, for a Redis on the same host or private network, as in `compose.yml`. |
 | API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. In production the start is refused while Redis holds a key as written and this is empty; elsewhere, and with `REQUIRE_API_KEY` on, it logs a warning. |
 | REDIS_SSL_CA_CERTS | (empty)   | Path to the CA certificate(s) to check a Redis certificate against, for one signed by a private CA. Empty: the system's CAs.                                     |
-| REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
 | TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
 

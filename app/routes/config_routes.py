@@ -18,7 +18,6 @@ from app.config_manager import (
     parse_term_replacements,
     fetch_user_organization_configs,
 )
-from app.models import PrettyJSONResponse
 
 router = APIRouter()
 
@@ -113,18 +112,3 @@ async def get_user_configs(
     username: str = Depends(fetch_management_username),
 ):
     return await fetch_user_organization_configs(email, context)
-
-
-# User Logs Route
-
-
-@router.get(
-    "/user/logs",
-    response_class=PrettyJSONResponse,
-)
-async def get_user_logs(
-    email: str,
-    context: AppContext = Depends(get_app_context),
-    username: str = Depends(fetch_management_username),
-):
-    return context.redis.get_user_logs(email)

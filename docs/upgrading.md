@@ -47,6 +47,15 @@ listed; the git history has them.
   for a valid credential whose user is not let in. Clients that only
   refreshed a token on `403` need to do so on `401`; the browser extension
   already does.
+- **The per-user request log is gone.** `REDIS_LOG_EMAILS` and
+  `GET /user/logs` no longer exist; the API no longer stores the text and
+  `Authorization` header of requests from the listed emails. What earlier
+  versions stored stays in Redis until deleted, with no expiry:
+
+  ```bash
+  redis-cli DEL debug_emails
+  redis-cli --scan --pattern 'log-dashboard-user-email:*' | xargs -r redis-cli DEL
+  ```
 
 ---
 

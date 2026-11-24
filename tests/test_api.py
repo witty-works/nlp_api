@@ -3982,3 +3982,12 @@ def test_dashboard_token_without_expiry(dashboard_sso, set_redis):
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Token error: The exp claim is missing"
+
+
+def test_no_request_log():
+    """The per-user request log, which kept the raw text and the
+    Authorization header, is gone, and with it its route."""
+    with TestClient(app) as client:
+        response = client.get("/user/logs", params={"email": "a@b.example"})
+
+    assert response.status_code == 404

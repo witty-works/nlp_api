@@ -2,11 +2,9 @@ from redis import Redis as RedisCache
 from fakeredis import FakeStrictRedis
 import json
 from fastapi import Request, HTTPException
-from pydantic import BaseModel
-import datetime
 
 from app.settings import Settings
-from app.models import MetricsType, CheckRequestIn
+from app.models import MetricsType
 import hmac
 import hashlib
 import re
@@ -16,10 +14,10 @@ API_KEY_DIGEST = re.compile(r"[0-9a-f]{64}")
 
 
 class Redis:
-    """Redis helper that manages connections, metrics, and request logs.
+    """Redis helper that manages connections, metrics and API keys.
 
     Provides a thin wrapper around a Redis client with helpers for
-    fetching/storing configs, metrics, and per-user request/response logs.
+    fetching/storing configs, metrics and API keys.
     """
 
     settings: Settings
@@ -72,19 +70,6 @@ class Redis:
     def get_user_id(self, email: str) -> str:
         """Generate a Redis key for a user by email."""
         return "dashboard-user-email:" + email.lower()
-
-    def get_log_id(self, user_email: str | None) -> str:
-        """Generate a Redis key for user logs."""
-        return "log-" + self.get_user_id(user_email if user_email else "none")
-
-    def get_log_key(self, user_email: str | None) -> str | None:
-        """Get the log key for a user if they are in the debug list."""
-        key = self.get_log_id(user_email)
-        if user_email is None:
-            user_email = "none"
-
-        debug_emails = self.db.lrange("debug_emails", 0, -1)
-        return key if user_email.encode() in debug_emails else None
 
     async def fetch_organization_configs_from_redis(
         self,
@@ -140,65 +125,6 @@ class Redis:
         elif endpoint == "guardrail_output":
             self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_COUNTS, version + user_id, 1)
             self.db.hincrby(MetricsType.GUARDRAIL_OUTPUT_HOST, version + host, 1)
-
-    def get_user_logs(
-        self,
-        user_email: str | None,
-    ) -> list:
-        """Retrieve all logged requests/responses for a user."""
-        results = []
-
-        data = self.db.lrange(self.get_log_id(user_email), 0, -1)
-        if data is not None:
-            data.reverse()
-            for result in data:
-                result = json.loads(result)
-                results.append(result)
-
-        return results
-
-    def store_request_log(
-        self,
-        check_request_in: CheckRequestIn,
-        user_email: str | None,
-        request: Request,
-        configs: dict,
-        version: str | None,
-        endpoint: str,
-    ) -> None:
-        """Log a request to Redis for debugging purposes."""
-        key = self.get_log_key(user_email)
-        if key is None:
-            return
-
-        data = {
-            "type": "request",
-            "date": datetime.datetime.now().isoformat(),
-            "text": check_request_in.text,
-            "auth_token": request.headers.get("Authorization", None),
-            "configs": configs,
-            "version": version,
-            "endpoint": endpoint,
-        }
-
-        self.db.lpush(key, json.dumps(data))
-
-    def store_response_log(
-        self,
-        user_email: str | None,
-        results: BaseModel,
-    ) -> None:
-        """Log a response to Redis for debugging purposes."""
-        key = self.get_log_key(user_email)
-        if key is None:
-            return
-
-        data = {
-            "type": "response",
-            "results": results.model_dump(),
-        }
-
-        self.db.lpush(key, json.dumps(data))
 
     def _hash_api_key(self, api_key: str) -> str:
         """HMAC-SHA256 hash an API key using the configured secret.

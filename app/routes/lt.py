@@ -466,9 +466,6 @@ async def lt_check(
     configs = await fetch_configs_for_request(check_request_in, user_email, context)
 
     context.redis.store_metrics(request, configs, "lt", "check")
-    context.redis.store_request_log(
-        check_request_in, user_email, request, configs, "lt", "check"
-    )
 
     # Mirror the native check endpoint: a request that resolves to no user
     # gets an empty result set rather than a 4xx, so signed-out or
@@ -551,8 +548,6 @@ async def lt_check(
         data is not None,
         len(matches),
     )
-
-    context.redis.store_response_log(user_email, response)
 
     return response
 

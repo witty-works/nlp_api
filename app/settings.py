@@ -131,7 +131,7 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     # Guards the endpoints that create or read credentials and configuration, or
     # act on a named user's behalf: /api_key, /user/configs,
-    # /organization/configs, /user/logs, /settings and /languagetool_api.
+    # /organization/configs, /settings and /languagetool_api.
     # Defaults to on so an unconfigured deployment is closed rather than open.
     management_auth_enabled: bool = True
     testing: bool = False
@@ -183,7 +183,6 @@ class Settings(BaseSettings):
     redis_port: Optional[str] = ""
     redis_username: Optional[str] = ""
     redis_password: Optional[str] = ""
-    redis_log_emails: Optional[str] = ""
     # Connect over TLS and check the server's certificate (against
     # redis_ssl_ca_certs if set, else the system's CAs). False: plain TCP.
     redis_verify_ssl: bool = True

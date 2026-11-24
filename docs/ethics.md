@@ -137,9 +137,8 @@ trigger") so that a reviewer can see the screening was done.
 
 ## Invariants — keep these true
 
-- Request text is not persisted. The exceptions are the context snippet,
-  which is opt-out, capped at ±100 chars and privacy-filtered, and the debug
-  log described below.
+- Request text is not persisted. The exception is the context snippet,
+  which is opt-out, capped at ±100 chars and privacy-filtered.
 - User text is never used to train or tune a model.
 - Every Sentry event passes through `sentry_clean_event_data`, and
   transactions other than `/check` are dropped.
@@ -160,13 +159,8 @@ the same flag.
 
 ## Known gaps — do not extend or copy these
 
-These are known gaps, not examples to follow. Do not build on them:
+These are known gaps, not examples to follow. Do not build on them. None is
+listed at present.
 
-- `store_request_log` / `store_response_log` in
-  [app/redis.py](../app/redis.py) keep the **full raw text and the
-  `Authorization` header**, unfiltered and with no expiry, for any email in
-  `REDIS_LOG_EMAILS`. They are readable through `get_user_logs`
-  ([app/routes/config_routes.py](../app/routes/config_routes.py)).
-
-When you work near one of these, mention it to the user. Fixing one counts as
-a privacy change, so screen it the same way.
+When you work near one, mention it to the user. Fixing one counts as a
+privacy change, so screen it the same way.
