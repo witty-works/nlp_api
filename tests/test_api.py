@@ -3298,10 +3298,14 @@ def test_features_with_a_key_say_what_it_may_use(monkeypatch):
     with TestClient(app) as client:
         assert llm() == {"available": True, "allowed": True}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["other@example.com"]
+        )
         assert llm() == {"available": True, "allowed": False}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["Default@Gmail.com"]
+        )
         assert llm() == {"available": True, "allowed": True}
 
         monkeypatch.setattr(context.settings, "llm_model", "")
