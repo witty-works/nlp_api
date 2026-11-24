@@ -632,7 +632,7 @@ Dashboard (Laravel Passport)
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
 | DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
-| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. It applies to every client in `DASHBOARD_CLIENT_ID` alike, so a client whose tokens lack the scope is refused. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
 and cached in Redis, under the document's address and the `kid`, for the
@@ -760,7 +760,7 @@ Dashboard (Laravel Passport)
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
 | DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
-| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
+| DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. It applies to every client in `DASHBOARD_CLIENT_ID` alike, so a client whose tokens lack the scope is refused. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
 and cached in Redis, under the document's address and the `kid`, for the

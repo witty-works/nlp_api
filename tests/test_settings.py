@@ -181,3 +181,23 @@ def test_one_dashboard_client_id_as_before(monkeypatch):
     monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
     configs = Settings.factory().sso_configs
     assert [name for name in configs if name.startswith("dashboard")] == ["dashboard"]
+
+
+def test_a_list_without_any_client_id_stops_the_start(monkeypatch):
+    """A typo such as "," would otherwise switch dashboard sign-in off silently."""
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", " , ")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    with pytest.raises(ValueError, match="DASHBOARD_CLIENT_ID"):
+        Settings.factory()
+
+
+def test_a_repeated_client_id_is_one_entry(monkeypatch):
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1, 2, 1")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    configs = Settings.factory().sso_configs
+    assert [name for name in configs if name.startswith("dashboard")] == [
+        "dashboard",
+        "dashboard:2",
+    ]

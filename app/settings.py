@@ -464,11 +464,20 @@ class Settings(BaseSettings):
             # Several clients of the one dashboard (the browser extension,
             # the dashboard's own write page), comma-separated: one entry per
             # client, the first under the name it always had.
-            client_ids = [
-                client_id.strip()
-                for client_id in settings.dashboard_client_id.split(",")
-                if client_id.strip()
-            ]
+            # In order, each once: a repeated id would only add a duplicate.
+            client_ids = list(
+                dict.fromkeys(
+                    client_id.strip()
+                    for client_id in settings.dashboard_client_id.split(",")
+                    if client_id.strip()
+                )
+            )
+            if not client_ids:
+                raise ValueError(
+                    "DASHBOARD_CLIENT_ID is set but names no client id: list"
+                    " one or more, comma-separated, or leave it empty for no"
+                    " dashboard sign-in"
+                )
             for index, client_id in enumerate(client_ids):
                 name = "dashboard" if index == 0 else f"dashboard:{client_id}"
                 settings.sso_configs[name] = {

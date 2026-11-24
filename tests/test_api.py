@@ -2777,6 +2777,7 @@ def test_a_token_of_the_second_dashboard_client_is_accepted(
             headers={"Authorization": "Bearer " + two_dashboard_clients(aud="2")},
         )
     assert response.status_code == 200
+    assert response.json()["id"] == "test-user"
 
 
 def test_a_token_of_an_unlisted_client_is_refused(two_dashboard_clients, set_redis):
