@@ -5,8 +5,10 @@ tenant someone controls could name themselves after any address ("nOAuth")."""
 
 import jwt
 import pytest
+import redis
 from fastapi.testclient import TestClient
 
+from app.auth_service import AuthError
 from app.main import app
 from tests.test_api import context, set_redis  # noqa: F401  (fixtures)
 
@@ -61,3 +63,34 @@ def test_a_verified_email_domain_is_let_in(office, set_redis):  # noqa: F811
 def test_an_unverified_email_is_not_let_in(office, set_redis, claims):  # noqa: F811
     response = auth(office(**claims))
     assert response.status_code == 403
+
+
+def test_a_store_outage_is_not_a_refused_token(
+    office, set_redis, monkeypatch  # noqa: F811
+):
+    """Redis failing while the token is verified says nothing about the
+    token: a 401 would make the client throw a good token away."""
+    token = office(email="test@gmail.com", xms_edov=True)
+
+    async def decode_jwt(*args):
+        raise redis.exceptions.ConnectionError("connection refused")
+
+    monkeypatch.setattr("app.auth_service.decode_jwt", decode_jwt)
+    response = auth(token)
+    assert response.status_code == 503
+    assert response.headers["retry-after"] == "10"
+    assert "connection refused" not in response.text
+
+
+def test_unfetchable_issuer_keys_say_when_to_retry(
+    office, set_redis, monkeypatch  # noqa: F811
+):
+    token = office(email="test@gmail.com", xms_edov=True)
+
+    async def decode_jwt(*args):
+        raise AuthError("Timeout while fetching RSA keys from issuer", 503)
+
+    monkeypatch.setattr("app.auth_service.decode_jwt", decode_jwt)
+    response = auth(token)
+    assert response.status_code == 503
+    assert response.headers["retry-after"] == "10"
