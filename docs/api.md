@@ -63,13 +63,21 @@ curl -X 'POST' \
   -H 'x-key: your-api-key' \
   -H 'Content-Type: application/json' \
   -d '{
-  "text": "The chairman called the policeman.",
+  "sentence": "The chairman called the policeman.",
+  "text": "chairman",
+  "start": 4,
+  "alternatives": [{"text": "chair"}, {"text": "chairperson"}],
   "lang": "en",
   "config": {
     "llm_alternatives": true
   }
 }'
 ```
+
+`sentence` is at most 300 characters. `text`, the words the alternatives
+replace from `start`, must be part of `sentence`, and `start` within it.
+At most 50 `alternatives` are accepted, each (and its `male_form` and
+`female_form`) at most 300 characters; anything else is refused with a `422`.
 
 Example `/v1.0/write` request:
 

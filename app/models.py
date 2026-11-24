@@ -981,24 +981,53 @@ class BaseRequestIn(BaseModel):
     organization_config_hash: Optional[str] = None
 
 
+# What one rephrasing may send the LLM: the sentence, and alternatives as
+# long as it. A finding has ALTERNATIVES_MAX_COUNT alternatives (5 by
+# default); the count leaves room for a config that asks for more.
+REPHRASE_SENTENCE_MAX_LENGTH = 300
+REPHRASE_ALTERNATIVES_MAX_COUNT = 50
+
+
 class RephraseAlternative(BaseModel):
-    text: str
+    text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     collective_noun: Optional[bool] = None
     gender_role: Optional[GenderedRolesFormatBasicType] = None
-    male_form: Optional[str] = None
-    female_form: Optional[str] = None
+    male_form: Optional[
+        Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    ] = None
+    female_form: Optional[
+        Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    ] = None
 
 
 class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
-    sentence: Annotated[str, Len(min_length=1, max_length=300)]
-    text: str
+    sentence: Annotated[
+        str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)
+    ]
+    # The words of `sentence` the alternatives replace, from `start`.
+    text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     start: int
-    alternatives: list[RephraseAlternative]
+    alternatives: Annotated[
+        list[RephraseAlternative], Len(max_length=REPHRASE_ALTERNATIVES_MAX_COUNT)
+    ]
     gender_separator: Union[
         GermanGenderEndingType | FrenchGenderSeparatorType | None
     ] = None
     lang: LangType
+
+    @model_validator(mode="after")
+    def text_is_in_sentence(self):
+        """`text` names words of `sentence`, and `start` a place in it.
+
+        Not checked to be at `start`: clients count `start` in UTF-16 code
+        units, which differ from Python's characters after an emoji."""
+        if self.text not in self.sentence:
+            raise ValueError("text must be part of sentence")
+        if not 0 <= self.start <= len(self.sentence):
+            raise ValueError("start must be within sentence")
+
+        return self
 
 
 WRITE_PROMPT_MAX_LENGTH = 1000

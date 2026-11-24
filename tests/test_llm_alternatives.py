@@ -4,6 +4,7 @@ import asyncio
 import json
 
 import pytest
+from pydantic import ValidationError
 
 from app.llm_alternatives import LlmAlternatives
 from app.models import RephraseRequestIn
@@ -91,3 +92,54 @@ def test_marks_the_model_left_in_are_removed():
     assert rephrase(answer) == {
         "Die Lehrkraft": "Die Lehrkraft gibt dem Schüler den Stift."
     }
+
+
+class RecordingBoth(Answering):
+    async def handle(self, user_prompt, system_prompt=None, *args, **kwargs):
+        self.user_prompt = user_prompt
+        self.system_prompt = system_prompt
+        return self.answer
+
+
+def test_the_replaced_words_are_quoted_in_the_system_prompt():
+    """The replaced words appear in the system prompt only as a JSON string, so
+    a quote in them cannot end the quotation and add instructions."""
+    settings = Settings(llm_model="openai/test")
+    prompt = RecordingBoth(settings, "{}")
+    text = 'say "hi" now'
+    request = RephraseRequestIn(
+        sentence=f"Then {text}, guys",
+        text=text,
+        start=5,
+        lang="en",
+        alternatives=[{"text": "everyone"}],
+    )
+    asyncio.run(LlmAlternatives(settings, None, prompt).handle(request))
+
+    assert json.dumps(text) in prompt.system_prompt
+    assert text not in prompt.system_prompt
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"text": "girls"},
+        {"start": -1},
+        {"start": 100},
+        {"text": "x" * 301},
+        {"alternatives": [{"text": "everyone"}] * 51},
+        {"alternatives": [{"text": "x" * 301}]},
+        {"alternatives": [{"text": "a", "male_form": "x" * 301}]},
+    ],
+)
+def test_a_rephrase_request_is_bounded(change):
+    request = {
+        "sentence": "When I am with the guys",
+        "text": "guys",
+        "start": 19,
+        "lang": "en",
+        "alternatives": [{"text": "everyone"}],
+    } | change
+
+    with pytest.raises(ValidationError):
+        RephraseRequestIn(**request)
