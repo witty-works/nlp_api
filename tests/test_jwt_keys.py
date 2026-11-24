@@ -10,7 +10,7 @@ import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
-from app.auth_service import AuthError, get_rsa_key, rsa_key_name
+from app.auth_service import AuthError, auth_http_error, get_rsa_key, rsa_key_name
 from app.redis import Redis
 from app.settings import Settings
 
@@ -108,3 +108,39 @@ def test_a_token_without_a_usable_kid_fetches_nothing(redis, kid):
     with pytest.raises(AuthError):
         asyncio.run(get_rsa_key(redis, session, unkeyed, ISSUER_A))
     assert session.requests == []
+
+
+class Unreachable(Session):
+    async def get(self, url):
+        self.requests.append(url)
+        raise OSError("connection refused")
+
+
+def test_an_unreachable_issuer_is_a_503(redis, monkeypatch):
+    """Not the token's fault: 503, so a client does not drop a good token."""
+    sleep = asyncio.sleep
+    monkeypatch.setattr(asyncio, "sleep", lambda *_: sleep(0))
+    pem, _ = key_pair()
+
+    with pytest.raises(AuthError) as error:
+        asyncio.run(get_rsa_key(redis, Unreachable({}), token(pem), ISSUER_A))
+
+    assert error.value.status_code == 503
+    assert auth_http_error(error.value).status_code == 503
+
+
+@pytest.mark.parametrize(
+    "status_code,expected,header",
+    [
+        (401, 401, 'Bearer error="invalid_token"'),
+        (400, 401, 'Bearer error="invalid_token"'),
+        (403, 403, None),
+        (503, 503, None),
+    ],
+)
+def test_auth_errors_as_answered(status_code, expected, header):
+    answered = auth_http_error(AuthError("Token error: some reason", status_code))
+
+    assert answered.status_code == expected
+    assert answered.detail == "Token error: some reason"
+    assert (answered.headers or {}).get("WWW-Authenticate") == header

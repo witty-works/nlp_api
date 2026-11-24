@@ -552,7 +552,8 @@ def test_invalid_access_token():
             headers={"authorization": "bearer invalid"},
         )
 
-        assert response.status_code == 403
+        assert response.status_code == 401
+        assert response.headers["WWW-Authenticate"] == 'Bearer error="invalid_token"'
 
 
 def test_config_not_changed(set_redis):
@@ -1022,8 +1023,9 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
 )
 def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
     with TestClient(app) as client:
+        # No credential at all; a user with no config is known but not let in.
         response = client.post("/v2.0/auth")
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         response = client.post(
             "/v2.0/auth", headers={"X-TESTING-AUTH": "missing@gmail.com"}
@@ -1079,7 +1081,7 @@ def test_auth_token_validation():
             json={},
             headers={"Authorization": "Bearer " + tokens["third_party_token"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 def test_api_key_validation(set_redis):
@@ -1090,7 +1092,7 @@ def test_api_key_validation(set_redis):
             json={},
             headers={"x-key": "invalid"},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         # Create a valid API key mapping via management endpoint
         api_key = "valid-api-key-0123456789-0123456789"
@@ -1127,14 +1129,14 @@ def test_api_key_validation(set_redis):
             json={},
             headers={"Authorization": "Bearer " + tokens["azureadbc_valid_expired"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         response = client.post(
             "/v2.4/check",
             json={"text": "Hallo Kunde"},
             headers={"Authorization": "Bearer " + tokens["office_valid_expired"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 @pytest.mark.parametrize(
@@ -2717,8 +2719,9 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
         response = client.post(
             "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + expired}
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
         assert response.json()["detail"] == "Token error: The token has expired"
+        assert response.headers["WWW-Authenticate"] == 'Bearer error="invalid_token"'
 
         # A different client id belongs to no configured issuer at all.
         response = client.post(
@@ -2726,7 +2729,7 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
             json={},
             headers={"Authorization": "Bearer " + dashboard_sso(aud="2")},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
         assert (
             response.json()["detail"]
             == "Token provided did not map to a valid client ID"
@@ -2742,7 +2745,7 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
         response = client.post(
             "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + tampered}
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
@@ -2754,7 +2757,7 @@ def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
                 json={},
                 headers={"Authorization": "Bearer " + dashboard_sso(iss=iss)},
             )
-            assert response.status_code == 403
+            assert response.status_code == 401
 
 
 @pytest.mark.parametrize("email_verified", [None, False, "true", 1])
@@ -3977,5 +3980,5 @@ def test_dashboard_token_without_expiry(dashboard_sso, set_redis):
             headers={"Authorization": "Bearer " + dashboard_sso(exp=None)},
         )
 
-    assert response.status_code == 403
+    assert response.status_code == 401
     assert response.json()["detail"] == "Token error: The exp claim is missing"

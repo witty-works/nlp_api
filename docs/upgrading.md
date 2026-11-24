@@ -39,6 +39,14 @@ listed; the git history has them.
   `email_verified` in its tokens, then this API with `DASHBOARD_ISSUER` set.
   Tokens the dashboard issued before carry neither and are refused, so users
   sign in again.
+- **Refused tokens are answered with `401`, not `403`.** An invalid or
+  expired token, an unknown `x-key` at `/v2.0/auth` and a request there
+  with no credential now get `401` (with
+  `WWW-Authenticate: Bearer error="invalid_token"` for a token); a failure
+  to fetch the issuer's keys gets `503`, where it got `400`. `403` is left
+  for a valid credential whose user is not let in. Clients that only
+  refreshed a token on `403` need to do so on `401`; the browser extension
+  already does.
 
 ---
 

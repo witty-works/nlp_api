@@ -180,7 +180,9 @@ async def require_api_key(request, call_next):
         )
     except HTTPException as error:
         return JSONResponse(
-            status_code=error.status_code, content={"detail": error.detail}
+            status_code=error.status_code,
+            content={"detail": error.detail},
+            headers=error.headers,
         )
 
     if user_email is None:

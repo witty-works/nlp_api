@@ -82,7 +82,7 @@ async def get_rsa_key(redis: Redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
     kid = unverified_header.get("kid")
     if not isinstance(kid, str) or not kid or len(kid) > KID_MAX_LENGTH:
-        raise AuthError("Unable to fetch RSA key", 400)
+        raise AuthError("Unable to fetch RSA key", 401)
 
     key = rsa_key_name(url, kid)
     rsa_key = redis.db.get(key)
@@ -91,7 +91,7 @@ async def get_rsa_key(redis: Redis, session, token, url):
 
     unknown = "unknown_kid:" + key.removeprefix("rsa_pem:")
     if redis.db.get(unknown):
-        raise AuthError("Unable to fetch RSA key", 400)
+        raise UnknownKid("Unable to fetch RSA key", 401)
 
     try:
         rsa_key, ttl = await get_rsa_key_(session, kid, url)
@@ -305,7 +305,7 @@ async def get_rsa_key_(session, kid, url):
                 if r.status != 200:  # pragma: no cover
                     # Don't reflect remote response body to clients; return a sanitized error.
                     raise AuthError(
-                        f"Fetching RSA key resulted in HTTP status {r.status}", 400
+                        f"Fetching RSA key resulted in HTTP status {r.status}", 503
                     )
 
                 jwks = await r.json()
@@ -326,7 +326,7 @@ async def get_rsa_key_(session, kid, url):
                         return pem, ttl
 
                 # If we reached here, no matching kid was found in the JWKS
-                raise UnknownKid("Unable to fetch RSA key", 400)
+                raise UnknownKid("Unable to fetch RSA key", 401)
 
         except AuthError:
             # Don't retry on deterministic auth errors (4xx), re-raise immediately.
@@ -335,7 +335,7 @@ async def get_rsa_key_(session, kid, url):
             if attempt < retries - 1:
                 await asyncio.sleep(backoff_base * (2**attempt))
                 continue
-            raise AuthError("Timeout while fetching RSA keys from issuer", 400)
+            raise AuthError("Timeout while fetching RSA keys from issuer", 503)
         except Exception as error:
             # For transient network errors, retry a few times.
             if attempt < retries - 1:
@@ -352,7 +352,34 @@ async def get_rsa_key_(session, kid, url):
                 error,
             )
 
-            raise AuthError("Failed to fetch RSA keys from issuer", 400)
+            raise AuthError("Failed to fetch RSA keys from issuer", 503)
+
+
+def token_refused(detail: str) -> HTTPException:
+    """A 401 for a token that is missing, malformed, expired, for another
+    audience or not signed by its issuer (RFC 6750, 3.1): a client may get a
+    new one and try again."""
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=detail,
+        headers={"WWW-Authenticate": 'Bearer error="invalid_token"'},
+    )
+
+
+def auth_http_error(error: AuthError) -> HTTPException:
+    """The answer to an AuthError: 503 when the issuer's keys could not be
+    fetched, which says nothing about the token; 403 for a valid token whose
+    user is not let in (a scope, an unverified email); 401 otherwise."""
+    if error.status_code == 503:
+        return HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=error.error_msg
+        )
+    if error.status_code == 403:
+        return HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=error.error_msg
+        )
+
+    return token_refused(error.error_msg)
 
 
 def fetch_email_from_claims(claims: dict) -> str:
@@ -461,20 +488,15 @@ async def fetch_user(
                     continue
 
                 return fetch_email_from_claims(claims)
-        except Exception as e:
-            # Sanitize error messages returned to clients. If it's an AuthError,
-            # surface the sanitized message; otherwise return a generic forbidden.
-            if isinstance(e, AuthError):
-                detail = getattr(e, "error_msg", "Forbidden")
-            else:
-                detail = "Forbidden"
+        except HTTPException:
+            raise
+        except AuthError as error:
+            # Only the sanitized message, never what the issuer answered.
+            raise auth_http_error(error) from None
+        except Exception:
+            raise token_refused("Token error: Unable to parse authentication")
 
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
-
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Token provided did not map to a valid client ID",
-        )
+        raise token_refused("Token provided did not map to a valid client ID")
 
     if settings.testing:
         # Only use test credentials when the explicit testing header is present

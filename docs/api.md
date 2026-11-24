@@ -55,6 +55,16 @@ rest is cut off at a word boundary and `limit_reached` says so. A `text` over
 Every endpoint refuses a request body over `REQUEST_MAX_BYTES` (8 MiB by
 default) with a `413`, before it is parsed.
 
+A bearer token that is malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`; a client may get a new token
+and retry. `403` means the token is valid but its user is not let in: a
+missing scope, a dashboard token without a verified email, or, at
+`/v2.0/auth`, a user this deployment has no config for. `/v2.0/auth` answers
+`401` to a request with no credential or an unknown `x-key`. `503` means the
+issuer's signing keys could not be fetched, which says nothing about the
+token.
+
 Example `/v1.0/rephrase` request:
 
 ```bash

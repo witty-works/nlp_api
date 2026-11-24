@@ -607,7 +607,15 @@ Supported methods:
 
 Which one a token is checked against is decided by its `aud` claim: it has to
 equal the client id of exactly one configured issuer. A token whose audience
-matches nothing configured is rejected with a 403.
+matches nothing configured is rejected with a 401.
+
+A token that is missing, malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`, so a client may get a new one
+and try again. A valid token whose user is not let in (a missing scope, an
+unverified email, no config for the user at `/v2.0/auth`) is answered with
+`403`. When the issuer's keys cannot be fetched the answer is `503`: that says
+nothing about the token.
 
 Dashboard (Laravel Passport)
 | Variable | Description |
@@ -726,7 +734,15 @@ These variables are optional and intended for local development or CI scenarios 
 - Back to [📋 Documentation Index](../README.md#documentation-index)
 Which one a token is checked against is decided by its `aud` claim: it has to
 equal the client id of exactly one configured issuer. A token whose audience
-matches nothing configured is rejected with a 403.
+matches nothing configured is rejected with a 401.
+
+A token that is missing, malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`, so a client may get a new one
+and try again. A valid token whose user is not let in (a missing scope, an
+unverified email, no config for the user at `/v2.0/auth`) is answered with
+`403`. When the issuer's keys cannot be fetched the answer is `503`: that says
+nothing about the token.
 
 Dashboard (Laravel Passport)
 | Variable | Description |
