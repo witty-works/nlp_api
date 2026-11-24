@@ -33,6 +33,24 @@ def _clean_request(event: dict, privacy_filter: PrivacyFilter) -> None:
         request["data"] = privacy_filter.clean_var(request["data"])
 
 
+def _clean_messages(event: dict, privacy_filter: PrivacyFilter) -> None:
+    """Log messages through the privacy filter: the event's own, which an
+    ERROR log line becomes, and the breadcrumbs of the lines before it. The
+    code does not log request text; this is for a line that does anyway."""
+    if isinstance(event.get("message"), str):
+        event["message"] = privacy_filter.clean(event["message"])
+    logentry = event.get("logentry")
+    if isinstance(logentry, dict):
+        for key in ("message", "formatted", "params"):
+            if key in logentry:
+                logentry[key] = privacy_filter.clean_var(logentry[key])
+    breadcrumbs = event.get("breadcrumbs")
+    values = breadcrumbs.get("values") if isinstance(breadcrumbs, dict) else breadcrumbs
+    for breadcrumb in values if isinstance(values, list) else []:
+        if isinstance(breadcrumb, dict) and isinstance(breadcrumb.get("message"), str):
+            breadcrumb["message"] = privacy_filter.clean(breadcrumb["message"])
+
+
 def sentry_clean_sensitive_frame(
     frame: dict, privacy_filter: PrivacyFilter
 ) -> dict:  # pragma: no cover
@@ -80,6 +98,7 @@ def sentry_clean_event_data(event: dict, hint: dict) -> dict:  # pragma: no cove
             sentry_clean_sensitive_frame(frame, privacy_filter)
 
     _clean_request(event, privacy_filter)
+    _clean_messages(event, privacy_filter)
 
     return event
 

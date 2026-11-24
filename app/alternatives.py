@@ -611,8 +611,12 @@ class Alternatives:
         ):
             word_type = await self.model.fetch_word_type(lang, token)
             if word_type in [WordType.NOUN, WordType.VERB, WordType.ADJECTIVE]:
-                self.logger.error(
-                    f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
+                # Not the word: it is the user's (AGENTS.md, 1.1).
+                self.logger.debug(
+                    "Declension in '%s' not found (tag: '%s', pos: '%s')",
+                    lang,
+                    token.tag_,
+                    token.pos_,
                 )
 
         return None

@@ -143,6 +143,9 @@ trigger") so that a reviewer can see the screening was done.
 - User text is never used to train or tune a model.
 - Every Sentry event passes through `sentry_clean_event_data`, and
   transactions other than `/check` are dropped.
+- No log line quotes the words of a checked text, nor of the alternatives
+  built from it; `LOG_MISSING_DECLENSION` says what is missing, not for which
+  word ([tests/test_no_words_in_logs.py](../tests/test_no_words_in_logs.py)).
 - LLM calls go only through [app/prompt.py](../app/prompt.py), and only for users
   that `LLM_ACCESS` lets through. Asking for `llm_alternatives` must not
   widen that.
@@ -164,12 +167,6 @@ These are known gaps, not examples to follow. Do not build on them:
   `Authorization` header**, unfiltered and with no expiry, for any email in
   `REDIS_LOG_EMAILS`. They are readable through `get_user_logs`
   ([app/routes/config_routes.py](../app/routes/config_routes.py)).
-- `LOG_MISSING_DECLENSION` (on by default) logs words from the user's text at
-  `error` level ([app/nouns.py](../app/nouns.py)). With Sentry enabled, the
-  default logging integration sends those as events, and `before_send` does
-  not clean the message.
-- `lt_check` logs up to 300 chars of the request at `debug` level
-  ([app/routes/lt.py](../app/routes/lt.py)).
 
 When you work near one of these, mention it to the user. Fixing one counts as
 a privacy change, so screen it the same way.

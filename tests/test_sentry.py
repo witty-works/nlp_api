@@ -57,3 +57,27 @@ def test_the_scrubber_knows_the_key_header():
 
     assert "a-real-key" not in str(scrubbed["request"]["headers"])
     assert "a-real-key" not in str(scrubbed["request"]["data"])
+
+
+def test_log_messages_go_through_the_filter():
+    """An ERROR log line becomes an event of its own; whatever a line quotes
+    reaches Sentry only filtered."""
+    cleaned = sentry_clean_event_data(
+        {
+            "message": "mail jane@acme.example",
+            "logentry": {
+                "message": "noun missing for %s",
+                "params": ["jane@acme.example", 791234567],
+                "formatted": "noun missing for jane@acme.example",
+            },
+            "breadcrumbs": {
+                "values": [{"message": "call 0791234567", "category": "nlp_api"}]
+            },
+        },
+        {},
+    )
+
+    assert "jane@acme.example" not in str(cleaned)
+    assert "0791234567" not in str(cleaned)
+    assert cleaned["logentry"]["message"] == "noun missing for %s"
+    assert cleaned["breadcrumbs"]["values"][0]["category"] == "nlp_api"

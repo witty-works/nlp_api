@@ -1,6 +1,5 @@
 from spacy.tokens import Token, Doc
 from inflex import Adjective
-import json
 
 from app.settings import Settings
 from app.models import LangType, WordType
@@ -49,8 +48,8 @@ class Adjectives:
 
         if target_form is None:
             if self.settings.log_missing_declension and len(source_text) > 2:
-                self.logger.error(
-                    f"English adjective target form could not be determined for '{source_text}' (lemma: '{source_lemma}')."
+                self.logger.debug(
+                    "English adjective target form could not be determined",
                 )
 
             return target_token.text
@@ -70,8 +69,9 @@ class Adjectives:
             if self.settings.log_missing_declension and check_word_case(
                 target_token.text, False
             ):
-                self.logger.error(
-                    f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{str(target_form)}'."
+                self.logger.debug(
+                    "English adjective data missing for target form %s",
+                    target_form,
                 )
 
             return text
@@ -79,8 +79,10 @@ class Adjectives:
         text = get_target_declension_form(target_result, target_form)
         if text is None:
             if self.settings.log_missing_declension and len(target_token.text) > 2:
-                self.logger.error(
-                    f"English adjective target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: {json.dumps(target_result)}"
+                self.logger.debug(
+                    "English adjective target form %s missing (declensions found: %s)",
+                    target_form,
+                    target_result is not None,
                 )
 
             return target_token.text
@@ -235,8 +237,8 @@ class Adjectives:
             and len(token.text) > 2
             and check_word_case(token.text, False)
         ):
-            self.logger.error(
-                f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
+            self.logger.debug(
+                "English adjective target form could not be determined",
             )
 
         return target_form

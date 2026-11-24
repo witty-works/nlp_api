@@ -407,7 +407,9 @@ async def lt_check(
             )
 
         if not text:
-            context.logger.debug("lt_check no text extracted from data=%.300r", data)
+            context.logger.debug(
+                "lt_check no text extracted from data (%d characters)", len(data)
+            )
 
     lang = resolve_lang(language)
     if lang is None:
