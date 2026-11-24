@@ -11,7 +11,7 @@ from fastapi.security.api_key import APIKeyHeader
 
 from app.context import AppContext
 from app.dependencies import get_app_context
-from app.models import CheckRequestIn, Result, ResultsOut, Client
+from app.models import CheckBodyIn, CheckRequestIn, Result, ResultsOut, Client
 from app.version_validators import (
     client_version,
     check_api_version,
@@ -41,7 +41,7 @@ router = APIRouter()
 async def post_check_v2_4(
     request: Request,
     response: Response,
-    check_request_in: CheckRequestIn,
+    check_request_in: CheckBodyIn,
     context: AppContext = Depends(get_app_context),
 ) -> Union[ResultsOut, Result]:
     return await check(request, response, check_request_in, CHECK_API_VERSION, context)

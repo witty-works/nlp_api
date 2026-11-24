@@ -608,10 +608,17 @@ class GuardrailThreshold(BaseModel):
         return cls.model_validate(value)
 
 
+# The most entries a list in a config may have: more than there are
+# categories (about 130) or addons.
+CONFIG_LIST_MAX_LENGTH = 500
+
+
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
-    addons: Optional[list[str]] = None
+    addons: Optional[
+        Annotated[list[str], Len(max_length=CONFIG_LIST_MAX_LENGTH)]
+    ] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
         LangWithAutoType.EN,
@@ -684,7 +691,9 @@ class Config(BaseModel):
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
 
-    disabled_categories: list = Field(default_factory=list)
+    disabled_categories: list = Field(
+        default_factory=list, max_length=CONFIG_LIST_MAX_LENGTH
+    )
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
@@ -1026,6 +1035,22 @@ class CheckRequestIn(BaseRequestIn):
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str] = None
+
+
+# The longest text /v2.4/check accepts; more is refused with a 422. Only
+# TEXT_MAX_LENGTH characters of it are checked, the rest is cut off and
+# `limit_reached` says so, so this only keeps a client from sending far more
+# than will ever be read. A hundred times the default TEXT_MAX_LENGTH: the
+# extension sends at most 1000 characters, the Word plugin a paragraph.
+CHECK_TEXT_MAX_LENGTH = 100000
+
+
+class CheckBodyIn(CheckRequestIn):
+    """A check request as a client sends it. CheckRequestIn itself is also
+    built for texts the server has, such as a guardrail answer, which have
+    their own limits."""
+
+    text: Annotated[str, Len(max_length=CHECK_TEXT_MAX_LENGTH)]
 
 
 class ResultAlternative(BaseModel):

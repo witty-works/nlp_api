@@ -279,6 +279,12 @@ what a request makes the server hold and send back; raise
 `GUARDRAIL_MESSAGES_MAX_COUNT` and `GUARDRAIL_REQUEST_MAX_LENGTH` for
 conversations longer than that.
 
+Before any of these, the whole request body is limited to `REQUEST_MAX_BYTES`
+(8 MiB) and refused with a `413` past it. The default fits
+`GUARDRAIL_REQUEST_MAX_LENGTH` characters of text, but images and other
+parts sent inline (as base64) count towards it too: raise it for a gateway
+that passes them on.
+
 A LiteLLM proxy treats the `422` as an error: the call through it fails
 unless the guardrail has `fail_on_error: false` (see [LiteLLM](#litellm)).
 

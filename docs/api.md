@@ -47,6 +47,14 @@ curl -X 'POST' \
 }'
 ```
 
+`text` is checked up to `TEXT_MAX_LENGTH` characters (1000 by default); the
+rest is cut off at a word boundary and `limit_reached` says so. A `text` over
+100000 characters is refused with a `422`, and so is a config list
+(`disabled_categories`, `addons`) of more than 500 entries.
+
+Every endpoint refuses a request body over `REQUEST_MAX_BYTES` (8 MiB by
+default) with a `413`, before it is parsed.
+
 Example `/v1.0/rephrase` request:
 
 ```bash
@@ -229,6 +237,9 @@ bound to 8081.
 
 (With `LANGUAGETOOL_COMPAT_ROOT` the same endpoints exist without the `/lt`
 prefix.)
+
+`/lt/v2/check` refuses a `text` over 100000 characters, or a `data` over
+500000, with a `422`.
 
 Example request (form-encoded, as LanguageTool clients send it):
 

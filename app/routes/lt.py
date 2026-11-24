@@ -28,6 +28,7 @@ from app.dependencies import get_app_context
 from app.helper import utf16_offsets
 from app.language_processor import apply_language_rules, fetch_text
 from app.models import (
+    CHECK_TEXT_MAX_LENGTH,
     CheckRequestIn,
     Client,
     Config,
@@ -53,6 +54,9 @@ SENTENCE_BOUNDARIES = ".!?\n"
 # How much text to include on each side of a match in `context`, in
 # characters. Matches the LanguageTool server's CONTEXT_SIZE.
 CONTEXT_RADIUS = 40
+
+# `data` carries markup besides the text, so it may be longer than `text`.
+LT_DATA_MAX_LENGTH = 5 * CHECK_TEXT_MAX_LENGTH
 
 
 class LTSoftware(BaseModel):
@@ -374,8 +378,8 @@ def build_response(
 )
 async def lt_check(
     request: Request,
-    text: str | None = Form(None),
-    data: str | None = Form(None),
+    text: str | None = Form(None, max_length=CHECK_TEXT_MAX_LENGTH),
+    data: str | None = Form(None, max_length=LT_DATA_MAX_LENGTH),
     language: str = Form("auto"),
     username: str | None = Form(None),
     apiKey: str | None = Form(None),

@@ -34,6 +34,7 @@ DEBUG_SETTINGS = (
     "guardrail_texts_max_count",
     "guardrail_check_max_length",
     "guardrail_request_max_length",
+    "request_max_bytes",
     "aadb2c_tenant_id",
     "aadb2c_client_id",
     "aadb2c_policy",
@@ -146,6 +147,12 @@ class Settings(BaseSettings):
     guardrail_texts_max_count: int = 20
     guardrail_check_max_length: int = 40000
     guardrail_request_max_length: int = 1000000
+    # The largest request body accepted, in bytes; larger is refused with a
+    # 413 before it is parsed. 8 MiB fits the largest guardrail request:
+    # GUARDRAIL_REQUEST_MAX_LENGTH characters take up to 4 bytes each in
+    # UTF-8, or 6 where JSON escapes them as \uXXXX, plus the JSON around
+    # them. Raise it with GUARDRAIL_REQUEST_MAX_LENGTH.
+    request_max_bytes: int = 8 * 1024 * 1024
     is_prod: bool = False
     terms_of_service: str = ""
     contact: str = ""
