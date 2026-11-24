@@ -158,6 +158,20 @@ def test_a_mismatch_is_refused_when_configured(monkeypatch):
         asyncio.run(prompt.handle("hi"))
 
 
+def test_a_refused_mismatch_asks_clients_to_wait_longer(monkeypatch):
+    """A mismatch lasts until the deployment changes, so clients are not told
+    to come back in seconds and spend a paid call each time."""
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model="other"),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with pytest.raises(LlmUnavailable) as refused:
+        asyncio.run(prompt.handle("hi"))
+    assert refused.value.retry_after == 300
+
+
 def test_unknown_served_model_counts_as_mismatch(monkeypatch, caplog):
     prompt, _ = prompt_with(
         monkeypatch,

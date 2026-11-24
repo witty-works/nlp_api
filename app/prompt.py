@@ -37,6 +37,11 @@ from app.llm_provider import (  # noqa: E402
 __all__ = ["LlmCutOff", "LlmTextRefused", "LlmUnavailable", "Prompt", "llm_error"]
 
 
+# Seconds a client is asked to wait after a call refused for answering with
+# another model than LLM_EXPECTED_MODEL (LLM_MODEL_MISMATCH=refuse).
+MISMATCH_RETRY_AFTER = 300
+
+
 @dataclass
 class LlmAnswer:
     """The text of an answer, and the model that gave it, if the provider said."""
@@ -122,7 +127,12 @@ class Prompt:
             )
             self._count(MetricsType.LLM_MODEL_MISMATCHES, name)
             if self.settings.llm_model_mismatch == "refuse":
-                raise LlmUnavailable("served model is not LLM_EXPECTED_MODEL")
+                # It lasts until the deployment changes: clients are asked to
+                # wait minutes, not seconds, rather than retry a paid call.
+                raise LlmUnavailable(
+                    "served model is not LLM_EXPECTED_MODEL",
+                    retry_after=MISMATCH_RETRY_AFTER,
+                )
 
     def _count(self, metric: MetricsType, field: str) -> None:
         if not self.settings.log_metrics or self.redis_db is None:
