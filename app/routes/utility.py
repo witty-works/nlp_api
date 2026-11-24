@@ -45,7 +45,8 @@ async def get_health(
         except Exception:
             health["model_" + lang] = False
 
-    if check_external:
+    # Without LANGUAGETOOL_API there is no LanguageTool to ask.
+    if check_external and context.settings.languagetool_api:
         try:
             languagetool_health = await context.http.fetch_json_get(
                 context.settings.languagetool_api + "/healthcheck",
@@ -60,6 +61,7 @@ async def get_health(
         except Exception:
             health["spelling"] = False
 
+    if check_external:
         try:
             health["config"] = context.redis.db.ping()
         except Exception:

@@ -110,7 +110,9 @@ class Settings(BaseSettings):
     environment_type: str = "production"
     # The environment's name, as Sentry reports it.
     environment: str = "local"
-    languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
+    # Empty: no LanguageTool, so no text goes to a third party unless a
+    # deployment names one.
+    languagetool_api: Optional[str] = ""
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
     languagetool_api_key: Optional[str] = ""

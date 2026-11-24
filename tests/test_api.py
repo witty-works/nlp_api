@@ -75,6 +75,17 @@ def test_health():
         assert response.status_code == 200
 
 
+def test_health_without_languagetool(monkeypatch):
+    """No LANGUAGETOOL_API is a deployment without it, not an unhealthy one."""
+    monkeypatch.setattr(context.settings, "languagetool_api", "")
+    with TestClient(app) as client:
+        response = client.get("/health", params={"check_external": True})
+
+    assert response.status_code == 200
+    assert "spelling" not in response.json()
+    assert response.json()["config"] is True
+
+
 def test_content_security_policy_is_sent_whole():
     """Every directive reaches the header, not only the last one configured."""
     with TestClient(app) as client:

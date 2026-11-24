@@ -44,8 +44,8 @@ LOGGING_ENABLED=true
 LOGGING_CONFIG_FILENAME=stdout
 LOGGING_CONFIG_LEVEL=INFO
 
-# LanguageTool (run locally or use public API)
-LANGUAGETOOL_API=http://localhost:8000/v2
+# LanguageTool: off unless set; run it locally (see setup.md)
+LANGUAGETOOL_API=http://127.0.0.1:8210/v2
 LANGUAGETOOL_VERIFY_SSL=false
 
 # Use in-memory fake Redis by omitting REDIS_HOST
@@ -351,11 +351,14 @@ Sentry uses `ENVIRONMENT` as the environment name and includes FastAPI/Starlette
 
 ## LanguageTool
 
-Optional spell/grammar checking. You can use the public API or self-host LanguageTool.
+Optional spell/grammar checking, off by default. Self-host LanguageTool (see
+[Using docker compose](./setup.md#using-docker-compose-recommended-for-local-multi-service-setup)),
+or name LanguageTool's hosted API (`https://api.languagetoolplus.com/v2`),
+which sends the text being checked to LanguageTool.
 
 | Variable                | Default                             | Description                                                                            |
 | ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------------- |
-| LANGUAGETOOL_API        | https://api.languagetoolplus.com/v2 | Base URL of your LanguageTool instance (must include `/v2`).                           |
+| LANGUAGETOOL_API        | (empty)                             | Base URL of your LanguageTool instance (must include `/v2`). Empty: no LanguageTool.   |
 | LANGUAGETOOL_VERIFY_SSL | true                                | Verify TLS certs when calling LanguageTool. Set to false for local/self-signed setups. |
 | LANGUAGETOOL_USERNAME   | (empty)                             | Optional: your username/email for premium LanguageTool accounts (used for API access). |
 | LANGUAGETOOL_API_KEY    | (empty)                             | Optional: your API key / access token for premium LanguageTool accounts.               |
@@ -691,7 +694,7 @@ These variables are optional and intended for local development or CI scenarios 
 ## What’s configured by default
 
 - Fake Redis in development (when no `REDIS_HOST` is provided).
-- LanguageTool enabled against the public API by default; set `LANGUAGETOOL_API` to your self-hosted URL or set it empty to disable.
+- LanguageTool off; set `LANGUAGETOOL_API` to a LanguageTool server to enable it.
 - Sentry disabled unless `SENTRY_DSN` is set and `TESTING` is false.
 - Context checker disabled unless the per-language URL and API key are provided.
 

@@ -118,3 +118,10 @@ def test_debug_view_leaves_out_secrets(monkeypatch):
 )
 def test_public_url(url, expected):
     assert public_url(url) == expected
+
+
+def test_no_languagetool_unless_named(monkeypatch):
+    """Text goes to no third party a deployment did not name."""
+    monkeypatch.delenv("LANGUAGETOOL_API", raising=False)
+
+    assert Settings(_env_file=None).languagetool_api == ""

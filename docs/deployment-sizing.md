@@ -23,7 +23,7 @@ The image carries the release's rule database (`dump.sql`, ~8 MB, read into an i
 
 LanguageTool is a second engine alongside the product's own rules. It is wired into `compose.yml` behind a profile so it is one command away, but nothing starts it and `LANGUAGETOOL_API` is empty.
 
-**The setting's default is a third-party service, not "off".** `languagetool_api` defaults to `https://api.languagetoolplus.com/v2` in [app/settings.py](../app/settings.py), so a deployment that simply never mentions LanguageTool sends the text being checked to LanguageTool's hosted API. That is the wrong default for an on-premise install and the reason `compose.yml` sets the variable to empty explicitly rather than leaving it unset. Empty is the only value that means no spell checking *and* no outbound call.
+**The setting's default is "off".** `languagetool_api` is empty by default in [app/settings.py](../app/settings.py), so a deployment that never mentions LanguageTool makes no spelling checks and sends no text to anyone. Pointing it at LanguageTool's hosted API (`https://api.languagetoolplus.com/v2`) sends the text being checked to a third party, which is the wrong choice for an on-premise install.
 
 **The hosted service is also wrong on correctness grounds, not only privacy.** It cannot carry this project's ignore lists, so it reports spelling errors on vocabulary the product uses deliberately, and it does not apply the `disabledRuleIds` in [languagetool/config.properties](../languagetool/config.properties) — several of which (`GLEICHBEHANDLUNG`, `ERSTSEMESTERIN`, `MAEDCHENNAME`, `PUTZFRAU`) are LanguageTool's own gendered-language rules, which overlap with the product's. Measured against the stock 6.8 image with a word taken from `de_ignore.txt`:
 
