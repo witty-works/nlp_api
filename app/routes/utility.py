@@ -20,7 +20,7 @@ from app.dependencies import (
     get_app_context,
 )
 from app.context import AppContext
-from app.settings import get_settings, Settings
+from app.settings import get_settings
 from app.text_utils import parse_word_type
 
 router = APIRouter()
@@ -113,8 +113,9 @@ def get_languagetool_api(
 def get_app_settings(
     username: str = Depends(fetch_management_username),
     context: AppContext = Depends(get_app_context),
-) -> Settings:
-    return context.settings
+) -> dict[str, Any]:
+    """The settings that help debug a deployment, without its secrets."""
+    return context.settings.debug_view()
 
 
 @router.get("/docs", include_in_schema=False)

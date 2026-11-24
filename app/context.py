@@ -69,7 +69,7 @@ class AppContext:
         self.categories = get_categories()
         self.settings = get_settings()
         self.logger = Logger.factory(self.settings)
-        self.logger.debug("app started with settings: %s", self.settings)
+        self.logger.debug("app started with settings: %s", self.settings.debug_view())
 
         self.sentry_sdk = set_up_sentry_sdk(self.version, self.settings)
 

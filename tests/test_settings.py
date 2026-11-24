@@ -1,6 +1,9 @@
+import json
+import re
+
 import pytest
 
-from app.settings import Settings
+from app.settings import DEBUG_SETTINGS, Settings, public_url
 
 
 @pytest.fixture
@@ -59,3 +62,58 @@ def test_the_shipped_example_key_is_refused(monkeypatch):
         monkeypatch.setenv("DEFAULT_API_KEY", value)
         with pytest.raises(ValueError, match="DEFAULT_API_KEY"):
             Settings.factory()
+
+
+SECRET_NAME = re.compile(r"key|secret|password|token|dsn", re.IGNORECASE)
+# Names the pattern catches that hold no secret: whether a key is required.
+NOT_SECRET = {"require_api_key"}
+
+
+def secret_names(names) -> list[str]:
+    return [n for n in names if SECRET_NAME.search(n) and n not in NOT_SECRET]
+
+
+def test_debug_settings_name_no_secret():
+    """The allow-list is the only thing that decides what GET /settings shows,
+    so a setting whose name says it is secret must never be on it."""
+    assert not secret_names(DEBUG_SETTINGS)
+    # A misspelt name would fail on every request rather than here.
+    assert set(DEBUG_SETTINGS) <= set(Settings.model_fields)
+
+
+def test_debug_view_leaves_out_secrets(monkeypatch):
+    for name, value in {
+        "LLM_API_KEY": "llm-secret",
+        "AWS_SECRET_KEY": "aws-secret",
+        "API_KEY_HMAC_KEY": "hmac-secret",
+        "REDIS_PASSWORD": "redis-secret",
+        "SLACK_BOT_TOKEN": "slack-secret",
+        "SENTRY_DSN": "https://dsn-secret@sentry.example/1",
+        "CONTEXT_CHECKER": '{"en": {"url": "https://cc.example", "api_key": "cc-secret"}}',
+        "LANGUAGETOOL_API": "https://lt-user:lt-secret@lt.example:8010/v2?key=q-secret",
+        "LLM_API_BASE": "https://llm.example/v1#frag-secret",
+    }.items():
+        monkeypatch.setenv(name, value)
+
+    view = Settings(_env_file=None).debug_view()
+
+    assert not secret_names(view)
+    assert "secret" not in json.dumps(view, default=str)
+    assert view["languagetool_api"] == "https://lt.example:8010/v2"
+    assert view["llm_api_base"] == "https://llm.example/v1"
+    assert view["context_checker"] == ["en"]
+
+
+@pytest.mark.parametrize(
+    "url,expected",
+    [
+        ("redis://user:pass@redis.example:6379/0", "redis://redis.example:6379/0"),
+        ("http://[::1]:8010/v2", "http://[::1]:8010/v2"),
+        ("https://example.org", "https://example.org"),
+        ("", ""),
+        (None, None),
+        ("http://example.org:notaport/", "(not a URL)"),
+    ],
+)
+def test_public_url(url, expected):
+    assert public_url(url) == expected

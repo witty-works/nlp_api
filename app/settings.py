@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Any, Optional
 from functools import lru_cache
 import os
+from urllib.parse import urlsplit, urlunsplit
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.api_keys import valid_key
 from app.models import LangType, LlmAccessType
@@ -8,6 +9,92 @@ from app.models import LangType, LlmAccessType
 # The /textarea page and the editor script it loads, see TEXTAREA_ENABLED.
 TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
 TEXTAREA_IMPRINT_PATH = "/textarea/imprint"
+
+# What GET /settings and the start-up log show of the settings, for
+# debugging a deployment. An allow-list, so a setting added later stays out
+# until someone decides it is safe to show: no keys, passwords, tokens or
+# DSNs, and no emails. URLs are shown without credentials (see public_url).
+DEBUG_SETTINGS = (
+    "environment_type",
+    "environment",
+    "is_prod",
+    "testing",
+    "logging_enabled",
+    "logging_config_level",
+    "languagetool_api",
+    "languagetool_verify_ssl",
+    "languagetool_compat_root",
+    "api_docs_auth_enabled",
+    "management_auth_enabled",
+    "sentry_traces_sample_rate",
+    "sentry_sample_rate",
+    "sentry_profiles_sample_rate",
+    "text_max_length",
+    "guardrail_messages_max_count",
+    "guardrail_texts_max_count",
+    "guardrail_check_max_length",
+    "guardrail_request_max_length",
+    "aadb2c_tenant_id",
+    "aadb2c_client_id",
+    "aadb2c_policy",
+    "aadb2c_domain",
+    "aadb2c_expected_scope",
+    "office_sso_client_id",
+    "office_sso_expected_scope",
+    "dashboard_client_id",
+    "dashboard_url",
+    "dashboard_jwks_url",
+    "dashboard_issuer",
+    "dashboard_expected_scope",
+    "redis_host",
+    "redis_port",
+    "redis_verify_ssl",
+    "default_user_config_enabled",
+    "default_user_store_context",
+    "default_user_llm_alternatives",
+    "client_config_enabled",
+    "require_auth",
+    "require_api_key",
+    "public_paths",
+    "textarea_enabled",
+    "root_redirect",
+    "slack_enabled",
+    "alternatives_max_count",
+    "context_checker_local",
+    "models",
+    "memory_zones",
+    "lemmatizer",
+    "git_revision",
+    "minimum_versions",
+    "import_from_dump",
+    "log_missing_declension",
+    "log_metrics",
+    "aws_region_name",
+    "llm_model",
+    "llm_api_base",
+    "llm_timeout",
+    "llm_max_concurrency",
+    "llm_max_requests_per_minute",
+    "llm_access",
+)
+
+
+def public_url(url: Any) -> Any:
+    """A URL as it can be shown: without the user and password some carry
+    (redis://user:pass@host), nor a query or fragment, where a key might be."""
+    if not isinstance(url, str) or not url:
+        return url
+    try:
+        parts = urlsplit(url)
+        host = parts.hostname or ""
+        port = parts.port
+    except ValueError:
+        return "(not a URL)"
+    if ":" in host:
+        host = f"[{host}]"
+    netloc = f"{host}:{port}" if port else host
+
+    return urlunsplit((parts.scheme, netloc, parts.path, "", ""))
 
 
 class Settings(BaseSettings):
@@ -291,6 +378,17 @@ class Settings(BaseSettings):
     # Leave it empty to allow every user.
     llm_access: LlmAccessType = LlmAccessType.USERS
     llm_allowed_users: list[str] = []
+
+    def debug_view(self) -> dict[str, Any]:
+        """The settings that are safe to show, see DEBUG_SETTINGS."""
+        view = {name: getattr(self, name) for name in DEBUG_SETTINGS}
+        for name in view:
+            if name.endswith("_url") or name.endswith("_api") or name.endswith("_base"):
+                view[name] = public_url(view[name])
+        # Which languages have a remote context checker, not its address or key.
+        view["context_checker"] = sorted(self.context_checker)
+
+        return view
 
     def jwks_url(self) -> str:
         """Resolve the dashboard's JWKS document, RFC 8615 path by default."""

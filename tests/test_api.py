@@ -2954,7 +2954,7 @@ def test_management_auth():
             )
             assert response.status_code == 401
 
-            # The settings object carries every secret the deployment holds.
+            # The settings show how the deployment is configured.
             assert client.get("/settings").status_code == 401
 
             # The docs switch is a separate decision and stays where it was.
@@ -3933,3 +3933,13 @@ def test_fetch_user_reuses_the_user_the_key_gate_resolved():
     assert asyncio.run(fetch_user(request, context.settings, None, None)) == (
         "gate@example.org"
     )
+
+
+def test_settings_shows_only_the_allow_list():
+    with TestClient(app) as client:
+        response = client.get("/settings")
+
+    assert response.status_code == 200
+    assert set(response.json()) == set(context.settings.debug_view())
+    assert "llm_api_key" not in response.json()
+    assert "api_key_hmac_key" not in response.json()

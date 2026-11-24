@@ -420,7 +420,7 @@ production too:
 
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
-| `/settings` | GET    | The whole settings object, including every secret it holds      |
+| `/settings` | GET    | The settings that help debug a deployment, without its secrets: `DEBUG_SETTINGS` in [app/settings.py](../app/settings.py) lists them, and URLs come without credentials or query |
 | `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
 
 Example: Test a specific rule
