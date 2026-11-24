@@ -24,6 +24,16 @@ A variant of a known provider is adjusted with settings rather than a new adapte
 
 A provider that differs structurally, in how it names the model that answered or how it reports a refused text, gets its own adapter in [app/llm_provider.py](../app/llm_provider.py): a subclass of `LlmProvider` with a unique `name`, overriding only what differs (`call_params`, `served_model`, `same_model`, `classify_error`), added to `PROVIDERS`, with tests in `tests/test_llm_provider.py`. Adapters decide what is sent to the provider, so a new one is screened against ethics question 1.1 ([ethics.md](./ethics.md)).
 
+## Knowing which model answered
+
+A provider can change the model behind a name without the deployment's configuration changing. What the API can do about it depends on why:
+
+- **Operational:** the provider moves a model name to other machines or another model under load. One proxy served the same alias from two machines on the same day.
+- **Accidental:** a routing or configuration bug sends requests to the wrong model, or an update changes how a model behaves.
+- **Malicious:** the provider deliberately serves something else and reports what the deployment expects. No software check can rule this out; it takes a trustworthy provider and a contract, or self-hosting with pinned weights.
+
+The API records which model answered each call, as far as the provider says (the adapter decides where to look, see above). It logs the model's name at DEBUG, counts calls per model in the metrics when `LOG_METRICS` is on, and compares it with `LLM_EXPECTED_MODEL` when that is set: a mismatch is logged as a warning and counted, and with `LLM_MODEL_MISMATCH=refuse` the call is refused with `503`. This catches operational and accidental changes when the provider reports them truthfully; it does nothing against a provider that lies. Only the model's name is recorded, never a machine or host name.
+
 ## Rephrasing needs no thinking
 
 Reasoning models think before they answer, and for this task the thinking costs time without improving the answer:

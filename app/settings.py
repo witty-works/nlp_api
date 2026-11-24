@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 from functools import lru_cache
 import os
 from urllib.parse import urlsplit, urlunsplit
@@ -387,6 +387,11 @@ class Settings(BaseSettings):
     llm_task_extra_body: dict[str, dict[str, Any]] = {}
     # litellm-proxy only: the response header naming the model that answered.
     llm_served_model_header: str = "x-litellm-model-name"
+    # The model the deployment expects to answer. Empty: the served model is
+    # recorded but not compared. An unknown served model counts as a mismatch.
+    llm_expected_model: str = ""
+    # On a mismatch: warn (log, count, keep the answer) or refuse (503).
+    llm_model_mismatch: Literal["warn", "refuse"] = "warn"
     # Seconds before an LLM call is given up and answered with a 503.
     llm_timeout: float = 60.0
     # LLM calls one worker process runs at once; the rest wait up to

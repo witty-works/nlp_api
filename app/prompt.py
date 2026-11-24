@@ -1,10 +1,12 @@
 import asyncio
 import logging
 import time
+from dataclasses import dataclass
 
 import litellm
 
 from app.settings import Settings
+from app.models import MetricsType
 from app.alternatives import Alternatives
 from app.guidance import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
 import json_repair
@@ -35,6 +37,14 @@ from app.llm_provider import (  # noqa: E402
 __all__ = ["LlmCutOff", "LlmTextRefused", "LlmUnavailable", "Prompt", "llm_error"]
 
 
+@dataclass
+class LlmAnswer:
+    """The text of an answer, and the model that gave it, if the provider said."""
+
+    text: str
+    served_model: str | None
+
+
 class Prompt:
     settings: Settings
     alternatives: Alternatives
@@ -42,6 +52,10 @@ class Prompt:
     def __init__(self, settings: Settings, redis_db=None):
         self.settings = settings
         self.provider: LlmProvider = provider_for(settings)
+        # This process's most recent answer: which model gave it, and whether
+        # that was LLM_EXPECTED_MODEL (None when nothing is expected).
+        self.last_served_model: str | None = None
+        self.last_model_matched: bool | None = None
         # Where the per-minute count is kept, shared by every worker; without
         # it there is no per-minute limit.
         self.redis_db = redis_db
@@ -80,7 +94,53 @@ class Prompt:
         temperature: float | None = None,
         max_tokens: int | None = None,
         task: LlmTask = "other",
-    ):
+    ) -> str:
+        """The text of the model's answer; see `answer`."""
+        return (
+            await self.answer(user_prompt, system_prompt, temperature, max_tokens, task)
+        ).text
+
+    def _record_served_model(self, served: str | None, task: LlmTask) -> None:
+        """Note which model answered, and compare it with LLM_EXPECTED_MODEL.
+        An unknown model counts as a mismatch when one is expected. Only the
+        model's name is logged and counted: no text, no machine, no host."""
+        logger = logging.getLogger("nlp_api")
+        name = served or "unknown"
+        logger.debug("LLM %s call answered by %s", task, name)
+        self.last_served_model = served
+        expected = self.settings.llm_expected_model
+        matched = None
+        if expected:
+            matched = served is not None and self.provider.same_model(expected, served)
+        self.last_model_matched = matched
+        self._count(MetricsType.LLM_SERVED_MODELS, name)
+        if matched is False:
+            logger.warning(
+                "LLM answered with %s, expected %s (LLM_EXPECTED_MODEL)",
+                name,
+                expected,
+            )
+            self._count(MetricsType.LLM_MODEL_MISMATCHES, name)
+            if self.settings.llm_model_mismatch == "refuse":
+                raise LlmUnavailable("served model is not LLM_EXPECTED_MODEL")
+
+    def _count(self, metric: MetricsType, field: str) -> None:
+        if not self.settings.log_metrics or self.redis_db is None:
+            return
+        try:
+            self.redis_db.hincrby(metric, field, 1)
+        except Exception:
+            # A metric is not worth failing a call for.
+            logging.getLogger("nlp_api").warning("could not count %s", metric)
+
+    async def answer(
+        self,
+        user_prompt: str,
+        system_prompt: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        task: LlmTask = "other",
+    ) -> LlmAnswer:
         """Handle LLM prompt generation and response.
 
         Args:
@@ -150,7 +210,9 @@ class Prompt:
                 " tokens before answering; raise LLM_MAX_TOKENS"
             )
 
-        return choice.message.content or ""
+        served = self.provider.served_model(response)
+        self._record_served_model(served, task)
+        return LlmAnswer(choice.message.content or "", served)
 
     def parse_json(self, result: str):
         """Parse and repair potentially malformed JSON from LLM responses.

@@ -13,10 +13,10 @@ from app.models import LlmAccessType
 from tests.test_api import llm_access, set_redis  # noqa: F401  (fixtures)
 
 
-def answer(content, finish_reason="stop"):
+def answer(content, finish_reason="stop", model="test"):
     message = type("Message", (), {"content": content})
     choice = type("Choice", (), {"message": message, "finish_reason": finish_reason})
-    return type("Response", (), {"choices": [choice]})
+    return type("Response", (), {"choices": [choice], "model": model})
 
 
 def prompt_with(monkeypatch, reply, **settings):
@@ -114,6 +114,61 @@ def test_the_task_reaches_the_call_params(monkeypatch):
     asyncio.run(prompt.handle("hi", task="write"))
     assert calls[0]["extra_body"] == no_thinking
     assert "extra_body" not in calls[1]
+
+
+def test_the_served_model_is_recorded(monkeypatch):
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="served-model"))
+    assert asyncio.run(prompt.answer("hi")).served_model == "served-model"
+    assert prompt.last_served_model == "served-model"
+
+
+def test_a_mismatch_warns_by_default(monkeypatch, caplog):
+    prompt, _ = prompt_with(
+        monkeypatch, answer("ok", model="other"), llm_expected_model="expected"
+    )
+    with caplog.at_level("WARNING", "nlp_api"):
+        assert asyncio.run(prompt.handle("hi")) == "ok"
+    assert "LLM answered with other, expected expected" in caplog.text
+    assert prompt.last_model_matched is False
+
+
+def test_a_match_is_recorded(monkeypatch):
+    prompt, _ = prompt_with(
+        monkeypatch, answer("ok", model="expected"), llm_expected_model="expected"
+    )
+    asyncio.run(prompt.handle("hi"))
+    assert prompt.last_model_matched is True
+
+
+def test_a_mismatch_is_refused_when_configured(monkeypatch):
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model="other"),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with pytest.raises(LlmUnavailable):
+        asyncio.run(prompt.handle("hi"))
+
+
+def test_unknown_served_model_counts_as_mismatch(monkeypatch, caplog):
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model=None),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with caplog.at_level("WARNING", "nlp_api"), pytest.raises(LlmUnavailable):
+        asyncio.run(prompt.handle("hi"))
+    assert "LLM answered with unknown" in caplog.text
+
+
+def test_no_expected_model_means_no_comparison(monkeypatch, caplog):
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="anything"))
+    with caplog.at_level("WARNING", "nlp_api"):
+        asyncio.run(prompt.handle("hi"))
+    assert prompt.last_model_matched is None
+    assert "expected" not in caplog.text
 
 
 def test_a_cut_off_answer_is_refused(monkeypatch):
