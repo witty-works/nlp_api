@@ -67,6 +67,11 @@ listed; the git history has them.
   uv run python -m bin.migrate_organization_keys --dry-run
   uv run python -m bin.migrate_organization_keys
   ```
+- **Rephrase and write answers name the model.** `/v1.0/rephrase` and
+  `/v1.0/write` answers carry `model`: the model that answered, as the
+  provider reported it, else `LLM_MODEL`. `/health` reports the same under
+  `llm`, for information only; it never makes `/health` fail. Clients that
+  ignore unknown fields need no change.
 - **Bedrock credentials use the standard AWS names.** `AWS_KEY` and
   `AWS_SECRET_KEY` are no longer read, and setting either stops the start.
   Set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` instead, or use an AWS

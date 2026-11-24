@@ -3298,10 +3298,14 @@ def test_features_with_a_key_say_what_it_may_use(monkeypatch):
     with TestClient(app) as client:
         assert llm() == {"available": True, "allowed": True}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["other@example.com"]
+        )
         assert llm() == {"available": True, "allowed": False}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["Default@Gmail.com"]
+        )
         assert llm() == {"available": True, "allowed": True}
 
         monkeypatch.setattr(context.settings, "llm_model", "")
@@ -4045,3 +4049,76 @@ def test_a_password_with_non_ascii_characters_is_checked(login):
             settings.api_docs_username, settings.api_docs_password = previous
 
     assert response.status_code == 401
+
+
+def reply_from(monkeypatch, content, model="served-model"):
+    """The provider answers `content`, naming `model` as the one that did."""
+
+    class Response:
+        def __init__(self):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+            self.model = model
+
+    async def acompletion(**kwargs):
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+
+def test_rephrase_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, '{"chair": "The chair called."}')
+    llm_access(LlmAccessType.USERS)
+    body = {
+        "sentence": "The chairman called.",
+        "text": "chairman",
+        "start": 4,
+        "alternatives": [{"text": "chair"}],
+        "lang": "en",
+    }
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase", json=body, headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_write_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, "The chair will call everyone tomorrow.")
+    llm_access(LlmAccessType.USERS)
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Make it formal.", "text": "Chair calls everyone."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_health_reports_the_llm_without_failing(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", "other")
+        monkeypatch.setattr(context.prompt, "last_model_matched", False)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"] == {
+        "configured": "openai/test",
+        "served": "other",
+        "matched": False,
+    }
+
+
+def test_health_stays_ok_before_any_llm_call(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    monkeypatch.setattr(context.settings, "llm_expected_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", None)
+        monkeypatch.setattr(context.prompt, "last_model_matched", None)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"]["served"] is None

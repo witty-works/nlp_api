@@ -1545,10 +1545,13 @@ class ConfigOptionsOut(BaseModel):
 class RephrasesOut(BaseModel):
     sentence: str
     results: dict[str, str]
+    # The model that wrote the rephrasings: the one that answered if the
+    # provider said, else the configured LLM_MODEL.
+    model: Optional[str] = None
 
     @staticmethod
-    def factory(sentence: str, results: dict[str, str]):
-        return RephrasesOut(sentence=sentence, results=results)
+    def factory(sentence: str, results: dict[str, str], model: str | None = None):
+        return RephrasesOut(sentence=sentence, results=results, model=model)
 
 
 class EditOut(BaseModel):
@@ -1563,6 +1566,9 @@ class PromptOut(BaseModel):
     reviewed_response: Optional[str] = None
     # Word diff from initial_response to reviewed_response; /v1.0/write only.
     edits: Optional[list[EditOut]] = None
+    # /v1.0/write only: the model of the last call that answered (the
+    # review's, if there was one), else the configured LLM_MODEL.
+    model: Optional[str] = None
 
 
 class ResultsOut(BaseModel):

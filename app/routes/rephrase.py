@@ -69,9 +69,11 @@ async def rephrase_sentence(
     context.redis.store_metrics(request, configs, version, "rephrase")
 
     try:
+        outcome = await context.llm_alternatives.handle(rephrase_request_in)
         result = RephrasesOut.factory(
             rephrase_request_in.sentence,
-            await context.llm_alternatives.handle(rephrase_request_in),
+            outcome.results,
+            outcome.served_model or context.settings.llm_model,
         )
     except Exception as error:
         response.status_code, headers, message = llm_error(error, "/v1.0/rephrase")

@@ -80,6 +80,16 @@ async def get_health(
                 detail=content,
             )
 
+    # Information only, outside the checks above: a mismatch only warns by
+    # default, a fresh worker has served nothing yet, and each worker keeps
+    # its own. Only model names, never a machine or host.
+    if context.settings.llm_model:
+        content["llm"] = {
+            "configured": context.settings.llm_model,
+            "served": context.prompt.last_served_model,
+            "matched": context.prompt.last_model_matched,
+        }
+
     return content
 
 

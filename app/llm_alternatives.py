@@ -8,6 +8,16 @@ from app.alternatives import Alternatives
 from app.prompt import Prompt
 import json
 import logging
+from dataclasses import dataclass
+
+
+@dataclass
+class RephraseOutcome:
+    """The rephrasings per alternative, and the model that wrote them."""
+
+    results: dict[str, str]
+    served_model: str | None
+
 
 lang_map = {
     LangType.EN: "English",
@@ -107,7 +117,10 @@ class LlmAlternatives:
 
         user_prompt = json.dumps(input_data, ensure_ascii=False)
 
-        answer = await self.prompt.handle(user_prompt, system_prompt, task="rephrase")
+        llm_answer = await self.prompt.answer(
+            user_prompt, system_prompt, task="rephrase"
+        )
+        answer = llm_answer.text
         parsed = self.prompt.parse_json(answer)
         # Anything but an object of sentences is no rephrasing: prose, a
         # reasoning model cut off mid-thought, a list. Keep only the strings.
@@ -156,4 +169,4 @@ class LlmAlternatives:
             elif alternative.text in result:
                 results[alternative.text] = result[alternative.text]
 
-        return results
+        return RephraseOutcome(results, llm_answer.served_model)

@@ -7,7 +7,14 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.prompt import LlmCutOff, LlmTextRefused, LlmUnavailable, Prompt, llm_error
+from app.prompt import (
+    LlmAnswer,
+    LlmCutOff,
+    LlmTextRefused,
+    LlmUnavailable,
+    Prompt,
+    llm_error,
+)
 from app.settings import Settings
 from app.models import LlmAccessType
 from tests.test_api import llm_access, set_redis  # noqa: F401  (fixtures)
@@ -390,7 +397,7 @@ def test_the_rephrase_route_answers_503_when_the_llm_is_busy(
         raise LlmUnavailable("rate limited")
 
     with TestClient(app) as client:
-        monkeypatch.setattr(app.state.context.prompt, "handle", busy)
+        monkeypatch.setattr(app.state.context.prompt, "answer", busy)
         response = client.post(
             "/v1.0/rephrase",
             json={
@@ -416,7 +423,7 @@ def test_the_rephrase_route_answers_422_when_the_provider_refuses(
         raise LlmTextRefused("Content blocked: AHV number pattern detected")
 
     with TestClient(app) as client:
-        monkeypatch.setattr(app.state.context.prompt, "handle", refused)
+        monkeypatch.setattr(app.state.context.prompt, "answer", refused)
         response = client.post(
             "/v1.0/rephrase",
             json={
@@ -464,10 +471,10 @@ def test_a_prose_answer_is_logged_without_its_text(
     llm_access(LlmAccessType.USERS)
 
     async def prose(*args, **kwargs):
-        return "Sure! Hey everyone, the chairperson will be late."
+        return LlmAnswer("Sure! Hey everyone, the chairperson will be late.", None)
 
     with TestClient(app) as client, caplog.at_level("WARNING", "nlp_api"):
-        monkeypatch.setattr(app.state.context.prompt, "handle", prose)
+        monkeypatch.setattr(app.state.context.prompt, "answer", prose)
         client.post(
             "/v1.0/rephrase",
             json={

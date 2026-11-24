@@ -107,11 +107,11 @@ async def post_write(
     )
     max_tokens = context.settings.llm_max_tokens + WRITE_TEXT_TOKENS
     try:
-        draft = plain_response(
-            await context.prompt.handle(
-                user_prompt, system_prompt, 0.4, max_tokens=max_tokens, task="write"
-            )
+        draft_answer = await context.prompt.answer(
+            user_prompt, system_prompt, 0.4, max_tokens=max_tokens, task="write"
         )
+        served_model = draft_answer.served_model
+        draft = plain_response(draft_answer.text)
         if not draft.strip():
             # The model failing, not the request: nothing to review.
             response.status_code = status.HTTP_502_BAD_GATEWAY
@@ -125,11 +125,11 @@ async def post_write(
         outcome = await review(check_request_in, configs, context)
         reviewed_response = None
         if outcome.reask is not None:
-            reviewed_response = plain_response(
-                await context.prompt.handle(
-                    outcome.reask["content"], max_tokens=max_tokens, task="write"
-                )
+            review_answer = await context.prompt.answer(
+                outcome.reask["content"], max_tokens=max_tokens, task="write"
             )
+            served_model = review_answer.served_model
+            reviewed_response = plain_response(review_answer.text)
     except Exception as error:
         # The caller gets the kind of failure, the operator the whole story: a
         # wrong LLM_API_BASE or an expired provider key ends up here too.
@@ -147,6 +147,7 @@ async def post_write(
         check_results=outcome.findings,
         limit_reached=outcome.limit_reached,
         edits=word_edits(draft, reviewed_response) if reviewed_response else None,
+        model=served_model or context.settings.llm_model,
     )
 
 
