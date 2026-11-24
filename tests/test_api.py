@@ -2748,6 +2748,48 @@ def test_dashboard_token(dashboard_sso, set_redis):
         assert response.json()["id"] == "test-user"
 
 
+@pytest.fixture
+def two_dashboard_clients(dashboard_sso, monkeypatch):
+    """The dashboard configs as Settings builds them for DASHBOARD_CLIENT_ID
+    "1, 2", against the fixture's keys."""
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1, 2")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    built = Settings.factory().sso_configs
+    configs = {
+        name: config for name, config in built.items() if name.startswith("dashboard")
+    }
+    monkeypatch.setattr(
+        context.settings,
+        "sso_configs",
+        {**context.settings.sso_configs, **configs},
+    )
+    return dashboard_sso
+
+
+def test_a_token_of_the_second_dashboard_client_is_accepted(
+    two_dashboard_clients, set_redis
+):
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + two_dashboard_clients(aud="2")},
+        )
+    assert response.status_code == 200
+    assert response.json()["id"] == "test-user"
+
+
+def test_a_token_of_an_unlisted_client_is_refused(two_dashboard_clients, set_redis):
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + two_dashboard_clients(aud="3")},
+        )
+    assert response.status_code == 401
+
+
 def test_dashboard_token_rejections(dashboard_sso, set_redis):
     """Expired, wrong-audience and unsigned variants are all refused."""
     with TestClient(app) as client:
@@ -3298,10 +3340,14 @@ def test_features_with_a_key_say_what_it_may_use(monkeypatch):
     with TestClient(app) as client:
         assert llm() == {"available": True, "allowed": True}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["other@example.com"]
+        )
         assert llm() == {"available": True, "allowed": False}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["Default@Gmail.com"]
+        )
         assert llm() == {"available": True, "allowed": True}
 
         monkeypatch.setattr(context.settings, "llm_model", "")
