@@ -160,3 +160,24 @@ def test_a_dashboard_issuer_is_required(monkeypatch):
     monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
     issuer = Settings.factory().sso_configs["dashboard"]["issuer"]
     assert issuer == "https://dashboard.example.com"
+
+
+def test_several_dashboard_client_ids(monkeypatch):
+    """The extension and the dashboard's write page are two clients of one
+    dashboard; the API accepts the tokens of both."""
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1, 2")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    configs = Settings.factory().sso_configs
+    assert configs["dashboard"]["client_id"] == "1"
+    assert configs["dashboard:2"]["client_id"] == "2"
+    assert configs["dashboard:2"]["issuer"] == configs["dashboard"]["issuer"]
+    assert configs["dashboard:2"]["jwks_url"] == configs["dashboard"]["jwks_url"]
+
+
+def test_one_dashboard_client_id_as_before(monkeypatch):
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    configs = Settings.factory().sso_configs
+    assert [name for name in configs if name.startswith("dashboard")] == ["dashboard"]

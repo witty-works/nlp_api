@@ -7,6 +7,9 @@ listed; the git history has them.
 
 ## 4.0.0
 
+- **`DASHBOARD_CLIENT_ID` accepts several client ids,** comma-separated, so
+  the tokens of the browser extension and of the dashboard's write page are
+  both accepted. One id works as before.
 - **`ENVIRONMENT_TYPE` defaults to `production`.** A deployment that never set
   it now hides the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`,
   `/parse-word-types`, `/save_openapi_json` answer `404`) and `/` no longer

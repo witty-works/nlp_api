@@ -461,14 +461,24 @@ class Settings(BaseSettings):
                     " it to the `iss` the dashboard's tokens carry (its"
                     " OAuthIssuer), which every dashboard token is checked for"
                 )
-            settings.sso_configs["dashboard"] = {
-                "client_id": settings.dashboard_client_id,
-                "jwks_url": settings.jwks_url(),
-                # Always checked: a token without the claim, or with another
-                # issuer's, is refused.
-                "issuer": settings.dashboard_issuer,
-                "expected_scope": settings.dashboard_expected_scope or None,
-            }
+            # Several clients of the one dashboard (the browser extension,
+            # the dashboard's own write page), comma-separated: one entry per
+            # client, the first under the name it always had.
+            client_ids = [
+                client_id.strip()
+                for client_id in settings.dashboard_client_id.split(",")
+                if client_id.strip()
+            ]
+            for index, client_id in enumerate(client_ids):
+                name = "dashboard" if index == 0 else f"dashboard:{client_id}"
+                settings.sso_configs[name] = {
+                    "client_id": client_id,
+                    "jwks_url": settings.jwks_url(),
+                    # Always checked: a token without the claim, or with
+                    # another issuer's, is refused.
+                    "issuer": settings.dashboard_issuer,
+                    "expected_scope": settings.dashboard_expected_scope or None,
+                }
 
         if settings.minimum_version_web_ext:
             settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
