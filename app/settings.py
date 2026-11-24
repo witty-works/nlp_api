@@ -540,12 +540,19 @@ def validate_aws_names(settings: Settings) -> None:
 def validate_llm_provider(settings: Settings) -> None:
     """Stop the start on an LLM_PROVIDER no adapter has, naming the known
     ones, rather than fail every LLM call later."""
-    from app.llm_provider import PROVIDERS
+    from app.llm_provider import LLM_TASKS, PROVIDERS
 
     if settings.llm_provider not in PROVIDERS:
         raise ValueError(
             f"LLM_PROVIDER {settings.llm_provider!r} is not one of: "
             + ", ".join(PROVIDERS)
+        )
+    # A misspelt task would otherwise be ignored without a word.
+    unknown = set(settings.llm_task_extra_body) - set(LLM_TASKS)
+    if unknown:
+        raise ValueError(
+            f"LLM_TASK_EXTRA_BODY names {', '.join(sorted(unknown))}, which is"
+            f" not a task; the tasks are: {', '.join(LLM_TASKS)}"
         )
 
 

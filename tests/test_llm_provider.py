@@ -132,3 +132,15 @@ def test_a_real_litellm_response_carries_the_served_model_header():
         server.shutdown()
     assert answer.text == "ok"
     assert answer.served_model == "openai/Real-Model"
+
+
+def test_task_extra_body_merges_one_level_deep():
+    """A task's fields add to a global object field rather than replace it."""
+    settings = Settings(
+        llm_extra_body={"chat_template_kwargs": {"a": 1}, "x": 1},
+        llm_task_extra_body={"rephrase": {"chat_template_kwargs": {"b": 2}}},
+    )
+    assert provider_for(settings).call_params("rephrase")["extra_body"] == {
+        "chat_template_kwargs": {"a": 1, "b": 2},
+        "x": 1,
+    }

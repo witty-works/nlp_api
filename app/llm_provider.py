@@ -7,7 +7,7 @@ one by pull request; one that only differs in a detail is adjusted with a
 setting (LLM_SERVED_MODEL_HEADER, LLM_TASK_EXTRA_BODY). See docs/llm-models.md.
 """
 
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, get_args
 
 import litellm
 
@@ -16,6 +16,7 @@ from app.settings import Settings
 # What a call is for, so an adapter can send different parameters for each
 # (for example, no thinking for a rephrasing).
 LlmTask = Literal["rephrase", "write", "other"]
+LLM_TASKS = get_args(LlmTask)
 
 
 class LlmUnavailable(Exception):
@@ -111,10 +112,14 @@ class LlmProvider:
         }
         if self.settings.aws_region_name:
             params["aws_region_name"] = self.settings.aws_region_name
-        extra_body = {
-            **self.settings.llm_extra_body,
-            **self.settings.llm_task_extra_body.get(task, {}),
-        }
+        # One level deep: a task's {"chat_template_kwargs": {...}} adds to the
+        # global one's instead of replacing it.
+        extra_body = dict(self.settings.llm_extra_body)
+        for name, value in self.settings.llm_task_extra_body.get(task, {}).items():
+            if isinstance(value, dict) and isinstance(extra_body.get(name), dict):
+                extra_body[name] = {**extra_body[name], **value}
+            else:
+                extra_body[name] = value
         if extra_body:
             params["extra_body"] = extra_body
         return params

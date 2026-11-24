@@ -163,6 +163,14 @@ def test_old_aws_variable_names_stop_the_start(monkeypatch, name, new_name):
         Settings.factory()
 
 
+def test_an_unknown_task_in_task_extra_body_stops_the_start(monkeypatch):
+    monkeypatch.setenv("LLM_TASK_EXTRA_BODY", '{"rephrasing": {"x": 1}}')
+    with pytest.raises(ValueError, match="LLM_TASK_EXTRA_BODY.*rephrasing"):
+        Settings.factory()
+    monkeypatch.setenv("LLM_TASK_EXTRA_BODY", '{"rephrase": {"x": 1}}')
+    Settings.factory()
+
+
 def test_unknown_llm_provider_stops_the_start(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", "nope")
     with pytest.raises(ValueError, match="LLM_PROVIDER"):
