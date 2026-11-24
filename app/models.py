@@ -616,6 +616,11 @@ CONFIG_LIST_MAX_LENGTH = 500
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
+    # A privacy option for clients: send a field's text only once the user
+    # has confirmed that field. The API cannot know about fields and does not
+    # enforce it; it carries the setting, forced where a synced config forces
+    # it.
+    confirm_before_checking: bool = False
     addons: Optional[
         Annotated[list[str], Len(max_length=CONFIG_LIST_MAX_LENGTH)]
     ] = None
@@ -854,6 +859,7 @@ class GenderedRolesFormatConfigType(BaseModel):
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType] = None
     llm_alternatives: Optional[BooleanConfigType] = None
+    confirm_before_checking: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None

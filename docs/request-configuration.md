@@ -124,6 +124,7 @@ The `config` object in a `/check` request supports the following options.
 | ------------------ | ------- | ------- |
 | `store_context`    | boolean | `true`  |
 | `llm_alternatives` | boolean | `false` |
+| `confirm_before_checking` | boolean | `false` |
 
 `store_context`: When true, includes surrounding text context (±100 chars) in results. Context is sanitized for privacy. Clients use this flag to decide whether to persist data with analytics.
 
@@ -132,6 +133,18 @@ The `config` object in a `/check` request supports the following options.
 itself, and an [`LLM_ACCESS`](./configuration.md#who-may-spend-the-llm-budget)
 policy that covers the requester — that last one is the operator's and can only
 ever turn this off.
+
+`confirm_before_checking`: A privacy option for clients: they send a field's
+text only once the user has confirmed that field. The API does not enforce it,
+since it cannot know about fields; it carries it. `/v2.0/auth` reports it as
+`{"value": ..., "status": ...}` in `config` (the user's, a synced API key's, or
+`DEFAULT_USER_CONFIRM_BEFORE_CHECKING`) and in `organization_config`, like
+`store_context`. A request may turn it on itself, whatever
+`CLIENT_CONFIG_ENABLED` says; a `force` in a synced config overrides what the
+request sent. An organisation turns it on with
+`"confirm_before_checking": {"value": true, "status": "force"}` in its
+`config`, and leaves it to its users with
+`{"value": false, "status": "suggestion"}`.
 
 ### Addons
 

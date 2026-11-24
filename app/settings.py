@@ -53,6 +53,7 @@ DEBUG_SETTINGS = (
     "default_user_config_enabled",
     "default_user_store_context",
     "default_user_llm_alternatives",
+    "default_user_confirm_before_checking",
     "client_config_enabled",
     "require_auth",
     "require_api_key",
@@ -198,6 +199,9 @@ class Settings(BaseSettings):
     default_user_config_enabled: bool = False
     default_user_store_context: bool = True
     default_user_llm_alternatives: bool = False
+    # Whether such a user's clients ask before sending a field's text (the
+    # `confirm_before_checking` config), as a suggestion the user may change.
+    default_user_confirm_before_checking: bool = False
 
     # An API key this deployment always has, mapped to DEFAULT_USER_EMAIL, so a
     # server run for one person has a key without a dashboard to mint one or a

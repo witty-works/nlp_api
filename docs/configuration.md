@@ -678,6 +678,7 @@ has no such job, so the two settings below fill the gap.
 |  `DEFAULT_USER_CONFIG_ENABLED`  | false         | Give a user with no stored config the defaults below instead of a 403. The `/user/configs` management endpoint still reports 404 for them, so "nothing is stored" stays visible. |
 |  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
 | `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
+| `DEFAULT_USER_CONFIRM_BEFORE_CHECKING` | false  | Whether clients ask before sending a field's text (`confirm_before_checking`). Always a suggestion, which the user may change; an API key's `force` keeps it on. |
 |       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
 |                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it, the [guardrail endpoints](./guardrails.md) included.                                                   |
 
