@@ -191,3 +191,31 @@ def test_correct_gendered_suggestions_from_witty_alternatives_survive(
             assert failed == [], (suggestion.alternative, suggestion.text, failed)
             checked += 1
     assert checked
+
+
+def test_the_lemma_check_parses_inside_a_memory_zone(context, monkeypatch):
+    """The user's words are parsed inside nlp_session, so they do not stay in
+    the model's string store for good."""
+    import contextlib
+
+    inside = {"now": False, "outside_calls": 0}
+    real_fetch = context.model.fetch_tokens
+
+    @contextlib.asynccontextmanager
+    async def session(lang):
+        inside["now"] = True
+        try:
+            yield
+        finally:
+            inside["now"] = False
+
+    def fetch_tokens(lang, text):
+        if not inside["now"]:
+            inside["outside_calls"] += 1
+        return real_fetch(lang, text)
+
+    monkeypatch.setattr(context.model, "nlp_session", session)
+    monkeypatch.setattr(context.model, "fetch_tokens", fetch_tokens)
+    case = next(c for c in CASES if c["name"] == "tense_kept")
+    asyncio.run(failed_checks(request_for(case), suggestion_for(case), {}, context))
+    assert inside["outside_calls"] == 0

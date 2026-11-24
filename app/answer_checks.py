@@ -39,19 +39,25 @@ def _occurrences(words: str, text: str) -> int:
     )
 
 
-def alternative_missing(
+async def alternative_missing(
     lang, suggestion: str, alternative: str, context: AppContext
 ) -> str | None:
     """Every word of the alternative is in the suggestion, by lemma or as
     written, so an inflected form passes ("closely examined" for "closely
-    examine") but an undone swap does not ("chairman" for "chair")."""
-    suggestion_doc = context.model.fetch_tokens(lang, suggestion)
-    lemmas = {token.lemma_.lower() for token in suggestion_doc}
-    words = {token.text.lower() for token in suggestion_doc}
-    for token in context.model.fetch_tokens(lang, alternative):
-        if token.is_punct or token.is_space:
-            continue
-        if token.lemma_.lower() not in lemmas and token.text.lower() not in words:
+    examine") but an undone swap does not ("chairman" for "chair"). Parsed
+    inside nlp_session, so the user's words do not stay in the model's string
+    store; only plain strings leave it."""
+    async with context.model.nlp_session(lang):
+        suggestion_doc = context.model.fetch_tokens(lang, suggestion)
+        lemmas = {token.lemma_.lower() for token in suggestion_doc}
+        words = {token.text.lower() for token in suggestion_doc}
+        wanted = [
+            (token.lemma_.lower(), token.text.lower())
+            for token in context.model.fetch_tokens(lang, alternative)
+            if not (token.is_punct or token.is_space)
+        ]
+    for lemma, word in wanted:
+        if lemma not in lemmas and word not in words:
             return "alternative_missing"
     return None
 
@@ -189,7 +195,9 @@ async def failed_checks(
     failed = []
     for alternative, model_sentence in checked:
         failed += [
-            alternative_missing(request_in.lang, model_sentence, alternative, context),
+            await alternative_missing(
+                request_in.lang, model_sentence, alternative, context
+            ),
             replaced_words_back(sentence, text, model_sentence, alternative),
             other_occurrence_changed(sentence, text, model_sentence, alternative),
         ]
