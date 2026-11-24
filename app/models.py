@@ -2,6 +2,7 @@ from pydantic import field_validator, model_validator, BaseModel, ConfigDict, Fi
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
+import html
 from collections import namedtuple
 import json
 from cmp_version import VersionString
@@ -1190,7 +1191,14 @@ class ResultOut(BaseModel):
                 else language._(subcategory_key, "sub_head")
             )
             if long_explanation is None or long_explanation == "":
-                long_explanation = explanation
+                # The short explanation is plain text (and an organisation's
+                # own words for its term replacements), long_text is HTML to
+                # clients, so it is escaped to show as written.
+                long_explanation = (
+                    html.escape(explanation, quote=False)
+                    if explanation
+                    else explanation
+                )
 
             video_url = (
                 video_url

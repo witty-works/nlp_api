@@ -313,6 +313,11 @@ curl -X 'POST' \
 }'
 ```
 
+A term replacement's explanation is plain text. A finding from it carries the
+text unchanged in `explanation.text` and HTML-escaped in
+`explanation.long_text`, which clients render as HTML, so it shows as written.
+Its `url` reaches clients only if it is an `http` or `https` address.
+
 ### Organization Configuration
 
 | Endpoint                                            | Method | Description                                 |
