@@ -49,7 +49,11 @@ class LlmAlternatives:
                 alternatives.append(alternative.male_form)
                 alternatives.append(alternative.female_form)
 
-        alternatives = list(set(alternatives))
+        # Sorted, not just deduplicated: a set's order changes with every
+        # process (hash randomisation), and the order of the drafts changes
+        # the model's answer, so the same request got different suggestions
+        # after a restart.
+        alternatives = sorted(set(alternatives))
 
         text = rephrase_request_in.text
         start = rephrase_request_in.start

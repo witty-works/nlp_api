@@ -120,6 +120,27 @@ def test_the_replaced_words_are_quoted_in_the_system_prompt():
     assert text not in prompt.system_prompt
 
 
+def test_the_drafts_reach_the_model_in_a_stable_order():
+    """The same alternatives in any order give the model the same message, so
+    a request gets the same suggestions in every process."""
+    settings = Settings(llm_model="openai/test")
+    messages = []
+    for alternatives in (["people", "everyone", "all"], ["all", "people", "everyone"]):
+        prompt = RecordingBoth(settings, "{}")
+        request = RephraseRequestIn(
+            sentence="When I am with the guys",
+            text="guys",
+            start=19,
+            lang="en",
+            alternatives=[{"text": text} for text in alternatives],
+        )
+        asyncio.run(LlmAlternatives(settings, None, prompt).handle(request))
+        messages.append(prompt.user_prompt)
+
+    assert messages[0] == messages[1]
+    assert list(json.loads(messages[0])["sentences"]) == ["all", "everyone", "people"]
+
+
 @pytest.mark.parametrize(
     "change",
     [
