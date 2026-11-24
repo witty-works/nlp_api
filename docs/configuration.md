@@ -554,6 +554,12 @@ Bedrock API key instead of the AWS credentials.
 The old names `AWS_KEY` and `AWS_SECRET_KEY` stop the start, so that no
 deployment calls Bedrock without its keys unnoticed.
 
+LiteLLM reads the AWS variables from the process environment, not from the
+API's `.env` file. With `compose.yml`, which passes `.env` to the container
+(`env_file`), they arrive there; run any other way (`uv run`, gunicorn
+directly), export them in the environment yourself, or Bedrock is called
+without credentials and every call fails.
+
 ### Who may spend the LLM budget
 
 These calls are billed to whoever runs the API, so who may make them is the
