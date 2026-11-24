@@ -25,7 +25,7 @@ from app.dependencies import (
     get_app_context,
 )
 from app.context import AppContext
-from app.settings import get_settings
+from app.settings import get_settings, public_url
 from app.text_utils import parse_word_type
 
 router = APIRouter()
@@ -123,7 +123,7 @@ def get_languagetool_api(
     username: str = Depends(fetch_management_username),
     context: AppContext = Depends(get_app_context),
 ) -> str:
-    return context.settings.languagetool_api
+    return public_url(context.settings.languagetool_api)
 
 
 @router.get("/settings", include_in_schema=not get_settings().is_prod)
