@@ -32,6 +32,7 @@ from app.llm_provider import (  # noqa: E402
     LlmTextRefused,
     LlmUnavailable,
     provider_for,
+    public_model_name,
 )
 
 __all__ = ["LlmCutOff", "LlmTextRefused", "LlmUnavailable", "Prompt", "llm_error"]
@@ -110,9 +111,10 @@ class Prompt:
         An unknown model counts as a mismatch when one is expected. Only the
         model's name is logged and counted: no text, no machine, no host."""
         logger = logging.getLogger("nlp_api")
-        name = served or "unknown"
+        shown = public_model_name(served)
+        name = shown or "unknown"
         logger.debug("LLM %s call answered by %s", task, name)
-        self.last_served_model = served
+        self.last_served_model = shown
         expected = self.settings.llm_expected_model
         matched = None
         if expected:

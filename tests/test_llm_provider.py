@@ -144,3 +144,24 @@ def test_task_extra_body_merges_one_level_deep():
         "chat_template_kwargs": {"a": 1, "b": 2},
         "x": 1,
     }
+
+
+ARN_MODEL = (
+    "bedrock/arn:aws:bedrock:eu-central-1:123456789012:inference-profile/eu.model"
+)
+
+
+def test_a_model_name_hides_the_aws_account_in_an_arn():
+    from app.llm_provider import public_model_name
+
+    shown = public_model_name(ARN_MODEL)
+    assert "123456789012" not in shown
+    assert shown.startswith("bedrock/arn:aws:bedrock:eu-central-1:")
+    assert shown.endswith(":inference-profile/eu.model")
+
+
+def test_a_model_name_is_capped():
+    from app.llm_provider import public_model_name
+
+    assert len(public_model_name("m" * 1000)) <= 200
+    assert public_model_name(None) is None

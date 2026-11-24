@@ -206,6 +206,13 @@ def test_a_cut_off_answer_still_records_its_model(monkeypatch):
     assert prompt.last_model_matched is False
 
 
+def test_a_long_served_model_name_is_capped(monkeypatch):
+    """The name comes from the provider; it is stored and counted capped."""
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="m" * 1000))
+    asyncio.run(prompt.handle("hi"))
+    assert len(prompt.last_served_model) <= 200
+
+
 def test_a_cut_off_answer_is_refused(monkeypatch):
     """A reasoning model that ran out of tokens returns its unfinished
     reasoning, or a truncated JSON object; neither may be used."""

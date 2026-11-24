@@ -4122,3 +4122,15 @@ def test_health_stays_ok_before_any_llm_call(monkeypatch):
         response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["llm"]["served"] is None
+
+
+def test_health_does_not_show_an_aws_account(monkeypatch):
+    monkeypatch.setattr(
+        context.settings,
+        "llm_model",
+        "bedrock/arn:aws:bedrock:eu-central-1:123456789012:inference-profile/x",
+    )
+    with TestClient(app) as client:
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert "123456789012" not in response.text

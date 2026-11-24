@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
+from app.llm_provider import public_model_name
 from app.context import AppContext
 from app.dependencies import get_app_context
 from app.guardrail import review
@@ -147,7 +148,7 @@ async def post_write(
         check_results=outcome.findings,
         limit_reached=outcome.limit_reached,
         edits=word_edits(draft, reviewed_response) if reviewed_response else None,
-        model=served_model or context.settings.llm_model,
+        model=public_model_name(served_model or context.settings.llm_model),
     )
 
 

@@ -7,6 +7,7 @@ one by pull request; one that only differs in a detail is adjusted with a
 setting (LLM_SERVED_MODEL_HEADER, LLM_TASK_EXTRA_BODY). See docs/llm-models.md.
 """
 
+import re
 from typing import ClassVar, Literal, get_args
 
 import litellm
@@ -76,6 +77,21 @@ def _refusal(error: litellm.BadRequestError) -> LlmTextRefused | None:
             guardrail=str(fields["guardrail_name"]),
         )
     return None
+
+
+# How long a model name may be wherever it is shown, logged or counted: it
+# comes from the provider, and a Redis hash field per name must stay bounded.
+MODEL_NAME_MAX_LENGTH = 200
+# The account id in an AWS ARN (a Bedrock inference profile, for instance).
+_ARN_ACCOUNT = re.compile(r"(arn:aws[\w-]*:[\w-]+:[\w-]*:)\d{12}(:)")
+
+
+def public_model_name(name: str | None) -> str | None:
+    """A model name as it may be shown, logged or counted: an AWS account id
+    in an ARN masked, and at most MODEL_NAME_MAX_LENGTH characters."""
+    if not name:
+        return name
+    return _ARN_ACCOUNT.sub(r"\1…\2", name)[:MODEL_NAME_MAX_LENGTH]
 
 
 def response_header(response, name: str) -> str | None:
