@@ -22,6 +22,9 @@ class Suggestion:
     alternative: str
     text: str
     drafts: list[tuple[str, str]]
+    # For a gendered alternative, the masculine and feminine form each draft
+    # was made with; empty for a plain one, whose drafts use `alternative`.
+    forms: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -172,10 +175,8 @@ class LlmAlternatives:
                     and alternative.female_form in result
                 ):
                     # Before noun_alternatives, which may change the forms.
-                    pairs = [
-                        (clean(drafts[form]), result[form])
-                        for form in (alternative.male_form, alternative.female_form)
-                    ]
+                    forms = [alternative.male_form, alternative.female_form]
+                    pairs = [(clean(drafts[form]), result[form]) for form in forms]
                     alternative.male_form, alternative.female_form, rephrasings = (
                         await self.alternatives.noun_alternatives(
                             rephrase_request_in.lang,
@@ -192,7 +193,10 @@ class LlmAlternatives:
                         results[alternative.text] = rephrasings[gendered_role_format]
                         suggestions.append(
                             Suggestion(
-                                alternative.text, results[alternative.text], pairs
+                                alternative.text,
+                                results[alternative.text],
+                                pairs,
+                                forms,
                             )
                         )
             elif alternative.text in result:

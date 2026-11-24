@@ -10,9 +10,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.answer_checks import checked_results, failed_checks, too_much_changed
-from app.llm_alternatives import RephraseOutcome, Suggestion
+from app.language_processor import apply_language_rules, fetch_text
+from app.llm_alternatives import LlmAlternatives, RephraseOutcome, Suggestion
 from app.main import app
-from app.models import RephraseRequestIn
+from app.models import CheckRequestIn, RephraseRequestIn
+from app.prompt import LlmAnswer, Prompt
+from app.version_validators import Client
 
 CASES = json.loads(
     pathlib.Path(__file__)
@@ -98,3 +101,93 @@ def test_agreement_changes_are_not_too_much():
     draft = "Nous attendons de notre serveuse qu'il est très attentif aux clients."
     model = "Nous attendons de notre serveuse qu'elle est très attentive aux clients."
     assert too_much_changed(draft, model, "serveuse") is None
+
+
+class CorrectModel(Prompt):
+    """Answers each draft with the marks removed and the given fixes applied:
+    a model that does the agreement right."""
+
+    fixes: dict = {}
+
+    async def answer(self, user_prompt, *args, **kwargs):
+        sentences = json.loads(user_prompt)["sentences"]
+        out = {}
+        for key, draft in sentences.items():
+            sentence = draft.replace("⟦", "").replace("⟧", "")
+            for wrong, right in self.fixes.items():
+                sentence = sentence.replace(wrong, right)
+            out[key] = sentence
+        return LlmAnswer(json.dumps(out, ensure_ascii=False), "model")
+
+
+@pytest.mark.parametrize(
+    "sentence,fixes",
+    [
+        (
+            "Jeder Lehrer kennt seine Schüler.",
+            {"Jede Lehrerin kennt seine": "Jede Lehrerin kennt ihre"},
+        ),
+        (
+            "Der erfahrene Arzt hat seinen Patienten geholfen.",
+            {"Der erfahrene Ärztin hat seinen": "Die erfahrene Ärztin hat ihren"},
+        ),
+        ("Die Mitarbeiter sind heute da.", {}),
+    ],
+)
+def test_correct_gendered_suggestions_from_witty_alternatives_survive(
+    sentence, fixes, context
+):
+    """Through the real LlmAlternatives with the alternatives Witty itself
+    offers for the sentence: a model that answers correctly loses nothing."""
+    check_in = CheckRequestIn(text=sentence, lang="de", client="string")
+    text, language, _ = fetch_text(check_in, context.langs, context)
+    findings = asyncio.run(
+        apply_language_rules(
+            Client.parse("string"),
+            check_in.config,
+            {},
+            language,
+            text,
+            context,
+            languagetool=False,
+        )
+    )
+    model = CorrectModel(context.settings)
+    model.fixes = fixes
+    handler = LlmAlternatives(
+        context.settings, context.llm_alternatives.alternatives, model
+    )
+    checked = 0
+    for finding in findings:
+        if finding.category != "gender-orientation" or not finding.alternatives:
+            continue
+        alternatives = [
+            {
+                key: value
+                for key, value in alternative.model_dump().items()
+                if key
+                in (
+                    "text",
+                    "gender_role",
+                    "male_form",
+                    "female_form",
+                    "collective_noun",
+                )
+                and value is not None
+            }
+            for alternative in finding.alternatives
+        ]
+        request = RephraseRequestIn(
+            sentence=sentence,
+            text=finding.text,
+            start=sentence.find(finding.text),
+            lang="de",
+            alternatives=alternatives,
+            gender_separator="*in",
+        )
+        outcome = asyncio.run(handler.handle(request.model_copy(deep=True)))
+        for suggestion in outcome.suggestions:
+            failed = asyncio.run(failed_checks(request, suggestion, {}, context))
+            assert failed == [], (suggestion.alternative, suggestion.text, failed)
+            checked += 1
+    assert checked

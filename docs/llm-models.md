@@ -72,7 +72,9 @@ Whatever model answered, each rephrasing passes these checks before it reaches t
 - **`replaced_words_back`:** the flagged words occur more often than before, beyond where the alternative itself contains them. Catches an inclusive form turned back.
 - **`other_occurrence_changed`:** another occurrence of the flagged words, which the user did not choose to replace, was changed.
 - **`too_much_changed`:** the model changed more than 3 words outside the alternative; agreement needs at most a few. Catches a rewritten sentence.
-- **`flagged_by_witty`:** Witty's own check, with the user's settings, flags a word in the gender category where the sentence changed, other than the alternative the user chose. Catches a flagged word the model added.
+- **`flagged_by_witty`:** Witty's own check, with the user's settings, finds more in the gender category than the original sentence had outside the replaced words, not counting the alternative the user chose. Catches a flagged word the model added.
+
+A gendered suggestion, which Witty assembles from a masculine and a feminine rephrasing, is checked per rephrasing against its form; Witty's own check is not run on it, as Witty may flag forms it built itself ("Die/der").
 
 Some mistakes pass these checks, such as an added article ("with the all"); test for those as described below. The checks add about 20 ms per suggestion.
 

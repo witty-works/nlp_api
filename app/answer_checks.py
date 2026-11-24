@@ -14,7 +14,6 @@ import logging
 import re
 
 from app.context import AppContext
-from app.guardrail import utf16_length
 from app.language_processor import apply_language_rules, fetch_text
 from app.llm_alternatives import RephraseOutcome, Suggestion
 from app.models import CheckRequestIn, MetricsType, RephraseRequestIn
@@ -97,15 +96,35 @@ def too_much_changed(draft: str, model_sentence: str, alternative: str) -> str |
     return None
 
 
-def _changed_span(sentence: str, suggestion: str) -> tuple[int, int] | None:
-    """Where the suggestion differs from the sentence, in UTF-16 offsets as
-    the check reports its findings."""
-    matcher = difflib.SequenceMatcher(None, sentence, suggestion, autojunk=False)
-    spans = [(j1, j2) for op, _, _, j1, j2 in matcher.get_opcodes() if op != "equal"]
-    if not spans:
-        return None
-    start, end = min(j1 for j1, _ in spans), max(j2 for _, j2 in spans)
-    return utf16_length(suggestion[:start]), utf16_length(suggestion[:end])
+def _words(text: str) -> list[str]:
+    """Lowercased words, split at gender separators too ("ihre/seine")."""
+    return [word.lower() for word in re.findall(r"\w+", text)]
+
+
+async def gender_findings(
+    request_in: RephraseRequestIn, text: str, configs: dict, context: AppContext
+) -> list[str]:
+    """The texts Witty's check flags in the gender category, with the
+    requesting user's config."""
+    check_in = CheckRequestIn(
+        text=text,
+        lang=request_in.lang,
+        config=request_in.config,
+        client=request_in.client,
+    )
+    checked, language, _ = fetch_text(check_in, context.langs, context)
+    if language is None:
+        return []
+    findings = await apply_language_rules(
+        Client.parse(request_in.client),
+        check_in.config,
+        configs,
+        language,
+        checked,
+        context,
+        languagetool=False,
+    )
+    return [finding.text for finding in findings if finding.category == GENDER_CATEGORY]
 
 
 async def flagged_by_witty(
@@ -114,45 +133,32 @@ async def flagged_by_witty(
     alternative: str,
     configs: dict,
     context: AppContext,
+    original_findings: list[str],
 ) -> str | None:
-    """Witty's own check, with the requesting user's config, finds nothing in
-    the gender category where the suggestion differs from the sentence,
-    apart from the alternative the user chose: Witty may prefer another
-    format than a binary form it offered (it flags "Les experts et expertes"
-    and suggests "Les expert·es"), and that choice is the user's, not a
-    mistake of the model's. Words the model added are what this catches."""
-    span = _changed_span(request_in.sentence, suggestion)
-    if span is None:
-        return None
-    check_in = CheckRequestIn(
-        text=suggestion,
-        lang=request_in.lang,
-        config=request_in.config,
-        client=request_in.client,
+    """Witty's own check, with the requesting user's config, finds no more
+    in the gender category than the original sentence had outside the
+    replaced words (`original_findings`). Counted, not matched by text: Witty
+    may regroup the same flagged word ("Jeder Lehrer" becomes "Lehrer") and
+    flags agreement pronouns too ("seine", "er" become "ihre", "sie").
+    Findings made only of the alternative the user chose are not counted:
+    Witty may prefer another format than a binary form it offered (it flags
+    "Les experts et expertes" and suggests "Les expert·es"), and that choice
+    is the user's, not a mistake of the model's. A flagged word the model
+    adds is what this catches."""
+    replaced = set(_words(request_in.text))
+    chosen = set(_words(alternative))
+    # The replaced occurrence's own finding is gone by design; any other
+    # occurrence of the same words the user kept still counts.
+    before = len(original_findings) - (
+        1 if any(set(_words(text)) <= replaced for text in original_findings) else 0
     )
-    text, language, _ = fetch_text(check_in, context.langs, context)
-    if language is None:
-        return None
-    findings = await apply_language_rules(
-        Client.parse(request_in.client),
-        check_in.config,
-        configs,
-        language,
-        text,
-        context,
-        languagetool=False,
+    after = sum(
+        1
+        for text in await gender_findings(request_in, suggestion, configs, context)
+        if not set(_words(text)) <= chosen
     )
-    start, end = span
-    chosen = {word.lower() for word in re.findall(r"[\w·*:/-]+", alternative)}
-    for finding in findings:
-        if (
-            finding.category == GENDER_CATEGORY
-            and finding.start < end
-            and finding.end > start
-            and not {word.lower() for word in re.findall(r"[\w·*:/-]+", finding.text)}
-            <= chosen
-        ):
-            return "flagged_by_witty"
+    if after > before:
+        return "flagged_by_witty"
     return None
 
 
@@ -161,26 +167,49 @@ async def failed_checks(
     suggestion: Suggestion,
     configs: dict,
     context: AppContext,
+    original_findings: list[str] | None = None,
 ) -> list[str]:
-    """The names of the checks the suggestion fails, empty if none."""
+    """The names of the checks the suggestion fails, empty if none.
+
+    A plain suggestion is checked as the model wrote it. A gendered one is
+    assembled by Witty from a masculine and a feminine draft, so each draft
+    is checked against the form it was made with, and Witty's own check is
+    not run on the assembly: with the default config it flags forms Witty
+    built itself ("Die/der")."""
     sentence, text = request_in.sentence, request_in.text
-    failed = [
-        alternative_missing(
-            request_in.lang, suggestion.text, suggestion.alternative, context
-        ),
-        replaced_words_back(sentence, text, suggestion.text, suggestion.alternative),
-        other_occurrence_changed(
-            sentence, text, suggestion.text, suggestion.alternative
-        ),
-        *(
-            too_much_changed(draft, model_sentence, suggestion.alternative)
-            for draft, model_sentence in suggestion.drafts
-        ),
+    if suggestion.forms:
+        checked = [
+            (form, model_sentence)
+            for form, (_, model_sentence) in zip(suggestion.forms, suggestion.drafts)
+        ]
+        forms = suggestion.forms
+    else:
+        checked = [(suggestion.alternative, suggestion.text)]
+        forms = [suggestion.alternative] * len(suggestion.drafts)
+    failed = []
+    for alternative, model_sentence in checked:
+        failed += [
+            alternative_missing(request_in.lang, model_sentence, alternative, context),
+            replaced_words_back(sentence, text, model_sentence, alternative),
+            other_occurrence_changed(sentence, text, model_sentence, alternative),
+        ]
+    failed += [
+        too_much_changed(draft, model_sentence, form)
+        for form, (draft, model_sentence) in zip(forms, suggestion.drafts)
     ]
     names = list(dict.fromkeys(name for name in failed if name))
-    if not names:
+    if not names and not suggestion.forms:
+        if original_findings is None:
+            original_findings = await gender_findings(
+                request_in, sentence, configs, context
+            )
         witty = await flagged_by_witty(
-            request_in, suggestion.text, suggestion.alternative, configs, context
+            request_in,
+            suggestion.text,
+            suggestion.alternative,
+            configs,
+            context,
+            original_findings,
         )
         if witty:
             names.append(witty)
@@ -196,8 +225,13 @@ async def checked_results(
     """The suggestions that pass every check, keyed by alternative."""
     logger = logging.getLogger("nlp_api")
     results = {}
+    original_findings = await gender_findings(
+        request_in, request_in.sentence, configs, context
+    )
     for suggestion in outcome.suggestions:
-        failed = await failed_checks(request_in, suggestion, configs, context)
+        failed = await failed_checks(
+            request_in, suggestion, configs, context, original_findings
+        )
         if not failed:
             results[suggestion.alternative] = suggestion.text
             continue
