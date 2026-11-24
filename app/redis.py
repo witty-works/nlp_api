@@ -71,12 +71,45 @@ class Redis:
         """Generate a Redis key for a user by email."""
         return "dashboard-user-email:" + email.lower()
 
+    def get_organization_key(self, organization_id: str) -> str:
+        """The Redis key of an organisation's config. Prefixed, so an id sent
+        to the management endpoints names an organisation and no other key."""
+        return "dashboard-organization:" + organization_id
+
+    def legacy_organization_configs(self, organization_id: str) -> str | None:
+        """An organisation config stored under its bare id, as before the
+        prefix: only a JSON object that names this id, so no other key can
+        be read through it. `bin.migrate_organization_keys` moves them."""
+        try:
+            value = self.db.get(organization_id)
+            if not isinstance(value, str):
+                return None
+            configs = json.loads(value)
+        except Exception:
+            return None
+        if isinstance(configs, dict) and str(configs.get("id")) == organization_id:
+            return value
+
+        return None
+
+    def set_organization_configs(self, organization_id: str, value: str) -> None:
+        self.db.set(self.get_organization_key(organization_id), value)
+        if self.legacy_organization_configs(organization_id) is not None:
+            self.db.delete(organization_id)
+
+    def delete_organization_configs(self, organization_id: str) -> None:
+        self.db.delete(self.get_organization_key(organization_id))
+        if self.legacy_organization_configs(organization_id) is not None:
+            self.db.delete(organization_id)
+
     async def fetch_organization_configs_from_redis(
         self,
         organization_id: str,
     ) -> dict:
         """Fetch organization configurations from Redis by organization ID."""
-        configs = self.db.get(organization_id)
+        configs = self.db.get(
+            self.get_organization_key(organization_id)
+        ) or self.legacy_organization_configs(organization_id)
         if not configs:
             raise HTTPException(
                 status_code=404, detail="Organization configs not found"

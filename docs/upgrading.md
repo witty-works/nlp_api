@@ -57,6 +57,17 @@ listed; the git history has them.
   redis-cli --scan --pattern 'log-dashboard-user-email:*' | xargs -r redis-cli DEL
   ```
 
+- **Organisation configs move to a prefixed Redis key.** They are stored
+  under `dashboard-organization:<id>` instead of the bare id. Configs stored
+  under the bare id are still read, so nothing breaks on upgrade; move them
+  once with the migration, which touches only JSON objects naming their own
+  key as `id`:
+
+  ```bash
+  uv run python -m bin.migrate_organization_keys --dry-run
+  uv run python -m bin.migrate_organization_keys
+  ```
+
 ---
 
 ## See Also

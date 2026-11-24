@@ -656,7 +656,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # free@gmail.com
     user_object = {
@@ -689,7 +691,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # default@gmail.com
     user_object = {
@@ -726,7 +730,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # test@gmail.com
     user_object = {
@@ -903,7 +909,9 @@ def set_redis():
     organization_object["term_replacements"] = parse_term_replacements(
         organization_object["term_replacements"], context
     )
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
 
 @pytest.mark.parametrize(

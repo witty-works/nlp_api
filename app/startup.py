@@ -134,8 +134,9 @@ async def lifespan(app: FastAPI, context: AppContext):
         organization_rules["term_replacements"] = parse_term_replacements(
             organization_rules["term_replacements"], context
         )
-        key = organization_rules["id"]
-        context.redis.db.set(key, json.dumps(organization_rules))
+        context.redis.set_organization_configs(
+            organization_rules["id"], json.dumps(organization_rules)
+        )
 
     # Initialize language processors
     context.nouns = Nouns(

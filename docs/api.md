@@ -371,6 +371,11 @@ curl -X 'POST' \
 }'
 ```
 
+The config is stored in Redis under `dashboard-organization:{id}`, so an `id`
+names an organisation and no other Redis key. One stored by an earlier version
+under its bare `id` is still read, if it is a JSON object with that `id`, until
+`uv run python -m bin.migrate_organization_keys` has moved it.
+
 ### API Key Management
 
 Behind the management password (`MANAGEMENT_AUTH_ENABLED`). The key goes in the JSON body, never the URL, which access logs keep; no answer repeats it.

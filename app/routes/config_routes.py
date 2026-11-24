@@ -37,7 +37,7 @@ async def post_organization_configs(
     organization_configs.term_replacements = parse_term_replacements(
         organization_configs.term_replacements, context
     )
-    context.redis.db.set(
+    context.redis.set_organization_configs(
         organization_configs.id, organization_configs.model_dump_json()
     )
 
@@ -51,7 +51,7 @@ async def delete_organization_configs(
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_management_username),
 ):
-    context.redis.db.delete(organization_id)
+    context.redis.delete_organization_configs(organization_id)
 
 
 @router.get(
