@@ -619,9 +619,13 @@ Dashboard (Laravel Passport)
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
-and cached in Redis for the lifetime the document's `Cache-Control` header
-allows (one hour when it says nothing), so rotating the dashboard's Passport
-keys needs no redeploy here.
+and cached in Redis, under the document's address and the `kid`, for the
+lifetime the document's `Cache-Control` header allows (one hour when it says
+nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
+`kid` the document does not have is remembered for a minute, so tokens with
+made-up ones do not each send a request to the dashboard; a key published in
+that minute is accepted once it has passed. A token without an `exp` claim is
+refused.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
@@ -731,9 +735,13 @@ Dashboard (Laravel Passport)
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
-and cached in Redis for the lifetime the document's `Cache-Control` header
-allows (one hour when it says nothing), so rotating the dashboard's Passport
-keys needs no redeploy here.
+and cached in Redis, under the document's address and the `kid`, for the
+lifetime the document's `Cache-Control` header allows (one hour when it says
+nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
+`kid` the document does not have is remembered for a minute, so tokens with
+made-up ones do not each send a request to the dashboard; a key published in
+that minute is accepted once it has passed. A token without an `exp` claim is
+refused.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See

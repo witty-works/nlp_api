@@ -30,6 +30,7 @@ from app.auth_service import (
     validate_scope_,
     get_token_,
     get_unverified_token_claims_,
+    rsa_key_name,
 )
 from app.models import (
     Config,
@@ -2644,15 +2645,16 @@ def dashboard_sso(request):
         return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
 
     kid = "test-dashboard-kid"
+    jwks_url = "https://dashboard.example.com/.well-known/jwks.json"
     context.redis.db.set(
-        "rsa_pem:" + kid,
+        rsa_key_name(jwks_url, kid),
         convert_to_pem(to_base64_url(numbers.n), to_base64_url(numbers.e)),
     )
 
     previous = context.settings.sso_configs.get("dashboard")
     context.settings.sso_configs["dashboard"] = {
         "client_id": "1",
-        "jwks_url": "https://dashboard.example.com/.well-known/jwks.json",
+        "jwks_url": jwks_url,
         "issuer": None,
         "expected_scope": None,
     }
@@ -2671,6 +2673,8 @@ def dashboard_sso(request):
             "preferred_username": "test@gmail.com",
         }
         claims.update(overrides)
+        # None leaves a claim out.
+        claims = {name: value for name, value in claims.items() if value is not None}
 
         return jwt.encode(
             claims,
@@ -2685,7 +2689,7 @@ def dashboard_sso(request):
 
     yield issue
 
-    context.redis.db.delete("rsa_pem:" + kid)
+    context.redis.db.delete(rsa_key_name(jwks_url, kid))
     if previous is None:
         del context.settings.sso_configs["dashboard"]
     else:  # pragma: no cover
@@ -3954,3 +3958,16 @@ def test_settings_shows_only_the_allow_list():
     assert set(response.json()) == set(context.settings.debug_view())
     assert "llm_api_key" not in response.json()
     assert "api_key_hmac_key" not in response.json()
+
+
+def test_dashboard_token_without_expiry(dashboard_sso, set_redis):
+    """A token without `exp` would be valid for ever."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso(exp=None)},
+        )
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Token error: The exp claim is missing"

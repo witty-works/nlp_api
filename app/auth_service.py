@@ -28,6 +28,7 @@ import base64
 import logging
 import uuid
 import re
+import hashlib
 import asyncio
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -49,6 +50,10 @@ class AuthError(Exception):
         self.status_code = status_code
 
 
+class UnknownKid(AuthError):
+    """The issuer's JWKS has no key by the token's `kid`."""
+
+
 def get_token_auth_header(request: Request):
     auth = request.headers.get("Authorization", None)
     return get_token_(auth)
@@ -59,14 +64,43 @@ def get_unverified_token_claims(request: Request):
     return get_unverified_token_claims_(token)
 
 
+# How long a `kid` the issuer's JWKS did not have is answered from the cache,
+# so that tokens with made-up ones do not each send a request to the issuer.
+# Short, as a key the issuer has just published is refused meanwhile.
+UNKNOWN_KID_TTL = 60
+# A `kid` is a short name; a longer one is no key of any issuer here.
+KID_MAX_LENGTH = 256
+
+
+def rsa_key_name(url: str, kid: str) -> str:
+    """The cache entry of one issuer's key: by its JWKS address as well as its
+    `kid`, which issuers choose themselves, so one cannot shadow another's."""
+    return f"rsa_pem:{hashlib.sha256(url.encode()).hexdigest()}:{kid}"
+
+
 async def get_rsa_key(redis: Redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
-    key = "rsa_pem:" + unverified_header["kid"]
+    kid = unverified_header.get("kid")
+    if not isinstance(kid, str) or not kid or len(kid) > KID_MAX_LENGTH:
+        raise AuthError("Unable to fetch RSA key", 400)
+
+    key = rsa_key_name(url, kid)
     rsa_key = redis.db.get(key)
     if rsa_key:
         return rsa_key
 
-    rsa_key, ttl = await get_rsa_key_(session, unverified_header["kid"], url)
+    unknown = "unknown_kid:" + key.removeprefix("rsa_pem:")
+    if redis.db.get(unknown):
+        raise AuthError("Unable to fetch RSA key", 400)
+
+    try:
+        rsa_key, ttl = await get_rsa_key_(session, kid, url)
+    except UnknownKid:
+        try:
+            redis.db.set(unknown, "1", ex=UNKNOWN_KID_TTL)
+        except Exception:
+            pass
+        raise
 
     # Set cached RSA PEM with TTL to handle JWKS rotation. Default to 1 hour.
     try:
@@ -153,10 +187,16 @@ def decode_jwt_(
     scope: str | None,
 ):
     try:
-        # `exp` and `nbf` are verified by PyJWT itself. `issuer=None` skips the
-        # issuer check, which is what a Passport token needs — it has no `iss`.
+        # `exp` and `nbf` are verified by PyJWT itself, and `exp` is required:
+        # a token without one would be valid for ever. `issuer=None` skips the
+        # issuer check.
         claims = jwt.decode(
-            token, rsa_key, algorithms=["RS256"], audience=audience, issuer=issuer
+            token,
+            rsa_key,
+            algorithms=["RS256"],
+            audience=audience,
+            issuer=issuer,
+            options={"require": ["exp"]},
         )
     except jwt.MissingRequiredClaimError as error:
         # Raised when the token omits a claim we asked to be verified, e.g. an
@@ -286,7 +326,7 @@ async def get_rsa_key_(session, kid, url):
                         return pem, ttl
 
                 # If we reached here, no matching kid was found in the JWKS
-                raise AuthError("Unable to fetch RSA key", 400)
+                raise UnknownKid("Unable to fetch RSA key", 400)
 
         except AuthError:
             # Don't retry on deterministic auth errors (4xx), re-raise immediately.
