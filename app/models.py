@@ -117,6 +117,12 @@ class MetricsType(str, Enum):
     GUARDRAIL_INPUT_HOST = "guardrail_input_host"
     GUARDRAIL_OUTPUT_COUNTS = "guardrail_output_counts"
     GUARDRAIL_OUTPUT_HOST = "guardrail_output_host"
+    # Per served model ("unknown" when the provider did not say): how many
+    # calls it answered, and how many of those were not LLM_EXPECTED_MODEL.
+    LLM_SERVED_MODELS = "llm_served_models"
+    LLM_MODEL_MISMATCHES = "llm_model_mismatches"
+    # Per answer check (app/answer_checks.py): rephrasings it dropped.
+    REPHRASE_DROPPED = "rephrase_dropped"
 
 
 class LlmAccessType(str, Enum):
@@ -621,9 +627,9 @@ class Config(BaseModel):
     # enforce it; it carries the setting, forced where a synced config forces
     # it.
     confirm_before_checking: bool = False
-    addons: Optional[
-        Annotated[list[str], Len(max_length=CONFIG_LIST_MAX_LENGTH)]
-    ] = None
+    addons: Optional[Annotated[list[str], Len(max_length=CONFIG_LIST_MAX_LENGTH)]] = (
+        None
+    )
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
         LangWithAutoType.EN,
@@ -983,6 +989,7 @@ class BaseRequestIn(BaseModel):
         """`"config": null` means the same as no config, rather than a None
         the config layers would trip over."""
         return Config() if config is None else config
+
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 
@@ -1008,9 +1015,7 @@ class RephraseAlternative(BaseModel):
 
 class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
-    sentence: Annotated[
-        str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)
-    ]
+    sentence: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     # The words of `sentence` the alternatives replace, from `start`.
     text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     start: int
@@ -1211,7 +1216,9 @@ class ResultOut(BaseModel):
             and category == "gender-orientation"
             and language.lang == LangType.DE
             and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
-            and any(alternative.is_in_gender_format() for alternative in alternatives or [])
+            and any(
+                alternative.is_in_gender_format() for alternative in alternatives or []
+            )
         ):
             # The ending's own logo replaces the emoji on a finding whose
             # suggestions are in the user's chosen system, whichever rule
@@ -1540,10 +1547,13 @@ class ConfigOptionsOut(BaseModel):
 class RephrasesOut(BaseModel):
     sentence: str
     results: dict[str, str]
+    # The model that wrote the rephrasings: the one that answered if the
+    # provider said, else the configured LLM_MODEL.
+    model: Optional[str] = None
 
     @staticmethod
-    def factory(sentence: str, results: dict[str, str]):
-        return RephrasesOut(sentence=sentence, results=results)
+    def factory(sentence: str, results: dict[str, str], model: str | None = None):
+        return RephrasesOut(sentence=sentence, results=results, model=model)
 
 
 class EditOut(BaseModel):
@@ -1558,6 +1568,9 @@ class PromptOut(BaseModel):
     reviewed_response: Optional[str] = None
     # Word diff from initial_response to reviewed_response; /v1.0/write only.
     edits: Optional[list[EditOut]] = None
+    # /v1.0/write only: the model of the last call that answered (the
+    # review's, if there was one), else the configured LLM_MODEL.
+    model: Optional[str] = None
 
 
 class ResultsOut(BaseModel):

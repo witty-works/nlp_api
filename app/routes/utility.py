@@ -16,6 +16,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.exceptions import RequestValidationError
 from starlette.responses import HTMLResponse, RedirectResponse
 
+from app.llm_provider import public_model_name
 from app.models import LangType
 from app.dependencies import (
     development_only,
@@ -79,6 +80,16 @@ async def get_health(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=content,
             )
+
+    # Information only, outside the checks above: a mismatch only warns by
+    # default, a fresh worker has served nothing yet, and each worker keeps
+    # its own. Only model names, never a machine or host.
+    if context.settings.llm_model:
+        content["llm"] = {
+            "configured": public_model_name(context.settings.llm_model),
+            "served": context.prompt.last_served_model,
+            "matched": context.prompt.last_model_matched,
+        }
 
     return content
 

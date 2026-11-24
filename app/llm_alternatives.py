@@ -8,6 +8,33 @@ from app.alternatives import Alternatives
 from app.prompt import Prompt
 import json
 import logging
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Suggestion:
+    """One rephrasing as the user would get it, keyed by the request's
+    alternative, with the (draft, model sentence) pairs it was made from: one
+    for a plain alternative, the masculine and feminine one for a gendered
+    alternative, whose suggestion Witty assembles from both. A draft is the
+    sentence with the alternative swapped in, without the marks."""
+
+    alternative: str
+    text: str
+    drafts: list[tuple[str, str]]
+    # For a gendered alternative, the masculine and feminine form each draft
+    # was made with; empty for a plain one, whose drafts use `alternative`.
+    forms: list[str] = field(default_factory=list)
+
+
+@dataclass
+class RephraseOutcome:
+    """The rephrasings per alternative, unchecked, and the model that wrote
+    them; `suggestions` carries what app/answer_checks.py needs to check them."""
+
+    results: dict[str, str]
+    served_model: str | None
+    suggestions: list[Suggestion] = field(default_factory=list)
 
 
 lang_map = {
@@ -108,7 +135,10 @@ class LlmAlternatives:
 
         user_prompt = json.dumps(input_data, ensure_ascii=False)
 
-        answer = await self.prompt.handle(user_prompt, system_prompt)
+        llm_answer = await self.prompt.answer(
+            user_prompt, system_prompt, task="rephrase"
+        )
+        answer = llm_answer.text
         parsed = self.prompt.parse_json(answer)
         # Anything but an object of sentences is no rephrasing: prose, a
         # reasoning model cut off mid-thought, a list. Keep only the strings.
@@ -132,7 +162,11 @@ class LlmAlternatives:
             Config.get_gender_separators(rephrase_request_in.gender_separator)
         )
 
+        def clean(draft: str) -> str:
+            return draft.replace("⟦", "").replace("⟧", "")
+
         results = {}
+        suggestions = []
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
             if alternative_index in genderstar:
@@ -140,6 +174,9 @@ class LlmAlternatives:
                     alternative.male_form in result
                     and alternative.female_form in result
                 ):
+                    # Before noun_alternatives, which may change the forms.
+                    forms = [alternative.male_form, alternative.female_form]
+                    pairs = [(clean(drafts[form]), result[form]) for form in forms]
                     alternative.male_form, alternative.female_form, rephrasings = (
                         await self.alternatives.noun_alternatives(
                             rephrase_request_in.lang,
@@ -154,7 +191,22 @@ class LlmAlternatives:
                     gendered_role_format = genderstar[alternative_index]
                     if genderstar[alternative_index] in rephrasings:
                         results[alternative.text] = rephrasings[gendered_role_format]
+                        suggestions.append(
+                            Suggestion(
+                                alternative.text,
+                                results[alternative.text],
+                                pairs,
+                                forms,
+                            )
+                        )
             elif alternative.text in result:
                 results[alternative.text] = result[alternative.text]
+                suggestions.append(
+                    Suggestion(
+                        alternative.text,
+                        result[alternative.text],
+                        [(clean(drafts[alternative.text]), result[alternative.text])],
+                    )
+                )
 
-        return results
+        return RephraseOutcome(results, llm_answer.served_model, suggestions)

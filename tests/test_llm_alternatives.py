@@ -8,17 +8,17 @@ from pydantic import ValidationError
 
 from app.llm_alternatives import LlmAlternatives
 from app.models import RephraseRequestIn
-from app.prompt import Prompt
+from app.prompt import LlmAnswer, Prompt
 from app.settings import Settings
 
 
 class Answering(Prompt):
-    def __init__(self, settings, answer):
+    def __init__(self, settings, reply):
         super().__init__(settings)
-        self.answer = answer
+        self.reply = reply
 
-    async def handle(self, *args, **kwargs):
-        return self.answer
+    async def answer(self, *args, **kwargs):
+        return LlmAnswer(self.reply, None)
 
 
 def rephrase(answer):
@@ -32,7 +32,7 @@ def rephrase(answer):
     )
     handler = LlmAlternatives(settings, None, Answering(settings, answer))
 
-    return asyncio.run(handler.handle(request))
+    return asyncio.run(handler.handle(request)).results
 
 
 @pytest.mark.parametrize(
@@ -60,9 +60,9 @@ def test_only_sentences_are_kept():
 
 
 class Recording(Answering):
-    async def handle(self, user_prompt, *args, **kwargs):
+    async def answer(self, user_prompt, *args, **kwargs):
         self.user_prompt = user_prompt
-        return self.answer
+        return LlmAnswer(self.reply, None)
 
 
 def test_the_code_swaps_the_words_in_and_marks_them():
@@ -95,10 +95,10 @@ def test_marks_the_model_left_in_are_removed():
 
 
 class RecordingBoth(Answering):
-    async def handle(self, user_prompt, system_prompt=None, *args, **kwargs):
+    async def answer(self, user_prompt, system_prompt=None, *args, **kwargs):
         self.user_prompt = user_prompt
         self.system_prompt = system_prompt
-        return self.answer
+        return LlmAnswer(self.reply, None)
 
 
 def test_the_replaced_words_are_quoted_in_the_system_prompt():

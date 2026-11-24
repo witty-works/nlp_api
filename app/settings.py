@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 from functools import lru_cache
 import os
 from urllib.parse import urlsplit, urlunsplit
@@ -345,10 +345,13 @@ class Settings(BaseSettings):
     import_from_dump: bool = True
     log_missing_declension: bool = True
     log_metrics: Optional[bool] = False
-    # Bedrock credentials. Still their own settings rather than LLM_API_KEY
-    # because Bedrock signs with a key pair and a region, and because a
-    # deployment on AWS may have none of them set and rely on an instance role.
+    # Bedrock's region. Its credentials are not settings of ours: LiteLLM
+    # finds them the standard AWS way (AWS_ACCESS_KEY_ID and
+    # AWS_SECRET_ACCESS_KEY, a profile or an instance role).
     aws_region_name: Optional[str] = ""
+    # The names these credentials used to have. Read only to refuse a start
+    # that still sets them, from the environment or .env, rather than call
+    # Bedrock without its keys (validate_aws_names).
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
 
@@ -375,6 +378,20 @@ class Settings(BaseSettings):
     # makes rephrasings faster without making them worse (docs/llm-models.md).
     # Empty: nothing extra is sent.
     llm_extra_body: dict[str, Any] = {}
+    # Which adapter handles what differs between providers (app/llm_provider.py):
+    # openai-compatible (the default, today's behaviour), litellm-proxy,
+    # openai. Chosen by name, never guessed from the model id.
+    llm_provider: str = "openai-compatible"
+    # Extra body fields per task (rephrase, write), merged over
+    # llm_extra_body: {"rephrase": {"chat_template_kwargs": {...}}}.
+    llm_task_extra_body: dict[str, dict[str, Any]] = {}
+    # litellm-proxy only: the response header naming the model that answered.
+    llm_served_model_header: str = "x-litellm-model-name"
+    # The model the deployment expects to answer. Empty: the served model is
+    # recorded but not compared. An unknown served model counts as a mismatch.
+    llm_expected_model: str = ""
+    # On a mismatch: warn (log, count, keep the answer) or refuse (503).
+    llm_model_mismatch: Literal["warn", "refuse"] = "warn"
     # Seconds before an LLM call is given up and answered with a 503.
     llm_timeout: float = 60.0
     # LLM calls one worker process runs at once; the rest wait up to
@@ -436,6 +453,8 @@ class Settings(BaseSettings):
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
         validate_production(settings)
+        validate_aws_names(settings)
+        validate_llm_provider(settings)
         validate_slack(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
@@ -523,6 +542,36 @@ def validate_production(settings: Settings) -> None:
             "MANAGEMENT_AUTH_ENABLED is off in production, which opens /api_key"
             " and the user and organisation configs to anyone. Turn it on, or"
             " set ENVIRONMENT_TYPE=development where that is wanted."
+        )
+
+
+def validate_aws_names(settings: Settings) -> None:
+    """Stop the start on the old names of the Bedrock credentials, which are
+    no longer passed on: Bedrock would be called without its keys."""
+    if settings.aws_key or settings.aws_secret_key:
+        raise ValueError(
+            "AWS_KEY and AWS_SECRET_KEY are no longer read; set AWS_ACCESS_KEY_ID"
+            " and AWS_SECRET_ACCESS_KEY instead, or use an AWS profile or"
+            " instance role"
+        )
+
+
+def validate_llm_provider(settings: Settings) -> None:
+    """Stop the start on an LLM_PROVIDER no adapter has, naming the known
+    ones, rather than fail every LLM call later."""
+    from app.llm_provider import LLM_TASKS, PROVIDERS
+
+    if settings.llm_provider not in PROVIDERS:
+        raise ValueError(
+            f"LLM_PROVIDER {settings.llm_provider!r} is not one of: "
+            + ", ".join(PROVIDERS)
+        )
+    # A misspelt task would otherwise be ignored without a word.
+    unknown = set(settings.llm_task_extra_body) - set(LLM_TASKS)
+    if unknown:
+        raise ValueError(
+            f"LLM_TASK_EXTRA_BODY names {', '.join(sorted(unknown))}, which is"
+            f" not a task; the tasks are: {', '.join(LLM_TASKS)}"
         )
 
 

@@ -3828,7 +3828,7 @@ def llm_calls(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
-    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    """Bedrock gets no credentials of ours: LiteLLM finds the AWS ones."""
     monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
     monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
 
@@ -3842,18 +3842,11 @@ async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
         {"role": "system", "content": "be brief"},
         {"role": "user", "content": "say something"},
     ]
-    # Bedrock signs with a key pair, so the bearer token is not offered to it.
-    assert "api_key" not in call
-
-    monkeypatch.setattr(context.settings, "aws_key", "an-id")
-    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
-    await prompt.handle("say something")
-    assert llm_calls[1]["aws_access_key_id"] == "an-id"
-
-    # An unset key pair has to stay unset so an instance role can take over.
-    monkeypatch.setattr(context.settings, "aws_key", "")
-    await prompt.handle("say something")
-    assert "aws_access_key_id" not in llm_calls[2]
+    # Nothing is derived from the model id: the same parameters as for any
+    # model, and no AWS key pair of ours.
+    assert call["api_key"] == "not-for-bedrock"
+    assert "aws_access_key_id" not in call
+    assert "aws_secret_access_key" not in call
 
 
 @pytest.mark.asyncio
@@ -4098,3 +4091,88 @@ def test_a_password_with_non_ascii_characters_is_checked(login):
             settings.api_docs_username, settings.api_docs_password = previous
 
     assert response.status_code == 401
+
+
+def reply_from(monkeypatch, content, model="served-model"):
+    """The provider answers `content`, naming `model` as the one that did."""
+
+    class Response:
+        def __init__(self):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+            self.model = model
+
+    async def acompletion(**kwargs):
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+
+def test_rephrase_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, '{"chair": "The chair called."}')
+    llm_access(LlmAccessType.USERS)
+    body = {
+        "sentence": "The chairman called.",
+        "text": "chairman",
+        "start": 4,
+        "alternatives": [{"text": "chair"}],
+        "lang": "en",
+    }
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase", json=body, headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_write_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, "The chair will call everyone tomorrow.")
+    llm_access(LlmAccessType.USERS)
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Make it formal.", "text": "Chair calls everyone."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_health_reports_the_llm_without_failing(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", "other")
+        monkeypatch.setattr(context.prompt, "last_model_matched", False)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"] == {
+        "configured": "openai/test",
+        "served": "other",
+        "matched": False,
+    }
+
+
+def test_health_stays_ok_before_any_llm_call(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    monkeypatch.setattr(context.settings, "llm_expected_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", None)
+        monkeypatch.setattr(context.prompt, "last_model_matched", None)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"]["served"] is None
+
+
+def test_health_does_not_show_an_aws_account(monkeypatch):
+    monkeypatch.setattr(
+        context.settings,
+        "llm_model",
+        "bedrock/arn:aws:bedrock:eu-central-1:123456789012:inference-profile/x",
+    )
+    with TestClient(app) as client:
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert "123456789012" not in response.text

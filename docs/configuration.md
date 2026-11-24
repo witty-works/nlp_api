@@ -217,9 +217,7 @@ For minimal resource usage in development:
 MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
 
 # Disable LLM features
-AWS_REGION_NAME=
-AWS_KEY=
-AWS_SECRET_KEY=
+LLM_MODEL=
 
 # Disable context checker
 CONTEXT_CHECKER_LOCAL=false
@@ -503,10 +501,15 @@ config change:
 | Variable       | Default  | Description                                                                                        |
 | -------------- | -------- | ---------------------------------------------------------------------------------------------------- |
 | `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
-| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
+| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS credentials below.     |
 | `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
 | `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend from a few hundred to over 3,000 tokens thinking before a rephrasing, unless `LLM_EXTRA_BODY` switches thinking off; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
 | `LLM_EXTRA_BODY` | (empty) | Provider-specific fields sent in the body of every call, as a JSON object, for what LiteLLM has no parameter of its own. `{"chat_template_kwargs": {"enable_thinking": false}}` switches off a Qwen3 model's thinking on a server that passes chat-template arguments on; rephrasing does not need it. See [Choosing a language model](./llm-models.md). |
+| `LLM_PROVIDER` | `openai-compatible` | Which adapter handles what differs between providers: `openai-compatible` (vLLM, Ollama and any provider LiteLLM reaches directly), `litellm-proxy` (a LiteLLM proxy; reads the served model from a response header), `openai`. Chosen by name, never guessed from the model id; an unknown name stops the start. See [Choosing a language model](./llm-models.md#choosing-an-adapter). |
+| `LLM_TASK_EXTRA_BODY` | (empty) | Extra body fields per task (`rephrase`, `write`, `other`), merged over `LLM_EXTRA_BODY` one level deep, so a task's `chat_template_kwargs` adds to the global one's: `{"rephrase": {…}, "write": {…}}`. For example, thinking switched off for rephrasing only. Another task name stops the start. |
+| `LLM_SERVED_MODEL_HEADER` | `x-litellm-model-name` | `litellm-proxy` only: the response header that names the model that answered. |
+| `LLM_EXPECTED_MODEL` | (empty) | The model the deployment expects to answer, as the adapter reports it (for `litellm-proxy`, the header's value, e.g. `openai/Qwen3.8-Flash-Next-oQ4e-mtp`). Empty: the served model is logged and counted but not compared. A provider that does not say which model answered counts as a mismatch. Wherever a model's name is shown, logged or counted, an AWS account id in an ARN is masked and the name is cut at 200 characters. |
+| `LLM_MODEL_MISMATCH` | `warn` | On a mismatch with `LLM_EXPECTED_MODEL`: `warn` logs and counts it and keeps the answer; `refuse` answers `503` instead, with `Retry-After: 300`, since a mismatch lasts until the deployment changes. |
 | `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
 | `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
 | `LLM_MAX_REQUESTS_PER_MINUTE` | 0 | LLM calls the whole deployment makes per minute, counted in Redis so all workers share one budget. Past it, a call is refused with 503 and a `Retry-After` up to the next minute, without reaching the provider. Set it below the provider's per-key limit (60 for the BFH inference server) so the account is never the one that hits it. `0` for no limit; without a real Redis each process counts on its own. |
@@ -534,16 +537,28 @@ deployment has no LLM": the features are refused the same way
 
 ### AWS Bedrock
 
-Bedrock keeps its own settings because it signs with a key pair and a region
-rather than a bearer token — `LLM_API_KEY` is not used for it. Leave `AWS_KEY`
-and `AWS_SECRET_KEY` empty to let an instance role supply the credentials
-instead. The model still comes from `LLM_MODEL`, as `bedrock/<model id>`.
+Bedrock signs with AWS credentials rather than a bearer token, so
+`LLM_API_KEY` is not used for it. The API passes no credentials of its own:
+LiteLLM finds them the standard AWS way, from `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY`, an AWS profile or an instance role. The model comes
+from `LLM_MODEL`, as `bedrock/<model id>`. Leave `LLM_API_KEY` empty for
+Bedrock: when set, it is passed on as for any model, and LiteLLM uses it as a
+Bedrock API key instead of the AWS credentials.
 
-| Variable        | Default                            | Description                                                   |
-| --------------- | ---------------------------------- | ------------------------------------------------------------- |
-| AWS_REGION_NAME | (empty)                            | AWS region (e.g., eu-central-1).                              |
-| AWS_KEY         | (empty)                            | AWS access key ID.                                            |
-| AWS_SECRET_KEY  | (empty)                            | AWS secret access key.                                        |
+| Variable              | Default | Description                                                          |
+| --------------------- | ------- | -------------------------------------------------------------------- |
+| AWS_REGION_NAME       | (empty) | AWS region (e.g., eu-central-1).                                     |
+| AWS_ACCESS_KEY_ID     | (empty) | AWS access key ID, read by LiteLLM, not by the API.                  |
+| AWS_SECRET_ACCESS_KEY | (empty) | AWS secret access key, read by LiteLLM, not by the API.              |
+
+The old names `AWS_KEY` and `AWS_SECRET_KEY` stop the start, so that no
+deployment calls Bedrock without its keys unnoticed.
+
+LiteLLM reads the AWS variables from the process environment, not from the
+API's `.env` file. With `compose.yml`, which passes `.env` to the container
+(`env_file`), they arrive there; run any other way (`uv run`, gunicorn
+directly), export them in the environment yourself, or Bedrock is called
+without credentials and every call fails.
 
 ### Who may spend the LLM budget
 
