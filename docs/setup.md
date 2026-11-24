@@ -62,8 +62,8 @@ than a smoke test use docker compose.
 - **Redis** (`redis:7-alpine`) keeps API keys and configs, in a named volume.
 - **LanguageTool** is built from [languagetool/](../languagetool/), with this
   project's ignore lists and disabled rules, and only runs with the
-  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`),
-  container port 8010.
+  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`)
+  of the loopback interface only, container port 8010.
 - `./database` and `./models` are mounted read-only into the API container:
   the checkout's rules, and the SetFit context-checker models if you
   downloaded them.
