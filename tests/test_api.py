@@ -3999,3 +3999,28 @@ def test_no_request_log():
         response = client.get("/user/logs", params={"email": "a@b.example"})
 
     assert response.status_code == 404
+
+
+@pytest.mark.parametrize("login", ["admin:secret", "admin:sécret", "ädmin:geheim✓"])
+def test_a_password_with_non_ascii_characters_is_checked(login):
+    """A configured password with non-ASCII characters refuses a wrong login
+    with a 401, not a 500. (FastAPI reads Basic credentials as ASCII, so a
+    non-ASCII login is refused before it is compared.)"""
+    settings = context.settings
+    previous = (settings.api_docs_username, settings.api_docs_password)
+    header = {
+        "Authorization": "Basic " + base64.b64encode(login.encode("utf-8")).decode()
+    }
+
+    with TestClient(app) as client:
+        settings.management_auth_enabled = True
+        settings.api_docs_username, settings.api_docs_password = "ädmin", "geheim✓"
+        try:
+            response = client.get(
+                "/user/configs?email=nobody@example.org", headers=header
+            )
+        finally:
+            settings.management_auth_enabled = False
+            settings.api_docs_username, settings.api_docs_password = previous
+
+    assert response.status_code == 401
