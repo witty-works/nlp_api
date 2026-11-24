@@ -363,9 +363,18 @@ class Settings(BaseSettings):
     # vLLM or Ollama, a gateway, an Azure deployment.
     llm_api_base: Optional[str] = ""
     # What one LLM call may generate. Reasoning models spend most of it on
-    # thinking before they answer (500-1000 tokens for one rephrasing), and
-    # an answer cut off by this limit is refused rather than used.
+    # thinking before they answer (a few hundred to over 3,000 tokens for one
+    # rephrasing), and an answer cut off by this limit is refused rather than
+    # used.
     llm_max_tokens: int = 2000
+    # Provider-specific fields sent in the body of every LLM call, as a JSON
+    # object: what LiteLLM has no parameter of its own for. The use it was
+    # added for is switching off a Qwen3 model's thinking on a server that
+    # passes chat-template arguments on,
+    # `{"chat_template_kwargs": {"enable_thinking": false}}`, which
+    # makes rephrasings faster without making them worse (docs/llm-models.md).
+    # Empty: nothing extra is sent.
+    llm_extra_body: dict[str, Any] = {}
     # Seconds before an LLM call is given up and answered with a 503.
     llm_timeout: float = 60.0
     # LLM calls one worker process runs at once; the rest wait up to
