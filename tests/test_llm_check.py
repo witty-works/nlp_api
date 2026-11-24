@@ -115,3 +115,18 @@ def test_the_key_is_sent_but_not_printed(monkeypatch, capsys):
     assert code == 1
     assert client.headers[0]["x-key"] == "secret-key-value"
     assert "secret-key-value" not in out
+
+
+class BusyClient(FakeClient):
+    """Every request fails as an overloaded provider does: 503, no model."""
+
+    def post(self, path, json, headers):
+        self.headers.append(headers)
+        return FakeResponse(503, {"detail": "busy"})
+
+
+def test_a_failed_request_is_not_reported_as_a_mismatch(monkeypatch, capsys):
+    code, out = run_main(monkeypatch, capsys, BusyClient({}), expected="expected")
+    assert code == 1
+    assert "status 503" in out
+    assert "not LLM_EXPECTED_MODEL" not in out

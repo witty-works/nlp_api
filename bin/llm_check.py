@@ -40,6 +40,8 @@ class CaseResult:
     passed: bool
     reason: str | None
     served_model: str | None
+    # The API's answer; only a 200 says which model answered.
+    status: int = 200
 
 
 def load_cases(directories: list[pathlib.Path]) -> list[Case]:
@@ -105,7 +107,9 @@ def run(
             name = case.name if repeat == 1 else f"{case.name}#{attempt + 1}"
             reason = check_case(case, response.status_code, payload)
             served = payload.get("model") if isinstance(payload, dict) else None
-            results.append(CaseResult(name, reason is None, reason, served))
+            results.append(
+                CaseResult(name, reason is None, reason, served, response.status_code)
+            )
     return results
 
 
@@ -163,7 +167,13 @@ def main(
     failed = passed < len(results)
     expected = context_settings_expected_model()
     if expected:
-        others = {r.served_model for r in results if r.served_model != expected}
+        # A failed request (an overloaded provider's 503) names no model; it
+        # already fails its case and is no evidence of another model.
+        others = {
+            r.served_model
+            for r in results
+            if r.status == 200 and r.served_model != expected
+        }
         if others:
             print(
                 "answered by "
