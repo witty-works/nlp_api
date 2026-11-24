@@ -125,3 +125,25 @@ def test_no_languagetool_unless_named(monkeypatch):
     monkeypatch.delenv("LANGUAGETOOL_API", raising=False)
 
     assert Settings(_env_file=None).languagetool_api == ""
+
+
+@pytest.mark.parametrize(
+    "name,value,message",
+    [
+        ("TESTING", "true", "TESTING is on in production"),
+        ("MANAGEMENT_AUTH_ENABLED", "false", "MANAGEMENT_AUTH_ENABLED is off"),
+    ],
+)
+def test_test_switches_stop_a_production_start(monkeypatch, name, value, message):
+    monkeypatch.setenv("ENVIRONMENT_TYPE", "production")
+    monkeypatch.setenv("TESTING", "false")
+    monkeypatch.setenv("MANAGEMENT_AUTH_ENABLED", "true")
+    Settings.factory()
+
+    monkeypatch.setenv(name, value)
+    with pytest.raises(ValueError, match=message):
+        Settings.factory()
+
+    # Outside production they are what the test suite runs with.
+    monkeypatch.setenv("ENVIRONMENT_TYPE", "development")
+    Settings.factory()

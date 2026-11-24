@@ -423,6 +423,7 @@ class Settings(BaseSettings):
         """
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
+        validate_production(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
 
@@ -465,6 +466,27 @@ class Settings(BaseSettings):
             )
 
         return settings
+
+
+def validate_production(settings: Settings) -> None:
+    """Stop a production start on the switches that are for tests and local
+    work only: TESTING lets any request name its user in X-Testing-Auth, and
+    MANAGEMENT_AUTH_ENABLED=false opens the endpoints that mint keys and
+    read and write every user's config."""
+    if not settings.is_prod:
+        return
+    if settings.testing:
+        raise ValueError(
+            "TESTING is on in production, which lets any request act as any"
+            " user (X-Testing-Auth). Turn it off, or set"
+            " ENVIRONMENT_TYPE=development where that is wanted."
+        )
+    if not settings.management_auth_enabled:
+        raise ValueError(
+            "MANAGEMENT_AUTH_ENABLED is off in production, which opens /api_key"
+            " and the user and organisation configs to anyone. Turn it on, or"
+            " set ENVIRONMENT_TYPE=development where that is wanted."
+        )
 
 
 def validate_pages(settings: Settings) -> None:

@@ -335,7 +335,7 @@ configured is closed rather than open.
 
 | Variable                | Default | Description                                                                             |
 | ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
-| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development.    |
+| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development only: with `ENVIRONMENT_TYPE=production` it stops the start. |
 
 It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
 there is one pair to configure rather than two. With auth enabled and no
@@ -688,7 +688,7 @@ The following environment variables are used to seed test data and shortcuts whe
 
 |                     Variable | Default | Description                                                                                                                                                                                                                                  |
 | ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry. It is necessary for running the test suite. Other settings listed below should be disabled while running the test suite.                                      |
+|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header, with which a request names its user) and disables Sentry. It is necessary for running the test suite. With `ENVIRONMENT_TYPE=production` it stops the start. Other settings listed below should be disabled while running the test suite. |
 |              `TESTING_RULES` | (empty) | JSON string containing a user-level rules object. On startup the app parses this JSON and writes it to Redis under the seeded user's id (the `email` field). See `.env.example` for an example payload.                                      |
 | `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
 

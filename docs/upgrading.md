@@ -23,6 +23,11 @@ listed; the git history has them.
   stops with a message saying how many. Set `API_KEY_HMAC_KEY` to a random
   secret, run `python -m bin.api_key rehash` against the deployment's Redis
   with it, then start; see [API keys](./setup.md#api-keys).
+- **Production refuses to start with `TESTING` on or
+  `MANAGEMENT_AUTH_ENABLED` off.** Both are for tests and local work: the
+  first lets a request name its user, the second opens the management
+  endpoints. Change them back, or set `ENVIRONMENT_TYPE=development` where you
+  run tests.
 
 ---
 
