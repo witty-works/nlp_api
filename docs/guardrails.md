@@ -177,7 +177,12 @@ An answer with nothing to fix:
   and may let the request through.
 - `reask` is only there on a `fail`. It is a ready-to-send `user` message that
   quotes the answer, so it works whether or not you send the conversation
-  before it again. The model's reply to it is the corrected answer.
+  before it again. The model's reply to it is the corrected answer. The
+  answer is quoted as a JSON string between `<previous_response>` tags it
+  cannot close, and the message tells the model not to follow instructions
+  in it: an answer can carry instructions from a page or document the model
+  read. Send the reask without tools, so that an instruction the model
+  follows anyway can only change the text it writes back.
 - The check does not refuse a long answer. An answer longer than `TEXT_MAX_LENGTH` (1000
   characters by default) is checked in parts of that length, and the
   findings' `start` and `end` point into the whole answer. Past 20000
