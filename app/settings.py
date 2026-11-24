@@ -424,6 +424,7 @@ class Settings(BaseSettings):
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
         validate_production(settings)
+        validate_slack(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
 
@@ -486,6 +487,18 @@ def validate_production(settings: Settings) -> None:
             "MANAGEMENT_AUTH_ENABLED is off in production, which opens /api_key"
             " and the user and organisation configs to anyone. Turn it on, or"
             " set ENVIRONMENT_TYPE=development where that is wanted."
+        )
+
+
+def validate_slack(settings: Settings) -> None:
+    """Stop the start on Slack switched on without its credentials, rather
+    than serving /slack/commands with nothing to check a signature against."""
+    if settings.slack_enabled and not (
+        settings.slack_bot_token and settings.slack_signing_secret
+    ):
+        raise ValueError(
+            "SLACK_ENABLED is on but SLACK_BOT_TOKEN or SLACK_SIGNING_SECRET is"
+            " not set"
         )
 
 

@@ -28,6 +28,9 @@ listed; the git history has them.
   first lets a request name its user, the second opens the management
   endpoints. Change them back, or set `ENVIRONMENT_TYPE=development` where you
   run tests.
+- **`SLACK_ENABLED` needs its credentials.** With Slack on and
+  `SLACK_SIGNING_SECRET` or `SLACK_BOT_TOKEN` empty, the start is refused;
+  it used to serve `/slack/commands` with a placeholder signing secret.
 
 ---
 

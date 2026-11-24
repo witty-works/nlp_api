@@ -581,7 +581,7 @@ Opt-in Slack integration. When enabled, the API registers the `/slack/commands` 
 Notes
 
 - If `SLACK_ENABLED=false` (default), no Slack code is initialized and the Slack routes are not included.
-- With `SLACK_ENABLED=true` but empty Slack credentials, the app uses a local/dev Slack client for testing (no external calls).
+- With `SLACK_ENABLED=true`, both `SLACK_SIGNING_SECRET` and `SLACK_BOT_TOKEN` are required; without either the start is refused.
 
 ## Textarea page
 
