@@ -141,7 +141,10 @@ trigger") so that a reviewer can see the screening was done.
   which is opt-out, capped at ±100 chars and privacy-filtered.
 - User text is never used to train or tune a model.
 - Every Sentry event passes through `sentry_clean_event_data`, and
-  transactions other than `/check` are dropped.
+  transactions other than `/check` are dropped. No event carries a request
+  body or a stack frame's local variables, where the checked text lives;
+  log and exception messages go through the privacy filter
+  ([tests/test_sentry.py](../tests/test_sentry.py)).
 - No log line quotes the words of a checked text, nor of the alternatives
   built from it; `LOG_MISSING_DECLENSION` says what is missing, not for which
   word ([tests/test_no_words_in_logs.py](../tests/test_no_words_in_logs.py)).
