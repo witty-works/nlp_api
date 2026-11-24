@@ -217,9 +217,7 @@ For minimal resource usage in development:
 MODELS=["en_core_web_sm","de_core_news_sm","fr_core_news_sm"]
 
 # Disable LLM features
-AWS_REGION_NAME=
-AWS_KEY=
-AWS_SECRET_KEY=
+LLM_MODEL=
 
 # Disable context checker
 CONTEXT_CHECKER_LOCAL=false
@@ -503,7 +501,7 @@ config change:
 | Variable       | Default  | Description                                                                                        |
 | -------------- | -------- | ---------------------------------------------------------------------------------------------------- |
 | `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
-| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
+| `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS credentials below.     |
 | `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
 | `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend from a few hundred to over 3,000 tokens thinking before a rephrasing, unless `LLM_EXTRA_BODY` switches thinking off; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
 | `LLM_EXTRA_BODY` | (empty) | Provider-specific fields sent in the body of every call, as a JSON object, for what LiteLLM has no parameter of its own. `{"chat_template_kwargs": {"enable_thinking": false}}` switches off a Qwen3 model's thinking on a server that passes chat-template arguments on; rephrasing does not need it. See [Choosing a language model](./llm-models.md). |
@@ -534,16 +532,22 @@ deployment has no LLM": the features are refused the same way
 
 ### AWS Bedrock
 
-Bedrock keeps its own settings because it signs with a key pair and a region
-rather than a bearer token — `LLM_API_KEY` is not used for it. Leave `AWS_KEY`
-and `AWS_SECRET_KEY` empty to let an instance role supply the credentials
-instead. The model still comes from `LLM_MODEL`, as `bedrock/<model id>`.
+Bedrock signs with AWS credentials rather than a bearer token, so
+`LLM_API_KEY` is not used for it. The API passes no credentials of its own:
+LiteLLM finds them the standard AWS way, from `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY`, an AWS profile or an instance role. The model comes
+from `LLM_MODEL`, as `bedrock/<model id>`. Leave `LLM_API_KEY` empty for
+Bedrock: when set, it is passed on as for any model, and LiteLLM uses it as a
+Bedrock API key instead of the AWS credentials.
 
-| Variable        | Default                            | Description                                                   |
-| --------------- | ---------------------------------- | ------------------------------------------------------------- |
-| AWS_REGION_NAME | (empty)                            | AWS region (e.g., eu-central-1).                              |
-| AWS_KEY         | (empty)                            | AWS access key ID.                                            |
-| AWS_SECRET_KEY  | (empty)                            | AWS secret access key.                                        |
+| Variable              | Default | Description                                                          |
+| --------------------- | ------- | -------------------------------------------------------------------- |
+| AWS_REGION_NAME       | (empty) | AWS region (e.g., eu-central-1).                                     |
+| AWS_ACCESS_KEY_ID     | (empty) | AWS access key ID, read by LiteLLM, not by the API.                  |
+| AWS_SECRET_ACCESS_KEY | (empty) | AWS secret access key, read by LiteLLM, not by the API.              |
+
+The old names `AWS_KEY` and `AWS_SECRET_KEY` stop the start, so that no
+deployment calls Bedrock without its keys unnoticed.
 
 ### Who may spend the LLM budget
 

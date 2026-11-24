@@ -3782,7 +3782,7 @@ def llm_calls(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
-    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    """Bedrock gets no credentials of ours: LiteLLM finds the AWS ones."""
     monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
     monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
 
@@ -3796,18 +3796,11 @@ async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
         {"role": "system", "content": "be brief"},
         {"role": "user", "content": "say something"},
     ]
-    # Bedrock signs with a key pair, so the bearer token is not offered to it.
-    assert "api_key" not in call
-
-    monkeypatch.setattr(context.settings, "aws_key", "an-id")
-    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
-    await prompt.handle("say something")
-    assert llm_calls[1]["aws_access_key_id"] == "an-id"
-
-    # An unset key pair has to stay unset so an instance role can take over.
-    monkeypatch.setattr(context.settings, "aws_key", "")
-    await prompt.handle("say something")
-    assert "aws_access_key_id" not in llm_calls[2]
+    # Nothing is derived from the model id: the same parameters as for any
+    # model, and no AWS key pair of ours.
+    assert call["api_key"] == "not-for-bedrock"
+    assert "aws_access_key_id" not in call
+    assert "aws_secret_access_key" not in call
 
 
 @pytest.mark.asyncio

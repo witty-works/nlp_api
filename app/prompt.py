@@ -114,27 +114,18 @@ class Prompt:
                 retry_after=60 - int(now % 60),
             )
 
-    def _credentials(self, model: str) -> dict:
-        """Provider credentials, keyed off the provider prefix in the model id.
-
-        Bedrock signs with a key pair rather than a bearer token, and passing
-        empty strings would break a deployment relying on an instance role, so
-        the AWS settings are only forwarded when they are actually set.
-        """
-        if model.startswith("bedrock/"):
-            if not self.settings.aws_key:
-                return {"aws_region_name": self.settings.aws_region_name or None}
-
-            return {
-                "aws_region_name": self.settings.aws_region_name or None,
-                "aws_access_key_id": self.settings.aws_key,
-                "aws_secret_access_key": self.settings.aws_secret_key,
-            }
-
-        return {
+    def _credentials(self) -> dict:
+        """What every call passes, whatever the model: nothing is derived from
+        the model id. A provider without a key of ours (Bedrock) gets None and
+        LiteLLM finds its credentials itself; the region only when set, as
+        drop_params removes it for providers that have none."""
+        credentials = {
             "api_key": self.settings.llm_api_key or None,
             "api_base": self.settings.llm_api_base or None,
         }
+        if self.settings.aws_region_name:
+            credentials["aws_region_name"] = self.settings.aws_region_name
+        return credentials
 
     async def handle(
         self,
@@ -192,7 +183,7 @@ class Prompt:
                 # A retry would hold the slot and the provider's quota longer
                 # than the client waits; the client can ask again instead.
                 num_retries=0,
-                **self._credentials(model),
+                **self._credentials(),
                 **(
                     {"extra_body": self.settings.llm_extra_body}
                     if self.settings.llm_extra_body

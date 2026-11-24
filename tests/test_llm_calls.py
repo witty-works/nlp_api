@@ -65,6 +65,46 @@ def test_extra_body_is_read_as_json_from_the_environment(monkeypatch):
     }
 
 
+def test_a_bedrock_call_passes_no_aws_keys_of_its_own(monkeypatch):
+    calls = []
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return answer("ok")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    prompt = Prompt(Settings(llm_model="bedrock/anthropic.claude-test"))
+    asyncio.run(prompt.handle("hi"))
+    assert "aws_access_key_id" not in calls[0]
+    assert "aws_secret_access_key" not in calls[0]
+    assert calls[0]["api_key"] is None
+
+
+def test_bedrock_reaches_litellms_aws_credential_lookup(monkeypatch):
+    """Not prompt_with: this goes through the real litellm.acompletion, up to
+    where LiteLLM resolves the AWS credentials itself."""
+    seen = {}
+
+    def get_credentials(self, *args, **kwargs):
+        seen.update(kwargs)
+        seen["called"] = True
+        raise RuntimeError("stop before the network")
+
+    monkeypatch.setattr(
+        "litellm.llms.bedrock.base_aws_llm.BaseAWSLLM.get_credentials",
+        get_credentials,
+    )
+    prompt = Prompt(
+        Settings(
+            llm_model="bedrock/anthropic.claude-test", aws_region_name="eu-central-1"
+        )
+    )
+    with pytest.raises(Exception):
+        asyncio.run(prompt.handle("hi"))
+    assert seen.get("called")
+    assert seen.get("aws_access_key_id") is None
+
+
 def test_a_cut_off_answer_is_refused(monkeypatch):
     """A reasoning model that ran out of tokens returns its unfinished
     reasoning, or a truncated JSON object; neither may be used."""

@@ -345,10 +345,13 @@ class Settings(BaseSettings):
     import_from_dump: bool = True
     log_missing_declension: bool = True
     log_metrics: Optional[bool] = False
-    # Bedrock credentials. Still their own settings rather than LLM_API_KEY
-    # because Bedrock signs with a key pair and a region, and because a
-    # deployment on AWS may have none of them set and rely on an instance role.
+    # Bedrock's region. Its credentials are not settings of ours: LiteLLM
+    # finds them the standard AWS way (AWS_ACCESS_KEY_ID and
+    # AWS_SECRET_ACCESS_KEY, a profile or an instance role).
     aws_region_name: Optional[str] = ""
+    # The names these credentials used to have. Read only to refuse a start
+    # that still sets them, from the environment or .env, rather than call
+    # Bedrock without its keys (validate_aws_names).
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
 
@@ -436,6 +439,7 @@ class Settings(BaseSettings):
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
         validate_production(settings)
+        validate_aws_names(settings)
         validate_slack(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
@@ -504,6 +508,17 @@ def validate_production(settings: Settings) -> None:
             "MANAGEMENT_AUTH_ENABLED is off in production, which opens /api_key"
             " and the user and organisation configs to anyone. Turn it on, or"
             " set ENVIRONMENT_TYPE=development where that is wanted."
+        )
+
+
+def validate_aws_names(settings: Settings) -> None:
+    """Stop the start on the old names of the Bedrock credentials, which are
+    no longer passed on: Bedrock would be called without its keys."""
+    if settings.aws_key or settings.aws_secret_key:
+        raise ValueError(
+            "AWS_KEY and AWS_SECRET_KEY are no longer read; set AWS_ACCESS_KEY_ID"
+            " and AWS_SECRET_ACCESS_KEY instead, or use an AWS profile or"
+            " instance role"
         )
 
 

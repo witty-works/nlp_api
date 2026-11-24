@@ -67,6 +67,11 @@ listed; the git history has them.
   uv run python -m bin.migrate_organization_keys --dry-run
   uv run python -m bin.migrate_organization_keys
   ```
+- **Bedrock credentials use the standard AWS names.** `AWS_KEY` and
+  `AWS_SECRET_KEY` are no longer read, and setting either stops the start.
+  Set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` instead, or use an AWS
+  profile or instance role; LiteLLM finds them itself. `AWS_REGION_NAME` is
+  unchanged.
 
 ---
 

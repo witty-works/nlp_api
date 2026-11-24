@@ -149,6 +149,20 @@ def test_test_switches_stop_a_production_start(monkeypatch, name, value, message
     Settings.factory()
 
 
+@pytest.mark.parametrize(
+    "name,new_name",
+    [("AWS_KEY", "AWS_ACCESS_KEY_ID"), ("AWS_SECRET_KEY", "AWS_SECRET_ACCESS_KEY")],
+)
+def test_old_aws_variable_names_stop_the_start(monkeypatch, name, new_name):
+    monkeypatch.delenv("AWS_KEY", raising=False)
+    monkeypatch.delenv("AWS_SECRET_KEY", raising=False)
+    Settings.factory()
+
+    monkeypatch.setenv(name, "something")
+    with pytest.raises(ValueError, match=new_name):
+        Settings.factory()
+
+
 def test_a_dashboard_issuer_is_required(monkeypatch):
     monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1")
     monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
