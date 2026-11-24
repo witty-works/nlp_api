@@ -81,6 +81,11 @@ listed; the git history has them.
   listed in `DEBUG_SETTINGS` (`app/settings.py`), with URLs shown without
   credentials, query or fragment. `GET /languagetool_api` shows its URL the
   same way. Tooling that read other fields there no longer gets them.
+- **A stricter Content-Security-Policy.** Every response now allows
+  scripts, styles and images from the API itself only, no inline code, and
+  no framing (`frame-ancestors 'none'`). `/docs` and `/textarea` send policies
+  of their own; the Swagger UI assets are pinned with Subresource Integrity
+  and load from the CDN on `/docs` only.
 - **An organisation's explanation is plain text.** HTML in a term
   replacement's explanation now shows as written, escaped, instead of being
   rendered, and its `url` reaches clients only if it is an `http` or `https`

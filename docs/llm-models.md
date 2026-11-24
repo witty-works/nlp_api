@@ -87,7 +87,7 @@ Some mistakes pass these checks, such as an added article ("with the all"); test
   uv run python -m bin.llm_check --repeat 3 # each case three times
   ```
 
-  Run it from a checkout, as described in [Running the commands in bin](./setup.md#running-the-commands-in-bin): it is not in the image. The key it sends has to belong to a user whose config has `llm_alternatives` and whom `LLM_ACCESS` lets in, as for any rephrasing; see [Who may spend the LLM budget](./configuration.md#who-may-spend-the-llm-budget).
+  Run it from a checkout, as described in [Running the commands in bin](./setup.md#running-the-commands-in-bin): it is not in the image. With `DEFAULT_API_KEY`, set `DEFAULT_USER_EMAIL` too, which the API needs to map the key to a user. The key it sends has to belong to a user whose config has `llm_alternatives` and whom `LLM_ACCESS` lets in, as for any rephrasing; see [Who may spend the LLM budget](./configuration.md#who-may-spend-the-llm-budget).
 
   A case fails when the API drops a suggestion, a suggestion contains a string the case forbids (`tests/llm_check/<case>/forbidden.json`), or the request fails; the run also fails when the answering model is not `LLM_EXPECTED_MODEL`. It authenticates with the key in `DEFAULT_API_KEY` (`--api-key-env` names another variable) and never prints it, and paces its calls below `LLM_MAX_REQUESTS_PER_MINUTE`, at least 1.1 s apart. A failure is a finding about the model, to read rather than count. Run it on each deploy and periodically, so a change behind the model's name shows up.
 
