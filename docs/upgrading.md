@@ -67,6 +67,20 @@ listed; the git history has them.
   uv run python -m bin.migrate_organization_keys --dry-run
   uv run python -m bin.migrate_organization_keys
   ```
+- **LLM provider adapters (`LLM_PROVIDER`).** Nothing changes without it:
+  the default `openai-compatible` behaves as before, including the `422`
+  for a LiteLLM proxy's guardrail refusals. Behind a LiteLLM proxy, set
+  `LLM_PROVIDER=litellm-proxy` so the API learns which model answered. New
+  optional settings: `LLM_TASK_EXTRA_BODY`, `LLM_SERVED_MODEL_HEADER`,
+  `LLM_EXPECTED_MODEL` and `LLM_MODEL_MISMATCH` (`warn` by default); an
+  unknown `LLM_PROVIDER` stops the start. See
+  [Choosing a language model](./llm-models.md).
+- **Rephrasings are checked before they reach the user.** A rephrasing that
+  undoes the swap, brings the flagged words back, changes another
+  occurrence of them, rewrites the sentence or adds a word Witty flags is
+  dropped, and the client offers the plain alternative. Drops are logged by
+  the check's name and counted in `rephrase_dropped` with `LOG_METRICS`.
+  `bin/llm_check.py` tests the configured model on known cases.
 - **Rephrase and write answers name the model.** `/v1.0/rephrase` and
   `/v1.0/write` answers carry `model`: the model that answered, as the
   provider reported it, else `LLM_MODEL`. `/health` reports the same under
