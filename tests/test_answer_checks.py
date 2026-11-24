@@ -96,11 +96,13 @@ def test_a_drop_is_logged_without_text(context, caplog):
     assert "chairman" not in caplog.text and "HACKED" not in caplog.text
 
 
-def test_agreement_changes_are_not_too_much():
+def test_agreement_changes_are_not_too_much(context):
     """Pronoun and adjective follow the swapped-in noun: two words, kept."""
     draft = "Nous attendons de notre serveuse qu'il est très attentif aux clients."
     model = "Nous attendons de notre serveuse qu'elle est très attentive aux clients."
-    assert too_much_changed(draft, model, "serveuse") is None
+    assert (
+        asyncio.run(too_much_changed(draft, model, "serveuse", "fr", context)) is None
+    )
 
 
 class CorrectModel(Prompt):
