@@ -441,6 +441,11 @@ async def fetch_user(
                         config["issuer"],
                         config["expected_scope"],
                     )
+                    # The dashboard's tokens name the user by email, so the
+                    # email has to be one its owner confirmed: anyone can sign
+                    # up with someone else's address.
+                    if claims.get("email_verified") is not True:
+                        raise AuthError("Token error: The email is not verified", 403)
                 elif "tid" in unverified_claims:
                     claims = await decode_jwt(
                         redis,

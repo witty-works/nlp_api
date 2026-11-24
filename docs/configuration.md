@@ -615,7 +615,7 @@ Dashboard (Laravel Passport)
 | DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
-| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
@@ -626,6 +626,9 @@ nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
 made-up ones do not each send a request to the dashboard; a key published in
 that minute is accepted once it has passed. A token without an `exp` claim is
 refused.
+
+A dashboard token names its user by the `email` claim, so it is accepted only
+with `email_verified` set to `true`; without it the API answers `403`.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
@@ -731,7 +734,7 @@ Dashboard (Laravel Passport)
 | DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
-| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
@@ -742,6 +745,9 @@ nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
 made-up ones do not each send a request to the dashboard; a key published in
 that minute is accepted once it has passed. A token without an `exp` claim is
 refused.
+
+A dashboard token names its user by the `email` claim, so it is accepted only
+with `email_verified` set to `true`; without it the API answers `403`.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See

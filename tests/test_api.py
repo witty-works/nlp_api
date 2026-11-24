@@ -2655,7 +2655,7 @@ def dashboard_sso(request):
     context.settings.sso_configs["dashboard"] = {
         "client_id": "1",
         "jwks_url": jwks_url,
-        "issuer": None,
+        "issuer": "https://dashboard.example.com",
         "expected_scope": None,
     }
 
@@ -2670,7 +2670,9 @@ def dashboard_sso(request):
             "sub": "1",
             "scopes": [],
             "email": "test@gmail.com",
+            "email_verified": True,
             "preferred_username": "test@gmail.com",
+            "iss": "https://dashboard.example.com",
         }
         claims.update(overrides)
         # None leaves a claim out.
@@ -2744,28 +2746,34 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
 
 
 def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
-    """Configuring an issuer makes a token without an `iss` claim invalid."""
-    context.settings.sso_configs["dashboard"][
-        "issuer"
-    ] = "https://dashboard.example.com"
-
+    """Every dashboard token must name the dashboard as its issuer."""
     with TestClient(app) as client:
-        response = client.post(
-            "/v2.0/auth",
-            json={},
-            headers={"Authorization": "Bearer " + dashboard_sso()},
-        )
-        assert response.status_code == 403
+        for iss in (None, "https://other.example.com"):
+            response = client.post(
+                "/v2.0/auth",
+                json={},
+                headers={"Authorization": "Bearer " + dashboard_sso(iss=iss)},
+            )
+            assert response.status_code == 403
 
+
+@pytest.mark.parametrize("email_verified", [None, False, "true", 1])
+def test_dashboard_token_needs_a_verified_email(
+    dashboard_sso, set_redis, email_verified
+):
+    """The email names the user, so only one its owner confirmed counts."""
+    with TestClient(app) as client:
         response = client.post(
             "/v2.0/auth",
             json={},
             headers={
                 "Authorization": "Bearer "
-                + dashboard_sso(iss="https://dashboard.example.com")
+                + dashboard_sso(email_verified=email_verified)
             },
         )
-        assert response.status_code == 200
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Token error: The email is not verified"
 
 
 @pytest.fixture

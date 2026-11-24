@@ -443,13 +443,18 @@ class Settings(BaseSettings):
         }
 
         if settings.dashboard_client_id:
+            if not settings.dashboard_issuer:
+                raise ValueError(
+                    "DASHBOARD_CLIENT_ID is set but DASHBOARD_ISSUER is not: set"
+                    " it to the `iss` the dashboard's tokens carry (its"
+                    " OAuthIssuer), which every dashboard token is checked for"
+                )
             settings.sso_configs["dashboard"] = {
                 "client_id": settings.dashboard_client_id,
                 "jwks_url": settings.jwks_url(),
-                # Passport does not emit an `iss` claim, so issuer verification
-                # is opt-in: setting DASHBOARD_ISSUER turns it into a hard
-                # requirement and tokens without the claim are then rejected.
-                "issuer": settings.dashboard_issuer or None,
+                # Always checked: a token without the claim, or with another
+                # issuer's, is refused.
+                "issuer": settings.dashboard_issuer,
                 "expected_scope": settings.dashboard_expected_scope or None,
             }
 

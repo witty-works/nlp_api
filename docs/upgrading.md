@@ -31,6 +31,14 @@ listed; the git history has them.
 - **`SLACK_ENABLED` needs its credentials.** With Slack on and
   `SLACK_SIGNING_SECRET` or `SLACK_BOT_TOKEN` empty, the start is refused;
   it used to serve `/slack/commands` with a placeholder signing secret.
+- **Dashboard tokens need an issuer and a verified email.** With
+  `DASHBOARD_CLIENT_ID` set, `DASHBOARD_ISSUER` is required (the start is
+  refused without it) and every dashboard token is checked for that `iss`. A
+  dashboard token is accepted only with `email_verified: true`. Deploy, in
+  this order: first the dashboard release that puts `iss` and
+  `email_verified` in its tokens, then this API with `DASHBOARD_ISSUER` set.
+  Tokens the dashboard issued before carry neither and are refused, so users
+  sign in again.
 
 ---
 

@@ -147,3 +147,16 @@ def test_test_switches_stop_a_production_start(monkeypatch, name, value, message
     # Outside production they are what the test suite runs with.
     monkeypatch.setenv("ENVIRONMENT_TYPE", "development")
     Settings.factory()
+
+
+def test_a_dashboard_issuer_is_required(monkeypatch):
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.delenv("DASHBOARD_ISSUER", raising=False)
+
+    with pytest.raises(ValueError, match="DASHBOARD_ISSUER"):
+        Settings.factory()
+
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    issuer = Settings.factory().sso_configs["dashboard"]["issuer"]
+    assert issuer == "https://dashboard.example.com"
