@@ -11,6 +11,7 @@
 - [Run Locally](#run-locally)
 - [Profiling locally with Blackfire](#profiling-locally-with-blackfire)
 - [Running against a dashboard on Lando](#running-against-a-dashboard-on-lando)
+- [Running the commands in bin](#running-the-commands-in-bin)
 - [API keys](#api-keys)
 - [Production Deployment](#production-deployment)
 
@@ -222,6 +223,15 @@ application rather than by the TLS layer.
 Regenerate the bundle whenever `certifi` is updated; it is a copy, not a
 reference. Nothing about this is needed for API-key mode, which makes no call
 back to the dashboard.
+
+## Running the commands in bin
+
+The image contains only what serves requests; the commands in `bin/`
+(`api_key`, `migrate_organization_keys`, `llm_check`) are not in it. Run them
+from a checkout of the release the deployment runs, after `uv sync`, with the
+deployment's environment and with its Redis reachable. `bin.llm_check` also
+needs the spaCy models (`uv run python -m bin.install_spacy_models`), as it
+runs the API in-process.
 
 ## API keys
 

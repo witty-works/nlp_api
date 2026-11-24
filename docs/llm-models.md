@@ -87,6 +87,8 @@ Some mistakes pass these checks, such as an added article ("with the all"); test
   uv run python -m bin.llm_check --repeat 3 # each case three times
   ```
 
+  Run it from a checkout, as described in [Running the commands in bin](./setup.md#running-the-commands-in-bin): it is not in the image. The key it sends has to belong to a user whose config has `llm_alternatives` and whom `LLM_ACCESS` lets in, as for any rephrasing; see [Who may spend the LLM budget](./configuration.md#who-may-spend-the-llm-budget).
+
   A case fails when the API drops a suggestion, a suggestion contains a string the case forbids (`tests/llm_check/<case>/forbidden.json`), or the request fails; the run also fails when the answering model is not `LLM_EXPECTED_MODEL`. It authenticates with the key in `DEFAULT_API_KEY` (`--api-key-env` names another variable) and never prints it, and paces its calls below `LLM_MAX_REQUESTS_PER_MINUTE`, at least 1.1 s apart. A failure is a finding about the model, to read rather than count. Run it on each deploy and periodically, so a change behind the model's name shows up.
 
 - **Run the rephrase cases against it:** `LLM_MODEL=… LLM_API_BASE=… LLM_API_KEY=… uv run pytest tests/test_api.py -k test_rephrase`. The stored answers record one model's wording, so a different model fails the snapshot comparison even when it is right: read the differences instead of counting failures. Add sentences from your own users' texts, in every language you serve.
