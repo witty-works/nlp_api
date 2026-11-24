@@ -15,6 +15,9 @@ listed; the git history has them.
   `/parse-word-types`, `/save_openapi_json` answer `404`) and `/` no longer
   redirects to `/docs`. Set `ENVIRONMENT_TYPE=development` where you want
   them, for local work only.
+- **`ENVIRONMENT_TYPE` accepts only `production` or `development`.** Any
+  other value (`prod`, `Production`) stops the start instead of being read as
+  development, which switched production's safeguards off.
 - **`LANGUAGETOOL_API` defaults to empty.** A deployment that never set it
   used LanguageTool's hosted API and sent it the text being checked; now it
   makes no spelling and grammar checks. To keep them, set `LANGUAGETOOL_API`
