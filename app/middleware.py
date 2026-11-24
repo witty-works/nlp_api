@@ -15,20 +15,20 @@ from app.settings import get_settings
 
 
 # Security headers configuration
-# Allow Swagger UI assets from jsdelivr and inline scripts/styles used by the
-# generated Swagger HTML. Keep default-src restrictive and explicitly allow
-# script-src and style-src for docs to render. One method per directive: `set`
-# replaces the whole policy, so chaining it sent only the last directive.
+# Every response gets a policy that allows nothing from elsewhere and no
+# inline code. The pages that need more send their own, which the middleware
+# below keeps: /docs (app/routes/utility.py) and /textarea. One method per
+# directive: `set` replaces the whole policy, so chaining it sent only the
+# last directive.
 csp = (
     secure.ContentSecurityPolicy()
-    .default_src("'self'", "cdn.jsdelivr.net")
-    .script_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
-    .style_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
-    # Swagger's inline icons and favicon, and in the /textarea editor's popover
-    # its logo (inline) and the learning-bite pictures it links from witty.works.
-    .img_src(
-        "'self'", "data:", "cdn.jsdelivr.net", "fastapi.tiangolo.com", "www.witty.works"
-    )
+    .default_src("'self'")
+    .script_src("'self'")
+    .style_src("'self'")
+    .img_src("'self'", "data:")
+    .object_src("'none'")
+    .base_uri("'none'")
+    .frame_ancestors("'none'")
 )
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
@@ -51,8 +51,8 @@ async def add_security_headers(request, call_next):
     # everything that depends on who is asking. A route that deliberately sets
     # its own keeps it — see /v2.0/categories.
     route_cache_control = response.headers.get("Cache-Control")
-    # Likewise a route with a stricter Content-Security-Policy than the one
-    # the docs need (/textarea).
+    # Likewise a route with a Content-Security-Policy of its own (/docs,
+    # /textarea).
     route_csp = response.headers.get("Content-Security-Policy")
 
     await secure_headers.set_headers_async(response)

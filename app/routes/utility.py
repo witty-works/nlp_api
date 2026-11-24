@@ -1,6 +1,10 @@
 """Utility routes for basic API operations."""
 
+import base64
+import hashlib
 import json
+import re
+from functools import lru_cache
 from typing import Any
 
 import spacy
@@ -10,7 +14,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.exceptions import RequestValidationError
-from starlette.responses import RedirectResponse
+from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.models import LangType
 from app.dependencies import (
@@ -120,11 +124,82 @@ def get_app_settings(
     return context.settings.debug_view()
 
 
+# Swagger UI for /docs, at an exact version and checked by its hash
+# (Subresource Integrity), so the CDN cannot hand the page other code. The
+# hashes are of the files as published on npm; for another version, compute
+# them from its files:
+#   curl -s URL | openssl dgst -sha384 -binary | openssl base64 -A
+SWAGGER_UI_URL = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/"
+SWAGGER_JS = (
+    SWAGGER_UI_URL + "swagger-ui-bundle.js",
+    "sha384-XFYN47VzPiDY6qPtxYKg0nqUeW/upo20xf1j2SUE7gT/i35FJB4cuS/71Iegzk8Z",
+)
+SWAGGER_CSS = (
+    SWAGGER_UI_URL + "swagger-ui.css",
+    "sha384-4c3vsE5f+trhFyHrFrLM1fFGUn531NIaC7dcqEWIJdoRQJ5CkJbSuSCwXLpaS1KF",
+)
+SWAGGER_FAVICON = "https://fastapi.tiangolo.com/img/favicon.png"
+
+
+@lru_cache(maxsize=1)
+def swagger_ui_page() -> tuple[str, str]:
+    """The /docs page with its assets pinned, and the policy that lets it run
+    and nothing else: the CDN only for the two files, the inline script that
+    starts Swagger UI only by its hash. Styles stay 'unsafe-inline', as
+    Swagger UI sets them on its elements."""
+    page = bytes(
+        get_swagger_ui_html(
+            openapi_url="/openapi.json",
+            title="docs",
+            swagger_js_url=SWAGGER_JS[0],
+            swagger_css_url=SWAGGER_CSS[0],
+            swagger_favicon_url=SWAGGER_FAVICON,
+        ).body
+    ).decode("utf-8")
+    pinned = page.replace(
+        f'<script src="{SWAGGER_JS[0]}"></script>',
+        f'<script src="{SWAGGER_JS[0]}" integrity="{SWAGGER_JS[1]}"'
+        ' crossorigin="anonymous"></script>',
+    ).replace(
+        f'href="{SWAGGER_CSS[0]}">',
+        f'href="{SWAGGER_CSS[0]}" integrity="{SWAGGER_CSS[1]}"'
+        ' crossorigin="anonymous">',
+    )
+    # A FastAPI that writes the tags differently would drop the integrity
+    # check silently; fail instead.
+    if pinned.count('integrity="') != 2:
+        raise RuntimeError("could not pin the Swagger UI assets in /docs")
+
+    inline = re.findall(r"<script>(.*?)</script>", pinned, re.DOTALL)
+    script_hashes = " ".join(
+        "'sha256-"
+        + base64.b64encode(hashlib.sha256(script.encode("utf-8")).digest()).decode()
+        + "'"
+        for script in inline
+    )
+    policy = "; ".join(
+        [
+            "default-src 'self'",
+            f"script-src 'self' {SWAGGER_JS[0]} {script_hashes}",
+            f"style-src 'self' 'unsafe-inline' {SWAGGER_CSS[0]}",
+            "img-src 'self' data: https://fastapi.tiangolo.com",
+            "connect-src 'self'",
+            "object-src 'none'",
+            "base-uri 'none'",
+            "frame-ancestors 'none'",
+        ]
+    )
+
+    return pinned, policy
+
+
 @router.get("/docs", include_in_schema=False)
 def get_swagger_documentation(
     username: str = Depends(fetch_current_username),
-):  # pragma: no cover
-    return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
+) -> HTMLResponse:
+    page, policy = swagger_ui_page()
+
+    return HTMLResponse(page, headers={"Content-Security-Policy": policy})
 
 
 @router.get("/openapi.json", include_in_schema=False)

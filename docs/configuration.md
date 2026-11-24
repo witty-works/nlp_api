@@ -324,6 +324,14 @@ needed. `/openapi.json` is served unguarded either way.
 
 Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` asks for the password instead, and the page loads `/openapi.json`, which needs one too: add `"/openapi.json"` to `PUBLIC_PATHS`, or the docs page renders without any endpoints. Add `"/docs"` as well to make the docs public.
 
+`/docs` loads Swagger UI from jsDelivr at an exact version, with Subresource
+Integrity hashes, so the browser refuses a file that differs from the one
+published. Only `/docs` is allowed to load from there: its
+Content-Security-Policy names the two files and allows its inline start-up
+script by hash, while every other response allows no third-party or inline
+script. To move to another Swagger UI version, change `SWAGGER_UI_URL` and
+both hashes in [app/routes/utility.py](../app/routes/utility.py).
+
 ## Protecting the management endpoints
 
 Separate from the docs switch, because reading the schema and minting a

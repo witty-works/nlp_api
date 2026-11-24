@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import re
 import pytest
 import logging
 import json
@@ -16,6 +17,7 @@ from app.main import (
     context,
 )
 from app.categories import get_category_keys
+from app.routes.utility import SWAGGER_CSS, SWAGGER_JS
 from app.prompt import Prompt
 from app.settings import Settings
 from app.config_manager import (
@@ -94,6 +96,32 @@ def test_content_security_policy_is_sent_whole():
 
     directives = {part.split()[0] for part in csp.split(";") if part.strip()}
     assert {"default-src", "script-src", "style-src", "img-src"} <= directives
+
+
+def test_only_the_docs_may_load_from_the_cdn():
+    """The allowance Swagger UI needs is on /docs alone, and covers its two
+    files, pinned by hash, and its one inline script."""
+    with TestClient(app) as client:
+        api_csp = client.get("/health").headers["content-security-policy"]
+        docs = client.get("/docs")
+
+    assert "cdn.jsdelivr.net" not in api_csp
+    assert "unsafe-inline" not in api_csp
+
+    assert docs.status_code == 200
+    page = docs.text
+    for url, integrity in (SWAGGER_JS, SWAGGER_CSS):
+        assert f'"{url}" integrity="{integrity}" crossorigin="anonymous"' in page
+    assert "@5/" not in page
+
+    docs_csp = docs.headers["content-security-policy"]
+    script_src = next(
+        part for part in docs_csp.split(";") if part.strip().startswith("script-src")
+    )
+    assert "unsafe-inline" not in script_src
+    (inline,) = re.findall(r"<script>(.*?)</script>", page, re.DOTALL)
+    digest = base64.b64encode(hashlib.sha256(inline.encode()).digest()).decode()
+    assert f"'sha256-{digest}'" in script_src
 
 
 @pytest.mark.parametrize(
