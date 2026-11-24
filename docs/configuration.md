@@ -36,13 +36,16 @@ The API is configured via environment variables (loaded from a local .env file a
 ## Quick start: minimal .env for local dev
 
 ```bash
+# The default is production, which hides the development helpers
+ENVIRONMENT_TYPE=development
+
 # Logging
 LOGGING_ENABLED=true
 LOGGING_CONFIG_FILENAME=stdout
 LOGGING_CONFIG_LEVEL=INFO
 
-# LanguageTool (run locally or use public API)
-LANGUAGETOOL_API=http://localhost:8000/v2
+# LanguageTool: off unless set; run it locally (see setup.md)
+LANGUAGETOOL_API=http://127.0.0.1:8210/v2
 LANGUAGETOOL_VERIFY_SSL=false
 
 # Use in-memory fake Redis by omitting REDIS_HOST
@@ -72,17 +75,18 @@ Tip: Keys are shown here in UPPERCASE to match common .env style. They map 1:1 t
 | LOGGING_ENABLED             | false                                                          | Enables application logging.                                                                                                                                     |
 | LOGGING_CONFIG_FILENAME     | ./logs/error.log                                               | Destination for logs. Use "stdout" to log to console.                                                                                                            |
 | LOGGING_CONFIG_LEVEL        | ERROR                                                          | Log level (e.g., DEBUG, INFO, WARNING, ERROR).                                                                                                                   |
-| ENVIRONMENT_TYPE            | development                                                    | Controls production behavior flags (sets `is_prod`). Set to "production" in prod, where the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. |
+| ENVIRONMENT_TYPE            | production                                                     | Controls production behavior flags (sets `is_prod`). In production the development helpers (`/debug/*`, `/lemmatize`, `/tokenize`, `/parse-word-types`, `/save_openapi_json`) answer `404`. Set `development` explicitly for local work. |
 | ENVIRONMENT                 | local                                                          | Logical environment name (used for Sentry environment).                                                                                                          |
 | ROOT_REDIRECT               | (empty)                                                        | Where `/` redirects, e.g. `/textarea` or `/docs`; a path on this host only, anything else stops the start. When set, `/` is open behind `REQUIRE_API_KEY` (its target is not). Empty: `/docs` outside production, a line of text in it. |
 | TEXT_MAX_LENGTH             | 1000                                                           | Max characters processed per request; longer texts are truncated on word boundary.                                                                               |
 | GUARDRAIL_MESSAGES_MAX_COUNT, GUARDRAIL_TEXTS_MAX_COUNT, GUARDRAIL_CHECK_MAX_LENGTH, GUARDRAIL_REQUEST_MAX_LENGTH | 1000, 20, 40000, 1000000 | What one guardrail request may ask of the server; more is refused with a `422`. See [Request limits](./guardrails.md#request-limits). |
+| REQUEST_MAX_BYTES           | 8388608 (8 MiB)                                                | The largest request body accepted; larger is refused with a `413` before it is parsed, by `Content-Length` or, for a chunked body, as it arrives. The default fits a guardrail request of `GUARDRAIL_REQUEST_MAX_LENGTH` characters even if every one is JSON-escaped (6 bytes each); raise it with that setting. |
 | ALTERNATIVES_MAX_COUNT      | 5                                                              | Default max count of alternatives returned unless overridden by request.                                                                                         |
 | TERMS_OF_SERVICE            |                                                                | Link surfaced in OpenAPI metadata.                                                                                                                               |
 | CONTACT                     |                                                                | Contact email in OpenAPI metadata.                                                                                                                               |
 | MODELS                      | ["en_core_web_lg",<br>"de_core_news_lg",<br>"fr_core_news_lg"] | spaCy models to load. They must be installed: see [Using Smaller spaCy Models](#using-smaller-spacy-models).                                                                             |
 | IMPORT_FROM_DUMP            | true                                                           | On first boot, initialize the in-memory SQLite DB from [database/dump.sql](../database/dump.sql) (otherwise from [database/db.sqlite3](../database/db.sqlite3)). |
-| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases to help enrich the database.                                                                                                        |
+| LOG_MISSING_DECLENSION      | true                                                           | Log missing declension cases at `DEBUG` to help enrich the database: the word type and form that is missing, never the word, which comes from the user's text. |
 | MINIMUM_VERSION_WEB_EXT     | (empty)                                                        | If set, reject requests from the browser extension below this semver.                                                                                            |
 | MINIMUM_VERSION_WORD_PLUGIN | (empty)                                                        | If set, reject requests from the Word plugin below this semver.                                                                                                  |
 | MINIMUM_VERSION_WITTY_EDITOR| (empty)                                                        | If set, reject requests from the Witty editor (client `witty-editor:<version>`, e.g. the /textarea page) below this semver.                                      |
@@ -282,9 +286,14 @@ The extension authenticates with an API key, which the LanguageTool clients do n
 
 ```bash
 DEFAULT_API_KEY=pick-something-long-and-random
+API_KEY_HMAC_KEY=another-long-random-secret
 DEFAULT_USER_EMAIL=you@example.com
 DEFAULT_USER_CONFIG_ENABLED=true
 ```
+
+`API_KEY_HMAC_KEY` keeps the key in Redis as a digest. In production, the
+default `ENVIRONMENT_TYPE`, the API refuses to start while Redis holds a key as
+written and it is empty.
 
 `DEFAULT_USER_CONFIG_ENABLED` belongs with it: the key resolves to an email that has no config stored, and without the fallback `/v2.0/auth` answers 403 and the extension concludes it is signed out. Checking still works if you call it directly, which is what makes that one confusing to diagnose.
 
@@ -315,18 +324,26 @@ needed. `/openapi.json` is served unguarded either way.
 
 Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` asks for the password instead, and the page loads `/openapi.json`, which needs one too: add `"/openapi.json"` to `PUBLIC_PATHS`, or the docs page renders without any endpoints. Add `"/docs"` as well to make the docs public.
 
+`/docs` loads Swagger UI from jsDelivr at an exact version, with Subresource
+Integrity hashes, so the browser refuses a file that differs from the one
+published. Only `/docs` is allowed to load from there: its
+Content-Security-Policy names the two files and allows its inline start-up
+script by hash, while every other response allows no third-party or inline
+script. To move to another Swagger UI version, change `SWAGGER_UI_URL` and
+both hashes in [app/routes/utility.py](../app/routes/utility.py).
+
 ## Protecting the management endpoints
 
 Separate from the docs switch, because reading the schema and minting a
 credential are not the same risk. This one guards `/api_key`, `/user/configs`,
-`/organization/configs`, `/user/logs`, `/settings` and `/languagetool_api` —
+`/organization/configs`, `/settings` and `/languagetool_api` —
 the endpoints that hand out or expose credentials and configuration, or act on
 a named user's behalf — and defaults to **on**, so a deployment nobody
 configured is closed rather than open.
 
 | Variable                | Default | Description                                                                             |
 | ----------------------- | ------- | ---------------------------------------------------------------------------------------- |
-| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development.    |
+| MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development only: with `ENVIRONMENT_TYPE=production` it stops the start. |
 
 It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
 there is one pair to configure rather than two. With auth enabled and no
@@ -347,11 +364,14 @@ Sentry uses `ENVIRONMENT` as the environment name and includes FastAPI/Starlette
 
 ## LanguageTool
 
-Optional spell/grammar checking. You can use the public API or self-host LanguageTool.
+Optional spell/grammar checking, off by default. Self-host LanguageTool (see
+[Using docker compose](./setup.md#using-docker-compose-recommended-for-local-multi-service-setup)),
+or name LanguageTool's hosted API (`https://api.languagetoolplus.com/v2`),
+which sends the text being checked to LanguageTool.
 
 | Variable                | Default                             | Description                                                                            |
 | ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------------- |
-| LANGUAGETOOL_API        | https://api.languagetoolplus.com/v2 | Base URL of your LanguageTool instance (must include `/v2`).                           |
+| LANGUAGETOOL_API        | (empty)                             | Base URL of your LanguageTool instance (must include `/v2`). Empty: no LanguageTool.   |
 | LANGUAGETOOL_VERIFY_SSL | true                                | Verify TLS certs when calling LanguageTool. Set to false for local/self-signed setups. |
 | LANGUAGETOOL_USERNAME   | (empty)                             | Optional: your username/email for premium LanguageTool accounts (used for API access). |
 | LANGUAGETOOL_API_KEY    | (empty)                             | Optional: your API key / access token for premium LanguageTool accounts.               |
@@ -467,9 +487,8 @@ Redis stores user/organization configs, API key mappings, optional request/respo
 | REDIS_USERNAME   | (empty)     | Redis username.                                                                                                                                               |
 | REDIS_PASSWORD   | (empty)     | Redis password.                                                                                                                                               |
 | REDIS_VERIFY_SSL | true        | Connect over TLS and check the server's certificate; a connection to a Redis whose certificate does not check out fails at startup. `false`: plain TCP, for a Redis on the same host or private network, as in `compose.yml`. |
-| API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. With `REQUIRE_API_KEY` on and this empty, the start logs a warning. |
+| API_KEY_HMAC_KEY | (empty)     | Secret for storing and looking up API keys as an HMAC-SHA256 digest, so a copy of Redis holds no working key. With it set, a key stored as written does not resolve: run `uv run python -m bin.api_key rehash` once after setting it. Changing it later invalidates every key, as digests cannot be converted; mint new ones. In production the start is refused while Redis holds a key as written and this is empty; elsewhere, and with `REQUIRE_API_KEY` on, it logs a warning. |
 | REDIS_SSL_CA_CERTS | (empty)   | Path to the CA certificate(s) to check a Redis certificate against, for one signed by a private CA. Empty: the system's CAs.                                     |
-| REDIS_LOG_EMAILS | (empty)     | JSON array of email addresses to enable per-user request/response logging. Example: ["dev@witty.works"]                                                       |
 | LOG_METRICS      | false       | When true, counters are incremented in Redis for auth/check/rephrase usage.                                                                                   |
 | TESTING\_\*      | (see below) | Fixtures for the test suite: `TESTING_RULES` and `TESTING_ORGANIZATION_RULES`. Only loaded when `TESTING` is set. See [Testing variables](#testing-variables). |
 
@@ -486,7 +505,8 @@ config change:
 | `LLM_MODEL`    | (empty)  | Model identifier, e.g. `bedrock/anthropic.claude-…`, `anthropic/claude-…`, `openai/…`, `openrouter/…`. Empty means the deployment has no LLM.       |
 | `LLM_API_KEY`  | (empty)  | Credential for the provider. Not used for Bedrock, which signs with the AWS settings below.        |
 | `LLM_API_BASE` | (empty)  | Only for a provider that is not at its vendor's own address: self-hosted vLLM or Ollama, a gateway, an Azure deployment. |
-| `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend 500–1000 tokens thinking before a rephrasing; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
+| `LLM_MAX_TOKENS` | 2000 | What one LLM call may generate. Reasoning models spend from a few hundred to over 3,000 tokens thinking before a rephrasing, unless `LLM_EXTRA_BODY` switches thinking off; an answer cut off by this limit is refused (502, logged) rather than used. `/v1.0/write` gets 1500 more for the text itself. |
+| `LLM_EXTRA_BODY` | (empty) | Provider-specific fields sent in the body of every call, as a JSON object, for what LiteLLM has no parameter of its own. `{"chat_template_kwargs": {"enable_thinking": false}}` switches off a Qwen3 model's thinking on a server that passes chat-template arguments on; rephrasing does not need it. See [Choosing a language model](./llm-models.md). |
 | `LLM_TIMEOUT` | 60 | Seconds before an LLM call is given up (503 with `Retry-After`). |
 | `LLM_MAX_CONCURRENCY` | 2 | LLM calls one worker runs at once; more wait up to `LLM_TIMEOUT` for a slot. Keep it times `WORKERS` within the provider's limit on concurrent requests. `0` for no limit. |
 | `LLM_MAX_REQUESTS_PER_MINUTE` | 0 | LLM calls the whole deployment makes per minute, counted in Redis so all workers share one budget. Past it, a call is refused with 503 and a `Retry-After` up to the next minute, without reaching the provider. Set it below the provider's per-key limit (60 for the BFH inference server) so the account is never the one that hits it. `0` for no limit; without a real Redis each process counts on its own. |
@@ -569,7 +589,7 @@ Opt-in Slack integration. When enabled, the API registers the `/slack/commands` 
 Notes
 
 - If `SLACK_ENABLED=false` (default), no Slack code is initialized and the Slack routes are not included.
-- With `SLACK_ENABLED=true` but empty Slack credentials, the app uses a local/dev Slack client for testing (no external calls).
+- With `SLACK_ENABLED=true`, both `SLACK_SIGNING_SECRET` and `SLACK_BOT_TOKEN` are required; without either the start is refused.
 
 ## Textarea page
 
@@ -595,7 +615,15 @@ Supported methods:
 
 Which one a token is checked against is decided by its `aud` claim: it has to
 equal the client id of exactly one configured issuer. A token whose audience
-matches nothing configured is rejected with a 403.
+matches nothing configured is rejected with a 401.
+
+A token that is missing, malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`, so a client may get a new one
+and try again. A valid token whose user is not let in (a missing scope, an
+unverified email, no config for the user at `/v2.0/auth`) is answered with
+`403`. When the issuer's keys cannot be fetched the answer is `503`: that says
+nothing about the token.
 
 Dashboard (Laravel Passport)
 | Variable | Description |
@@ -603,13 +631,20 @@ Dashboard (Laravel Passport)
 | DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
-| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
-and cached in Redis for the lifetime the document's `Cache-Control` header
-allows (one hour when it says nothing), so rotating the dashboard's Passport
-keys needs no redeploy here.
+and cached in Redis, under the document's address and the `kid`, for the
+lifetime the document's `Cache-Control` header allows (one hour when it says
+nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
+`kid` the document does not have is remembered for a minute, so tokens with
+made-up ones do not each send a request to the dashboard; a key published in
+that minute is accepted once it has passed. A token without an `exp` claim is
+refused.
+
+A dashboard token names its user by the `email` claim, so it is accepted only
+with `email_verified` set to `true`; without it the API answers `403`.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See
@@ -644,6 +679,7 @@ has no such job, so the two settings below fill the gap.
 |  `DEFAULT_USER_CONFIG_ENABLED`  | false         | Give a user with no stored config the defaults below instead of a 403. The `/user/configs` management endpoint still reports 404 for them, so "nothing is stored" stays visible. |
 |  `DEFAULT_USER_STORE_CONTEXT`   | true          | Whether results carry the surrounding text. Reported as a suggestion when `CLIENT_CONFIG_ENABLED` is on, so a client may override it, and as a force otherwise.             |
 | `DEFAULT_USER_LLM_ALTERNATIVES` | false         | Same, for LLM-generated alternatives.                                                                                                                                      |
+| `DEFAULT_USER_CONFIRM_BEFORE_CHECKING` | false  | Whether clients ask before sending a field's text (`confirm_before_checking`). Always a suggestion, which the user may change; an API key's `force` keeps it on. |
 |       `CLIENT_CONFIG_ENABLED`   | false         | Let a request set `store_context` and `llm_alternatives` for itself.                                                                                                       |
 |                  `REQUIRE_AUTH` | true          | Whether a request has to resolve to a user before any text is checked. Off means the API answers anyone who can reach it, the [guardrail endpoints](./guardrails.md) included.                                                   |
 
@@ -676,7 +712,7 @@ The following environment variables are used to seed test data and shortcuts whe
 
 |                     Variable | Default | Description                                                                                                                                                                                                                                  |
 | ---------------------------: | :-----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header) and disables Sentry. It is necessary for running the test suite. Other settings listed below should be disabled while running the test suite.                                      |
+|                      TESTING |  false  | Enables testing shortcuts (e.g., `X-TESTING-AUTH` header, with which a request names its user) and disables Sentry. It is necessary for running the test suite. With `ENVIRONMENT_TYPE=production` it stops the start. Other settings listed below should be disabled while running the test suite. |
 |              `TESTING_RULES` | (empty) | JSON string containing a user-level rules object. On startup the app parses this JSON and writes it to Redis under the seeded user's id (the `email` field). See `.env.example` for an example payload.                                      |
 | `TESTING_ORGANIZATION_RULES` | (empty) | JSON string containing organization-level rules/config. On startup it is parsed and written to Redis under the configured organization id so the app can use organization configs during testing. See `.env.example` for an example payload. |
 
@@ -687,7 +723,7 @@ These variables are optional and intended for local development or CI scenarios 
 ## What’s configured by default
 
 - Fake Redis in development (when no `REDIS_HOST` is provided).
-- LanguageTool enabled against the public API by default; set `LANGUAGETOOL_API` to your self-hosted URL or set it empty to disable.
+- LanguageTool off; set `LANGUAGETOOL_API` to a LanguageTool server to enable it.
 - Sentry disabled unless `SENTRY_DSN` is set and `TESTING` is false.
 - Context checker disabled unless the per-language URL and API key are provided.
 
@@ -707,7 +743,15 @@ These variables are optional and intended for local development or CI scenarios 
 - Back to [📋 Documentation Index](../README.md#documentation-index)
 Which one a token is checked against is decided by its `aud` claim: it has to
 equal the client id of exactly one configured issuer. A token whose audience
-matches nothing configured is rejected with a 403.
+matches nothing configured is rejected with a 401.
+
+A token that is missing, malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`, so a client may get a new one
+and try again. A valid token whose user is not let in (a missing scope, an
+unverified email, no config for the user at `/v2.0/auth`) is answered with
+`403`. When the issuer's keys cannot be fetched the answer is `503`: that says
+nothing about the token.
 
 Dashboard (Laravel Passport)
 | Variable | Description |
@@ -715,13 +759,20 @@ Dashboard (Laravel Passport)
 | DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
-| DASHBOARD_ISSUER | Optional: expected `iss` claim. Passport emits no `iss`, so setting this rejects every token until the dashboard is changed to emit one. |
+| DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
 | DASHBOARD_EXPECTED_SCOPE | Optional: scope required in the token. Passport's `scopes` claim is a JSON array and empty for the extension's client, so leave this unset. |
 
 The signing key is fetched from the JWKS document by the token header's `kid`
-and cached in Redis for the lifetime the document's `Cache-Control` header
-allows (one hour when it says nothing), so rotating the dashboard's Passport
-keys needs no redeploy here.
+and cached in Redis, under the document's address and the `kid`, for the
+lifetime the document's `Cache-Control` header allows (one hour when it says
+nothing), so rotating the dashboard's Passport keys needs no redeploy here. A
+`kid` the document does not have is remembered for a minute, so tokens with
+made-up ones do not each send a request to the dashboard; a key published in
+that minute is accepted once it has passed. A token without an `exp` claim is
+refused.
+
+A dashboard token names its user by the `email` claim, so it is accepted only
+with `email_verified` set to `true`; without it the API answers `403`.
 
 A dashboard behind a self-signed certificate — a local Lando one, for
 instance — fails this fetch with `Failed to fetch RSA keys from issuer`. See

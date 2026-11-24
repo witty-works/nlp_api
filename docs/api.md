@@ -47,6 +47,24 @@ curl -X 'POST' \
 }'
 ```
 
+`text` is checked up to `TEXT_MAX_LENGTH` characters (1000 by default); the
+rest is cut off at a word boundary and `limit_reached` says so. A `text` over
+100000 characters is refused with a `422`, and so is a config list
+(`disabled_categories`, `addons`) of more than 500 entries.
+
+Every endpoint refuses a request body over `REQUEST_MAX_BYTES` (8 MiB by
+default) with a `413`, before it is parsed.
+
+A bearer token that is malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`; a client may get a new token
+and retry. `403` means the token is valid but its user is not let in: a
+missing scope, a dashboard token without a verified email, or, at
+`/v2.0/auth`, a user this deployment has no config for. `/v2.0/auth` answers
+`401` to a request with no credential or an unknown `x-key`. `503` means the
+issuer's signing keys could not be fetched, which says nothing about the
+token.
+
 Example `/v1.0/rephrase` request:
 
 ```bash
@@ -55,13 +73,21 @@ curl -X 'POST' \
   -H 'x-key: your-api-key' \
   -H 'Content-Type: application/json' \
   -d '{
-  "text": "The chairman called the policeman.",
+  "sentence": "The chairman called the policeman.",
+  "text": "chairman",
+  "start": 4,
+  "alternatives": [{"text": "chair"}, {"text": "chairperson"}],
   "lang": "en",
   "config": {
     "llm_alternatives": true
   }
 }'
 ```
+
+`sentence` is at most 300 characters. `text`, the words the alternatives
+replace from `start`, must be part of `sentence`, and `start` within it.
+At most 50 `alternatives` are accepted, each (and its `male_form` and
+`female_form`) at most 300 characters; anything else is refused with a `422`.
 
 Example `/v1.0/write` request:
 
@@ -230,6 +256,9 @@ bound to 8081.
 (With `LANGUAGETOOL_COMPAT_ROOT` the same endpoints exist without the `/lt`
 prefix.)
 
+`/lt/v2/check` refuses a `text` over 100000 characters, or a `data` over
+500000, with a `422`.
+
 Example request (form-encoded, as LanguageTool clients send it):
 
 ```bash
@@ -287,7 +316,6 @@ These endpoints manage user and organization configurations. All require HTTP Ba
 | `POST /user/configs`                 | POST   | Create or update user configuration                                         |
 | `GET /user/configs?email={email}`    | GET    | Retrieve user configuration by email                                        |
 | `DELETE /user/configs?email={email}` | DELETE | Delete user configuration                                                   |
-| `GET /user/logs?email={email}`       | GET    | Retrieve request/response logs for user (if enabled via `REDIS_LOG_EMAILS`) |
 
 Example: Store user configuration
 
@@ -313,6 +341,11 @@ curl -X 'POST' \
 }'
 ```
 
+A term replacement's explanation is plain text. A finding from it carries the
+text unchanged in `explanation.text` and HTML-escaped in
+`explanation.long_text`, which clients render as HTML, so it shows as written.
+Its `url` reaches clients only if it is an `http` or `https` address.
+
 ### Organization Configuration
 
 | Endpoint                                            | Method | Description                                 |
@@ -337,6 +370,11 @@ curl -X 'POST' \
   }
 }'
 ```
+
+The config is stored in Redis under `dashboard-organization:{id}`, so an `id`
+names an organisation and no other Redis key. One stored by an earlier version
+under its bare `id` is still read, if it is a JSON object with that `id`, until
+`uv run python -m bin.migrate_organization_keys` has moved it.
 
 ### API Key Management
 
@@ -415,7 +453,7 @@ production too:
 
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
-| `/settings` | GET    | The whole settings object, including every secret it holds      |
+| `/settings` | GET    | The settings that help debug a deployment, without its secrets: `DEBUG_SETTINGS` in [app/settings.py](../app/settings.py) lists them, and URLs come without credentials or query |
 | `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
 
 Example: Test a specific rule

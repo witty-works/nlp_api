@@ -7,6 +7,7 @@ from app.gender_format import (
 )
 from collections import defaultdict
 import json
+from urllib.parse import urlsplit
 from app.context import AppContext
 from app.models import (
     Alternative,
@@ -113,6 +114,21 @@ async def apply_language_rules(
     return list_results
 
 
+def http_url(url: str | None) -> str | None:
+    """An organisation's explanation link, if it is an http(s) address.
+
+    Clients put it into a link's href, where a javascript: or data: address
+    would run in the client when clicked, so anything else is dropped."""
+    if not isinstance(url, str):
+        return None
+    try:
+        scheme = urlsplit(url.strip()).scheme.lower()
+    except ValueError:
+        return None
+
+    return url if scheme in ("http", "https") else None
+
+
 def fetch_term_replacements(
     configs: dict,
     lang: LangType,
@@ -152,7 +168,7 @@ def fetch_term_replacements(
 
         if term_replacement["explanation"] is not None:
             rule.explanation = term_replacement["explanation"].get("text")
-            rule.url = term_replacement["explanation"].get("url")
+            rule.url = http_url(term_replacement["explanation"].get("url"))
             rule.icon = term_replacement["explanation"].get("icon")
 
         if term_replacement["word_types"][0]["lower_case"]:

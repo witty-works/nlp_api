@@ -18,7 +18,7 @@ docker compose up -d languagetool
 LANGUAGETOOL_API="http://127.0.0.1:8210/v2" uv run pytest -q
 ```
 
-Without it the tests call the hosted API, which is a different version. It moved from 6.8 to 6.9-SNAPSHOT during this project and stopped reporting `COMMA_COMPOUND_SENTENCE`, so a snapshot changed with no change here. It is also reachable over the network, which failed five times in one afternoon and once took a dozen unrelated tests down with it.
+Without it the tests run with no LanguageTool at all and the snapshots with its findings fail. Do not point it at the hosted API instead: that is a different version. It moved from 6.8 to 6.9-SNAPSHOT during this project and stopped reporting `COMMA_COMPOUND_SENTENCE`, so a snapshot changed with no change here. It is also reachable over the network, which failed five times in one afternoon and once took a dozen unrelated tests down with it.
 
 The image is pinned for the same reason `latest` is not: it would drift too. The heap is set because the default runs out part way through the suite and the container exits, which surfaces as every remaining test failing to connect.
 

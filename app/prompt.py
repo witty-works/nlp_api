@@ -193,6 +193,11 @@ class Prompt:
                 # than the client waits; the client can ask again instead.
                 num_retries=0,
                 **self._credentials(model),
+                **(
+                    {"extra_body": self.settings.llm_extra_body}
+                    if self.settings.llm_extra_body
+                    else {}
+                ),
             )
         except _UNAVAILABLE as error:
             raise LlmUnavailable(str(error)) from error

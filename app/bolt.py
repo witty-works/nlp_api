@@ -7,22 +7,16 @@ from slack_sdk.models.blocks import (
     SectionBlock,
     MarkdownTextObject,
 )
-from slack_sdk.web.async_client import AsyncWebClient
 
 
 def get_bolt(settings: Settings, context: AppContext) -> AsyncApp:
-    if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
-        bolt = AsyncApp(
-            token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
-        )
-    else:
-        bolt = AsyncApp(
-            signing_secret="valid",
-            client=AsyncWebClient(
-                token="valid_token",
-                base_url="http://localhost",
-            ),
-        )
+    # validate_slack stops the start before this; never a placeholder secret,
+    # which would accept requests signed with it.
+    if not (settings.slack_bot_token and settings.slack_signing_secret):
+        raise ValueError("SLACK_ENABLED needs SLACK_BOT_TOKEN and SLACK_SIGNING_SECRET")
+    bolt = AsyncApp(
+        token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
+    )
 
     # Inject AppContext into Slack Bolt's context for all listeners
     @bolt.middleware

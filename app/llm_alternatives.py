@@ -49,7 +49,11 @@ class LlmAlternatives:
                 alternatives.append(alternative.male_form)
                 alternatives.append(alternative.female_form)
 
-        alternatives = list(set(alternatives))
+        # Sorted, not just deduplicated: a set's order changes with every
+        # process (hash randomisation), and the order of the drafts changes
+        # the model's answer, so the same request got different suggestions
+        # after a restart.
+        alternatives = sorted(set(alternatives))
 
         text = rephrase_request_in.text
         start = rephrase_request_in.start
@@ -68,19 +72,26 @@ class LlmAlternatives:
             for alternative in alternatives
         }
 
+        # The replaced words are named in the system prompt, as on dev: a
+        # reference by key ("the words of 'replaced'") made the model keep the
+        # tense and leave repeats alone less reliably. They are JSON-quoted so
+        # they cannot close the quotes around them, and they are bounded by
+        # the request model: a substring of `sentence`, which the model reads
+        # anyway, of at most 300 characters.
+        replaced = json.dumps(text, ensure_ascii=False)
         system_prompt = f"""
         You fix {lang} grammar after a word swap.
         In each sentence of "sentences", the words in ⟦ ⟧ replaced the words
-        "{text}" of "original". They may be a base form: an infinitive, a
+        {replaced} of "original". They may be a base form: an infinitive, a
         singular, a masculine or feminine form.
         Rewrite each sentence so they fit, and remove the ⟦ ⟧:
-        - Give the words in ⟦ ⟧ the grammatical form "{text}" had in
-          "original": the same tense, person, number and case. If "{text}" is
+        - Give the words in ⟦ ⟧ the grammatical form {replaced} had in
+          "original": the same tense, person, number and case. If {replaced} is
           past tense, they become past tense too.
         - Make the words that depend on them agree with them: articles,
           adjectives, pronouns referring to them, the verb.
         - Change nothing else. Every other word stays exactly as it is, even
-          where it repeats "{text}" elsewhere in the sentence, and so do
+          where it repeats {replaced} elsewhere in the sentence, and so do
           spelling mistakes, gender-inclusive forms such as Kund*innen or
           expert·es, and double parentheses.
         An expression listed in "collective_nouns" names a group: keep it, and

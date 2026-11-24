@@ -11,7 +11,7 @@ from fastapi.security.api_key import APIKeyHeader
 
 from app.context import AppContext
 from app.dependencies import get_app_context
-from app.models import CheckRequestIn, Result, ResultsOut, Client
+from app.models import CheckBodyIn, CheckRequestIn, Result, ResultsOut, Client
 from app.version_validators import (
     client_version,
     check_api_version,
@@ -41,7 +41,7 @@ router = APIRouter()
 async def post_check_v2_4(
     request: Request,
     response: Response,
-    check_request_in: CheckRequestIn,
+    check_request_in: CheckBodyIn,
     context: AppContext = Depends(get_app_context),
 ) -> Union[ResultsOut, Result]:
     return await check(request, response, check_request_in, CHECK_API_VERSION, context)
@@ -70,15 +70,6 @@ async def check(
         configs = debug_configs(check_request_in, context.settings)
 
     context.redis.store_metrics(request, configs, version, "check")
-
-    context.redis.store_request_log(
-        check_request_in,
-        user_email,
-        request,
-        configs,
-        version,
-        "check",
-    )
 
     # An empty `configs` means the request resolved to no user. Answering it
     # with an empty result set rather than a 4xx is deliberate: a client that
@@ -125,10 +116,5 @@ async def check(
             gender_separator=check_request_in.config.get_gender_separator(lang),
             bulk_actions=bulk_actions(lang, check_request_in.config),
         )
-
-    context.redis.store_response_log(
-        user_email,
-        results,
-    )
 
     return results

@@ -78,6 +78,13 @@ async def post_auth_2_0(
 
     context.redis.store_metrics(request, configs, "2.0", "auth")
 
+    # No credential, or one that resolves to nobody: 401. A user this
+    # deployment has no config for is known but not let in: 403.
+    if user_email is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

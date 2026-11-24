@@ -45,6 +45,26 @@ def test_a_call_is_bounded_by_the_settings(monkeypatch):
     assert calls[0]["num_retries"] == 0
 
 
+def test_extra_body_reaches_the_provider_only_when_set(monkeypatch):
+    no_thinking = {"chat_template_kwargs": {"enable_thinking": False}}
+    prompt, calls = prompt_with(monkeypatch, answer("ok"), llm_extra_body=no_thinking)
+    asyncio.run(prompt.handle("hi"))
+    assert calls[0]["extra_body"] == no_thinking
+
+    prompt, calls = prompt_with(monkeypatch, answer("ok"))
+    asyncio.run(prompt.handle("hi"))
+    assert "extra_body" not in calls[0]
+
+
+def test_extra_body_is_read_as_json_from_the_environment(monkeypatch):
+    monkeypatch.setenv(
+        "LLM_EXTRA_BODY", '{"chat_template_kwargs": {"enable_thinking": false}}'
+    )
+    assert Settings().llm_extra_body == {
+        "chat_template_kwargs": {"enable_thinking": False}
+    }
+
+
 def test_a_cut_off_answer_is_refused(monkeypatch):
     """A reasoning model that ran out of tokens returns its unfinished
     reasoning, or a truncated JSON object; neither may be used."""

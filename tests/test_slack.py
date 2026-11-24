@@ -91,3 +91,26 @@ async def test_process_command_witty_blocks_smoke(monkeypatch):
     assert len(respond.calls) == 1
     # Basic sanity: at least two sections (header + details)
     assert len(respond.calls[0]) >= 2
+
+
+@pytest.mark.parametrize(
+    "token,secret", [("", ""), ("xoxb-token", ""), ("", "signing-secret")]
+)
+def test_slack_without_its_credentials_stops_the_start(monkeypatch, token, secret):
+    """No placeholder signing secret: requests signed with it would pass."""
+    from app.settings import Settings
+
+    monkeypatch.setenv("SLACK_ENABLED", "true")
+    monkeypatch.setenv("SLACK_BOT_TOKEN", token)
+    monkeypatch.setenv("SLACK_SIGNING_SECRET", secret)
+
+    with pytest.raises(ValueError, match="SLACK_ENABLED"):
+        Settings.factory()
+
+
+def test_bolt_needs_the_credentials():
+    from app.bolt import get_bolt
+    from app.settings import Settings
+
+    with pytest.raises(ValueError, match="SLACK_SIGNING_SECRET"):
+        get_bolt(Settings(_env_file=None, slack_enabled=True), None)

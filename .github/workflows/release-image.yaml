@@ -29,11 +29,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          # No later step uses git with the token: the build reads the
+          # checkout as files. Left in .git/config, the token would be readable
+          # by the build and whatever it runs.
+          persist-credentials: false
 
       # Torch and three lg models make a ~4 GB image, and the build needs the
       # layers twice over; the runner's free disk is not enough for that.
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           tool-cache: true
           android: true

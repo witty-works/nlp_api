@@ -28,6 +28,7 @@ from app.dependencies import get_app_context
 from app.helper import utf16_offsets
 from app.language_processor import apply_language_rules, fetch_text
 from app.models import (
+    CHECK_TEXT_MAX_LENGTH,
     CheckRequestIn,
     Client,
     Config,
@@ -53,6 +54,9 @@ SENTENCE_BOUNDARIES = ".!?\n"
 # How much text to include on each side of a match in `context`, in
 # characters. Matches the LanguageTool server's CONTEXT_SIZE.
 CONTEXT_RADIUS = 40
+
+# `data` carries markup besides the text, so it may be longer than `text`.
+LT_DATA_MAX_LENGTH = 5 * CHECK_TEXT_MAX_LENGTH
 
 
 class LTSoftware(BaseModel):
@@ -374,8 +378,8 @@ def build_response(
 )
 async def lt_check(
     request: Request,
-    text: str | None = Form(None),
-    data: str | None = Form(None),
+    text: str | None = Form(None, max_length=CHECK_TEXT_MAX_LENGTH),
+    data: str | None = Form(None, max_length=LT_DATA_MAX_LENGTH),
     language: str = Form("auto"),
     username: str | None = Form(None),
     apiKey: str | None = Form(None),
@@ -403,7 +407,9 @@ async def lt_check(
             )
 
         if not text:
-            context.logger.debug("lt_check no text extracted from data=%.300r", data)
+            context.logger.debug(
+                "lt_check no text extracted from data (%d characters)", len(data)
+            )
 
     lang = resolve_lang(language)
     if lang is None:
@@ -460,9 +466,6 @@ async def lt_check(
     configs = await fetch_configs_for_request(check_request_in, user_email, context)
 
     context.redis.store_metrics(request, configs, "lt", "check")
-    context.redis.store_request_log(
-        check_request_in, user_email, request, configs, "lt", "check"
-    )
 
     # Mirror the native check endpoint: a request that resolves to no user
     # gets an empty result set rather than a 4xx, so signed-out or
@@ -545,8 +548,6 @@ async def lt_check(
         data is not None,
         len(matches),
     )
-
-    context.redis.store_response_log(user_email, response)
 
     return response
 

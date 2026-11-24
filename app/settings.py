@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Any, Optional
 from functools import lru_cache
 import os
+from urllib.parse import urlsplit, urlunsplit
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.api_keys import valid_key
 from app.models import LangType, LlmAccessType
@@ -9,6 +10,94 @@ from app.models import LangType, LlmAccessType
 TEXTAREA_PATHS = ("/textarea", "/textarea/witty-editor.js", "/textarea/page.js")
 TEXTAREA_IMPRINT_PATH = "/textarea/imprint"
 
+# What GET /settings and the start-up log show of the settings, for
+# debugging a deployment. An allow-list, so a setting added later stays out
+# until someone decides it is safe to show: no keys, passwords, tokens or
+# DSNs, and no emails. URLs are shown without credentials (see public_url).
+DEBUG_SETTINGS = (
+    "environment_type",
+    "environment",
+    "is_prod",
+    "testing",
+    "logging_enabled",
+    "logging_config_level",
+    "languagetool_api",
+    "languagetool_verify_ssl",
+    "languagetool_compat_root",
+    "api_docs_auth_enabled",
+    "management_auth_enabled",
+    "sentry_traces_sample_rate",
+    "sentry_sample_rate",
+    "sentry_profiles_sample_rate",
+    "text_max_length",
+    "guardrail_messages_max_count",
+    "guardrail_texts_max_count",
+    "guardrail_check_max_length",
+    "guardrail_request_max_length",
+    "request_max_bytes",
+    "aadb2c_tenant_id",
+    "aadb2c_client_id",
+    "aadb2c_policy",
+    "aadb2c_domain",
+    "aadb2c_expected_scope",
+    "office_sso_client_id",
+    "office_sso_expected_scope",
+    "dashboard_client_id",
+    "dashboard_url",
+    "dashboard_jwks_url",
+    "dashboard_issuer",
+    "dashboard_expected_scope",
+    "redis_host",
+    "redis_port",
+    "redis_verify_ssl",
+    "default_user_config_enabled",
+    "default_user_store_context",
+    "default_user_llm_alternatives",
+    "default_user_confirm_before_checking",
+    "client_config_enabled",
+    "require_auth",
+    "require_api_key",
+    "public_paths",
+    "textarea_enabled",
+    "root_redirect",
+    "slack_enabled",
+    "alternatives_max_count",
+    "context_checker_local",
+    "models",
+    "memory_zones",
+    "lemmatizer",
+    "git_revision",
+    "minimum_versions",
+    "import_from_dump",
+    "log_missing_declension",
+    "log_metrics",
+    "aws_region_name",
+    "llm_model",
+    "llm_api_base",
+    "llm_timeout",
+    "llm_max_concurrency",
+    "llm_max_requests_per_minute",
+    "llm_access",
+)
+
+
+def public_url(url: Any) -> Any:
+    """A URL as it can be shown: without the user and password some carry
+    (redis://user:pass@host), nor a query or fragment, where a key might be."""
+    if not isinstance(url, str) or not url:
+        return url
+    try:
+        parts = urlsplit(url)
+        host = parts.hostname or ""
+        port = parts.port
+    except ValueError:
+        return "(not a URL)"
+    if ":" in host:
+        host = f"[{host}]"
+    netloc = f"{host}:{port}" if port else host
+
+    return urlunsplit((parts.scheme, netloc, parts.path, "", ""))
+
 
 class Settings(BaseSettings):
     """Load environment variables into Python objects using Pydantic."""
@@ -16,11 +105,15 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    # "production" turns off what only development wants (see is_prod).
-    environment_type: str = "development"
+    # "production" turns off what only development wants (see is_prod). The
+    # default, so an image started without configuration serves no
+    # development routes; local work sets ENVIRONMENT_TYPE=development.
+    environment_type: str = "production"
     # The environment's name, as Sentry reports it.
     environment: str = "local"
-    languagetool_api: Optional[str] = "https://api.languagetoolplus.com/v2"
+    # Empty: no LanguageTool, so no text goes to a third party unless a
+    # deployment names one.
+    languagetool_api: Optional[str] = ""
     languagetool_verify_ssl: bool = True
     languagetool_username: Optional[str] = ""
     languagetool_api_key: Optional[str] = ""
@@ -39,7 +132,7 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     # Guards the endpoints that create or read credentials and configuration, or
     # act on a named user's behalf: /api_key, /user/configs,
-    # /organization/configs, /user/logs, /settings and /languagetool_api.
+    # /organization/configs, /settings and /languagetool_api.
     # Defaults to on so an unconfigured deployment is closed rather than open.
     management_auth_enabled: bool = True
     testing: bool = False
@@ -57,6 +150,12 @@ class Settings(BaseSettings):
     guardrail_texts_max_count: int = 20
     guardrail_check_max_length: int = 40000
     guardrail_request_max_length: int = 1000000
+    # The largest request body accepted, in bytes; larger is refused with a
+    # 413 before it is parsed. 8 MiB fits the largest guardrail request:
+    # GUARDRAIL_REQUEST_MAX_LENGTH characters take up to 4 bytes each in
+    # UTF-8, or 6 where JSON escapes them as \uXXXX, plus the JSON around
+    # them. Raise it with GUARDRAIL_REQUEST_MAX_LENGTH.
+    request_max_bytes: int = 8 * 1024 * 1024
     is_prod: bool = False
     terms_of_service: str = ""
     contact: str = ""
@@ -85,7 +184,6 @@ class Settings(BaseSettings):
     redis_port: Optional[str] = ""
     redis_username: Optional[str] = ""
     redis_password: Optional[str] = ""
-    redis_log_emails: Optional[str] = ""
     # Connect over TLS and check the server's certificate (against
     # redis_ssl_ca_certs if set, else the system's CAs). False: plain TCP.
     redis_verify_ssl: bool = True
@@ -101,6 +199,9 @@ class Settings(BaseSettings):
     default_user_config_enabled: bool = False
     default_user_store_context: bool = True
     default_user_llm_alternatives: bool = False
+    # Whether such a user's clients ask before sending a field's text (the
+    # `confirm_before_checking` config), as a suggestion the user may change.
+    default_user_confirm_before_checking: bool = False
 
     # An API key this deployment always has, mapped to DEFAULT_USER_EMAIL, so a
     # server run for one person has a key without a dashboard to mint one or a
@@ -262,9 +363,18 @@ class Settings(BaseSettings):
     # vLLM or Ollama, a gateway, an Azure deployment.
     llm_api_base: Optional[str] = ""
     # What one LLM call may generate. Reasoning models spend most of it on
-    # thinking before they answer (500-1000 tokens for one rephrasing), and
-    # an answer cut off by this limit is refused rather than used.
+    # thinking before they answer (a few hundred to over 3,000 tokens for one
+    # rephrasing), and an answer cut off by this limit is refused rather than
+    # used.
     llm_max_tokens: int = 2000
+    # Provider-specific fields sent in the body of every LLM call, as a JSON
+    # object: what LiteLLM has no parameter of its own for. The use it was
+    # added for is switching off a Qwen3 model's thinking on a server that
+    # passes chat-template arguments on,
+    # `{"chat_template_kwargs": {"enable_thinking": false}}`, which
+    # makes rephrasings faster without making them worse (docs/llm-models.md).
+    # Empty: nothing extra is sent.
+    llm_extra_body: dict[str, Any] = {}
     # Seconds before an LLM call is given up and answered with a 503.
     llm_timeout: float = 60.0
     # LLM calls one worker process runs at once; the rest wait up to
@@ -292,6 +402,17 @@ class Settings(BaseSettings):
     llm_access: LlmAccessType = LlmAccessType.USERS
     llm_allowed_users: list[str] = []
 
+    def debug_view(self) -> dict[str, Any]:
+        """The settings that are safe to show, see DEBUG_SETTINGS."""
+        view = {name: getattr(self, name) for name in DEBUG_SETTINGS}
+        for name in view:
+            if name.endswith("_url") or name.endswith("_api") or name.endswith("_base"):
+                view[name] = public_url(view[name])
+        # Which languages have a remote context checker, not its address or key.
+        view["context_checker"] = sorted(self.context_checker)
+
+        return view
+
     def jwks_url(self) -> str:
         """Resolve the dashboard's JWKS document, RFC 8615 path by default."""
         if self.dashboard_jwks_url:
@@ -314,6 +435,8 @@ class Settings(BaseSettings):
         """
         settings = Settings()
         settings.is_prod = settings.environment_type == "production"
+        validate_production(settings)
+        validate_slack(settings)
         validate_pages(settings)
         validate_default_api_key(settings)
 
@@ -332,13 +455,18 @@ class Settings(BaseSettings):
         }
 
         if settings.dashboard_client_id:
+            if not settings.dashboard_issuer:
+                raise ValueError(
+                    "DASHBOARD_CLIENT_ID is set but DASHBOARD_ISSUER is not: set"
+                    " it to the `iss` the dashboard's tokens carry (its"
+                    " OAuthIssuer), which every dashboard token is checked for"
+                )
             settings.sso_configs["dashboard"] = {
                 "client_id": settings.dashboard_client_id,
                 "jwks_url": settings.jwks_url(),
-                # Passport does not emit an `iss` claim, so issuer verification
-                # is opt-in: setting DASHBOARD_ISSUER turns it into a hard
-                # requirement and tokens without the claim are then rejected.
-                "issuer": settings.dashboard_issuer or None,
+                # Always checked: a token without the claim, or with another
+                # issuer's, is refused.
+                "issuer": settings.dashboard_issuer,
                 "expected_scope": settings.dashboard_expected_scope or None,
             }
 
@@ -356,6 +484,39 @@ class Settings(BaseSettings):
             )
 
         return settings
+
+
+def validate_production(settings: Settings) -> None:
+    """Stop a production start on the switches that are for tests and local
+    work only: TESTING lets any request name its user in X-Testing-Auth, and
+    MANAGEMENT_AUTH_ENABLED=false opens the endpoints that mint keys and
+    read and write every user's config."""
+    if not settings.is_prod:
+        return
+    if settings.testing:
+        raise ValueError(
+            "TESTING is on in production, which lets any request act as any"
+            " user (X-Testing-Auth). Turn it off, or set"
+            " ENVIRONMENT_TYPE=development where that is wanted."
+        )
+    if not settings.management_auth_enabled:
+        raise ValueError(
+            "MANAGEMENT_AUTH_ENABLED is off in production, which opens /api_key"
+            " and the user and organisation configs to anyone. Turn it on, or"
+            " set ENVIRONMENT_TYPE=development where that is wanted."
+        )
+
+
+def validate_slack(settings: Settings) -> None:
+    """Stop the start on Slack switched on without its credentials, rather
+    than serving /slack/commands with nothing to check a signature against."""
+    if settings.slack_enabled and not (
+        settings.slack_bot_token and settings.slack_signing_secret
+    ):
+        raise ValueError(
+            "SLACK_ENABLED is on but SLACK_BOT_TOKEN or SLACK_SIGNING_SECRET is"
+            " not set"
+        )
 
 
 def validate_pages(settings: Settings) -> None:

@@ -6,27 +6,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 from starlette.routing import Match
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.auth_service import fetch_user
 from app.dependencies import fetch_current_username, fetch_management_username
 from app.route_table import registered_routes
+from app.settings import get_settings
 
 
 # Security headers configuration
-# Allow Swagger UI assets from jsdelivr and inline scripts/styles used by the
-# generated Swagger HTML. Keep default-src restrictive and explicitly allow
-# script-src and style-src for docs to render. One method per directive: `set`
-# replaces the whole policy, so chaining it sent only the last directive.
+# Every response gets a policy that allows nothing from elsewhere and no
+# inline code. The pages that need more send their own, which the middleware
+# below keeps: /docs (app/routes/utility.py) and /textarea. One method per
+# directive: `set` replaces the whole policy, so chaining it sent only the
+# last directive.
 csp = (
     secure.ContentSecurityPolicy()
-    .default_src("'self'", "cdn.jsdelivr.net")
-    .script_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
-    .style_src("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
-    # Swagger's inline icons and favicon, and in the /textarea editor's popover
-    # its logo (inline) and the learning-bite pictures it links from witty.works.
-    .img_src(
-        "'self'", "data:", "cdn.jsdelivr.net", "fastapi.tiangolo.com", "www.witty.works"
-    )
+    .default_src("'self'")
+    .script_src("'self'")
+    .style_src("'self'")
+    .img_src("'self'", "data:")
+    .object_src("'none'")
+    .base_uri("'none'")
+    .frame_ancestors("'none'")
 )
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
@@ -49,8 +51,8 @@ async def add_security_headers(request, call_next):
     # everything that depends on who is asking. A route that deliberately sets
     # its own keeps it — see /v2.0/categories.
     route_cache_control = response.headers.get("Cache-Control")
-    # Likewise a route with a stricter Content-Security-Policy than the one
-    # the docs need (/textarea).
+    # Likewise a route with a Content-Security-Policy of its own (/docs,
+    # /textarea).
     route_csp = response.headers.get("Content-Security-Policy")
 
     await secure_headers.set_headers_async(response)
@@ -178,7 +180,9 @@ async def require_api_key(request, call_next):
         )
     except HTTPException as error:
         return JSONResponse(
-            status_code=error.status_code, content={"detail": error.detail}
+            status_code=error.status_code,
+            content={"detail": error.detail},
+            headers=error.headers,
         )
 
     if user_email is None:
@@ -195,7 +199,94 @@ async def require_api_key(request, call_next):
     return await call_next(request)
 
 
+class BodyTooLarge(HTTPException):
+    """A request body over REQUEST_MAX_BYTES, found while it was read.
+
+    An HTTPException so that FastAPI passes it on as it is rather than turning
+    it into a 400 for a body that could not be parsed."""
+
+    def __init__(self, limit: int):
+        super().__init__(
+            status_code=413,
+            detail=f"The request body is larger than {limit} bytes (REQUEST_MAX_BYTES).",
+        )
+
+
+class RequestSizeLimit:
+    """Refuse a request body over REQUEST_MAX_BYTES with a 413.
+
+    Before anything reads it where the request says its length, and while it
+    is read where it does not (chunked) or says less than it sends. Pure ASGI
+    rather than a BaseHTTPMiddleware, so it sees the body as it arrives
+    instead of after it was read whole."""
+
+    def __init__(self, app: ASGIApp):
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        context = getattr(scope["app"].state, "context", None)
+        settings = context.settings if context is not None else get_settings()
+        limit = settings.request_max_bytes
+
+        for name, value in scope["headers"]:
+            if name == b"content-length":
+                try:
+                    declared = int(value)
+                except ValueError:
+                    declared = 0
+                if declared > limit:
+                    await self.refuse(scope, receive, send, limit)
+                    return
+
+        received = 0
+        started = False
+
+        async def limited_receive() -> Message:
+            nonlocal received
+            message = await receive()
+            if message["type"] == "http.request":
+                received += len(message.get("body", b""))
+                if received > limit:
+                    raise BodyTooLarge(limit)
+            return message
+
+        async def tracked_send(message: Message) -> None:
+            nonlocal started
+            if message["type"] == "http.response.start":
+                started = True
+            await send(message)
+
+        try:
+            await self.app(scope, limited_receive, tracked_send)
+        except BodyTooLarge:
+            # Where a route read the body outside FastAPI's error handling.
+            if started:
+                raise
+            await self.refuse(scope, receive, send, limit)
+
+    @staticmethod
+    async def refuse(scope: Scope, receive: Receive, send: Send, limit: int) -> None:
+        error = BodyTooLarge(limit)
+        response = JSONResponse(
+            status_code=error.status_code,
+            content={"detail": error.detail},
+            # The rest of the body is not read, so the connection cannot
+            # carry another request.
+            headers={"Connection": "close"},
+        )
+        await response(scope, receive, send)
+
+
 def setup_middleware(app: FastAPI):
+    # Registered first, so it runs last, inside the others: a 413 still
+    # carries the security and CORS headers, and browser clients can read it.
+    # No middleware before it reads the body.
+    app.add_middleware(RequestSizeLimit)
+
     # Registered before the security headers so that it runs after them:
     # Starlette runs the most recently added middleware first, and a 401 from
     # here should still carry the security headers.
