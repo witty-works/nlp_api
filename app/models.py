@@ -1018,7 +1018,7 @@ class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
     sentence: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     # The words of `sentence` the alternatives replace, from `start`.
-    text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    text: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     start: int
     alternatives: Annotated[
         list[RephraseAlternative], Len(max_length=REPHRASE_ALTERNATIVES_MAX_COUNT)

@@ -63,14 +63,21 @@ async def alternative_missing(
     return None
 
 
+def _allowed(sentence: str, text: str, alternative: str) -> int:
+    """How often the flagged words may occur in a suggestion: as in the
+    original minus the replaced occurrence, plus where the alternative itself
+    contains them. A `text` cut inside a word occurs nowhere as a whole word,
+    so there is nothing to subtract."""
+    return max(0, _occurrences(text, sentence) - 1) + _occurrences(text, alternative)
+
+
 def replaced_words_back(
     sentence: str, text: str, suggestion: str, alternative: str
 ) -> str | None:
     """The flagged words occur no more often than in the original minus the
     replaced occurrence, plus where the alternative itself contains them (a
     binary form such as "Les experts et les expertes")."""
-    allowed = _occurrences(text, sentence) - 1 + _occurrences(text, alternative)
-    if _occurrences(text, suggestion) > allowed:
+    if _occurrences(text, suggestion) > _allowed(sentence, text, alternative):
         return "replaced_words_back"
     return None
 
@@ -80,8 +87,7 @@ def other_occurrence_changed(
 ) -> str | None:
     """The other occurrences of the flagged words are still there: only the
     one the user chose to replace may change."""
-    expected = _occurrences(text, sentence) - 1 + _occurrences(text, alternative)
-    if _occurrences(text, suggestion) < expected:
+    if _occurrences(text, suggestion) < _allowed(sentence, text, alternative):
         return "other_occurrence_changed"
     return None
 
