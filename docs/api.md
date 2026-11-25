@@ -62,8 +62,9 @@ and retry. `403` means the token is valid but its user is not let in: a
 missing scope, a dashboard token without a verified email, or, at
 `/v2.0/auth`, a user this deployment has no config for. `/v2.0/auth` answers
 `401` to a request with no credential or an unknown `x-key`. `503` means the
-issuer's signing keys could not be fetched, which says nothing about the
-token.
+token could not be verified, because the issuer's signing keys could not be
+fetched or the API's Redis did not answer; it says nothing about the token,
+so a client keeps it and retries after the `Retry-After` seconds (10).
 
 Example `/v1.0/rephrase` request:
 
@@ -85,7 +86,9 @@ curl -X 'POST' \
 ```
 
 `sentence` is at most 300 characters. `text`, the words the alternatives
-replace from `start`, must be part of `sentence`, and `start` within it.
+replace from `start`, must be part of `sentence` and not empty, and `start`
+within it. `start` counts UTF-16 code units, as JavaScript strings and the
+check's offsets do.
 At most 50 `alternatives` are accepted, each (and its `male_form` and
 `female_form`) at most 300 characters; anything else is refused with a `422`.
 

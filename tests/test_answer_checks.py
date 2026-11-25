@@ -8,8 +8,15 @@ import pathlib
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
-from app.answer_checks import checked_results, failed_checks, too_much_changed
+from app.answer_checks import (
+    checked_results,
+    failed_checks,
+    other_occurrence_changed,
+    replaced_words_back,
+    too_much_changed,
+)
 from app.language_processor import apply_language_rules, fetch_text
 from app.llm_alternatives import LlmAlternatives, RephraseOutcome, Suggestion
 from app.main import app
@@ -96,11 +103,13 @@ def test_a_drop_is_logged_without_text(context, caplog):
     assert "chairman" not in caplog.text and "HACKED" not in caplog.text
 
 
-def test_agreement_changes_are_not_too_much():
+def test_agreement_changes_are_not_too_much(context):
     """Pronoun and adjective follow the swapped-in noun: two words, kept."""
     draft = "Nous attendons de notre serveuse qu'il est très attentif aux clients."
     model = "Nous attendons de notre serveuse qu'elle est très attentive aux clients."
-    assert too_much_changed(draft, model, "serveuse") is None
+    assert (
+        asyncio.run(too_much_changed(draft, model, "serveuse", "fr", context)) is None
+    )
 
 
 class CorrectModel(Prompt):
@@ -219,3 +228,23 @@ def test_the_lemma_check_parses_inside_a_memory_zone(context, monkeypatch):
     case = next(c for c in CASES if c["name"] == "tense_kept")
     asyncio.run(failed_checks(request_for(case), suggestion_for(case), {}, context))
     assert inside["outside_calls"] == 0
+
+
+def test_partial_word_text_drops_nothing():
+    """`text` cut inside a word occurs nowhere as a whole word; the
+    occurrence checks then have nothing to count, rather than dropping."""
+    sentence = "Der Lehrer hilft."
+    suggestion = "Die Lehrperson hilft."
+    assert replaced_words_back(sentence, "Lehr", suggestion, "Lehrperson") is None
+    assert other_occurrence_changed(sentence, "Lehr", suggestion, "Lehrperson") is None
+
+
+def test_empty_text_is_refused():
+    with pytest.raises(ValidationError):
+        RephraseRequestIn(
+            sentence="Der Lehrer hilft.",
+            text="",
+            start=0,
+            lang="de",
+            alternatives=[{"text": "Lehrperson"}],
+        )

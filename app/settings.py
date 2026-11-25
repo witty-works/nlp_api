@@ -451,6 +451,13 @@ class Settings(BaseSettings):
         based on environment variables.
         """
         settings = Settings()
+        # Exactly one of two values: a typo such as "prod" would otherwise
+        # read as development and switch every production safeguard off.
+        if settings.environment_type not in ("production", "development"):
+            raise ValueError(
+                f"ENVIRONMENT_TYPE is {settings.environment_type!r}; it must be"
+                " production or development"
+            )
         settings.is_prod = settings.environment_type == "production"
         validate_production(settings)
         validate_aws_names(settings)

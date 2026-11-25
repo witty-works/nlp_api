@@ -164,3 +164,34 @@ def test_a_rephrase_request_is_bounded(change):
 
     with pytest.raises(ValidationError):
         RephraseRequestIn(**request)
+
+
+def test_start_counts_utf16_code_units_as_clients_send_it():
+    """Clients count `start` in UTF-16 code units: an emoji is two of them, so
+    after one the Python index differs, and the swap must still land on
+    `text`."""
+    settings = Settings(llm_model="openai/test")
+    prompt = RecordingBoth(settings, "{}")
+    sentence = "😀😀 The chairman decides"
+    request = RephraseRequestIn(
+        sentence=sentence,
+        text="chairman",
+        start=9,  # "😀😀 The " is 9 UTF-16 code units, 7 Python characters
+        lang="en",
+        alternatives=[{"text": "chair"}],
+    )
+    asyncio.run(LlmAlternatives(settings, None, prompt).handle(request))
+    assert json.loads(prompt.user_prompt)["sentences"]["chair"] == (
+        "😀😀 The ⟦chair⟧ decides"
+    )
+
+
+def test_a_start_near_the_end_after_emoji_is_accepted():
+    request = RephraseRequestIn(
+        sentence="😀😀😀 he",
+        text="he",
+        start=7,
+        lang="en",
+        alternatives=[{"text": "they"}],
+    )
+    assert request.start == 7

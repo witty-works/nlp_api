@@ -4176,3 +4176,17 @@ def test_health_does_not_show_an_aws_account(monkeypatch):
         response = client.get("/health")
     assert response.status_code == 200
     assert "123456789012" not in response.text
+
+
+def test_languagetool_api_is_shown_without_credentials(monkeypatch):
+    """The URL can carry a user, a password or a key; like /settings, the
+    endpoint shows it without them."""
+    monkeypatch.setattr(
+        context.settings,
+        "languagetool_api",
+        "https://lt-user:lt-secret@lt.example:8010/v2?key=q-secret",
+    )
+    with TestClient(app) as client:
+        response = client.get("/languagetool_api")
+    assert response.status_code == 200
+    assert response.json() == "https://lt.example:8010/v2"

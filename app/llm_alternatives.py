@@ -8,6 +8,8 @@ from app.alternatives import Alternatives
 from app.prompt import Prompt
 import json
 import logging
+
+from app.utf16 import python_index
 from dataclasses import dataclass, field
 
 
@@ -83,7 +85,12 @@ class LlmAlternatives:
         alternatives = sorted(set(alternatives))
 
         text = rephrase_request_in.text
-        start = rephrase_request_in.start
+        # Clients send `start` in UTF-16 code units; after an emoji that is
+        # not the Python index. When it still does not land on `text` (a
+        # client counting otherwise), the first occurrence is taken.
+        start = python_index(sentence, rephrase_request_in.start)
+        if sentence[start : start + len(text)] != text:
+            start = sentence.find(text)
         lang = lang_map[rephrase_request_in.lang]
 
         end = start + len(text)

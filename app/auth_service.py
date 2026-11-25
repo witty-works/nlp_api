@@ -29,6 +29,7 @@ import logging
 import uuid
 import re
 import hashlib
+from redis.exceptions import RedisError
 import asyncio
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -366,14 +367,27 @@ def token_refused(detail: str) -> HTTPException:
     )
 
 
+# Seconds a client waits before trying again when a token could not be
+# verified for a reason on our side.
+AUTH_RETRY_AFTER = 10
+
+
+def auth_unavailable(detail: str) -> HTTPException:
+    """A 503: the token could not be verified, which says nothing about the
+    token, so the client keeps it and tries again later."""
+    return HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=detail,
+        headers={"Retry-After": str(AUTH_RETRY_AFTER)},
+    )
+
+
 def auth_http_error(error: AuthError) -> HTTPException:
     """The answer to an AuthError: 503 when the issuer's keys could not be
     fetched, which says nothing about the token; 403 for a valid token whose
     user is not let in (a scope, an unverified email); 401 otherwise."""
     if error.status_code == 503:
-        return HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=error.error_msg
-        )
+        return auth_unavailable(error.error_msg)
     if error.status_code == 403:
         return HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=error.error_msg
@@ -482,6 +496,17 @@ async def fetch_user(
                         config["client_id"],
                         config["expected_scope"],
                     )
+                    # Office SSO accepts tokens from any Entra tenant, and a
+                    # tenant's admin can put any address into a user's email
+                    # ("nOAuth"). Only an email whose domain the tenant
+                    # verified (`xms_edov`, an optional claim the app
+                    # registration has to issue) names the user; never
+                    # preferred_username, which Microsoft calls a display hint.
+                    if claims.get("xms_edov") is not True or not claims.get("email"):
+                        raise AuthError(
+                            "Token error: The email domain is not verified", 403
+                        )
+                    return claims["email"]
                 else:
                     # The client id matched but the token carries nothing this
                     # issuer knows how to verify with.
@@ -493,6 +518,8 @@ async def fetch_user(
         except AuthError as error:
             # Only the sanitized message, never what the issuer answered.
             raise auth_http_error(error) from None
+        except RedisError:
+            raise auth_unavailable("Token error: Verification unavailable") from None
         except Exception:
             raise token_refused("Token error: Unable to parse authentication")
 

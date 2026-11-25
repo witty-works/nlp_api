@@ -15,6 +15,15 @@ listed; the git history has them.
   `/parse-word-types`, `/save_openapi_json` answer `404`) and `/` no longer
   redirects to `/docs`. Set `ENVIRONMENT_TYPE=development` where you want
   them, for local work only.
+- **Office SSO needs a verified email domain.** The Word plugin's tokens are
+  accepted only with `xms_edov: true`, and the user is taken from `email`, no
+  longer from `preferred_username`. Add the optional claims `email` and
+  `xms_edov` to the access token in the Entra app registration (**Token
+  configuration**) before upgrading, or Office sign-in answers `403`. No
+  change to the Word plugin is needed.
+- **`ENVIRONMENT_TYPE` accepts only `production` or `development`.** Any
+  other value (`prod`, `Production`) stops the start instead of being read as
+  development, which switched production's safeguards off.
 - **`LANGUAGETOOL_API` defaults to empty.** A deployment that never set it
   used LanguageTool's hosted API and sent it the text being checked; now it
   makes no spelling and grammar checks. To keep them, set `LANGUAGETOOL_API`
@@ -24,8 +33,10 @@ listed; the git history has them.
   holds an API key as written (any key minted, synced or set as
   `DEFAULT_API_KEY` while `API_KEY_HMAC_KEY` was empty), a production start
   stops with a message saying how many. Set `API_KEY_HMAC_KEY` to a random
-  secret, run `python -m bin.api_key rehash` against the deployment's Redis
-  with it, then start; see [API keys](./setup.md#api-keys).
+  secret, run `uv run python -m bin.api_key rehash` against the deployment's
+  Redis with it, then start; see [API keys](./setup.md#api-keys). The
+  commands in `bin/` are not in the image: run them from a checkout of the
+  release, see [Running the commands in bin](./setup.md#running-the-commands-in-bin).
 - **Production refuses to start with `TESTING` on or
   `MANAGEMENT_AUTH_ENABLED` off.** Both are for tests and local work: the
   first lets a request name its user, the second opens the management
@@ -46,10 +57,39 @@ listed; the git history has them.
   expired token, an unknown `x-key` at `/v2.0/auth` and a request there
   with no credential now get `401` (with
   `WWW-Authenticate: Bearer error="invalid_token"` for a token); a failure
-  to fetch the issuer's keys gets `503`, where it got `400`. `403` is left
+  to fetch the issuer's keys, or Redis not answering while a token is
+  verified, gets `503` with `Retry-After: 10`, where it got `400` or `403`.
+  `403` is left
   for a valid credential whose user is not let in. Clients that only
   refreshed a token on `403` need to do so on `401`; the browser extension
   already does.
+- **Requests have size limits.** Every endpoint refuses a body over
+  `REQUEST_MAX_BYTES` (8 MiB by default) with `413`. A check refuses a
+  `text` over 100000 characters, and a config list (`disabled_categories`,
+  `addons`) of more than 500 entries, with `422`; `/lt/v2/check` refuses a
+  `text` over 100000 characters or a `data` over 500000. `/v1.0/rephrase`
+  refuses a `sentence` over 300 characters, an empty `text`, a `text` that
+  is not part of the sentence and more than 50 alternatives with `422`. See
+  [API](./api.md).
+- **`/v1.0/rephrase` reads `start` in UTF-16 code units,** as browsers and
+  the check's offsets count. Clients need no change: they already sent it
+  that way, and a sentence with an emoji or another character outside the
+  Basic Multilingual Plane before the flagged words is now rephrased at the
+  right place.
+- **`GET /settings` shows only what helps debugging.** It used to return
+  the whole settings object, secrets included; now it returns the settings
+  listed in `DEBUG_SETTINGS` (`app/settings.py`), with URLs shown without
+  credentials, query or fragment. `GET /languagetool_api` shows its URL the
+  same way. Tooling that read other fields there no longer gets them.
+- **A stricter Content-Security-Policy.** Every response now allows
+  scripts, styles and images from the API itself only, no inline code, and
+  no framing (`frame-ancestors 'none'`). `/docs` and `/textarea` send policies
+  of their own; the Swagger UI assets are pinned with Subresource Integrity
+  and load from the CDN on `/docs` only.
+- **An organisation's explanation is plain text.** HTML in a term
+  replacement's explanation now shows as written, escaped, instead of being
+  rendered, and its `url` reaches clients only if it is an `http` or `https`
+  address. Remove markup from explanations before upgrading.
 - **The per-user request log is gone.** `REDIS_LOG_EMAILS` and
   `GET /user/logs` no longer exist; the API no longer stores the text and
   `Authorization` header of requests from the listed emails. What earlier

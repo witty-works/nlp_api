@@ -231,3 +231,19 @@ def test_a_repeated_client_id_is_one_entry(monkeypatch):
         "dashboard",
         "dashboard:2",
     ]
+
+
+@pytest.mark.parametrize("value", ["prod", "Production", "live", ""])
+def test_an_unknown_environment_type_stops_the_start(monkeypatch, value):
+    """A typo must not silently switch production's safeguards off."""
+    monkeypatch.setenv("ENVIRONMENT_TYPE", value)
+    with pytest.raises(ValueError, match="ENVIRONMENT_TYPE"):
+        Settings.factory()
+
+
+@pytest.mark.parametrize("value", ["production", "development"])
+def test_the_known_environment_types_start(monkeypatch, value):
+    monkeypatch.setenv("ENVIRONMENT_TYPE", value)
+    monkeypatch.setenv("TESTING", "false")
+    monkeypatch.setenv("MANAGEMENT_AUTH_ENABLED", "true")
+    assert Settings.factory().is_prod is (value == "production")

@@ -12,6 +12,7 @@ logged and counted by the check's name only, never with text (AGENTS.md, 1.1).
 import difflib
 import logging
 import re
+from dataclasses import dataclass
 
 from app.context import AppContext
 from app.language_processor import apply_language_rules, fetch_text
@@ -21,9 +22,9 @@ from app.version_validators import Client
 
 # How many words outside the alternative a model may change in a draft, for
 # the agreement the swap needs (articles, adjectives, pronouns, the verb).
-# Calibrated on tests/test_answer_checks: correct answers change at most 2
-# ("qu'il est très attentif" -> "qu'elle est très attentive"), a rewrite of
-# the sentence many more.
+# Agreement changes are not counted (_agreement). Calibrated on
+# tests/test_answer_checks: correct answers change at most 2 other words, a
+# rewrite of the sentence many more.
 MAX_OTHER_CHANGED_WORDS = 3
 
 # The category whose findings mean the suggestion says what Witty would flag.
@@ -62,14 +63,21 @@ async def alternative_missing(
     return None
 
 
+def _allowed(sentence: str, text: str, alternative: str) -> int:
+    """How often the flagged words may occur in a suggestion: as in the
+    original minus the replaced occurrence, plus where the alternative itself
+    contains them. A `text` cut inside a word occurs nowhere as a whole word,
+    so there is nothing to subtract."""
+    return max(0, _occurrences(text, sentence) - 1) + _occurrences(text, alternative)
+
+
 def replaced_words_back(
     sentence: str, text: str, suggestion: str, alternative: str
 ) -> str | None:
     """The flagged words occur no more often than in the original minus the
     replaced occurrence, plus where the alternative itself contains them (a
     binary form such as "Les experts et les expertes")."""
-    allowed = _occurrences(text, sentence) - 1 + _occurrences(text, alternative)
-    if _occurrences(text, suggestion) > allowed:
+    if _occurrences(text, suggestion) > _allowed(sentence, text, alternative):
         return "replaced_words_back"
     return None
 
@@ -79,24 +87,73 @@ def other_occurrence_changed(
 ) -> str | None:
     """The other occurrences of the flagged words are still there: only the
     one the user chose to replace may change."""
-    expected = _occurrences(text, sentence) - 1 + _occurrences(text, alternative)
-    if _occurrences(text, suggestion) < expected:
+    if _occurrences(text, suggestion) < _allowed(sentence, text, alternative):
         return "other_occurrence_changed"
     return None
 
 
-def too_much_changed(draft: str, model_sentence: str, alternative: str) -> str | None:
+@dataclass
+class _Token:
+    """A token reduced to plain strings, so nothing outlives nlp_session."""
+
+    text: str
+    lemma_: str
+    pos_: str
+
+
+# Word classes that follow the swapped-in noun (articles, possessives,
+# pronouns): changing them is agreement, never a rewrite.
+AGREEMENT_POS = {"DET", "PRON"}
+
+
+def _agreement(before, after) -> bool:
+    """A change the swap itself needs: the same word inflected (same lemma)
+    or one article or pronoun for another."""
+    if before.lemma_ == after.lemma_:
+        return True
+    return before.pos_ in AGREEMENT_POS and after.pos_ in AGREEMENT_POS
+
+
+async def too_much_changed(
+    draft: str, model_sentence: str, alternative: str, lang, context: AppContext
+) -> str | None:
     """The model changed at most MAX_OTHER_CHANGED_WORDS words outside the
-    alternative, word by word against the draft."""
-    before, after = draft.split(), model_sentence.split()
-    alternative_words = {word.lower() for word in alternative.split()}
+    alternative, word by word against the draft. Agreement changes do not
+    count (_agreement): a German sentence can need five of them ("er",
+    "seinen", "seiner" become "sie", "ihren", "ihrer"). Parsed inside
+    nlp_session, as in alternative_missing."""
+    async with context.model.nlp_session(lang):
+        before = [
+            _Token(t.text.lower(), t.lemma_.lower(), t.pos_)
+            for t in context.model.fetch_tokens(lang, draft)
+            if not (t.is_punct or t.is_space)
+        ]
+        after = [
+            _Token(t.text.lower(), t.lemma_.lower(), t.pos_)
+            for t in context.model.fetch_tokens(lang, model_sentence)
+            if not (t.is_punct or t.is_space)
+        ]
+        alternative_words = {
+            t.text.lower() for t in context.model.fetch_tokens(lang, alternative)
+        }
     changed = 0
-    matcher = difflib.SequenceMatcher(None, before, after, autojunk=False)
+    matcher = difflib.SequenceMatcher(
+        None, [t.text for t in before], [t.text for t in after], autojunk=False
+    )
     for op, i1, i2, j1, j2 in matcher.get_opcodes():
         if op == "equal":
             continue
-        ours = sum(1 for word in before[i1:i2] if word.lower() in alternative_words)
-        changed += max(i2 - i1, j2 - j1) - ours
+        old, new = before[i1:i2], after[j1:j2]
+        for index in range(max(len(old), len(new))):
+            a = old[index] if index < len(old) else None
+            b = new[index] if index < len(new) else None
+            if a and a.text in alternative_words:
+                continue
+            if a and b and _agreement(a, b):
+                continue
+            if not (a and b) and (a or b).pos_ in AGREEMENT_POS:
+                continue
+            changed += 1
     if changed > MAX_OTHER_CHANGED_WORDS:
         return "too_much_changed"
     return None
@@ -201,10 +258,12 @@ async def failed_checks(
             replaced_words_back(sentence, text, model_sentence, alternative),
             other_occurrence_changed(sentence, text, model_sentence, alternative),
         ]
-    failed += [
-        too_much_changed(draft, model_sentence, form)
-        for form, (draft, model_sentence) in zip(forms, suggestion.drafts)
-    ]
+    for form, (draft, model_sentence) in zip(forms, suggestion.drafts):
+        failed.append(
+            await too_much_changed(
+                draft, model_sentence, form, request_in.lang, context
+            )
+        )
     names = list(dict.fromkeys(name for name in failed if name))
     if not names and not suggestion.forms:
         if original_findings is None:

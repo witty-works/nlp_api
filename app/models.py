@@ -1,4 +1,5 @@
 from pydantic import field_validator, model_validator, BaseModel, ConfigDict, Field
+from app.utf16 import utf16_units
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
@@ -1017,7 +1018,7 @@ class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
     sentence: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     # The words of `sentence` the alternatives replace, from `start`.
-    text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    text: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     start: int
     alternatives: Annotated[
         list[RephraseAlternative], Len(max_length=REPHRASE_ALTERNATIVES_MAX_COUNT)
@@ -1031,11 +1032,11 @@ class RephraseRequestIn(BaseRequestIn):
     def text_is_in_sentence(self):
         """`text` names words of `sentence`, and `start` a place in it.
 
-        Not checked to be at `start`: clients count `start` in UTF-16 code
-        units, which differ from Python's characters after an emoji."""
+        Clients count `start` in UTF-16 code units, which differ from
+        Python's characters after an emoji, so it is bounded in those."""
         if self.text not in self.sentence:
             raise ValueError("text must be part of sentence")
-        if not 0 <= self.start <= len(self.sentence):
+        if not 0 <= self.start <= utf16_units(self.sentence):
             raise ValueError("start must be within sentence")
 
         return self
