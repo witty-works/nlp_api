@@ -57,13 +57,12 @@ def check_continue(
         text_id = list_full[-1].text_id if len(list_full) else ""
 
         context.logger.error(
-            "Incorrect new_token_index on line %i using '%s': expected %i < %i for '%s' versus '%s' for text_id '%s'",
+            # Not the tokens: they are the user's words (AGENTS.md, 1.1).
+            "Incorrect new_token_index on line %i using '%s': expected %i < %i for text_id '%s'",
             cf.f_back.f_lineno,
             func_name,
             token_index,
             new_token_index,
-            tokens[token_index].text,
-            tokens[new_token_index].text,
             text_id,
         )
 

@@ -21,7 +21,7 @@ from app.settings import get_settings
 from app.models import (
     Alternative,
     Client,
-    CheckRequestIn,
+    CheckBodyIn,
     Config,
     LangType,
     Result,
@@ -269,7 +269,7 @@ async def get_debug_german_noun(
 async def post_debug_check(
     request: Request,
     response: Response,
-    check_request_in: CheckRequestIn,
+    check_request_in: CheckBodyIn,
     context: AppContext = Depends(get_app_context),
     username: str = Depends(fetch_current_username),
 ):

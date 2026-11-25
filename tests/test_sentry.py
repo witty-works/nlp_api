@@ -1,5 +1,6 @@
-"""What reaches Sentry: no credential, and request text only through the
-privacy filter (AGENTS.md, 1.1)."""
+"""What reaches Sentry: no credential, no request body, no local variables,
+and log and exception messages only through the privacy filter (AGENTS.md,
+1.1). The user's text reaches Sentry in none of them."""
 
 from sentry_sdk.scrubber import EventScrubber
 
@@ -25,16 +26,40 @@ def event(path="/v1.0/guardrail/output", **request):
     }
 
 
-def test_an_error_event_carries_no_key_and_only_filtered_text():
+def test_an_error_event_carries_no_key_and_no_body():
     cleaned = sentry_clean_event_data(event(), {})
     request = cleaned["request"]
 
     assert "x-key" not in request["headers"]
     assert request["headers"]["user-agent"] == "curl"
     assert "query_string" not in request
-    assert "jane@acme.example" not in str(request["data"])
-    assert "0791234567" not in str(request["data"])
-    assert "x.example" not in str(request["data"])
+    # Not filtered, gone: the filter catches emails and numbers, not the
+    # sentences people write about themselves.
+    assert "data" not in request
+
+
+def test_stack_frames_carry_no_local_variables():
+    frame = {"function": "checked_results", "vars": {"sentence": "My son is autistic"}}
+    cleaned = sentry_clean_event_data(
+        {"exception": {"values": [{"stacktrace": {"frames": [frame]}}]}}, {}
+    )
+    frame = cleaned["exception"]["values"][0]["stacktrace"]["frames"][0]
+    assert "vars" not in frame
+    assert frame["function"] == "checked_results"
+
+
+def test_exception_messages_go_through_the_filter():
+    cleaned = sentry_clean_event_data(
+        {
+            "exception": {
+                "values": [{"type": "ValueError", "value": "bad jane@acme.example"}]
+            }
+        },
+        {},
+    )
+    value = cleaned["exception"]["values"][0]
+    assert value["type"] == "ValueError"
+    assert "jane@acme.example" not in value["value"]
 
 
 def test_a_transaction_carries_no_key_either():
@@ -57,3 +82,27 @@ def test_the_scrubber_knows_the_key_header():
 
     assert "a-real-key" not in str(scrubbed["request"]["headers"])
     assert "a-real-key" not in str(scrubbed["request"]["data"])
+
+
+def test_log_messages_go_through_the_filter():
+    """An ERROR log line becomes an event of its own; whatever a line quotes
+    reaches Sentry only filtered."""
+    cleaned = sentry_clean_event_data(
+        {
+            "message": "mail jane@acme.example",
+            "logentry": {
+                "message": "noun missing for %s",
+                "params": ["jane@acme.example", 791234567],
+                "formatted": "noun missing for jane@acme.example",
+            },
+            "breadcrumbs": {
+                "values": [{"message": "call 0791234567", "category": "nlp_api"}]
+            },
+        },
+        {},
+    )
+
+    assert "jane@acme.example" not in str(cleaned)
+    assert "0791234567" not in str(cleaned)
+    assert cleaned["logentry"]["message"] == "noun missing for %s"
+    assert cleaned["breadcrumbs"]["values"][0]["category"] == "nlp_api"

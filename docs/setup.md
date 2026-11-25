@@ -11,6 +11,7 @@
 - [Run Locally](#run-locally)
 - [Profiling locally with Blackfire](#profiling-locally-with-blackfire)
 - [Running against a dashboard on Lando](#running-against-a-dashboard-on-lando)
+- [Running the commands in bin](#running-the-commands-in-bin)
 - [API keys](#api-keys)
 - [Production Deployment](#production-deployment)
 
@@ -62,8 +63,8 @@ than a smoke test use docker compose.
 - **Redis** (`redis:7-alpine`) keeps API keys and configs, in a named volume.
 - **LanguageTool** is built from [languagetool/](../languagetool/), with this
   project's ignore lists and disabled rules, and only runs with the
-  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`),
-  container port 8010.
+  `languagetool` profile. It is published on host port 8210 (`LT_HOST_PORT`)
+  of the loopback interface only, container port 8010.
 - `./database` and `./models` are mounted read-only into the API container:
   the checkout's rules, and the SetFit context-checker models if you
   downloaded them.
@@ -143,7 +144,9 @@ docker run -p 8080:8081 nlpapi
 
 ## Run Locally
 
-Note for Mac users. Set environment variables with the following snippet:
+The API defaults to `ENVIRONMENT_TYPE=production`, which hides the
+development helpers. `.env.development.mac` sets `development`; on macOS it
+also avoids MKL warnings, so copy it as your `.env`:
 
 ```bash
 cp .env.development.mac .env
@@ -221,6 +224,15 @@ Regenerate the bundle whenever `certifi` is updated; it is a copy, not a
 reference. Nothing about this is needed for API-key mode, which makes no call
 back to the dashboard.
 
+## Running the commands in bin
+
+The image contains only what serves requests; the commands in `bin/`
+(`api_key`, `migrate_organization_keys`, `llm_check`) are not in it. Run them
+from a checkout of the release the deployment runs, after `uv sync`, with the
+deployment's environment and with its Redis reachable. `bin.llm_check` also
+needs the spaCy models (`uv run python -m bin.install_spacy_models`), as it
+runs the API in-process.
+
 ## API keys
 
 An `x-key` header is resolved against `api_key:<key>` entries in Redis, which
@@ -246,6 +258,13 @@ the plaintext cannot be recovered from Redis.
 ```bash
 uv run python -m bin.api_key rehash
 ```
+
+In production (`ENVIRONMENT_TYPE=production`, the default) the API refuses to
+start while Redis holds a key as written and `API_KEY_HMAC_KEY` is empty; the
+message says how many, never which. To move a deployment that has such keys:
+set `API_KEY_HMAC_KEY` in its environment, run `rehash` with that environment
+against its Redis, then start the API. A `DEFAULT_API_KEY` needs no rehash: it
+is written again, as a digest, on every start.
 
 Run it before the next key-file sync (below): a sync before it no longer finds
 the synced keys under their old names and revokes them. `rehash` leaves alone,

@@ -7,16 +7,23 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.prompt import LlmCutOff, LlmTextRefused, LlmUnavailable, Prompt, llm_error
+from app.prompt import (
+    LlmAnswer,
+    LlmCutOff,
+    LlmTextRefused,
+    LlmUnavailable,
+    Prompt,
+    llm_error,
+)
 from app.settings import Settings
 from app.models import LlmAccessType
 from tests.test_api import llm_access, set_redis  # noqa: F401  (fixtures)
 
 
-def answer(content, finish_reason="stop"):
+def answer(content, finish_reason="stop", model="test"):
     message = type("Message", (), {"content": content})
     choice = type("Choice", (), {"message": message, "finish_reason": finish_reason})
-    return type("Response", (), {"choices": [choice]})
+    return type("Response", (), {"choices": [choice], "model": model})
 
 
 def prompt_with(monkeypatch, reply, **settings):
@@ -43,6 +50,167 @@ def test_a_call_is_bounded_by_the_settings(monkeypatch):
     assert calls[0]["max_tokens"] == 1234
     assert calls[0]["timeout"] == 7.0
     assert calls[0]["num_retries"] == 0
+
+
+def test_extra_body_reaches_the_provider_only_when_set(monkeypatch):
+    no_thinking = {"chat_template_kwargs": {"enable_thinking": False}}
+    prompt, calls = prompt_with(monkeypatch, answer("ok"), llm_extra_body=no_thinking)
+    asyncio.run(prompt.handle("hi"))
+    assert calls[0]["extra_body"] == no_thinking
+
+    prompt, calls = prompt_with(monkeypatch, answer("ok"))
+    asyncio.run(prompt.handle("hi"))
+    assert "extra_body" not in calls[0]
+
+
+def test_extra_body_is_read_as_json_from_the_environment(monkeypatch):
+    monkeypatch.setenv(
+        "LLM_EXTRA_BODY", '{"chat_template_kwargs": {"enable_thinking": false}}'
+    )
+    assert Settings().llm_extra_body == {
+        "chat_template_kwargs": {"enable_thinking": False}
+    }
+
+
+def test_a_bedrock_call_passes_no_aws_keys_of_its_own(monkeypatch):
+    calls = []
+
+    async def acompletion(**kwargs):
+        calls.append(kwargs)
+        return answer("ok")
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+    prompt = Prompt(Settings(llm_model="bedrock/anthropic.claude-test"))
+    asyncio.run(prompt.handle("hi"))
+    assert "aws_access_key_id" not in calls[0]
+    assert "aws_secret_access_key" not in calls[0]
+    assert calls[0]["api_key"] is None
+
+
+def test_bedrock_reaches_litellms_aws_credential_lookup(monkeypatch):
+    """Not prompt_with: this goes through the real litellm.acompletion, up to
+    where LiteLLM resolves the AWS credentials itself."""
+    seen = {}
+
+    def get_credentials(self, *args, **kwargs):
+        seen.update(kwargs)
+        seen["called"] = True
+        raise RuntimeError("stop before the network")
+
+    monkeypatch.setattr(
+        "litellm.llms.bedrock.base_aws_llm.BaseAWSLLM.get_credentials",
+        get_credentials,
+    )
+    prompt = Prompt(
+        Settings(
+            llm_model="bedrock/anthropic.claude-test", aws_region_name="eu-central-1"
+        )
+    )
+    with pytest.raises(Exception):
+        asyncio.run(prompt.handle("hi"))
+    assert seen.get("called")
+    assert seen.get("aws_access_key_id") is None
+
+
+def test_the_task_reaches_the_call_params(monkeypatch):
+    no_thinking = {"chat_template_kwargs": {"enable_thinking": False}}
+    prompt, calls = prompt_with(
+        monkeypatch, answer("ok"), llm_task_extra_body={"rephrase": no_thinking}
+    )
+    asyncio.run(prompt.handle("hi", task="rephrase"))
+    asyncio.run(prompt.handle("hi", task="write"))
+    assert calls[0]["extra_body"] == no_thinking
+    assert "extra_body" not in calls[1]
+
+
+def test_the_served_model_is_recorded(monkeypatch):
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="served-model"))
+    assert asyncio.run(prompt.answer("hi")).served_model == "served-model"
+    assert prompt.last_served_model == "served-model"
+
+
+def test_a_mismatch_warns_by_default(monkeypatch, caplog):
+    prompt, _ = prompt_with(
+        monkeypatch, answer("ok", model="other"), llm_expected_model="expected"
+    )
+    with caplog.at_level("WARNING", "nlp_api"):
+        assert asyncio.run(prompt.handle("hi")) == "ok"
+    assert "LLM answered with other, expected expected" in caplog.text
+    assert prompt.last_model_matched is False
+
+
+def test_a_match_is_recorded(monkeypatch):
+    prompt, _ = prompt_with(
+        monkeypatch, answer("ok", model="expected"), llm_expected_model="expected"
+    )
+    asyncio.run(prompt.handle("hi"))
+    assert prompt.last_model_matched is True
+
+
+def test_a_mismatch_is_refused_when_configured(monkeypatch):
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model="other"),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with pytest.raises(LlmUnavailable):
+        asyncio.run(prompt.handle("hi"))
+
+
+def test_a_refused_mismatch_asks_clients_to_wait_longer(monkeypatch):
+    """A mismatch lasts until the deployment changes, so clients are not told
+    to come back in seconds and spend a paid call each time."""
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model="other"),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with pytest.raises(LlmUnavailable) as refused:
+        asyncio.run(prompt.handle("hi"))
+    assert refused.value.retry_after == 300
+
+
+def test_unknown_served_model_counts_as_mismatch(monkeypatch, caplog):
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("ok", model=None),
+        llm_expected_model="expected",
+        llm_model_mismatch="refuse",
+    )
+    with caplog.at_level("WARNING", "nlp_api"), pytest.raises(LlmUnavailable):
+        asyncio.run(prompt.handle("hi"))
+    assert "LLM answered with unknown" in caplog.text
+
+
+def test_no_expected_model_means_no_comparison(monkeypatch, caplog):
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="anything"))
+    with caplog.at_level("WARNING", "nlp_api"):
+        asyncio.run(prompt.handle("hi"))
+    assert prompt.last_model_matched is None
+    assert "expected" not in caplog.text
+
+
+def test_a_cut_off_answer_still_records_its_model(monkeypatch):
+    """An answer cut off at LLM_MAX_TOKENS was still served by some model:
+    it is counted and compared like any other."""
+    prompt, _ = prompt_with(
+        monkeypatch,
+        answer("Let me think", "length", model="other"),
+        llm_expected_model="expected",
+    )
+    with pytest.raises(LlmCutOff):
+        asyncio.run(prompt.handle("hi"))
+    assert prompt.last_served_model == "other"
+    assert prompt.last_model_matched is False
+
+
+def test_a_long_served_model_name_is_capped(monkeypatch):
+    """The name comes from the provider; it is stored and counted capped."""
+    prompt, _ = prompt_with(monkeypatch, answer("ok", model="m" * 1000))
+    asyncio.run(prompt.handle("hi"))
+    assert len(prompt.last_served_model) <= 200
 
 
 def test_a_cut_off_answer_is_refused(monkeypatch):
@@ -264,7 +432,7 @@ def test_the_rephrase_route_answers_503_when_the_llm_is_busy(
         raise LlmUnavailable("rate limited")
 
     with TestClient(app) as client:
-        monkeypatch.setattr(app.state.context.prompt, "handle", busy)
+        monkeypatch.setattr(app.state.context.prompt, "answer", busy)
         response = client.post(
             "/v1.0/rephrase",
             json={
@@ -290,7 +458,7 @@ def test_the_rephrase_route_answers_422_when_the_provider_refuses(
         raise LlmTextRefused("Content blocked: AHV number pattern detected")
 
     with TestClient(app) as client:
-        monkeypatch.setattr(app.state.context.prompt, "handle", refused)
+        monkeypatch.setattr(app.state.context.prompt, "answer", refused)
         response = client.post(
             "/v1.0/rephrase",
             json={
@@ -338,10 +506,10 @@ def test_a_prose_answer_is_logged_without_its_text(
     llm_access(LlmAccessType.USERS)
 
     async def prose(*args, **kwargs):
-        return "Sure! Hey everyone, the chairperson will be late."
+        return LlmAnswer("Sure! Hey everyone, the chairperson will be late.", None)
 
     with TestClient(app) as client, caplog.at_level("WARNING", "nlp_api"):
-        monkeypatch.setattr(app.state.context.prompt, "handle", prose)
+        monkeypatch.setattr(app.state.context.prompt, "answer", prose)
         client.post(
             "/v1.0/rephrase",
             json={

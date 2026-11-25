@@ -63,7 +63,7 @@ jobs:
       # The spacy 3.8 model wheels plus torch overflow the runner disk;
       # the 2024 upgrade attempt (branch feature/spacy-3-8) found this first.
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           tool-cache: true
           android: true

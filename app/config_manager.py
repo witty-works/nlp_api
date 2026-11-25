@@ -116,6 +116,12 @@ def build_default_user_configs(
             "value": settings.default_user_llm_alternatives,
             "status": status,
         },
+        # Always a suggestion: a user may turn it on for themselves, and an
+        # API key's `force` is what keeps it on.
+        "confirm_before_checking": {
+            "value": settings.default_user_confirm_before_checking,
+            "status": "suggestion",
+        },
         "categories": {},
         "force_categories": [],
     }
@@ -320,7 +326,7 @@ def apply_configs(
 
                     if force_disables_category and category not in disabled_categories:
                         disabled_categories.append(category)
-        elif config in ("store_context", "llm_alternatives"):
+        elif config in ("store_context", "llm_alternatives", "confirm_before_checking"):
             # Forcing applies in both directions: the client value is the
             # starting point now that it is no longer overwritten up front, so
             # a `force: false` has to actually turn the flag off rather than

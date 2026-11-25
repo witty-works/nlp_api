@@ -106,8 +106,8 @@ def test_missing_script_says_how_to_install_it(textarea):
 
 
 def test_csp_lets_the_page_run_and_nothing_else(textarea):
-    """Stricter than the API's own policy, which the Swagger docs need: no
-    inline or third-party script, requests only to this server, not framed."""
+    """No inline or third-party script, requests only to this server, not
+    framed."""
     with TestClient(app) as client:
         csp = client.get("/textarea").headers["content-security-policy"]
         api_csp = client.get("/health").headers["content-security-policy"]
@@ -124,8 +124,9 @@ def test_csp_lets_the_page_run_and_nothing_else(textarea):
     assert {"data:", "https://www.witty.works"} <= set(directives["img-src"])
     # The page has no inline script left to allow.
     assert "<script>" not in PAGE
-    # Everything else keeps the policy the docs need.
-    assert "'unsafe-inline'" in api_csp.split("script-src")[1].split(";")[0]
+    # The API's own policy allows no inline script either; only /docs has
+    # one of its own.
+    assert "'unsafe-inline'" not in api_csp.split("script-src")[1].split(";")[0]
 
 
 def test_page_structure_for_assistive_technology():

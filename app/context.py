@@ -38,7 +38,7 @@ from app.verbs import Verbs
 
 
 class AppContext:
-    version = "4.0.0rc2"
+    version = "4.0.0rc3"
     translations: dict[str, dict[str, str]]
     declensions_config: dict
     verb_form_map: dict
@@ -69,7 +69,7 @@ class AppContext:
         self.categories = get_categories()
         self.settings = get_settings()
         self.logger = Logger.factory(self.settings)
-        self.logger.debug("app started with settings: %s", self.settings)
+        self.logger.debug("app started with settings: %s", self.settings.debug_view())
 
         self.sentry_sdk = set_up_sentry_sdk(self.version, self.settings)
 

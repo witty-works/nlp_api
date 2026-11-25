@@ -104,7 +104,7 @@ def test_a_dry_run_changes_nothing(client):
     response = sync(client, JANE, TOM, dry_run=True)
 
     assert response.json()["added"] == ["jane@acme.example", "tom@example.org"]
-    assert auth(client, JANE_KEY).status_code == 403
+    assert auth(client, JANE_KEY).status_code == 401
 
 
 def test_a_sync_adds_and_revokes_keys(client):
@@ -119,7 +119,7 @@ def test_a_sync_adds_and_revokes_keys(client):
     assert second["revoked"] == ["tom@example.org"]
     assert second["added"] == ["jane@acme.example"]
     assert second["unchanged"] == ["jane@acme.example"]
-    assert auth(client, TOM_KEY).status_code == 403
+    assert auth(client, TOM_KEY).status_code == 401
     assert auth(client, NEW_KEY).status_code == 200
 
     # The response names emails, never keys.
@@ -232,7 +232,7 @@ def test_an_empty_file_revokes_nothing_unless_asked(client):
         "/api_keys", params={"allow_empty": True}, json={"entries": []}
     )
     assert emptied.json()["revoked"] == ["jane@acme.example"]
-    assert auth(client, JANE_KEY).status_code == 403
+    assert auth(client, JANE_KEY).status_code == 401
 
 
 def test_a_key_minted_elsewhere_for_the_same_email_stays_unmanaged(client):

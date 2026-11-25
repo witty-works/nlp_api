@@ -47,6 +47,25 @@ curl -X 'POST' \
 }'
 ```
 
+`text` is checked up to `TEXT_MAX_LENGTH` characters (1000 by default); the
+rest is cut off at a word boundary and `limit_reached` says so. A `text` over
+100000 characters is refused with a `422`, and so is a config list
+(`disabled_categories`, `addons`) of more than 500 entries.
+
+Every endpoint refuses a request body over `REQUEST_MAX_BYTES` (8 MiB by
+default) with a `413`, before it is parsed.
+
+A bearer token that is malformed, expired, for another audience or not
+signed by its issuer is answered with `401` and
+`WWW-Authenticate: Bearer error="invalid_token"`; a client may get a new token
+and retry. `403` means the token is valid but its user is not let in: a
+missing scope, a dashboard token without a verified email, or, at
+`/v2.0/auth`, a user this deployment has no config for. `/v2.0/auth` answers
+`401` to a request with no credential or an unknown `x-key`. `503` means the
+token could not be verified, because the issuer's signing keys could not be
+fetched or the API's Redis did not answer; it says nothing about the token,
+so a client keeps it and retries after the `Retry-After` seconds (10).
+
 Example `/v1.0/rephrase` request:
 
 ```bash
@@ -55,13 +74,27 @@ curl -X 'POST' \
   -H 'x-key: your-api-key' \
   -H 'Content-Type: application/json' \
   -d '{
-  "text": "The chairman called the policeman.",
+  "sentence": "The chairman called the policeman.",
+  "text": "chairman",
+  "start": 4,
+  "alternatives": [{"text": "chair"}, {"text": "chairperson"}],
   "lang": "en",
   "config": {
     "llm_alternatives": true
   }
 }'
 ```
+
+`sentence` is at most 300 characters. `text`, the words the alternatives
+replace from `start`, must be part of `sentence` and not empty, and `start`
+within it. `start` counts UTF-16 code units, as JavaScript strings and the
+check's offsets do.
+At most 50 `alternatives` are accepted, each (and its `male_form` and
+`female_form`) at most 300 characters; anything else is refused with a `422`.
+
+The answer maps each alternative to its rephrased sentence in `results`, and
+names in `model` the model that wrote them (as the provider reported it, else
+`LLM_MODEL`).
 
 Example `/v1.0/write` request:
 
@@ -76,7 +109,7 @@ curl -X 'POST' \
 }'
 ```
 
-`/v1.0/write` is Witty GPT's managed loop, built on the [guardrail endpoints](./guardrails.md) and used by `/textarea`: Witty makes the model calls itself. It sends `prompt` and `text` to the LLM with the guidance of `/v1.0/guardrail/input` as its system prompt (an empty `text` asks for a new text from the prompt alone), checks the draft as `/v1.0/guardrail/output` does, and on a fail sends the LLM that check's reask. In the answer, `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters. `text` is limited to `TEXT_MAX_LENGTH` (1000 by default), what Witty checks at once: the result has to fit that too, so a longer text could only come back shortened, and is refused with a `422`. The model is asked to keep a draft within it; a draft is reviewed in full up to 20000 characters, and `limit_reached` says when it was longer and the rest went unchecked. An empty draft is the model failing and answered with `502`. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
+`/v1.0/write` is Witty GPT's managed loop, built on the [guardrail endpoints](./guardrails.md) and used by `/textarea`: Witty makes the model calls itself. It sends `prompt` and `text` to the LLM with the guidance of `/v1.0/guardrail/input` as its system prompt (an empty `text` asks for a new text from the prompt alone), checks the draft as `/v1.0/guardrail/output` does, and on a fail sends the LLM that check's reask. In the answer, `initial_response` is the draft, `reviewed_response` the reviewed text (absent when the check found nothing to fix), `check_results` what the check found in the draft, `model` the model that wrote the last of them (as the provider reported it, else `LLM_MODEL`), and `edits` a word diff from draft to reviewed text as a list of `{"op": "equal" | "insert" | "delete", "text": ...}` (joining the non-deleted parts gives the reviewed text, the non-inserted ones the draft). A `config` in the request applies to the check of the draft as it does to `/v2.4/check`, so `german_gender_ending` decides the format the review writes. `prompt` is limited to 1000 characters. `text` is limited to `TEXT_MAX_LENGTH` (1000 by default), what Witty checks at once: the result has to fit that too, so a longer text could only come back shortened, and is refused with a `422`. The model is asked to keep a draft within it; a draft is reviewed in full up to 20000 characters, and `limit_reached` says when it was longer and the rest went unchecked. An empty draft is the model failing and answered with `502`. Like `/v1.0/rephrase` it answers `403` unless the user's config has `llm_alternatives` and `LLM_ACCESS` allows them; the `/textarea` page uses it for its prompt field.
 
 When the LLM call fails, both routes say what kind of failure it was: `503` with `Retry-After` when the provider is busy, rate limited or unreachable, `502` when its answer was cut off, and `422` when the provider refused the text. LLM providers, and gateways in front of them, can run guardrails of their own that refuse some texts, for example ones containing personal identifiers. Which texts they refuse depends on the deployment's provider, not on Witty. The `422` message is the deployment's `LLM_REFUSED_MESSAGE` if it sets one, otherwise the provider's reason if it gives one.
 
@@ -230,6 +263,9 @@ bound to 8081.
 (With `LANGUAGETOOL_COMPAT_ROOT` the same endpoints exist without the `/lt`
 prefix.)
 
+`/lt/v2/check` refuses a `text` over 100000 characters, or a `data` over
+500000, with a `422`.
+
 Example request (form-encoded, as LanguageTool clients send it):
 
 ```bash
@@ -287,7 +323,6 @@ These endpoints manage user and organization configurations. All require HTTP Ba
 | `POST /user/configs`                 | POST   | Create or update user configuration                                         |
 | `GET /user/configs?email={email}`    | GET    | Retrieve user configuration by email                                        |
 | `DELETE /user/configs?email={email}` | DELETE | Delete user configuration                                                   |
-| `GET /user/logs?email={email}`       | GET    | Retrieve request/response logs for user (if enabled via `REDIS_LOG_EMAILS`) |
 
 Example: Store user configuration
 
@@ -313,6 +348,11 @@ curl -X 'POST' \
 }'
 ```
 
+A term replacement's explanation is plain text. A finding from it carries the
+text unchanged in `explanation.text` and HTML-escaped in
+`explanation.long_text`, which clients render as HTML, so it shows as written.
+Its `url` reaches clients only if it is an `http` or `https` address.
+
 ### Organization Configuration
 
 | Endpoint                                            | Method | Description                                 |
@@ -337,6 +377,11 @@ curl -X 'POST' \
   }
 }'
 ```
+
+The config is stored in Redis under `dashboard-organization:{id}`, so an `id`
+names an organisation and no other Redis key. One stored by an earlier version
+under its bare `id` is still read, if it is a JSON object with that `id`, until
+`uv run python -m bin.migrate_organization_keys` has moved it.
 
 ### API Key Management
 
@@ -415,7 +460,7 @@ production too:
 
 | Endpoint    | Method | Description                                                     |
 | ----------- | ------ | ----------------------------------------------------------------- |
-| `/settings` | GET    | The whole settings object, including every secret it holds      |
+| `/settings` | GET    | The settings that help debug a deployment, without its secrets: `DEBUG_SETTINGS` in [app/settings.py](../app/settings.py) lists them, and URLs come without credentials or query |
 | `/languagetool_api` | GET | View the LanguageTool backend URL (`LANGUAGETOOL_API`)     |
 
 Example: Test a specific rule

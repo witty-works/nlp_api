@@ -1,7 +1,9 @@
 from pydantic import field_validator, model_validator, BaseModel, ConfigDict, Field
+from app.utf16 import utf16_units
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
+import html
 from collections import namedtuple
 import json
 from cmp_version import VersionString
@@ -116,6 +118,12 @@ class MetricsType(str, Enum):
     GUARDRAIL_INPUT_HOST = "guardrail_input_host"
     GUARDRAIL_OUTPUT_COUNTS = "guardrail_output_counts"
     GUARDRAIL_OUTPUT_HOST = "guardrail_output_host"
+    # Per served model ("unknown" when the provider did not say): how many
+    # calls it answered, and how many of those were not LLM_EXPECTED_MODEL.
+    LLM_SERVED_MODELS = "llm_served_models"
+    LLM_MODEL_MISMATCHES = "llm_model_mismatches"
+    # Per answer check (app/answer_checks.py): rephrasings it dropped.
+    REPHRASE_DROPPED = "rephrase_dropped"
 
 
 class LlmAccessType(str, Enum):
@@ -607,10 +615,22 @@ class GuardrailThreshold(BaseModel):
         return cls.model_validate(value)
 
 
+# The most entries a list in a config may have: more than there are
+# categories (about 130) or addons.
+CONFIG_LIST_MAX_LENGTH = 500
+
+
 class Config(BaseModel):
     store_context: bool = True
     llm_alternatives: bool = False
-    addons: Optional[list[str]] = None
+    # A privacy option for clients: send a field's text only once the user
+    # has confirmed that field. The API cannot know about fields and does not
+    # enforce it; it carries the setting, forced where a synced config forces
+    # it.
+    confirm_before_checking: bool = False
+    addons: Optional[Annotated[list[str], Len(max_length=CONFIG_LIST_MAX_LENGTH)]] = (
+        None
+    )
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [
         LangWithAutoType.EN,
@@ -683,7 +703,9 @@ class Config(BaseModel):
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
 
-    disabled_categories: list = Field(default_factory=list)
+    disabled_categories: list = Field(
+        default_factory=list, max_length=CONFIG_LIST_MAX_LENGTH
+    )
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
@@ -844,6 +866,7 @@ class GenderedRolesFormatConfigType(BaseModel):
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType] = None
     llm_alternatives: Optional[BooleanConfigType] = None
+    confirm_before_checking: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
@@ -967,28 +990,56 @@ class BaseRequestIn(BaseModel):
         """`"config": null` means the same as no config, rather than a None
         the config layers would trip over."""
         return Config() if config is None else config
+
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 
 
+# What one rephrasing may send the LLM: the sentence, and alternatives as
+# long as it. A finding has ALTERNATIVES_MAX_COUNT alternatives (5 by
+# default); the count leaves room for a config that asks for more.
+REPHRASE_SENTENCE_MAX_LENGTH = 300
+REPHRASE_ALTERNATIVES_MAX_COUNT = 50
+
+
 class RephraseAlternative(BaseModel):
-    text: str
+    text: Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     collective_noun: Optional[bool] = None
     gender_role: Optional[GenderedRolesFormatBasicType] = None
-    male_form: Optional[str] = None
-    female_form: Optional[str] = None
+    male_form: Optional[
+        Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    ] = None
+    female_form: Optional[
+        Annotated[str, Len(max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    ] = None
 
 
 class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
-    sentence: Annotated[str, Len(min_length=1, max_length=300)]
-    text: str
+    sentence: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
+    # The words of `sentence` the alternatives replace, from `start`.
+    text: Annotated[str, Len(min_length=1, max_length=REPHRASE_SENTENCE_MAX_LENGTH)]
     start: int
-    alternatives: list[RephraseAlternative]
+    alternatives: Annotated[
+        list[RephraseAlternative], Len(max_length=REPHRASE_ALTERNATIVES_MAX_COUNT)
+    ]
     gender_separator: Union[
         GermanGenderEndingType | FrenchGenderSeparatorType | None
     ] = None
     lang: LangType
+
+    @model_validator(mode="after")
+    def text_is_in_sentence(self):
+        """`text` names words of `sentence`, and `start` a place in it.
+
+        Clients count `start` in UTF-16 code units, which differ from
+        Python's characters after an emoji, so it is bounded in those."""
+        if self.text not in self.sentence:
+            raise ValueError("text must be part of sentence")
+        if not 0 <= self.start <= utf16_units(self.sentence):
+            raise ValueError("start must be within sentence")
+
+        return self
 
 
 WRITE_PROMPT_MAX_LENGTH = 1000
@@ -1025,6 +1076,22 @@ class CheckRequestIn(BaseRequestIn):
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str] = None
+
+
+# The longest text /v2.4/check accepts; more is refused with a 422. Only
+# TEXT_MAX_LENGTH characters of it are checked, the rest is cut off and
+# `limit_reached` says so, so this only keeps a client from sending far more
+# than will ever be read. A hundred times the default TEXT_MAX_LENGTH: the
+# extension sends at most 1000 characters, the Word plugin a paragraph.
+CHECK_TEXT_MAX_LENGTH = 100000
+
+
+class CheckBodyIn(CheckRequestIn):
+    """A check request as a client sends it. CheckRequestIn itself is also
+    built for texts the server has, such as a guardrail answer, which have
+    their own limits."""
+
+    text: Annotated[str, Len(max_length=CHECK_TEXT_MAX_LENGTH)]
 
 
 class ResultAlternative(BaseModel):
@@ -1150,7 +1217,9 @@ class ResultOut(BaseModel):
             and category == "gender-orientation"
             and language.lang == LangType.DE
             and config.german_gender_ending == GermanGenderEndingType.INKLUSIVUM
-            and any(alternative.is_in_gender_format() for alternative in alternatives or [])
+            and any(
+                alternative.is_in_gender_format() for alternative in alternatives or []
+            )
         ):
             # The ending's own logo replaces the emoji on a finding whose
             # suggestions are in the user's chosen system, whichever rule
@@ -1190,7 +1259,14 @@ class ResultOut(BaseModel):
                 else language._(subcategory_key, "sub_head")
             )
             if long_explanation is None or long_explanation == "":
-                long_explanation = explanation
+                # The short explanation is plain text (and an organisation's
+                # own words for its term replacements), long_text is HTML to
+                # clients, so it is escaped to show as written.
+                long_explanation = (
+                    html.escape(explanation, quote=False)
+                    if explanation
+                    else explanation
+                )
 
             video_url = (
                 video_url
@@ -1472,10 +1548,13 @@ class ConfigOptionsOut(BaseModel):
 class RephrasesOut(BaseModel):
     sentence: str
     results: dict[str, str]
+    # The model that wrote the rephrasings: the one that answered if the
+    # provider said, else the configured LLM_MODEL.
+    model: Optional[str] = None
 
     @staticmethod
-    def factory(sentence: str, results: dict[str, str]):
-        return RephrasesOut(sentence=sentence, results=results)
+    def factory(sentence: str, results: dict[str, str], model: str | None = None):
+        return RephrasesOut(sentence=sentence, results=results, model=model)
 
 
 class EditOut(BaseModel):
@@ -1490,6 +1569,9 @@ class PromptOut(BaseModel):
     reviewed_response: Optional[str] = None
     # Word diff from initial_response to reviewed_response; /v1.0/write only.
     edits: Optional[list[EditOut]] = None
+    # /v1.0/write only: the model of the last call that answered (the
+    # review's, if there was one), else the configured LLM_MODEL.
+    model: Optional[str] = None
 
 
 class ResultsOut(BaseModel):

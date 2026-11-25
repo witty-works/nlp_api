@@ -16,7 +16,6 @@ from app.db import Db
 from app.settings import Settings
 from app.categories import is_sub_category_enabled, make_category_advanced
 
-import json
 from spacy.tokens import Token, Doc
 from logging import Logger
 from german_nouns.lookup import Nouns as GermanNouns
@@ -335,8 +334,8 @@ class Nouns:
                     LangType.DE, token, WordType.PRONOUN, True, True
                 )
             ):
-                self.logger.error(
-                    f"German noun declension not found for '{text}', idx: '{token.idx}'"
+                self.logger.debug(
+                    "German noun declension not found",
                 )
 
             return None
@@ -347,8 +346,8 @@ class Nouns:
             and self.settings.log_missing_declension
             and check_word_case(text, True)
         ):
-            self.logger.error(
-                f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
+            self.logger.debug(
+                "German noun target form could not be determined",
             )
 
         return target_form
@@ -382,14 +381,7 @@ class Nouns:
                 not text[0].isupper()
                 and WordType.NOUN == alternative.get_first_word_type()
             ):
-                message = (
-                    f"French noun missing for '{text}"
-                    + (postfix if postfix else "")
-                    + "'"
-                    + f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
-                )
-
-                self.logger.error(message)
+                self.logger.debug("French noun missing")
 
             return None
 
@@ -437,8 +429,10 @@ class Nouns:
             if self.settings.log_missing_declension and check_word_case(
                 target_token.text, True
             ):
-                self.logger.error(
-                    f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                self.logger.debug(
+                    "German noun target form %s missing (declensions found: %s)",
+                    target_form,
+                    target_result is not None,
                 )
 
             return target_token.text
@@ -460,8 +454,9 @@ class Nouns:
             if self.settings.log_missing_declension and check_word_case(
                 target_token.text
             ):
-                self.logger.error(
-                    f"English noun plural for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                self.logger.debug(
+                    "English noun plural missing (declensions found: %s)",
+                    target_result is not None,
                 )
 
             return Noun(target_token.text).plural()

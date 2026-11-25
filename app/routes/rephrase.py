@@ -9,6 +9,8 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.security import HTTPBearer
 from fastapi.security.api_key import APIKeyHeader
 
+from app.llm_provider import public_model_name
+from app.answer_checks import checked_results
 from app.prompt import llm_error
 from app.llm_access import LlmRefused, llm_user
 from app.context import AppContext
@@ -69,9 +71,12 @@ async def rephrase_sentence(
     context.redis.store_metrics(request, configs, version, "rephrase")
 
     try:
+        outcome = await context.llm_alternatives.handle(rephrase_request_in)
         result = RephrasesOut.factory(
             rephrase_request_in.sentence,
-            await context.llm_alternatives.handle(rephrase_request_in),
+            # Only what passes the checks against known model mistakes.
+            await checked_results(rephrase_request_in, outcome, configs, context),
+            public_model_name(outcome.served_model or context.settings.llm_model),
         )
     except Exception as error:
         response.status_code, headers, message = llm_error(error, "/v1.0/rephrase")

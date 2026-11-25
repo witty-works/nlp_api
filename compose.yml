@@ -15,7 +15,7 @@ services:
     # deliberately, and it does not apply the disabledRuleIds in
     # languagetool/config.properties - several of which are LanguageTool's own
     # gendered-language rules that collide with ours. The same is true of the
-    # hosted service, which is why LANGUAGETOOL_API defaults to empty.
+    # hosted service, which is one reason LANGUAGETOOL_API defaults to empty.
     #
     # The LanguageTool release is pinned in languagetool/Dockerfile, not
     # floating, because LanguageTool retunes rules between releases and this
@@ -28,7 +28,10 @@ services:
     ports:
       # Host side deliberately not 8010: that is a common default and a local
       # PHP server on ::1 shadowed it, so localhost resolved past the container.
-      - "${LT_HOST_PORT:-8210}:8010"
+      # Loopback only: the API reaches it over the compose network, and the
+      # host only for the test suite (docs/tests.md). On all interfaces anyone
+      # who reaches the host could use it, and send it text.
+      - "127.0.0.1:${LT_HOST_PORT:-8210}:8010"
     environment:
       # The default heap runs out part way through the test suite:
       # java.lang.OutOfMemoryError: Java heap space, and the container exits.
@@ -104,11 +107,9 @@ services:
       - path: .env
         required: false
     environment:
-      # Empty by default, and deliberately so: the *code* default is
-      # LanguageTool's hosted API, so leaving this unset would send the text
-      # being checked to a third party. Empty means no spelling or grammar
-      # findings and no outbound call. To run it locally, start the
-      # languagetool profile and set this to http://languagetool:8010/v2
+      # Empty by default, as in the code: no spelling or grammar findings and
+      # no outbound call. To run it locally, start the languagetool profile
+      # and set this to http://languagetool:8010/v2
       - LANGUAGETOOL_API=${LANGUAGETOOL_API-}
       # Without these the app uses an empty in-process fake (see redis above).
       - REDIS_HOST=${REDIS_HOST:-redis}

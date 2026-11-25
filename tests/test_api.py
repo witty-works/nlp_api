@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import re
 import pytest
 import logging
 import json
@@ -16,6 +17,7 @@ from app.main import (
     context,
 )
 from app.categories import get_category_keys
+from app.routes.utility import SWAGGER_CSS, SWAGGER_JS
 from app.prompt import Prompt
 from app.settings import Settings
 from app.config_manager import (
@@ -30,6 +32,7 @@ from app.auth_service import (
     validate_scope_,
     get_token_,
     get_unverified_token_claims_,
+    rsa_key_name,
 )
 from app.models import (
     Config,
@@ -75,6 +78,17 @@ def test_health():
         assert response.status_code == 200
 
 
+def test_health_without_languagetool(monkeypatch):
+    """No LANGUAGETOOL_API is a deployment without it, not an unhealthy one."""
+    monkeypatch.setattr(context.settings, "languagetool_api", "")
+    with TestClient(app) as client:
+        response = client.get("/health", params={"check_external": True})
+
+    assert response.status_code == 200
+    assert "spelling" not in response.json()
+    assert response.json()["config"] is True
+
+
 def test_content_security_policy_is_sent_whole():
     """Every directive reaches the header, not only the last one configured."""
     with TestClient(app) as client:
@@ -82,6 +96,32 @@ def test_content_security_policy_is_sent_whole():
 
     directives = {part.split()[0] for part in csp.split(";") if part.strip()}
     assert {"default-src", "script-src", "style-src", "img-src"} <= directives
+
+
+def test_only_the_docs_may_load_from_the_cdn():
+    """The allowance Swagger UI needs is on /docs alone, and covers its two
+    files, pinned by hash, and its one inline script."""
+    with TestClient(app) as client:
+        api_csp = client.get("/health").headers["content-security-policy"]
+        docs = client.get("/docs")
+
+    assert "cdn.jsdelivr.net" not in api_csp
+    assert "unsafe-inline" not in api_csp
+
+    assert docs.status_code == 200
+    page = docs.text
+    for url, integrity in (SWAGGER_JS, SWAGGER_CSS):
+        assert f'"{url}" integrity="{integrity}" crossorigin="anonymous"' in page
+    assert "@5/" not in page
+
+    docs_csp = docs.headers["content-security-policy"]
+    script_src = next(
+        part for part in docs_csp.split(";") if part.strip().startswith("script-src")
+    )
+    assert "unsafe-inline" not in script_src
+    (inline,) = re.findall(r"<script>(.*?)</script>", page, re.DOTALL)
+    digest = base64.b64encode(hashlib.sha256(inline.encode()).digest()).decode()
+    assert f"'sha256-{digest}'" in script_src
 
 
 @pytest.mark.parametrize(
@@ -540,7 +580,8 @@ def test_invalid_access_token():
             headers={"authorization": "bearer invalid"},
         )
 
-        assert response.status_code == 403
+        assert response.status_code == 401
+        assert response.headers["WWW-Authenticate"] == 'Bearer error="invalid_token"'
 
 
 def test_config_not_changed(set_redis):
@@ -643,7 +684,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # free@gmail.com
     user_object = {
@@ -676,7 +719,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # default@gmail.com
     user_object = {
@@ -713,7 +758,9 @@ def set_redis():
         "config_hash": None,
     }
 
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
     # test@gmail.com
     user_object = {
@@ -890,7 +937,9 @@ def set_redis():
     organization_object["term_replacements"] = parse_term_replacements(
         organization_object["term_replacements"], context
     )
-    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.set_organization_configs(
+        organization_object["id"], json.dumps(organization_object)
+    )
 
 
 @pytest.mark.parametrize(
@@ -1010,8 +1059,9 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
 )
 def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
     with TestClient(app) as client:
+        # No credential at all; a user with no config is known but not let in.
         response = client.post("/v2.0/auth")
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         response = client.post(
             "/v2.0/auth", headers={"X-TESTING-AUTH": "missing@gmail.com"}
@@ -1067,7 +1117,7 @@ def test_auth_token_validation():
             json={},
             headers={"Authorization": "Bearer " + tokens["third_party_token"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 def test_api_key_validation(set_redis):
@@ -1078,7 +1128,7 @@ def test_api_key_validation(set_redis):
             json={},
             headers={"x-key": "invalid"},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         # Create a valid API key mapping via management endpoint
         api_key = "valid-api-key-0123456789-0123456789"
@@ -1115,14 +1165,14 @@ def test_api_key_validation(set_redis):
             json={},
             headers={"Authorization": "Bearer " + tokens["azureadbc_valid_expired"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
         response = client.post(
             "/v2.4/check",
             json={"text": "Hallo Kunde"},
             headers={"Authorization": "Bearer " + tokens["office_valid_expired"]},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 @pytest.mark.parametrize(
@@ -2633,16 +2683,17 @@ def dashboard_sso(request):
         return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
 
     kid = "test-dashboard-kid"
+    jwks_url = "https://dashboard.example.com/.well-known/jwks.json"
     context.redis.db.set(
-        "rsa_pem:" + kid,
+        rsa_key_name(jwks_url, kid),
         convert_to_pem(to_base64_url(numbers.n), to_base64_url(numbers.e)),
     )
 
     previous = context.settings.sso_configs.get("dashboard")
     context.settings.sso_configs["dashboard"] = {
         "client_id": "1",
-        "jwks_url": "https://dashboard.example.com/.well-known/jwks.json",
-        "issuer": None,
+        "jwks_url": jwks_url,
+        "issuer": "https://dashboard.example.com",
         "expected_scope": None,
     }
 
@@ -2657,9 +2708,13 @@ def dashboard_sso(request):
             "sub": "1",
             "scopes": [],
             "email": "test@gmail.com",
+            "email_verified": True,
             "preferred_username": "test@gmail.com",
+            "iss": "https://dashboard.example.com",
         }
         claims.update(overrides)
+        # None leaves a claim out.
+        claims = {name: value for name, value in claims.items() if value is not None}
 
         return jwt.encode(
             claims,
@@ -2674,7 +2729,7 @@ def dashboard_sso(request):
 
     yield issue
 
-    context.redis.db.delete("rsa_pem:" + kid)
+    context.redis.db.delete(rsa_key_name(jwks_url, kid))
     if previous is None:
         del context.settings.sso_configs["dashboard"]
     else:  # pragma: no cover
@@ -2693,6 +2748,48 @@ def test_dashboard_token(dashboard_sso, set_redis):
         assert response.json()["id"] == "test-user"
 
 
+@pytest.fixture
+def two_dashboard_clients(dashboard_sso, monkeypatch):
+    """The dashboard configs as Settings builds them for DASHBOARD_CLIENT_ID
+    "1, 2", against the fixture's keys."""
+    monkeypatch.setenv("DASHBOARD_CLIENT_ID", "1, 2")
+    monkeypatch.setenv("DASHBOARD_URL", "https://dashboard.example.com")
+    monkeypatch.setenv("DASHBOARD_ISSUER", "https://dashboard.example.com")
+    built = Settings.factory().sso_configs
+    configs = {
+        name: config for name, config in built.items() if name.startswith("dashboard")
+    }
+    monkeypatch.setattr(
+        context.settings,
+        "sso_configs",
+        {**context.settings.sso_configs, **configs},
+    )
+    return dashboard_sso
+
+
+def test_a_token_of_the_second_dashboard_client_is_accepted(
+    two_dashboard_clients, set_redis
+):
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + two_dashboard_clients(aud="2")},
+        )
+    assert response.status_code == 200
+    assert response.json()["id"] == "test-user"
+
+
+def test_a_token_of_an_unlisted_client_is_refused(two_dashboard_clients, set_redis):
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + two_dashboard_clients(aud="3")},
+        )
+    assert response.status_code == 401
+
+
 def test_dashboard_token_rejections(dashboard_sso, set_redis):
     """Expired, wrong-audience and unsigned variants are all refused."""
     with TestClient(app) as client:
@@ -2700,8 +2797,9 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
         response = client.post(
             "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + expired}
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
         assert response.json()["detail"] == "Token error: The token has expired"
+        assert response.headers["WWW-Authenticate"] == 'Bearer error="invalid_token"'
 
         # A different client id belongs to no configured issuer at all.
         response = client.post(
@@ -2709,7 +2807,7 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
             json={},
             headers={"Authorization": "Bearer " + dashboard_sso(aud="2")},
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
         assert (
             response.json()["detail"]
             == "Token provided did not map to a valid client ID"
@@ -2725,32 +2823,38 @@ def test_dashboard_token_rejections(dashboard_sso, set_redis):
         response = client.post(
             "/v2.0/auth", json={}, headers={"Authorization": "Bearer " + tampered}
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 def test_dashboard_token_issuer_enforced(dashboard_sso, set_redis):
-    """Configuring an issuer makes a token without an `iss` claim invalid."""
-    context.settings.sso_configs["dashboard"][
-        "issuer"
-    ] = "https://dashboard.example.com"
-
+    """Every dashboard token must name the dashboard as its issuer."""
     with TestClient(app) as client:
-        response = client.post(
-            "/v2.0/auth",
-            json={},
-            headers={"Authorization": "Bearer " + dashboard_sso()},
-        )
-        assert response.status_code == 403
+        for iss in (None, "https://other.example.com"):
+            response = client.post(
+                "/v2.0/auth",
+                json={},
+                headers={"Authorization": "Bearer " + dashboard_sso(iss=iss)},
+            )
+            assert response.status_code == 401
 
+
+@pytest.mark.parametrize("email_verified", [None, False, "true", 1])
+def test_dashboard_token_needs_a_verified_email(
+    dashboard_sso, set_redis, email_verified
+):
+    """The email names the user, so only one its owner confirmed counts."""
+    with TestClient(app) as client:
         response = client.post(
             "/v2.0/auth",
             json={},
             headers={
                 "Authorization": "Bearer "
-                + dashboard_sso(iss="https://dashboard.example.com")
+                + dashboard_sso(email_verified=email_verified)
             },
         )
-        assert response.status_code == 200
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Token error: The email is not verified"
 
 
 @pytest.fixture
@@ -2954,7 +3058,7 @@ def test_management_auth():
             )
             assert response.status_code == 401
 
-            # The settings object carries every secret the deployment holds.
+            # The settings show how the deployment is configured.
             assert client.get("/settings").status_code == 401
 
             # The docs switch is a separate decision and stays where it was.
@@ -3236,10 +3340,14 @@ def test_features_with_a_key_say_what_it_may_use(monkeypatch):
     with TestClient(app) as client:
         assert llm() == {"available": True, "allowed": True}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["other@example.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["other@example.com"]
+        )
         assert llm() == {"available": True, "allowed": False}
 
-        monkeypatch.setattr(context.settings, "llm_allowed_users", ["Default@Gmail.com"])
+        monkeypatch.setattr(
+            context.settings, "llm_allowed_users", ["Default@Gmail.com"]
+        )
         assert llm() == {"available": True, "allowed": True}
 
         monkeypatch.setattr(context.settings, "llm_model", "")
@@ -3720,7 +3828,7 @@ def llm_calls(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
-    """Bedrock gets the AWS key pair, and only when there is one to give."""
+    """Bedrock gets no credentials of ours: LiteLLM finds the AWS ones."""
     monkeypatch.setattr(context.settings, "llm_model", "bedrock/some.model")
     monkeypatch.setattr(context.settings, "llm_api_key", "not-for-bedrock")
 
@@ -3734,18 +3842,11 @@ async def test_llm_bedrock_credentials(llm_calls, monkeypatch):
         {"role": "system", "content": "be brief"},
         {"role": "user", "content": "say something"},
     ]
-    # Bedrock signs with a key pair, so the bearer token is not offered to it.
-    assert "api_key" not in call
-
-    monkeypatch.setattr(context.settings, "aws_key", "an-id")
-    monkeypatch.setattr(context.settings, "aws_secret_key", "a-secret")
-    await prompt.handle("say something")
-    assert llm_calls[1]["aws_access_key_id"] == "an-id"
-
-    # An unset key pair has to stay unset so an instance role can take over.
-    monkeypatch.setattr(context.settings, "aws_key", "")
-    await prompt.handle("say something")
-    assert "aws_access_key_id" not in llm_calls[2]
+    # Nothing is derived from the model id: the same parameters as for any
+    # model, and no AWS key pair of ours.
+    assert call["api_key"] == "not-for-bedrock"
+    assert "aws_access_key_id" not in call
+    assert "aws_secret_access_key" not in call
 
 
 @pytest.mark.asyncio
@@ -3933,3 +4034,159 @@ def test_fetch_user_reuses_the_user_the_key_gate_resolved():
     assert asyncio.run(fetch_user(request, context.settings, None, None)) == (
         "gate@example.org"
     )
+
+
+def test_settings_shows_only_the_allow_list():
+    with TestClient(app) as client:
+        response = client.get("/settings")
+
+    assert response.status_code == 200
+    assert set(response.json()) == set(context.settings.debug_view())
+    assert "llm_api_key" not in response.json()
+    assert "api_key_hmac_key" not in response.json()
+
+
+def test_dashboard_token_without_expiry(dashboard_sso, set_redis):
+    """A token without `exp` would be valid for ever."""
+    with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + dashboard_sso(exp=None)},
+        )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Token error: The exp claim is missing"
+
+
+def test_no_request_log():
+    """The per-user request log, which kept the raw text and the
+    Authorization header, is gone, and with it its route."""
+    with TestClient(app) as client:
+        response = client.get("/user/logs", params={"email": "a@b.example"})
+
+    assert response.status_code == 404
+
+
+@pytest.mark.parametrize("login", ["admin:secret", "admin:sécret", "ädmin:geheim✓"])
+def test_a_password_with_non_ascii_characters_is_checked(login):
+    """A configured password with non-ASCII characters refuses a wrong login
+    with a 401, not a 500. (FastAPI reads Basic credentials as ASCII, so a
+    non-ASCII login is refused before it is compared.)"""
+    settings = context.settings
+    previous = (settings.api_docs_username, settings.api_docs_password)
+    header = {
+        "Authorization": "Basic " + base64.b64encode(login.encode("utf-8")).decode()
+    }
+
+    with TestClient(app) as client:
+        settings.management_auth_enabled = True
+        settings.api_docs_username, settings.api_docs_password = "ädmin", "geheim✓"
+        try:
+            response = client.get(
+                "/user/configs?email=nobody@example.org", headers=header
+            )
+        finally:
+            settings.management_auth_enabled = False
+            settings.api_docs_username, settings.api_docs_password = previous
+
+    assert response.status_code == 401
+
+
+def reply_from(monkeypatch, content, model="served-model"):
+    """The provider answers `content`, naming `model` as the one that did."""
+
+    class Response:
+        def __init__(self):
+            message = type("Message", (), {"content": content})
+            self.choices = [
+                type("Choice", (), {"message": message, "finish_reason": "stop"})
+            ]
+            self.model = model
+
+    async def acompletion(**kwargs):
+        return Response()
+
+    monkeypatch.setattr("app.prompt.litellm.acompletion", acompletion)
+
+
+def test_rephrase_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, '{"chair": "The chair called."}')
+    llm_access(LlmAccessType.USERS)
+    body = {
+        "sentence": "The chairman called.",
+        "text": "chairman",
+        "start": 4,
+        "alternatives": [{"text": "chair"}],
+        "lang": "en",
+    }
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/rephrase", json=body, headers={"X-TESTING-AUTH": "test@gmail.com"}
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_write_names_the_model(llm_access, set_redis, monkeypatch):
+    reply_from(monkeypatch, "The chair will call everyone tomorrow.")
+    llm_access(LlmAccessType.USERS)
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1.0/write",
+            json={"prompt": "Make it formal.", "text": "Chair calls everyone."},
+            headers={"X-TESTING-AUTH": "test@gmail.com"},
+        )
+    assert response.status_code == 200
+    assert response.json()["model"] == "served-model"
+
+
+def test_health_reports_the_llm_without_failing(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", "other")
+        monkeypatch.setattr(context.prompt, "last_model_matched", False)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"] == {
+        "configured": "openai/test",
+        "served": "other",
+        "matched": False,
+    }
+
+
+def test_health_stays_ok_before_any_llm_call(monkeypatch):
+    monkeypatch.setattr(context.settings, "llm_model", "openai/test")
+    monkeypatch.setattr(context.settings, "llm_expected_model", "openai/test")
+    with TestClient(app) as client:
+        monkeypatch.setattr(context.prompt, "last_served_model", None)
+        monkeypatch.setattr(context.prompt, "last_model_matched", None)
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["llm"]["served"] is None
+
+
+def test_health_does_not_show_an_aws_account(monkeypatch):
+    monkeypatch.setattr(
+        context.settings,
+        "llm_model",
+        "bedrock/arn:aws:bedrock:eu-central-1:123456789012:inference-profile/x",
+    )
+    with TestClient(app) as client:
+        response = client.get("/health")
+    assert response.status_code == 200
+    assert "123456789012" not in response.text
+
+
+def test_languagetool_api_is_shown_without_credentials(monkeypatch):
+    """The URL can carry a user, a password or a key; like /settings, the
+    endpoint shows it without them."""
+    monkeypatch.setattr(
+        context.settings,
+        "languagetool_api",
+        "https://lt-user:lt-secret@lt.example:8010/v2?key=q-secret",
+    )
+    with TestClient(app) as client:
+        response = client.get("/languagetool_api")
+    assert response.status_code == 200
+    assert response.json() == "https://lt.example:8010/v2"

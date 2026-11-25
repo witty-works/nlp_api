@@ -1,6 +1,5 @@
 from inflex import Verb
 from spacy.tokens import Token, Doc
-import json
 
 from app.db import Db
 from app.models import WordType, LangType
@@ -38,9 +37,8 @@ class Verbs:
 
     async def german_verb_splittable(self, word: str) -> str | None:  # pragma: no cover
         if self.settings.log_missing_declension and not word.isupper():
-            self.logger.error(
-                "Guessing how to split: %s",
-                word,
+            self.logger.debug(
+                "Guessing how to split a German verb",
             )
 
         prefixes = (
@@ -193,8 +191,8 @@ class Verbs:
                         target_text = target_text[0:-1]
 
         if self.settings.log_missing_declension and not source_text.isupper():
-            self.logger.error(
-                f"German verb declension not found for '{source_text}' (lemma '{source_lemma}'): prefix '{prefix}', ending '{ending}' applies to '{target_token.text}' => {target_text}"
+            self.logger.debug(
+                "German verb declension not found",
             )
 
         return target_text + ending
@@ -221,8 +219,9 @@ class Verbs:
                 target_form = None
 
             if self.settings.log_missing_declension and not source_text.isupper():
-                self.logger.error(
-                    f"English verb target form '{str(target_form)}' determined via fallback for '{source_text}'."
+                self.logger.debug(
+                    "English verb target form %s determined via fallback",
+                    target_form,
                 )
 
         if target_form is None:
@@ -243,8 +242,9 @@ class Verbs:
                 text = target_token.lemma_
 
             if self.settings.log_missing_declension and not target_token.text.isupper():
-                self.logger.error(
-                    f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') generated '{text}'."
+                self.logger.debug(
+                    "English verb target form %s generated",
+                    target_form,
                 )
 
             return text
@@ -252,8 +252,10 @@ class Verbs:
         text = get_target_declension_form(target_result, target_form)
         if text is None:
             if self.settings.log_missing_declension and not target_token.text.isupper():
-                self.logger.error(
-                    f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                self.logger.debug(
+                    "English verb target form %s missing (declensions found: %s)",
+                    target_form,
+                    target_result is not None,
                 )
 
             return text
@@ -293,8 +295,8 @@ class Verbs:
             LangType.DE, WordType.VERB, token.text, token
         )
         if forms is None:
-            self.logger.error(
-                f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
+            self.logger.debug(
+                "German verb form could not be determined",
             )
 
             return None
@@ -305,8 +307,8 @@ class Verbs:
             and self.settings.log_missing_declension
             and check_word_case(token.text, False)
         ):
-            self.logger.error(
-                f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
+            self.logger.debug(
+                "German verb target form could not be determined",
             )
 
         return target_form
@@ -340,8 +342,8 @@ class Verbs:
             and self.settings.log_missing_declension
             and check_word_case(token.text, False)
         ):
-            self.logger.error(
-                f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
+            self.logger.debug(
+                "English verb target form could not be determined",
             )
 
         return target_form

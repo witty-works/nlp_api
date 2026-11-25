@@ -1,0 +1,11 @@
+{
+  "sentence": "The chairman decides.",
+  "text": "chairman",
+  "start": 4,
+  "alternatives": [
+    {
+      "text": "chair"
+    }
+  ],
+  "lang": "en"
+}

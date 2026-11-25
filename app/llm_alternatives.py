@@ -9,6 +9,35 @@ from app.prompt import Prompt
 import json
 import logging
 
+from app.utf16 import python_index
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Suggestion:
+    """One rephrasing as the user would get it, keyed by the request's
+    alternative, with the (draft, model sentence) pairs it was made from: one
+    for a plain alternative, the masculine and feminine one for a gendered
+    alternative, whose suggestion Witty assembles from both. A draft is the
+    sentence with the alternative swapped in, without the marks."""
+
+    alternative: str
+    text: str
+    drafts: list[tuple[str, str]]
+    # For a gendered alternative, the masculine and feminine form each draft
+    # was made with; empty for a plain one, whose drafts use `alternative`.
+    forms: list[str] = field(default_factory=list)
+
+
+@dataclass
+class RephraseOutcome:
+    """The rephrasings per alternative, unchecked, and the model that wrote
+    them; `suggestions` carries what app/answer_checks.py needs to check them."""
+
+    results: dict[str, str]
+    served_model: str | None
+    suggestions: list[Suggestion] = field(default_factory=list)
+
 
 lang_map = {
     LangType.EN: "English",
@@ -49,10 +78,19 @@ class LlmAlternatives:
                 alternatives.append(alternative.male_form)
                 alternatives.append(alternative.female_form)
 
-        alternatives = list(set(alternatives))
+        # Sorted, not just deduplicated: a set's order changes with every
+        # process (hash randomisation), and the order of the drafts changes
+        # the model's answer, so the same request got different suggestions
+        # after a restart.
+        alternatives = sorted(set(alternatives))
 
         text = rephrase_request_in.text
-        start = rephrase_request_in.start
+        # Clients send `start` in UTF-16 code units; after an emoji that is
+        # not the Python index. When it still does not land on `text` (a
+        # client counting otherwise), the first occurrence is taken.
+        start = python_index(sentence, rephrase_request_in.start)
+        if sentence[start : start + len(text)] != text:
+            start = sentence.find(text)
         lang = lang_map[rephrase_request_in.lang]
 
         end = start + len(text)
@@ -68,19 +106,26 @@ class LlmAlternatives:
             for alternative in alternatives
         }
 
+        # The replaced words are named in the system prompt, as on dev: a
+        # reference by key ("the words of 'replaced'") made the model keep the
+        # tense and leave repeats alone less reliably. They are JSON-quoted so
+        # they cannot close the quotes around them, and they are bounded by
+        # the request model: a substring of `sentence`, which the model reads
+        # anyway, of at most 300 characters.
+        replaced = json.dumps(text, ensure_ascii=False)
         system_prompt = f"""
         You fix {lang} grammar after a word swap.
         In each sentence of "sentences", the words in ⟦ ⟧ replaced the words
-        "{text}" of "original". They may be a base form: an infinitive, a
+        {replaced} of "original". They may be a base form: an infinitive, a
         singular, a masculine or feminine form.
         Rewrite each sentence so they fit, and remove the ⟦ ⟧:
-        - Give the words in ⟦ ⟧ the grammatical form "{text}" had in
-          "original": the same tense, person, number and case. If "{text}" is
+        - Give the words in ⟦ ⟧ the grammatical form {replaced} had in
+          "original": the same tense, person, number and case. If {replaced} is
           past tense, they become past tense too.
         - Make the words that depend on them agree with them: articles,
           adjectives, pronouns referring to them, the verb.
         - Change nothing else. Every other word stays exactly as it is, even
-          where it repeats "{text}" elsewhere in the sentence, and so do
+          where it repeats {replaced} elsewhere in the sentence, and so do
           spelling mistakes, gender-inclusive forms such as Kund*innen or
           expert·es, and double parentheses.
         An expression listed in "collective_nouns" names a group: keep it, and
@@ -97,7 +142,10 @@ class LlmAlternatives:
 
         user_prompt = json.dumps(input_data, ensure_ascii=False)
 
-        answer = await self.prompt.handle(user_prompt, system_prompt)
+        llm_answer = await self.prompt.answer(
+            user_prompt, system_prompt, task="rephrase"
+        )
+        answer = llm_answer.text
         parsed = self.prompt.parse_json(answer)
         # Anything but an object of sentences is no rephrasing: prose, a
         # reasoning model cut off mid-thought, a list. Keep only the strings.
@@ -121,7 +169,11 @@ class LlmAlternatives:
             Config.get_gender_separators(rephrase_request_in.gender_separator)
         )
 
+        def clean(draft: str) -> str:
+            return draft.replace("⟦", "").replace("⟧", "")
+
         results = {}
+        suggestions = []
         for alternative_index in range(len(rephrase_request_in.alternatives)):
             alternative = rephrase_request_in.alternatives[alternative_index]
             if alternative_index in genderstar:
@@ -129,6 +181,9 @@ class LlmAlternatives:
                     alternative.male_form in result
                     and alternative.female_form in result
                 ):
+                    # Before noun_alternatives, which may change the forms.
+                    forms = [alternative.male_form, alternative.female_form]
+                    pairs = [(clean(drafts[form]), result[form]) for form in forms]
                     alternative.male_form, alternative.female_form, rephrasings = (
                         await self.alternatives.noun_alternatives(
                             rephrase_request_in.lang,
@@ -143,7 +198,22 @@ class LlmAlternatives:
                     gendered_role_format = genderstar[alternative_index]
                     if genderstar[alternative_index] in rephrasings:
                         results[alternative.text] = rephrasings[gendered_role_format]
+                        suggestions.append(
+                            Suggestion(
+                                alternative.text,
+                                results[alternative.text],
+                                pairs,
+                                forms,
+                            )
+                        )
             elif alternative.text in result:
                 results[alternative.text] = result[alternative.text]
+                suggestions.append(
+                    Suggestion(
+                        alternative.text,
+                        result[alternative.text],
+                        [(clean(drafts[alternative.text]), result[alternative.text])],
+                    )
+                )
 
-        return results
+        return RephraseOutcome(results, llm_answer.served_model, suggestions)

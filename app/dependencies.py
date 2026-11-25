@@ -68,11 +68,15 @@ def _fetch_basic_auth_username(
             detail="Incorrect user configuration",
         )
 
+    # As bytes: compare_digest refuses str with non-ASCII characters, which
+    # a client can send, with a TypeError (a 500).
     correct_username = secrets.compare_digest(
-        credentials.username, context.settings.api_docs_username
+        credentials.username.encode("utf-8"),
+        context.settings.api_docs_username.encode("utf-8"),
     )
     correct_password = secrets.compare_digest(
-        credentials.password, context.settings.api_docs_password
+        credentials.password.encode("utf-8"),
+        context.settings.api_docs_password.encode("utf-8"),
     )
     if not (correct_username and correct_password):
         raise HTTPException(

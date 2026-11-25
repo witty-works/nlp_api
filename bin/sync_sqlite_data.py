@@ -2,6 +2,7 @@ import sqlite3
 import argparse
 import os
 import json
+import shutil
 
 from app.query_definitions import declensions_config
 from app.models import LangType
@@ -27,7 +28,8 @@ args = parse_args()
 if not is_file(args.file):
     raise FileNotFoundError("File %s cannot be found." % args.file)
 
-os.system(f"cp {args.file} ./database/db.sqlite3")
+# Not through a shell: the file name would be run as part of the command.
+shutil.copy(args.file, "./database/db.sqlite3")
 source = sqlite3.connect("./database/db.sqlite3")
 
 tables_to_keep = [
