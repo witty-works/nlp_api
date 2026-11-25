@@ -229,8 +229,13 @@ per level:
 - Only findings with alternatives count, and a finding without a gravity
   counts towards `overall` only. To leave whole categories out, disable them
   in the config, as on `/v2.4/check`.
-- The reask covers every finding with alternatives, not only those of the
-  levels that failed: the model should fix the whole answer. Findings without
+- The reask covers the findings of every level that has a limit, whether
+  or not that limit was reached, so the model fixes those across the whole
+  answer. A level without a limit is reported in `findings` and left to the
+  person: with `{"basic": {"count": 1}}`, an answer that fails on a basic
+  finding is revised for its basic findings, and its advanced ones (such as
+  formal address, which is right in many texts) are only shown. An
+  `overall` limit, as in the default, covers every finding. Findings without
   alternatives go in too, with their explanation, for the model to rephrase.
 
 ## `GET /v1.0/guardrail/guidance`
