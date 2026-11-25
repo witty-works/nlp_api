@@ -20,7 +20,6 @@ from app.models import (
 from app.review_prompt import ReviewPrompt
 from app.settings import Settings
 
-
 # How much of an answer is checked, in parts of TEXT_MAX_LENGTH: as much as the
 # /textarea editor checks. The rest goes unchecked, which `limit_reached` says.
 GUARDRAIL_MAX_LENGTH = 20000
@@ -148,6 +147,23 @@ def failed_on(
     return failed
 
 
+def reask_findings(
+    findings: list[ResultOut], threshold: GuardrailThreshold
+) -> list[ResultOut]:
+    """The findings the reask asks the model to fix: those of every level the
+    threshold sets a limit for, whether or not that limit was reached. A level
+    without a limit is reported and left to the person; with an `overall`
+    limit, which the default has, that is every finding."""
+    if threshold.overall is not None:
+        return findings
+    return [
+        finding
+        for finding in findings
+        if (level := finding_level(finding)) is not None
+        and getattr(threshold, level) is not None
+    ]
+
+
 async def review(
     check_request_in: CheckRequestIn,
     configs: dict,
@@ -155,7 +171,8 @@ async def review(
 ) -> GuardrailOutputOut:
     """Check a model's answer against the config's `guardrail_threshold` and,
     where it fails, write the message that asks the model to apply Witty's
-    alternatives: all of them, not only those of the levels that failed.
+    alternatives: those of every level with a limit (reask_findings), not
+    only of the levels that failed.
 
     Never refuses: an answer longer than Witty checks at once is checked in
     parts of TEXT_MAX_LENGTH, up to GUARDRAIL_MAX_LENGTH (`limit_reached` past
@@ -209,7 +226,11 @@ async def review(
     # Per word of what was checked: past GUARDRAIL_MAX_LENGTH, the unchecked
     # rest would only water a ratio down.
     failed = failed_on(findings, words, threshold)
-    reask = ReviewPrompt.handle(findings, check_request_in.text) if failed else None
+    reask = (
+        ReviewPrompt.handle(reask_findings(findings, threshold), check_request_in.text)
+        if failed
+        else None
+    )
 
     return GuardrailOutputOut(
         verdict="fail" if failed else "pass",
