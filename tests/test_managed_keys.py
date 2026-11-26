@@ -183,3 +183,22 @@ def test_a_key_in_its_grace_period_cannot_be_replaced_again(redis):
 
     with pytest.raises(KeyError):
         managed_keys.replace(redis, details.id, 604800)
+
+
+def test_revoke_matching_catches_a_key_replaced_meanwhile(redis, monkeypatch):
+    _, details = managed_keys.mint(redis, "jane@acme.example", "team-a", "Editor", "api", None)
+    revoke = managed_keys.revoke
+    replaced = []
+
+    def replace_first(redis, key_id):
+        # The dashboard replaces the key while the person is being removed.
+        if not replaced:
+            replaced.append(managed_keys.replace(redis, key_id, 604800))
+        return revoke(redis, key_id)
+
+    monkeypatch.setattr(managed_keys, "revoke", replace_first)
+
+    managed_keys.revoke_matching(redis, email=None, team_id="team-a")
+
+    assert replaced
+    assert managed_keys.list_keys(redis, email="jane@acme.example", team_id=None) == []

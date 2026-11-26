@@ -219,8 +219,18 @@ def revoke(redis: Redis, key_id: str) -> bool:
 
 
 def revoke_matching(redis: Redis, email: Optional[str], team_id: Optional[str]) -> int:
-    """Revoke every key of an email, a team, or an email in a team."""
-    return sum(revoke(redis, key_id) for key_id in _matching(redis, email, team_id))
+    """Revoke every key of an email, a team, or an email in a team. Rounds
+    repeat until one finds no key, so a key replaced meanwhile goes too:
+    `replace` adds the new key to the index sets as it stores it. A key
+    minted after the last round stays; the team check in app/auth_service.py
+    still refuses it once the person has left the team."""
+    count = 0
+    for _ in range(10):
+        ids = _matching(redis, email, team_id)
+        if not ids:
+            break
+        count += sum(revoke(redis, key_id) for key_id in ids)
+    return count
 
 
 def replace(redis: Redis, key_id: str, grace_seconds: int) -> tuple[str, ManagedKey]:
