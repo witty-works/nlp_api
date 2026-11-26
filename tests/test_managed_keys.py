@@ -202,3 +202,13 @@ def test_revoke_matching_catches_a_key_replaced_meanwhile(redis, monkeypatch):
 
     assert replaced
     assert managed_keys.list_keys(redis, email="jane@acme.example", team_id=None) == []
+
+
+def test_a_key_in_its_grace_period_counts_towards_the_limit(redis):
+    ids = [managed_keys.mint(redis, "jane@acme.example", None, f"K{n}", "api", None)[1].id for n in range(20)]
+
+    # Replacing is never refused for the limit, but the old key counts until
+    # its grace period ends, so at most 20 keys are minted beyond that.
+    managed_keys.replace(redis, ids[0], 86400)
+    with pytest.raises(TooManyKeys):
+        managed_keys.mint(redis, "jane@acme.example", None, "One more", "api", None)
