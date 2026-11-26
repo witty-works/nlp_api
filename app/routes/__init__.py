@@ -3,6 +3,7 @@
 from app.routes import (
     utility,
     auth,
+    managed_keys,
     config_routes,
     rephrase,
     prompt,
@@ -23,6 +24,7 @@ def register_routes(app):
 
     # Register authentication routes
     include(app, auth.router, tags=["auth"])
+    include(app, managed_keys.router, tags=["auth"])
 
     # Register configuration management routes
     include(app, config_routes.router, tags=["config"])
