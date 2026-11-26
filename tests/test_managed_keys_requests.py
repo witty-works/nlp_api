@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 from app import managed_keys
 from app.main import app
-from app.request_team import key_team
+from app.request_team import key_team, team_limit
 
 EMAIL = "jane@acme.example"
 
@@ -30,6 +30,7 @@ def client(monkeypatch):
                 db.delete(name)
         db.delete(context.redis.get_user_id(EMAIL))
         key_team.set(None)
+        team_limit.set(None)
 
 
 def sync_user(client, teams=None, organization_id="team-a"):

@@ -9,7 +9,7 @@ from typing import Optional
 from fastapi import HTTPException
 
 from app.api_keys import KeyConfig, key_config
-from app.request_team import key_team
+from app.request_team import key_team, team_limit
 from app.context import AppContext
 from app.settings import Settings
 from app.text_utils import parse_word_type
@@ -200,6 +200,9 @@ async def fetch_user_organization_configs(
     if key_team.get() is not None:
         configs["organization_id"] = key_team.get()
 
+    # The team this request's LLM calls count against, if it has a limit.
+    team_limit.set(None)
+
     if "organization_id" in configs and configs["organization_id"] is not None:
         organization_configs = (
             await context.redis.fetch_organization_configs_from_redis(
@@ -208,6 +211,10 @@ async def fetch_user_organization_configs(
         )
 
         configs["organization_name"] = organization_configs["name"]
+
+        limit = organization_configs.get("llm_requests_per_minute")
+        if limit:
+            team_limit.set((configs["organization_id"], limit))
 
         configs["organization_config_hash"] = organization_configs.get("config_hash")
 

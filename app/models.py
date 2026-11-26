@@ -952,9 +952,9 @@ class UserConfRequest(ConfRequest):
 
 
 class OrganizationConfRequest(ConfRequest):
-    # No fields of its own; kept as a distinct type so the organisation and
-    # user config endpoints stay separately typed.
-    pass
+    # The team's share of the LLM: requests per minute for all its members
+    # and keys together (Prompt._count_request). None: no per-team limit.
+    llm_requests_per_minute: Optional[int] = Field(None, ge=1)
 
 
 class ConfResponse(BaseModel):
