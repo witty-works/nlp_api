@@ -59,7 +59,9 @@ def test_create_refused_without_hmac_secret(client, monkeypatch):
 
     response = create(client)
 
-    assert response.status_code == 409
+    # The deployment's setup, not the person's request: not a 409 a client
+    # would show as "too many keys".
+    assert response.status_code == 503
     assert "API_KEY_HMAC_KEY" in response.text
 
 

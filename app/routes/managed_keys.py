@@ -56,7 +56,10 @@ class CountOut(BaseModel):
 def _mint_errors(action):
     try:
         return action()
-    except (KeyStorageUnavailable, TooManyKeys) as error:
+    except KeyStorageUnavailable as error:
+        # The deployment's setup, not the request: no client can fix it.
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(error))
+    except TooManyKeys as error:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error))
     except ValueError as error:
         raise HTTPException(
@@ -68,7 +71,7 @@ def _mint_errors(action):
     "/managed_keys",
     status_code=status.HTTP_201_CREATED,
     response_model=MintedOut,
-    responses={409: {"model": ErrorMessage}},
+    responses={409: {"model": ErrorMessage}, 503: {"model": ErrorMessage}},
 )
 async def create_managed_key(
     body: CreateIn,
@@ -110,7 +113,7 @@ async def list_managed_keys(
     "/managed_keys/{key_id}/replace",
     status_code=status.HTTP_201_CREATED,
     response_model=MintedOut,
-    responses={404: {"model": ErrorMessage}, 409: {"model": ErrorMessage}},
+    responses={404: {"model": ErrorMessage}, 503: {"model": ErrorMessage}},
 )
 async def replace_managed_key(
     key_id: str,

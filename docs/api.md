@@ -417,9 +417,9 @@ Keys the API mints for a client such as the dashboard, each for a person (an ema
 
 | Endpoint                              | Body or query                                                         | Answers                                                                                                   |
 | ------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `POST /managed_keys`                  | `{"email", "team_id"?, "name", "source"?, "expires_at"?}`             | `201` `{"key", "details"}`; `409` without `API_KEY_HMAC_KEY` or with 20 keys already; `422` for bad input |
+| `POST /managed_keys`                  | `{"email", "team_id"?, "name", "source"?, "expires_at"?}`             | `201` `{"key", "details"}`; `409` with 20 keys already; `503` without `API_KEY_HMAC_KEY`; `422` for bad input |
 | `GET /managed_keys`                   | `?email=` and/or `?team_id=`                                          | `200` the keys' details, never the keys                                                                   |
-| `POST /managed_keys/{id}/replace`     | `{"grace_seconds": 0 \| 86400 \| 604800}`                             | `201` a new key with the same email, team, name and expiry; the old one works for the grace period, never past its own expiry; `404` if it is gone or expired |
+| `POST /managed_keys/{id}/replace`     | `{"grace_seconds": 0 \| 86400 \| 604800}`                             | `201` a new key with the same email, team, name and expiry; the old one works for the grace period, never past its own expiry; `404` if it is gone, expired or already replaced; `503` without `API_KEY_HMAC_KEY` |
 | `DELETE /managed_keys/{id}`           |                                                                       | `204`, also when the key is already gone                                                                  |
 | `POST /managed_keys/revoke`           | `{"email"?, "team_id"?}`, at least one                                | `200` `{"count"}` of keys revoked                                                                         |
 
