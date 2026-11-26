@@ -334,6 +334,7 @@ curl -X 'POST' \
   -d '{
   "email": "user@example.com",
   "organization_id": "org-123",
+  "teams": ["org-123", "org-456"],
   "config": {
     "german_gender_ending": ":in",
     "preferred_variants": ["de-CH"]
@@ -347,6 +348,8 @@ curl -X 'POST' \
   }
 }'
 ```
+
+`organization_id` is the team whose settings apply to the person's requests. `teams` lists every team they belong to; a [managed key](#managed-api-keys) for a team works only while its team is listed.
 
 A term replacement's explanation is plain text. A finding from it carries the
 text unchanged in `explanation.text` and HTML-escaped in
@@ -399,6 +402,23 @@ curl -X 'POST' 'http://127.0.0.1:8000/api_key' \
   -u 'admin:password' -H 'Content-Type: application/json' \
   -d '{"api_key": "'"$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"'", "email": "user@example.com"}'
 ```
+
+### Managed API Keys
+
+Keys the API mints for a client such as the dashboard, each for a person (an email) and, optionally, a team. Behind the management password too. Only the answers of creating and replacing a key contain the key itself; everywhere else a key is named by its `id`.
+
+- **A key with a team** checks text with that team's settings. It only works while the person's synced user config (`POST /user/configs`) lists the team in `teams`; without that list it is refused.
+- **Minting needs `API_KEY_HMAC_KEY`,** because only digests are stored. Changing that secret invalidates every managed key.
+- **Several API servers must share one Redis** for managed keys to hold.
+- **A person may have at most 20 keys.**
+
+| Endpoint                              | Body or query                                                         | Answers                                                                                                   |
+| ------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `POST /managed_keys`                  | `{"email", "team_id"?, "name", "source"?, "expires_at"?}`             | `201` `{"key", "details"}`; `409` without `API_KEY_HMAC_KEY` or with 20 keys already; `422` for bad input |
+| `GET /managed_keys`                   | `?email=` and/or `?team_id=`                                          | `200` the keys' details, never the keys                                                                   |
+| `POST /managed_keys/{id}/replace`     | `{"grace_seconds": 0 \| 86400 \| 604800}`                             | `201` a new key with the same email, team, name and expiry; the old one works for the grace period, never past its own expiry; `404` if it is gone or expired |
+| `DELETE /managed_keys/{id}`           |                                                                       | `204`, also when the key is already gone                                                                  |
+| `POST /managed_keys/revoke`           | `{"email"?, "team_id"?}`, at least one                                | `200` `{"count"}` of keys revoked                                                                         |
 
 ## Health & Utility Endpoints
 

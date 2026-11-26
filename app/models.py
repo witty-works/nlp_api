@@ -943,6 +943,9 @@ class ConfRequest(BaseModel):
 class UserConfRequest(ConfRequest):
     email: str
     organization_id: Optional[str] = None
+    # Every team the person belongs to. A managed key for a team only works
+    # while its team is listed here (app/auth_service.py).
+    teams: Optional[list[str]] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
@@ -967,6 +970,7 @@ class ConfResponse(BaseModel):
 class UserConfResponse(ConfRequest):
     email: str
     organization_id: Optional[str] = None
+    teams: Optional[list[str]] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
     organization_false_positives: Optional[list[str]] = Field(default_factory=list)

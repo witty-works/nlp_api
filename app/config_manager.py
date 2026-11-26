@@ -9,6 +9,7 @@ from typing import Optional
 from fastapi import HTTPException
 
 from app.api_keys import KeyConfig, key_config
+from app.request_team import key_team
 from app.context import AppContext
 from app.settings import Settings
 from app.text_utils import parse_word_type
@@ -193,6 +194,11 @@ async def fetch_user_organization_configs(
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
+
+    # A managed key for a team checks with that team's settings, whatever the
+    # person's licence team is (app/auth_service.py resolved and checked it).
+    if key_team.get() is not None:
+        configs["organization_id"] = key_team.get()
 
     if "organization_id" in configs and configs["organization_id"] is not None:
         organization_configs = (
