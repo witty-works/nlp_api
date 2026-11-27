@@ -52,6 +52,84 @@ INKLUSIVUM_CASES = {
     "Acc": "akkusativ",
 }
 
+# Pronouns that say nothing about the person's gender.
+FRENCH_UNNAMED_PERSONS = {"je", "j’", "j'", "tu", "vous", "me", "m’", "m'", "te", "t’", "t'"}
+# `être` in a question, which the tokenizer keeps whole with its subject
+# (`êtes-vous`, `es-tu`, `suis-je`).
+FRENCH_ETRE_FORMS = {
+    "suis", "es", "est", "sommes", "êtes", "sont", "étais", "était", "étiez",
+    "serai", "seras", "sera", "serez", "serais", "serait", "seriez",
+}
+
+
+def is_etre_question(token: Token) -> bool:
+    verb, _, person = token.text.lower().rpartition("-")
+    return verb in FRENCH_ETRE_FORMS and person in FRENCH_UNNAMED_PERSONS
+
+
+def is_about_unnamed_person(token_index: int, tokens: Doc) -> bool:
+    """Whether a French adjective or participle agrees with `je`, `tu` or
+    `vous` through `être` and is written in the masculine singular:
+    `vous êtes connecté`, `merci de vous être inscrit`, `êtes-vous sûr`.
+
+    Only `être` makes it agree with the person; after `avoir` it agrees with
+    the object (`vous l’avez ajouté`). `il est connecté` says who it is, and
+    is left alone."""
+    token = tokens[token_index]
+    if not (
+        token.pos_ == "ADJ" or (token.pos_ == "VERB" and "Part" in token.morph.get("VerbForm"))
+    ):
+        return False
+    if "Plur" in token.morph.get("Number") or "Fem" in token.morph.get("Gender"):
+        return False
+    text = token.text.lower()
+    if text.endswith("e") or "·" in text:
+        return False
+
+    # `être` just before it, past negation and adverbs, and past the subject
+    # of a question (`êtes-vous`).
+    index = token_index - 1
+    inverted = None
+    while index >= token.sent.start and (
+        tokens[index].pos_ == "ADV"
+        or (tokens[index].pos_ == "PRON" and tokens[index].text.startswith("-"))
+    ):
+        if tokens[index].pos_ == "PRON":
+            inverted = tokens[index]
+        index -= 1
+    if index < token.sent.start:
+        return False
+    if is_etre_question(tokens[index]):
+        return True
+    if tokens[index].lemma_ != "être":
+        return False
+    if inverted is not None:
+        # The subject of a question, after `être`: `êtes-vous sûr`.
+        return is_unnamed_person(inverted)
+
+    # The person is the word's subject (`vous êtes connecté`), or with no
+    # subject a pronoun attached to it (`merci de vous être inscrit`). A
+    # noun subject is someone else, whatever pronouns the sentence has
+    # (`le mot de passe que vous avez choisi est court`).
+    subjects = [
+        child
+        for child in token.children
+        if child.dep_.startswith("nsubj") or child.dep_ == "expl:subj"
+    ]
+    if subjects:
+        return is_unnamed_person(subjects[0])
+
+    return any(
+        is_unnamed_person(child)
+        for child in token.children
+        if child.dep_ in ("iobj", "obj", "expl:comp", "expl:pv")
+    )
+
+
+def is_unnamed_person(token: Token) -> bool:
+    return token.pos_ == "PRON" and token.text.lower().lstrip("-") in FRENCH_UNNAMED_PERSONS
+
+
 
 UMLAUT = str.maketrans({"a": "ä", "o": "ö", "u": "ü", "A": "Ä", "O": "Ö", "U": "Ü"})
 
@@ -519,6 +597,26 @@ class RuleCheck:
                 for rule in rules
                 if not self.db.is_gendered_denom_rule(language.lang, rule.subcategories)
             ]
+
+        # After the rules from the database, so a longer one that matches
+        # (`sûr de soi`) comes first.
+        if language.lang == LangType.FR and is_about_unnamed_person(token_index, tokens):
+            male_form = token.text.lower()
+            female_form = self.adjectives.get_feminine_form_french(male_form)
+            if male_form != female_form:
+                rule = Rule(
+                    "fr_adjective_rule",
+                    LangType.FR,
+                    male_form,
+                    [male_form],
+                    [{"word_type": "", "lower_case": True, "lemmatize": False}],
+                    ["hidden_image"],
+                    utils.build_french_adjective_alternatives(male_form, female_form),
+                )
+                rule.adapt_alternatives = True
+                rules.append(rule)
+
+            return rules
 
         if (
             language.lang == LangType.FR

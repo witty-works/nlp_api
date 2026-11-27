@@ -9,6 +9,38 @@
         {
             "alternatives": [
                 {
+                    "female_form": "absente",
+                    "gender_role": "inclusive_gender",
+                    "male_form": "absent",
+                    "text": "absent·e"
+                },
+                {
+                    "female_form": "absente",
+                    "gender_role": "binary_gender",
+                    "male_form": "absent",
+                    "text": "absent et absente"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades. Nous cherchons des stagiaires curieux e",
+            "end": 47,
+            "explanation": {
+                "icon": "😟",
+                "long_text": "Pour montrer que vous avez à cœur de représenter tous les genres, utilisez des expressions non genrées.",
+                "text": "Évoque une représentation genrée",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Expression genrée",
+            "proficiency_level": "unconscious_bias",
+            "start": 41,
+            "subcategory": "hidden_image",
+            "text": "absent",
+            "text_id": "fr_adjective_rule"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Les personnes participante"
                 },
                 {
