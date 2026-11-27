@@ -13,6 +13,7 @@
 - [Running against a dashboard on Lando](#running-against-a-dashboard-on-lando)
 - [Running the commands in bin](#running-the-commands-in-bin)
 - [API keys](#api-keys)
+- [Checking translation files](#checking-translation-files)
 - [Production Deployment](#production-deployment)
 
 ---
@@ -343,6 +344,45 @@ The `/api_key` HTTP endpoints do the same thing, behind the management password
 (`MANAGEMENT_AUTH_ENABLED`, on unless turned off): anyone with that password can
 mint a key for any email, so keep it out of reach or the endpoints off the
 public routing. They take the key in the request body, never in the URL.
+
+## Checking translation files
+
+`bin/check_translations.py` sends every string of a project's translation
+files to `/v2.4/check` and reports what the API flags, by file and key. It reads
+Laravel language files (`.php`, which needs `php`), JSON (nested, i18next, or a
+browser extension's `messages.json`) and gettext `.po` catalogues, and takes
+each file's language from its path (`lang/de/`, `fr.json`, `_locales/en/`,
+`de_CH/LC_MESSAGES/`).
+
+[config/witty.json](../config/witty.json) is the config it checks with unless
+`--config` names another: Witty's own style for its interface texts. Neutral
+words where possible, and where a role has to be named the gender star in German
+and the point médian with the short feminine suffix in French
+(`gendered_roles_format: inclusive_gender`, `german_gender_ending: *in`,
+`french_gender_separator: ·`, `french_gender_suffix: short`), with every
+category on, inspirations shown, no LLM and no stored context. Every Witty
+repository checks its texts against this one file, so they stay consistent; a
+change to Witty's style is a change to this file. A test checks that each of its
+fields is one `/v2.4/check` accepts.
+
+It needs only Python's standard library, so it runs from a checkout of this
+repository without `uv sync`:
+
+```bash
+# Against a local API (started with REQUIRE_AUTH=false, no key needed)
+python3 bin/check_translations.py ../dashboard/resources/lang --api http://127.0.0.1:8000
+
+# Against a deployment, with an API key; leave out keys that show formats on purpose
+WITTY_API_KEY=... python3 bin/check_translations.py ../browser-extension/source/_locales \
+    --api https://api.example.org --exclude-key 'gender_separator' --cache review.jsonl
+```
+
+The exit status is 0 without findings, 1 with findings and 2 when a file or a
+request failed, so CI can run it. `--cache` keeps the answers of a run in a file,
+so a rerun after an interruption skips the strings already checked with the same
+config. An API key is sent over https or to an API on this machine only, and
+redirects are not followed. Laravel files are PHP and are run to be read, so
+check only files you trust.
 
 ## Production Deployment
 
