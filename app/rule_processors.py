@@ -756,7 +756,11 @@ async def witty_rules(
                     )
                 )
 
-        new_token_index += 1
+        # No check moved past this token (check_continue). Go on from the
+        # next one rather than from what the last check returned: one that
+        # returned an earlier token would have the loop read it again, and
+        # again, for good.
+        new_token_index = token_index + 1
 
     if is_sub_category_enabled(config.disabled_categories, "plain_language"):
         sentence_word_limit = 30
