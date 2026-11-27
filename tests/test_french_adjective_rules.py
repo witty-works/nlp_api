@@ -62,3 +62,20 @@ def test_a_role_already_written_inclusively_is_confirmed_not_flagged(set_redis):
 
     assert results, "the role is still confirmed"
     assert all(r.get("gravity") is None and not r.get("alternatives") for r in results), results
+
+
+def test_a_word_without_a_plural_ending_is_no_plural_adjective(set_redis):  # noqa: F811
+    # LanguageTool, where it runs, may still call the word a misspelling.
+    flagged = [
+        r["text"]
+        for r in check("En tant que superadmin, vous avez besoin de la connexion.")
+        if r["category"] == "gender-orientation"
+    ]
+
+    assert "superadmin" not in flagged
+
+
+def test_a_plural_adjective_naming_people_is_still_flagged(set_redis):  # noqa: F811
+    flagged = [r["text"] for r in check("Nous sommes très stricts sur ce sujet.")]
+
+    assert "stricts" in flagged

@@ -465,7 +465,11 @@ class RuleCheck:
                 language.lang, token, WordType.ADJECTIVE, True, True
             )
         ):
-            if self.model.is_token_plural(LangType.FR, token):
+            # A French plural adjective is written with -s or -x; the tagger
+            # also calls a word plural that is not (`en tant que superadmin`).
+            if self.model.is_token_plural(LangType.FR, token) and token.text.lower().endswith(
+                ("s", "x")
+            ):
                 male_form = pluralize(token.lemma_)
                 female_form = pluralize(
                     self.adjectives.get_feminine_form_french(token.lemma_)
