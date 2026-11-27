@@ -156,6 +156,9 @@ class Model:
             lang == LangType.FR
             and word_type == WordType.ADJECTIVE
             and token.lemma_.endswith("er")
+            # A participle used as an adjective (`occupé`, lemma `occuper`),
+            # not an adjective that ends in -er itself (`dernier`, `premier`).
+            and token.text.lower().endswith(("é", "ée", "és", "ées"))
         ):
             token.lemma_ = token.lemma_[0:-2] + "é"
 

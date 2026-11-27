@@ -40,6 +40,30 @@ from app.gender_format import (
 from app.text_utils import german_lemmatization
 
 
+
+# The ending of a gendered form, which is no part of the word to read:
+# `administrateur·rice·s`, `Administrator:innen`, `Beauftragte_r`.
+GENDER_ENDING = re.compile(r"(?:·[^\W\d_]{1,6}){1,2}$|[:*_/]-?(?:innen|in|r|n|e)$")
+
+
+def is_too_long_word(text: str) -> bool:
+    """Whether a word is too long to read at once: more than 18 characters,
+    and in one piece or with a part of more than 12."""
+    text = GENDER_ENDING.sub("", text)
+    if len(text) <= 18:
+        return False
+
+    subwords = (
+        text.replace("/", "-")
+        .replace("@", "-")
+        .replace(":", "-")
+        .replace(".", "-")
+        .replace("_", "-")
+        .split("-")
+    )
+    return len(subwords) == 1 or any(len(subword) > 12 for subword in subwords)
+
+
 def check_continue(
     list_full: list,
     token_index: int,
@@ -723,38 +747,23 @@ async def witty_rules(
             ):
                 continue
 
-        if len(token.text) > 18 and is_sub_category_enabled(
+        if is_sub_category_enabled(
             config.disabled_categories, "plain_language"
-        ):
-            subwords = (
-                token.text.replace("/", "-")
-                .replace("@", "-")
-                .replace(":", "-")
-                .replace(".", "-")
-                .replace("_", "-")
-                .split("-")
-            )
-            highlight = len(subwords) == 1
-            for subword in subwords:
-                if len(subword) > 12:
-                    highlight = True
-                    break
-
-            if highlight:
-                list_full.append(
-                    ResultOut.factory(
-                        config,
-                        client,
-                        language,
-                        token.text,
-                        token.text,
-                        text,
-                        offsets,
-                        "plain_language",
-                        token.idx,
-                        explanation=language.translate("TOO_LONG_WORD"),
-                    )
+        ) and is_too_long_word(token.text):
+            list_full.append(
+                ResultOut.factory(
+                    config,
+                    client,
+                    language,
+                    token.text,
+                    token.text,
+                    text,
+                    offsets,
+                    "plain_language",
+                    token.idx,
+                    explanation=language.translate("TOO_LONG_WORD"),
                 )
+            )
 
         # No check moved past this token (check_continue). Go on from the
         # next one rather than from what the last check returned: one that
