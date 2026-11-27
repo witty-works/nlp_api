@@ -42,3 +42,12 @@ def test_no_adjective_rule_for_an_adverb_or_an_adjective_before_its_noun(
     flagged = [r["text"].lower() for r in check(text)]
 
     assert words not in flagged
+
+
+def test_an_adjective_naming_a_person_keeps_its_stem(set_redis):  # noqa: F811
+    results = [r for r in check("Le dernier est arrivé hier.") if r["text"] == "Le dernier"]
+
+    assert results, "the adjective naming a person is still flagged"
+    alternatives = [a["text"] for a in results[0]["alternatives"]]
+    assert any("dernier" in a and "ère" in a for a in alternatives), alternatives
+    assert not any("dernié" in a for a in alternatives), alternatives
