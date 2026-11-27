@@ -496,14 +496,20 @@ class RuleCheck:
 
                     rules.append(rule)
             elif (
-                self.alternatives.is_previous_token_article(
+                # check_word_type takes an adverb for the adjective it was
+                # asked about, which the rules need; here it read `il ne`,
+                # `au moins` and `les plus` as adjectives naming a person.
+                token.pos_ != "ADV"
+                and self.alternatives.is_previous_token_article(
                     token_index, tokens, language.lang
                 )
+                # An adjective names a person only without a noun after it:
+                # `le dernier est arrivé`, not `le dernier compte`.
                 and (
                     token_index + 1 >= len(tokens)
                     or not await self.model.check_word_type(
                         language.lang,
-                        tokens[token_index],
+                        tokens[token_index + 1],
                         WordType.NOUN,
                         True,
                         True,
