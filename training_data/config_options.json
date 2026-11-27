@@ -24,18 +24,18 @@
     "german_gender_ending": {
         "translations": {
             "en": {
-                "*in": "Genderstar, f.e Expert*in",
-                ":in": "Colon, f.e Expert:in",
-                "_in": "Gendergap, f.e Expert_in",
-                "/in": "Slash, f.e Expert/in",
-                "/-in": "Slash + Dash, f.e Expert/-in",
-                "In": "Binnen-I, f.e ExpertIn",
-                "(-)": "Parenthesis + Dash, f.e Expert(-in)",
-                "()": "Parenthesis, f.e Expert(in)",
-                "de-e": "Inklusivum, f.e de Expertere"
+                "*in": "Genderstar, e.g. Expert*in",
+                ":in": "Colon, e.g. Expert:in",
+                "_in": "Gendergap, e.g. Expert_in",
+                "/in": "Slash, e.g. Expert/in",
+                "/-in": "Slash + Dash, e.g. Expert/-in",
+                "In": "Binnen-I, e.g. ExpertIn",
+                "(-)": "Parenthesis + Dash, e.g. Expert(-in)",
+                "()": "Parenthesis, e.g. Expert(in)",
+                "de-e": "Inklusivum, e.g. de Expertere"
             },
             "de": {
-                "*in": "Genderstar, f.e Expert*in",
+                "*in": "Genderstern, z. B. Expert*in",
                 ":in": "Doppelpunkt, z. B. Expert:in",
                 "_in": "Gendergap, z.B. Experte_in",
                 "/in": "Schrägstrich, z.B. Expert/in",
@@ -64,12 +64,12 @@
     "french_gender_separator": {
         "translations": {
             "en": {
-                "·": "Point médian, f.e. expert·es",
-                "·s": "Point médian, incl. plural, f.e. expert·e·s",
-                ".": "Point, f.e. expert.es",
-                ".s": "Dot incl. plural, f.e. expert.e.s",
-                "/": "Slash, f.e. expert/es",
-                "/s": "Slash, incl. plural, f.e. expert/e/s"
+                "·": "Point médian, e.g. expert·es",
+                "·s": "Point médian, incl. plural, e.g. expert·e·s",
+                ".": "Point, e.g. expert.es",
+                ".s": "Dot incl. plural, e.g. expert.e.s",
+                "/": "Slash, e.g. expert/es",
+                "/s": "Slash, incl. plural, e.g. expert/e/s"
             },
             "de": {
                 "·": "Mittelpunkt (Point médian), z.B. expert·es",
@@ -92,8 +92,8 @@
     "french_gender_suffix": {
         "translations": {
             "en": {
-                "short": "Short ending, f.e. utilisateur·rice, vendeur·se",
-                "full": "Full ending, f.e. utilisateur·trice, vendeur·euse"
+                "short": "Short ending, e.g. utilisateur·rice, vendeur·se",
+                "full": "Full ending, e.g. utilisateur·trice, vendeur·euse"
             },
             "de": {
                 "short": "Kurze Endung, z. B. utilisateur·rice, vendeur·se",
