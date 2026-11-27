@@ -88,5 +88,21 @@
                 "/s": "Barre oblique, incl. pluriel, p. ex. expert/e/s"
             }
         }
+    },
+    "french_gender_suffix": {
+        "translations": {
+            "en": {
+                "short": "Short ending, f.e. utilisateur·rice, vendeur·se",
+                "full": "Full ending, f.e. utilisateur·trice, vendeur·euse"
+            },
+            "de": {
+                "short": "Kurze Endung, z. B. utilisateur·rice, vendeur·se",
+                "full": "Vollständige Endung, z. B. utilisateur·trice, vendeur·euse"
+            },
+            "fr": {
+                "short": "Terminaison courte, p. ex. utilisateur·rice, vendeur·se",
+                "full": "Terminaison complète, p. ex. utilisateur·trice, vendeur·euse"
+            }
+        }
     }
 }

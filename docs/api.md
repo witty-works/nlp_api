@@ -176,6 +176,10 @@ curl 'http://127.0.0.1:8000/v2.0/config-options'
       "values": ["·", "·s", ".", ".s", "/", "/s"],
       "default": "·"
     },
+    "french_gender_suffix": {
+      "values": ["short", "full"],
+      "default": "short"
+    },
     "gendered_roles_format": {
       "values": ["none", "both", "inclusive_gender", "binary_gender"],
       "default": "both"

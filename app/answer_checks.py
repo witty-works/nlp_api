@@ -17,7 +17,8 @@ from dataclasses import dataclass
 from app.context import AppContext
 from app.language_processor import apply_language_rules, fetch_text
 from app.llm_alternatives import RephraseOutcome, Suggestion
-from app.models import CheckRequestIn, MetricsType, RephraseRequestIn
+from app.gender_format import french_suffix_form
+from app.models import CheckRequestIn, LangType, MetricsType, RephraseRequestIn
 from app.version_validators import Client
 
 # How many words outside the alternative a model may change in a draft, for
@@ -296,6 +297,14 @@ async def checked_results(
         request_in, request_in.sentence, configs, context
     )
     for suggestion in outcome.suggestions:
+        if request_in.lang == LangType.FR:
+            # The model writes French roles with either feminine suffix; the
+            # user gets the configured one, which the checks expect as well.
+            suggestion.text = french_suffix_form(
+                suggestion.text,
+                request_in.config.french_gender_suffix,
+                request_in.config.french_gender_separator.value[0],
+            )
         failed = await failed_checks(
             request_in, suggestion, configs, context, original_findings
         )

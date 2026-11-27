@@ -119,6 +119,7 @@ async def french_gender_endings(
         # adds no lexeme for every stem asked about. A model without vectors
         # converts nothing (startup warns about it).
         tokens.vocab.has_vector,
+        config.french_gender_suffix,
     )
     if converted is None:
         return token_index

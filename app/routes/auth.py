@@ -130,6 +130,7 @@ async def get_categories_2_0(
 CONFIG_OPTION_FIELDS = (
     "german_gender_ending",
     "french_gender_separator",
+    "french_gender_suffix",
     "gendered_roles_format",
 )
 
