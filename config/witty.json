@@ -1,0 +1,12 @@
+{
+  "german_gender_ending": "*in",
+  "french_gender_separator": "·",
+  "french_gender_suffix": "short",
+  "gendered_roles_format": "inclusive_gender",
+  "preferred_languages": ["en", "de", "fr"],
+  "preferred_variants": ["en-US", "de-DE", "fr-FR"],
+  "disabled_categories": [],
+  "show_inspiration_alternatives": true,
+  "store_context": false,
+  "llm_alternatives": false
+}

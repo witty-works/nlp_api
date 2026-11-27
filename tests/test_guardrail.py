@@ -331,6 +331,13 @@ def test_open_deployment_adds_guidance_without_a_key(
     assert response.json()["guidance"].startswith(BASE_GUIDANCE)
 
 
+@pytest.mark.parametrize("suffix, example", [("short", "utilisateur·rice"), ("full", "utilisateur·trice")])
+def test_guidance_names_the_french_suffix(suffix, example):
+    config = Config(french_gender_suffix=suffix)
+
+    assert f'"{example}"' in guidance(config)
+
+
 def test_guidance_french_example():
     config = Config(french_gender_separator=FrenchGenderSeparatorType.POINT)
 

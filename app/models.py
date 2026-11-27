@@ -3,6 +3,7 @@ from app.utf16 import utf16_units
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
+import copy
 import html
 from collections import namedtuple
 import json
@@ -262,6 +263,15 @@ class FrenchGenderSeparatorType(str, Enum):
     POINT_S = ".s"
     SLASH = "/"
     SLASH_S = "/s"
+
+
+class FrenchGenderSuffixType(str, Enum):
+    """The feminine suffix of a French inclusive form, where there are two:
+    the part of the feminine that differs (`utilisateur·rice`, `vendeur·se`)
+    or the whole feminine suffix (`utilisateur·trice`, `vendeur·euse`)."""
+
+    SHORT = "short"
+    FULL = "full"
 
 
 class GenderedRolesFormatBasicType(str, Enum):
@@ -702,6 +712,7 @@ class Config(BaseModel):
     french_gender_separator: FrenchGenderSeparatorType = (
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
+    french_gender_suffix: FrenchGenderSuffixType = FrenchGenderSuffixType.SHORT
 
     disabled_categories: list = Field(
         default_factory=list, max_length=CONFIG_LIST_MAX_LENGTH
@@ -858,6 +869,11 @@ class FrenchGenderSeparatorConfigType(BaseModel):
     status: StatusType
 
 
+class FrenchGenderSuffixConfigType(BaseModel):
+    value: FrenchGenderSuffixType
+    status: StatusType
+
+
 class GenderedRolesFormatConfigType(BaseModel):
     value: GenderedRolesFormatType
     status: StatusType
@@ -870,6 +886,7 @@ class RuleConfig(BaseModel):
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
+    french_gender_suffix: Optional[FrenchGenderSuffixConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: Optional[dict[str, BooleanConfigType]] = Field(default_factory=dict)
     force_categories: Optional[list[str]] = Field(default_factory=list)
@@ -1285,6 +1302,26 @@ class ResultOut(BaseModel):
             )
             if not isinstance(image_url, dict):
                 image_url = None
+
+        if language.lang == LangType.FR and alternatives:
+            # Imported here: gender_format builds on these models.
+            from app.gender_format import french_suffix_form
+
+            # Before cleaning, which drops an alternative that is the text
+            # itself or another one; on copies, as a rule's alternatives are
+            # shared between requests.
+            separator = config.french_gender_separator.value[0]
+            converted = []
+            for alternative in alternatives:
+                if isinstance(alternative.lemma, str):
+                    lemma = french_suffix_form(
+                        alternative.lemma, config.french_gender_suffix, separator
+                    )
+                    if lemma != alternative.lemma:
+                        alternative = copy.copy(alternative)
+                        alternative.lemma = lemma
+                converted.append(alternative)
+            alternatives = converted
 
         (
             text,

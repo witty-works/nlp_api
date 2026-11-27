@@ -3916,6 +3916,7 @@ def test_config_options():
         assert set(options) == {
             "german_gender_ending",
             "french_gender_separator",
+            "french_gender_suffix",
             "gendered_roles_format",
         }
 
