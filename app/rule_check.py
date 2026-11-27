@@ -53,6 +53,57 @@ INKLUSIVUM_CASES = {
 }
 
 
+UMLAUT = str.maketrans({"a": "ä", "o": "ö", "u": "ü", "A": "Ä", "O": "Ö", "U": "Ü"})
+
+
+def feminine_forms(word: str) -> list[str]:
+    """The forms a feminine of `word` takes: Lehrer -> Lehrerin, Kunde ->
+    Kundin, Arzt -> Ärztin."""
+    forms = [word + "in"] + ([word[:-1] + "in"] if word.endswith("e") else [])
+    for i in range(len(word) - 1, -1, -1):
+        if word[i] in "aouAOU":
+            forms.append(word[:i] + word[i].translate(UMLAUT) + word[i + 1 :] + "in")
+            break
+    return forms
+
+
+def is_compound_with(word: str, part: str, nouns) -> bool:
+    """Whether `word` can be a compound ending in `part`, read off the
+    Wiktionary noun list (german_nouns): `Stammkunde` with `Kunde`,
+    `Bergbauingenieur` with `Ingenieur`, but not `Sekunde` with `Kunde` or
+    `Krankenhäuser` with `User`.
+
+    Only a word the list knows is judged. It keeps the rule when it names a
+    person (it has a feminine form, or does what a known word names:
+    Lohnarbeit, Lohnarbeiter) or when the splitter's last part is the
+    rule's word. Anything the list does not know is left to the rule, an
+    invented compound (`Katzenhure`) above all."""
+    index = nouns.index
+    if (
+        word.lower() == part.lower()
+        or not word.lower().endswith(part.lower())
+        or word.lower() not in index
+    ):
+        return True
+    if word.endswith(("in", "innen")) or any(
+        form.lower() in index for form in feminine_forms(word)
+    ):
+        return True
+
+    try:
+        split = nouns.parse_compound(word)
+    except (KeyError, IndexError):
+        return True
+    if not split:
+        return True
+
+    last, rule = split[-1].lower(), part.lower()
+    if rule in last or (len(last) >= 3 and rule.startswith(last)):
+        return True
+
+    return len(split) == 1 and word.lower() in (last + "er", last + "r")
+
+
 class RuleCheck:
     settings: Settings
     logger: Logger
@@ -431,6 +482,14 @@ class RuleCheck:
 
         return False
 
+    def compound_suffix_rules(self, token: Token, rules: list[Rule]) -> list[Rule]:
+        """The suffix rules whose word is a part of the token's compound.
+
+        The suffix pass finds `Kunde` in `Stammkunden` and in `Sekunden`
+        alike; `is_compound_with` tells them apart."""
+        word = token.lemma_
+        return [rule for rule in rules if is_compound_with(word, rule.lemma, self.nouns.nouns)]
+
     async def fetch_rules(
         self,
         language: Language,
@@ -448,6 +507,9 @@ class RuleCheck:
             config.addons,
             suffix_check,
         )
+
+        if rules and suffix_check and language.lang == LangType.DE:
+            rules = self.compound_suffix_rules(token, rules)
 
         if rules and await self.is_written_in_inklusivum(language.lang, config, token):
             # Already gender neutral, so the gendered denomination rules would
