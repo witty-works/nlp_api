@@ -51,3 +51,14 @@ def test_an_adjective_naming_a_person_keeps_its_stem(set_redis):  # noqa: F811
     alternatives = [a["text"] for a in results[0]["alternatives"]]
     assert any("dernier" in a and "ère" in a for a in alternatives), alternatives
     assert not any("dernié" in a for a in alternatives), alternatives
+
+
+def test_a_role_already_written_inclusively_is_confirmed_not_flagged(set_redis):  # noqa: F811
+    results = [
+        r
+        for r in check("Demandez à un·e propriétaire d’équipe de vous inviter.")
+        if "propriétaire" in r["text"]
+    ]
+
+    assert results, "the role is still confirmed"
+    assert all(r.get("gravity") is None and not r.get("alternatives") for r in results), results

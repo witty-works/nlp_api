@@ -1290,6 +1290,7 @@ class ResultOut(BaseModel):
             text,
             start,
             alternatives,
+            written_as_alternative,
         ) = ResultOut.clean_alternatives(
             language,
             text,
@@ -1305,6 +1306,10 @@ class ResultOut(BaseModel):
             explanation = language.convert_sharp_ss(explanation)
 
         gravity = map_gravity(subcategory) if gravity is None else gravity
+        if written_as_alternative and not alternatives:
+            # The text is already what the rule suggests (`un·e
+            # propriétaire`): a confirmation, not an issue to fix.
+            gravity = None
 
         if language.locale == "en-GB":
             label = Language.convert_to(label, language.locale)
@@ -1366,8 +1371,9 @@ class ResultOut(BaseModel):
         alternatives_max_count: int,
     ):
         if alternatives is None:
-            return text, start, []
+            return text, start, [], False
 
+        written_as_alternative = False
         cleaned_alternatives = {}
 
         for alternative in alternatives:
@@ -1395,6 +1401,7 @@ class ResultOut(BaseModel):
                     alternative.lemma = language.convert_sharp_ss(alternative.lemma)
 
                 if alternative.lemma == text:
+                    written_as_alternative = True
                     continue
 
                 if alternative.is_inspiration:
@@ -1441,7 +1448,7 @@ class ResultOut(BaseModel):
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
 
-        return text, start, cleaned_alternatives
+        return text, start, cleaned_alternatives, written_as_alternative
 
     @staticmethod
     def isUpper(
