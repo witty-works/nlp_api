@@ -86,6 +86,20 @@ def test_team_refusal_does_not_consume_global_budget(prompt):
     assert run_as("t2", 5, llm.handle("hi")) == "ok"
 
 
+def test_global_refusal_does_not_consume_team_budget(prompt):
+    """Calls the deployment's limit refuses never reach the provider, so they
+    leave the team's budget as it was for when the deployment frees up."""
+    llm = prompt(llm_max_requests_per_minute=1)
+
+    assert run_as("t1", 2, llm.handle("hi")) == "ok"
+    for _ in range(3):
+        with pytest.raises(LlmUnavailable) as refused:
+            run_as("t1", 2, llm.handle("hi"))
+        assert "LLM_MAX_REQUESTS_PER_MINUTE" in str(refused.value)
+
+    assert int(llm.redis_db.get("llm_requests:team:t1:16667")) == 1
+
+
 EMAIL = "jane@acme.example"
 
 
