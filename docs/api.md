@@ -353,7 +353,7 @@ curl -X 'POST' \
 }'
 ```
 
-`organization_id` is the team whose settings apply to the person's requests. `teams` lists every team they belong to; a [managed key](#managed-api-keys) for a team works only while its team is listed.
+`organization_id` is the team whose settings apply to the person's requests. `teams` lists every team they belong to; a [managed key](#managed-api-keys) for a team works only while its team is listed and the team's own config is synced.
 
 A term replacement's explanation is plain text. A finding from it carries the
 text unchanged in `explanation.text` and HTML-escaped in
@@ -414,7 +414,7 @@ curl -X 'POST' 'http://127.0.0.1:8000/api_key' \
 
 Keys the API mints for a client such as the dashboard, each for a person (an email) and, optionally, a team. Behind the management password too. Only the answers of creating and replacing a key contain the key itself; everywhere else a key is named by its `id`.
 
-- **A key with a team** checks text with that team's settings and counts against the team's `llm_requests_per_minute`. It only works while the person's synced user config (`POST /user/configs`) lists the team in `teams`; without that list it is refused.
+- **A key with a team** checks text with that team's settings and counts against the team's `llm_requests_per_minute`. It only works while the person's synced user config (`POST /user/configs`) lists the team in `teams` and the team's config (`POST /organization/configs`) is stored; without either it is refused.
 - **Minting needs `API_KEY_HMAC_KEY`,** because only digests are stored. Changing that secret invalidates every managed key.
 - **Several API servers must share one Redis** for managed keys and the per-team limit to hold.
 - **A person may have at most 20 keys.** A replaced key counts until its grace period ends; replacing is never refused for the limit.
