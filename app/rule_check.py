@@ -614,6 +614,20 @@ class RuleCheck:
                     utils.build_french_adjective_alternatives(male_form, female_form),
                 )
                 rule.adapt_alternatives = True
+                # Already written in both genders, with either conjunction:
+                # `connecté ou connectée`, `connecté et connectée`.
+                # The rule's own list, not `dynamic`: check_rules resets that
+                # before it checks the rule.
+                rule.false_positives = [
+                    first + conjunction + second
+                    for conjunction in self.static_rules[LangType.FR][
+                        "noun_conjunction"
+                    ].values()
+                    for first, second in (
+                        (male_form, female_form),
+                        (female_form, male_form),
+                    )
+                ]
                 rules.append(rule)
 
             return rules
