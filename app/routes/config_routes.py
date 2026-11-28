@@ -5,6 +5,7 @@ Handles organization and user configuration CRUD operations.
 
 from fastapi import APIRouter, Depends, status
 
+from app import managed_keys
 from app.context import AppContext
 from app.dependencies import fetch_management_username, get_app_context
 from app.models import (
@@ -98,6 +99,9 @@ async def delete_user_configs(
     username: str = Depends(fetch_management_username),
 ):
     context.redis.db.delete(context.redis.get_user_id(email))
+    # A key without a team would go on resolving to the email; one for a team
+    # is refused without the config anyway, and goes too.
+    managed_keys.revoke_matching(context.redis, email, None)
 
 
 @router.get(

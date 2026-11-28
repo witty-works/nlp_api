@@ -95,6 +95,20 @@ def test_oauth_style_requests_keep_the_licence_team(client):
     assert auth(client, plain_key).json()["organization_id"] == "team-a"
 
 
+def test_deleting_the_user_config_revokes_their_keys(client):
+    """A key without a team would otherwise go on resolving to the email
+    after the person is gone; the address's case does not matter."""
+    sync_user(client, teams=["team-a"])
+    teamless, team_key = mint(None), mint("team-a")
+    assert auth(client, teamless).status_code == 200
+
+    response = client.delete("/user/configs", params={"email": EMAIL.upper()})
+
+    assert response.status_code == 204
+    assert managed_keys.lookup(app.state.context.redis, teamless) is None
+    assert managed_keys.lookup(app.state.context.redis, team_key) is None
+
+
 def test_revoked_key_no_longer_works(client):
     sync_user(client, teams=["team-a"])
     key, details = managed_keys.mint(app.state.context.redis, EMAIL, "team-a", "E", "dashboard", None)

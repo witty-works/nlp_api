@@ -326,7 +326,7 @@ These endpoints manage user and organization configurations. All require HTTP Ba
 | ------------------------------------ | ------ | --------------------------------------------------------------------------- |
 | `POST /user/configs`                 | POST   | Create or update user configuration                                         |
 | `GET /user/configs?email={email}`    | GET    | Retrieve user configuration by email                                        |
-| `DELETE /user/configs?email={email}` | DELETE | Delete user configuration                                                   |
+| `DELETE /user/configs?email={email}` | DELETE | Delete user configuration, and revoke the person's managed keys             |
 
 Example: Store user configuration
 
