@@ -88,6 +88,7 @@ class Prompt:
         # The team's own budget first, so a team over it does not use up the
         # deployment's: one budget per team, whichever member or key asks.
         team = team_limit.get()
+        team_key = None
         if team is not None:
             team_id, team_budget = team
             team_key = f"llm_requests:team:{team_id}:{minute}"
@@ -109,6 +110,9 @@ class Prompt:
         pipe.expire(key, 120)
         count = pipe.execute()[0]
         if count > limit:
+            # Refused before the provider: the team keeps what it counted.
+            if team_key is not None:
+                self.redis_db.decr(team_key)
             raise LlmUnavailable(
                 f"{limit} LLM requests this minute (LLM_MAX_REQUESTS_PER_MINUTE)",
                 retry_after=retry_after,
