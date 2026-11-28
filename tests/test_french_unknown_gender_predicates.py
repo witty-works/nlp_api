@@ -75,5 +75,7 @@ def test_a_word_that_agrees_with_someone_else_or_already_does_is_left(text, word
 def test_a_word_already_written_in_both_genders_is_left(text, word, set_redis):  # noqa: F811
     """No finding on the word alone: accepting its suggestion would write it a
     third time (`connecté ou connectée ou connectée`). The configured format
-    may still suggest the pair's inclusive form (`inscrit·e`)."""
-    assert word not in [r["text"].lower() for r in results(text)], results(text)
+    may still suggest the pair's inclusive form (`inscrit·e`). Only the gender
+    findings: LanguageTool, where it runs, has its own view on the agreement."""
+    gender = [r for r in results(text) if r["category"] == "gender-orientation"]
+    assert word not in [r["text"].lower() for r in gender], gender
