@@ -360,7 +360,11 @@ words where possible, and where a role has to be named the gender star in German
 and the point médian with the short feminine suffix in French
 (`gendered_roles_format: inclusive_gender`, `german_gender_ending: *in`,
 `french_gender_separator: ·`, `french_gender_suffix: short`), with every
-category on, inspirations shown, no LLM and no stored context. Every Witty
+category on, inspirations shown, no LLM and no stored context. The API takes
+the last two from a client only where `CLIENT_CONFIG_ENABLED` is on
+([configuration.md](configuration.md)); elsewhere it decides them itself, and
+with `DEFAULT_USER_STORE_CONTEXT` at its default (true) it stores the checked
+strings as context like any other text. Every Witty
 repository checks its texts against this one file, so they stay consistent; a
 change to Witty's style is a change to this file. A test checks that each of its
 fields is one `/v2.4/check` accepts.
