@@ -317,8 +317,8 @@ needed. `/openapi.json` is served unguarded either way.
 | Variable              | Default | Description                                        |
 | --------------------- | ------- | -------------------------------------------------- |
 | API_DOCS_AUTH_ENABLED | false   | Enable Basic Auth for the docs UI and dev helpers. |
-| API_DOCS_USERNAME     | (empty) | Username for docs auth.                            |
-| API_DOCS_PASSWORD     | (empty) | Password for docs auth.                            |
+| API_DOCS_USERNAME     | (empty) | Username for docs auth and the [management endpoints](#protecting-the-management-endpoints). |
+| API_DOCS_PASSWORD     | (empty) | Password for docs auth and the [management endpoints](#protecting-the-management-endpoints). |
 
 Behind `REQUIRE_API_KEY`, `/docs` needs a key unless `API_DOCS_AUTH_ENABLED` asks for the password instead, and the page loads `/openapi.json`, which needs one too: add `"/openapi.json"` to `PUBLIC_PATHS`, or the docs page renders without any endpoints. Add `"/docs"` as well to make the docs public.
 
@@ -333,8 +333,8 @@ both hashes in [app/routes/utility.py](../app/routes/utility.py).
 ## Protecting the management endpoints
 
 Separate from the docs switch, because reading the schema and minting a
-credential are not the same risk. This one guards `/api_key`, `/user/configs`,
-`/organization/configs`, `/settings` and `/languagetool_api` —
+credential are not the same risk. This one guards `/api_key`, `/managed_keys`,
+`/user/configs`, `/organization/configs`, `/settings` and `/languagetool_api` —
 the endpoints that hand out or expose credentials and configuration, or act on
 a named user's behalf — and defaults to **on**, so a deployment nobody
 configured is closed rather than open.
@@ -344,7 +344,9 @@ configured is closed rather than open.
 | MANAGEMENT_AUTH_ENABLED | true    | Require Basic Auth on the management endpoints. Set to `false` for local development only: with `ENVIRONMENT_TYPE=production` it stops the start. |
 
 It reuses `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for the credentials, so
-there is one pair to configure rather than two. With auth enabled and no
+there is one pair to configure rather than two. These are the management
+credentials the dashboard signs in with to write settings and manage API keys:
+its `APP_NLP_API_SYNC_USER` and `APP_NLP_API_SYNC_PASSWORD`. With auth enabled and no
 password set, those endpoints answer 500 rather than letting anyone through.
 
 ## Sentry.io
@@ -643,7 +645,7 @@ nothing about the token.
 Dashboard (Laravel Passport)
 | Variable | Description |
 |---|---|
-| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. Several clients of the one dashboard, comma-separated (the browser extension's and the dashboard's write page's: `1, 2`): a token is accepted when its `aud` is any of them. |
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. Several clients of the one dashboard, comma-separated (the browser extension's and the dashboard's write page's): a token is accepted when its `aud` is any of them. Passport issues UUIDs, such as `9a1f3c52-6d0e-4b7a-8f21-3c5d9e0b7a64, 9a1f3c5b-2e4f-4c8d-9b17-6a0e2f4d8c31`; the dashboard prints the write page's when it creates the client at its first start. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
 | DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
@@ -773,7 +775,7 @@ nothing about the token.
 Dashboard (Laravel Passport)
 | Variable | Description |
 |---|---|
-| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. Several clients of the one dashboard, comma-separated (the browser extension's and the dashboard's write page's: `1, 2`): a token is accepted when its `aud` is any of them. |
+| DASHBOARD_CLIENT_ID | OAuth client id the dashboard issues tokens for; also the `aud` claim. Setting it enables this issuer. Several clients of the one dashboard, comma-separated (the browser extension's and the dashboard's write page's): a token is accepted when its `aud` is any of them. Passport issues UUIDs, such as `9a1f3c52-6d0e-4b7a-8f21-3c5d9e0b7a64, 9a1f3c5b-2e4f-4c8d-9b17-6a0e2f4d8c31`; the dashboard prints the write page's when it creates the client at its first start. |
 | DASHBOARD_URL | Base URL of the dashboard. The JWKS document is looked up at `{DASHBOARD_URL}/.well-known/jwks.json`. |
 | DASHBOARD_JWKS_URL | Optional: the full JWKS URL, when it does not sit at the RFC 8615 path. |
 | DASHBOARD_ISSUER | Required with `DASHBOARD_CLIENT_ID`: the `iss` claim the dashboard's tokens carry (its `OAuthIssuer`). Every dashboard token is checked for it; without it set the start is refused. |
