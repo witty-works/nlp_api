@@ -157,6 +157,26 @@ def test_only_forms_with_the_configured_separator_change():
     assert french_suffix_form("acteur·rice et acteur.rice", FULL, "·") == "acteur·trice et acteur.rice"
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Voir www.chanteur.se",
+        "Écrire à jean@chanteur.se.",
+        "Voir https://chanteur.se/agenda",
+        "Voir contact.chanteur.se",
+    ],
+)
+def test_suffix_form_leaves_addresses_under_the_point_separator(text):
+    """An LLM suggestion is converted whole: under the `.` separator an
+    address ending in `.se` is not a role to rewrite."""
+    assert french_suffix_form(text, FULL, ".") == text
+
+
+def test_suffix_form_still_converts_roles_under_the_point_separator():
+    assert french_suffix_form("les utilisateur.rices", FULL, ".") == "les utilisateur.trices"
+    assert french_suffix_form("Chaque vendeur.se.", FULL, ".") == "Chaque vendeur.euse."
+
+
 def test_two_suggestions_that_differ_only_in_the_suffix_are_one(set_redis):  # noqa: F811
     with TestClient(app) as client:
         results = check(client, "Les utilisateurs peuvent se connecter.", "full")
