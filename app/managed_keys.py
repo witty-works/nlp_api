@@ -128,8 +128,10 @@ def mint(
         if expires_at <= now:
             raise ValueError("expires_at must be in the future")
     email = email.lower()
-    if len(_ids(redis, _email_index(email))) >= MAX_KEYS_PER_EMAIL:
-        raise TooManyKeys(f"An email may have at most {MAX_KEYS_PER_EMAIL} keys")
+    index = _email_index(email)
+    # Expired ids out first: pruning inside the transaction would change the
+    # index it watches.
+    _ids(redis, index)
 
     key, digest = _new_key(redis)
     details = ManagedKey(
@@ -141,9 +143,17 @@ def mint(
         created_at=now.replace(microsecond=0),
         expires_at=expires_at,
     )
-    pipe = redis.db.pipeline()
-    _store(pipe, details, digest)
-    pipe.execute()
+
+    def store(pipe) -> None:
+        # Counted and written in one transaction on the person's index: a key
+        # minted for them meanwhile makes it run again, and count that one.
+        live = [i for i in pipe.smembers(index) if pipe.exists(_details_name(i))]
+        if len(live) >= MAX_KEYS_PER_EMAIL:
+            raise TooManyKeys(f"An email may have at most {MAX_KEYS_PER_EMAIL} keys")
+        pipe.multi()
+        _store(pipe, details, digest)
+
+    redis.db.transaction(store, index)
     return key, details
 
 
