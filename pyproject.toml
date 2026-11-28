@@ -1,6 +1,6 @@
 [project]
 name = "witty-works"
-version = "4.0.0rc3"
+version = "4.0.0rc4"
 description = ""
 authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},

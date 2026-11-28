@@ -3,6 +3,7 @@ from app.utf16 import utf16_units
 from typing import Union, Optional, Annotated, Any, Literal
 from annotated_types import Len
 from enum import Enum
+import copy
 import html
 from collections import namedtuple
 import json
@@ -262,6 +263,15 @@ class FrenchGenderSeparatorType(str, Enum):
     POINT_S = ".s"
     SLASH = "/"
     SLASH_S = "/s"
+
+
+class FrenchGenderSuffixType(str, Enum):
+    """The feminine suffix of a French inclusive form, where there are two:
+    the part of the feminine that differs (`utilisateur·rice`, `vendeur·se`)
+    or the whole feminine suffix (`utilisateur·trice`, `vendeur·euse`)."""
+
+    SHORT = "short"
+    FULL = "full"
 
 
 class GenderedRolesFormatBasicType(str, Enum):
@@ -702,6 +712,7 @@ class Config(BaseModel):
     french_gender_separator: FrenchGenderSeparatorType = (
         FrenchGenderSeparatorType.POINT_MEDIAN
     )
+    french_gender_suffix: FrenchGenderSuffixType = FrenchGenderSuffixType.SHORT
 
     disabled_categories: list = Field(
         default_factory=list, max_length=CONFIG_LIST_MAX_LENGTH
@@ -858,6 +869,11 @@ class FrenchGenderSeparatorConfigType(BaseModel):
     status: StatusType
 
 
+class FrenchGenderSuffixConfigType(BaseModel):
+    value: FrenchGenderSuffixType
+    status: StatusType
+
+
 class GenderedRolesFormatConfigType(BaseModel):
     value: GenderedRolesFormatType
     status: StatusType
@@ -870,6 +886,7 @@ class RuleConfig(BaseModel):
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     french_gender_separator: Optional[FrenchGenderSeparatorConfigType] = None
+    french_gender_suffix: Optional[FrenchGenderSuffixConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: Optional[dict[str, BooleanConfigType]] = Field(default_factory=dict)
     force_categories: Optional[list[str]] = Field(default_factory=list)
@@ -943,15 +960,18 @@ class ConfRequest(BaseModel):
 class UserConfRequest(ConfRequest):
     email: str
     organization_id: Optional[str] = None
+    # Every team the person belongs to. A managed key for a team only works
+    # while its team is listed here (app/auth_service.py).
+    teams: Optional[list[str]] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
 
 
 class OrganizationConfRequest(ConfRequest):
-    # No fields of its own; kept as a distinct type so the organisation and
-    # user config endpoints stay separately typed.
-    pass
+    # The team's share of the LLM: requests per minute for all its members
+    # and keys together (Prompt._count_request). None: no per-team limit.
+    llm_requests_per_minute: Optional[int] = Field(None, ge=1)
 
 
 class ConfResponse(BaseModel):
@@ -967,6 +987,7 @@ class ConfResponse(BaseModel):
 class UserConfResponse(ConfRequest):
     email: str
     organization_id: Optional[str] = None
+    teams: Optional[list[str]] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
     organization_false_positives: Optional[list[str]] = Field(default_factory=list)
@@ -1282,10 +1303,31 @@ class ResultOut(BaseModel):
             if not isinstance(image_url, dict):
                 image_url = None
 
+        if language.lang == LangType.FR and alternatives:
+            # Imported here: gender_format builds on these models.
+            from app.gender_format import french_suffix_form
+
+            # Before cleaning, which drops an alternative that is the text
+            # itself or another one; on copies, as a rule's alternatives are
+            # shared between requests.
+            separator = config.french_gender_separator.value[0]
+            converted = []
+            for alternative in alternatives:
+                if isinstance(alternative.lemma, str):
+                    lemma = french_suffix_form(
+                        alternative.lemma, config.french_gender_suffix, separator
+                    )
+                    if lemma != alternative.lemma:
+                        alternative = copy.copy(alternative)
+                        alternative.lemma = lemma
+                converted.append(alternative)
+            alternatives = converted
+
         (
             text,
             start,
             alternatives,
+            written_as_alternative,
         ) = ResultOut.clean_alternatives(
             language,
             text,
@@ -1301,6 +1343,16 @@ class ResultOut(BaseModel):
             explanation = language.convert_sharp_ss(explanation)
 
         gravity = map_gravity(subcategory) if gravity is None else gravity
+        if (
+            written_as_alternative
+            and not alternatives
+            and category == "gender-orientation"
+        ):
+            # The text is already the inclusive form the rule suggests (`un·e
+            # propriétaire`): a confirmation, not an issue to fix. Elsewhere,
+            # as an orthography finding that de-CH's ss turns into its own
+            # text, it stays a finding.
+            gravity = None
 
         if language.locale == "en-GB":
             label = Language.convert_to(label, language.locale)
@@ -1362,8 +1414,9 @@ class ResultOut(BaseModel):
         alternatives_max_count: int,
     ):
         if alternatives is None:
-            return text, start, []
+            return text, start, [], False
 
+        written_as_alternative = False
         cleaned_alternatives = {}
 
         for alternative in alternatives:
@@ -1391,6 +1444,7 @@ class ResultOut(BaseModel):
                     alternative.lemma = language.convert_sharp_ss(alternative.lemma)
 
                 if alternative.lemma == text:
+                    written_as_alternative = True
                     continue
 
                 if alternative.is_inspiration:
@@ -1437,7 +1491,7 @@ class ResultOut(BaseModel):
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
 
-        return text, start, cleaned_alternatives
+        return text, start, cleaned_alternatives, written_as_alternative
 
     @staticmethod
     def isUpper(

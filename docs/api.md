@@ -170,11 +170,15 @@ curl 'http://127.0.0.1:8000/v2.0/config-options'
     "german_gender_ending": {
       "values": ["/in", "/-in", "_in", "*in", ":in", "(-)", "()", "In"],
       "default": "*in",
-      "labels": { "*in": "Genderstar, f.e Expert*in" }   // one per value
+      "labels": { "*in": "Genderstar, e.g. Expert*in" }   // one per value
     },
     "french_gender_separator": {
       "values": ["·", "·s", ".", ".s", "/", "/s"],
       "default": "·"
+    },
+    "french_gender_suffix": {
+      "values": ["short", "full"],
+      "default": "short"
     },
     "gendered_roles_format": {
       "values": ["none", "both", "inclusive_gender", "binary_gender"],
@@ -218,7 +222,7 @@ curl 'http://127.0.0.1:8000/v2.0/features' -H 'x-key: your-api-key'
 
 The features that differ between deployments, so a client can show or hide them instead of finding out from a refused request. `available` says whether the deployment has the feature at all. `allowed` says whether the key sent may use it; it is only there when a key was sent, and only for features some keys are refused. `values` lists what a feature offers where that is a list.
 
-- `llm`: the language model behind `/v1.0/write`, `/v1.0/rephrase` and AI suggestions (`LLM_MODEL`). `LLM_ACCESS` and `LLM_ALLOWED_USERS` decide `allowed`; the `/textarea` page disables its prompt and AI suggestions where it is false, and links to `TEXTAREA_CONTACT` to ask for access.
+- `llm`: the language model behind `/v1.0/write`, `/v1.0/rephrase` and AI suggestions (`LLM_MODEL`). `allowed` is what `/v1.0/write` will do for the key: `LLM_ACCESS` and `LLM_ALLOWED_USERS` decide it, and so do the key's user and team configs, where a team can force `llm_alternatives` off, for a request that does not set `llm_alternatives` itself; the `/textarea` page disables its prompt and AI suggestions where it is false, and links to `TEXTAREA_CONTACT` to ask for access.
 - `spelling_grammar`: LanguageTool's spelling, grammar and style findings (`LANGUAGETOOL_API`); without it a check returns no orthography results.
 - `languages`: the languages this server checks (`MODELS`).
 
@@ -322,7 +326,7 @@ These endpoints manage user and organization configurations. All require HTTP Ba
 | ------------------------------------ | ------ | --------------------------------------------------------------------------- |
 | `POST /user/configs`                 | POST   | Create or update user configuration                                         |
 | `GET /user/configs?email={email}`    | GET    | Retrieve user configuration by email                                        |
-| `DELETE /user/configs?email={email}` | DELETE | Delete user configuration                                                   |
+| `DELETE /user/configs?email={email}` | DELETE | Delete user configuration, and revoke the person's managed keys             |
 
 Example: Store user configuration
 
@@ -334,6 +338,7 @@ curl -X 'POST' \
   -d '{
   "email": "user@example.com",
   "organization_id": "org-123",
+  "teams": ["org-123", "org-456"],
   "config": {
     "german_gender_ending": ":in",
     "preferred_variants": ["de-CH"]
@@ -347,6 +352,8 @@ curl -X 'POST' \
   }
 }'
 ```
+
+`organization_id` is the team whose settings apply to the person's requests. `teams` lists every team they belong to; a [managed key](#managed-api-keys) for a team works only while its team is listed and the team's own config is synced.
 
 A term replacement's explanation is plain text. A finding from it carries the
 text unchanged in `explanation.text` and HTML-escaped in
@@ -371,12 +378,15 @@ curl -X 'POST' \
   -d '{
   "id": "org-123",
   "name": "Acme Corp",
+  "llm_requests_per_minute": 30,
   "config": {
     "gendered_roles_format": "inclusive_gender",
     "disabled_categories": ["age"]
   }
 }'
 ```
+
+`llm_requests_per_minute` is the team's share of the language model: LLM requests per minute for all its members and keys together. Past it, a request is refused with `503` and a `Retry-After`, as with `LLM_MAX_REQUESTS_PER_MINUTE`. Leave it out for no per-team limit; the deployment's own limit applies either way.
 
 The config is stored in Redis under `dashboard-organization:{id}`, so an `id`
 names an organisation and no other Redis key. One stored by an earlier version
@@ -399,6 +409,23 @@ curl -X 'POST' 'http://127.0.0.1:8000/api_key' \
   -u 'admin:password' -H 'Content-Type: application/json' \
   -d '{"api_key": "'"$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"'", "email": "user@example.com"}'
 ```
+
+### Managed API Keys
+
+Keys the API mints for a client such as the dashboard, each for a person (an email) and, optionally, a team. Behind the management password too. Only the answers of creating and replacing a key contain the key itself; everywhere else a key is named by its `id`.
+
+- **A key with a team** checks text with that team's settings and counts against the team's `llm_requests_per_minute`. It only works while the person's synced user config (`POST /user/configs`) lists the team in `teams` and the team's config (`POST /organization/configs`) is stored; without either it is refused.
+- **Minting needs `API_KEY_HMAC_KEY`,** because only digests are stored. Changing that secret invalidates every managed key.
+- **Several API servers must share one Redis** for managed keys and the per-team limit to hold.
+- **A person may have at most 20 keys.** A replaced key counts until its grace period ends; replacing is never refused for the limit.
+
+| Endpoint                              | Body or query                                                         | Answers                                                                                                   |
+| ------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `POST /managed_keys`                  | `{"email", "team_id"?, "name", "source"?, "expires_at"?}`             | `201` `{"key", "details"}`; `409` with 20 keys already; `503` without `API_KEY_HMAC_KEY`; `422` for bad input |
+| `GET /managed_keys`                   | `?email=` and/or `?team_id=`                                          | `200` the keys' details, never the keys                                                                   |
+| `POST /managed_keys/{id}/replace`     | `{"grace_seconds": 0 \| 86400 \| 604800}`                             | `201` a new key with the same email, team, name and expiry; the old one works for the grace period, never past its own expiry; `404` if it is gone, expired or already replaced; `503` without `API_KEY_HMAC_KEY` |
+| `DELETE /managed_keys/{id}`           |                                                                       | `204`, also when the key is already gone                                                                  |
+| `POST /managed_keys/revoke`           | `{"email"?, "team_id"?}`, at least one                                | `200` `{"count"}` of keys revoked, including ones replaced meanwhile                                                                         |
 
 ## Health & Utility Endpoints
 

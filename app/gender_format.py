@@ -415,6 +415,64 @@ FRENCH_FEMININE_SUFFIXES = sorted(
 )
 
 
+# The suffix families with a short and a full feminine suffix, by the ending
+# of the masculine they follow: `utilisateur·rice` / `utilisateur·trice`,
+# `vendeur·se` / `vendeur·euse`, `heureux·se` / `heureux·euse`.
+FRENCH_SUFFIX_PAIRS = (
+    (("teur",), "rice", "trice"),
+    (("eur", "eux"), "se", "euse"),
+)
+_FRENCH_SUFFIX_FORM = re.compile(
+    rf"(?<=[{_FR}])(eur|eux)([·./])(rice|trice|se|euse)(?=(?:[·./]?s)?(?![{_FR}]))",
+    flags=re.I,
+)
+
+
+def french_suffix_form(text: str, suffix: str, separators: str = "·./") -> str:
+    """`text` with each French inclusive form in the short or the full
+    feminine suffix (`french_gender_suffix`): `utilisateur·rice` under
+    `full` gives `utilisateur·trice`. Forms whose two suffixes do not differ
+    (`enseignant·e`, `musicien·ne`) stay as written, and so does a form with
+    a separator not in `separators`: given the configured one, a domain
+    such as `acteur.se` is no form. Nor is one inside an address, which the
+    `.` separator cannot tell apart: a word with `@` or `://`, one starting
+    with `www.`, or one with a dot before the role (`contact.chanteur.se`)."""
+    full = suffix == "full"
+
+    def is_address(match: re.Match) -> bool:
+        start = max(text.rfind(c, 0, match.start()) for c in " \t\n") + 1
+        ends = [i for i in (text.find(c, match.end()) for c in " \t\n") if i != -1]
+        word = text[start : min(ends, default=len(text))]
+        return (
+            "@" in word
+            or "://" in word
+            or word.lower().startswith("www.")
+            or "." in text[start : match.start()]
+        )
+
+    def replace(match: re.Match) -> str:
+        ending, separator, written = match.groups()
+        if separator not in separators or is_address(match):
+            return match.group(0)
+        before = text[: match.start()].lower()
+        for endings, short_suffix, full_suffix in FRENCH_SUFFIX_PAIRS:
+            if written.lower() not in (short_suffix, full_suffix):
+                continue
+            if not any((before + ending.lower()).endswith(e) for e in endings):
+                continue
+            new = full_suffix if full else short_suffix
+            # The writer's capitals: Serveur·Se, UTILISATEUR·RICE.
+            if written.isupper():
+                new = new.upper()
+            elif written[0].isupper():
+                new = new.capitalize()
+            return ending + separator + new
+
+        return match.group(0)
+
+    return _FRENCH_SUFFIX_FORM.sub(replace, text)
+
+
 def split_french_ending(ending: str) -> tuple[str, bool] | None:
     """A feminine suffix and whether a plural `s` follows it: `es` gives
     (`e`, True), `rices` (`rice`, True), `rice` (`rice`, False)."""
@@ -444,11 +502,13 @@ def convert_french(
     masculine_words: set[str],
     feminine_words: set[str],
     is_word,
+    suffix_form: str = "short",
 ) -> str | None:
     """A French inclusive form in the target format, or None when `text` is
     not one: `enseignant.e.s` under `·` gives `enseignant·es`, `la/le` gives
-    `la·le`, `un.e` gives `un·e`. `is_word(stem)` confirms a masculine noun
-    or adjective, so `site.fr` or `p.ex` are left alone."""
+    `la·le`, `un.e` gives `un·e`, and the feminine suffix as `suffix_form` asks
+    (`french_suffix_form`). `is_word(stem)` confirms a masculine noun or
+    adjective, so `site.fr` or `p.ex` are left alone."""
     match = re.fullmatch(
         rf"({_FR_WORD})([·./])([{_FR}]+)(?:([·./])(s))?", text, flags=re.I
     )
@@ -481,7 +541,9 @@ def convert_french(
     # Keep the writer's case of the suffix (it is lowercase in practice).
     written_suffix = rest[: len(suffix)]
 
-    return render_french(stem, written_suffix, plural, target)
+    return french_suffix_form(
+        render_french(stem, written_suffix, plural, target), suffix_form, target[0]
+    )
 
 
 # Articles a French doublet can start with. `les`, `des`, `aux` and `l'` serve

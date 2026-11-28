@@ -63,8 +63,16 @@ def guidance(config: Config, lang: LangWithAutoType | None = None) -> str:
 
     french = FRENCH_EXAMPLES.get(config.french_gender_separator)
     if french is not None and known in (None, "fr"):
+        # The feminine suffix where there are two (`french_gender_suffix`).
+        suffix = "trice" if config.french_gender_suffix == "full" else "rice"
+        separator = config.french_gender_separator.value
+        role = f"utilisateur{separator[0]}{suffix}"
+        if len(separator) > 1:
+            # The formats with a plural `s` of its own, like the example.
+            role += f"{separator[0]}s"
         lines.append(
-            f'When writing French, form gender-inclusive person nouns like "{french}".'
+            f'When writing French, form gender-inclusive person nouns like "{french}"'
+            f' and "{role}".'
         )
 
     return "\n".join(lines)

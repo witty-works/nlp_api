@@ -52,6 +52,135 @@ INKLUSIVUM_CASES = {
     "Acc": "akkusativ",
 }
 
+# Pronouns that say nothing about the person's gender.
+FRENCH_UNNAMED_PERSONS = {"je", "j’", "j'", "tu", "vous", "me", "m’", "m'", "te", "t’", "t'"}
+# `être` in a question, which the tokenizer keeps whole with its subject
+# (`êtes-vous`, `es-tu`, `suis-je`).
+FRENCH_ETRE_FORMS = {
+    "suis", "es", "est", "sommes", "êtes", "sont", "étais", "était", "étiez",
+    "serai", "seras", "sera", "serez", "serais", "serait", "seriez",
+}
+
+
+def is_etre_question(token: Token) -> bool:
+    verb, _, person = token.text.lower().rpartition("-")
+    return verb in FRENCH_ETRE_FORMS and person in FRENCH_UNNAMED_PERSONS
+
+
+def is_about_unnamed_person(token_index: int, tokens: Doc) -> bool:
+    """Whether a French adjective or participle agrees with `je`, `tu` or
+    `vous` through `être` and is written in the masculine singular:
+    `vous êtes connecté`, `merci de vous être inscrit`, `êtes-vous sûr`.
+
+    Only `être` makes it agree with the person; after `avoir` it agrees with
+    the object (`vous l’avez ajouté`). `il est connecté` says who it is, and
+    is left alone."""
+    token = tokens[token_index]
+    if not (
+        token.pos_ == "ADJ" or (token.pos_ == "VERB" and "Part" in token.morph.get("VerbForm"))
+    ):
+        return False
+    if "Plur" in token.morph.get("Number") or "Fem" in token.morph.get("Gender"):
+        return False
+    text = token.text.lower()
+    if text.endswith("e") or "·" in text:
+        return False
+
+    # `être` just before it, past negation and adverbs, and past the subject
+    # of a question (`êtes-vous`).
+    index = token_index - 1
+    inverted = None
+    while index >= token.sent.start and (
+        tokens[index].pos_ == "ADV"
+        or (tokens[index].pos_ == "PRON" and tokens[index].text.startswith("-"))
+    ):
+        if tokens[index].pos_ == "PRON":
+            inverted = tokens[index]
+        index -= 1
+    if index < token.sent.start:
+        return False
+    if is_etre_question(tokens[index]):
+        return True
+    if tokens[index].lemma_ != "être":
+        return False
+    if inverted is not None:
+        # The subject of a question, after `être`: `êtes-vous sûr`.
+        return is_unnamed_person(inverted)
+
+    # The person is the word's subject (`vous êtes connecté`), or with no
+    # subject a pronoun attached to it (`merci de vous être inscrit`). A
+    # noun subject is someone else, whatever pronouns the sentence has
+    # (`le mot de passe que vous avez choisi est court`).
+    subjects = [
+        child
+        for child in token.children
+        if child.dep_.startswith("nsubj") or child.dep_ == "expl:subj"
+    ]
+    if subjects:
+        return is_unnamed_person(subjects[0])
+
+    return any(
+        is_unnamed_person(child)
+        for child in token.children
+        if child.dep_ in ("iobj", "obj", "expl:comp", "expl:pv")
+    )
+
+
+def is_unnamed_person(token: Token) -> bool:
+    return token.pos_ == "PRON" and token.text.lower().lstrip("-") in FRENCH_UNNAMED_PERSONS
+
+
+
+UMLAUT = str.maketrans({"a": "ä", "o": "ö", "u": "ü", "A": "Ä", "O": "Ö", "U": "Ü"})
+
+
+def feminine_forms(word: str) -> list[str]:
+    """The forms a feminine of `word` takes: Lehrer -> Lehrerin, Kunde ->
+    Kundin, Arzt -> Ärztin."""
+    forms = [word + "in"] + ([word[:-1] + "in"] if word.endswith("e") else [])
+    for i in range(len(word) - 1, -1, -1):
+        if word[i] in "aouAOU":
+            forms.append(word[:i] + word[i].translate(UMLAUT) + word[i + 1 :] + "in")
+            break
+    return forms
+
+
+def is_compound_with(word: str, part: str, nouns) -> bool:
+    """Whether `word` can be a compound ending in `part`, read off the
+    Wiktionary noun list (german_nouns): `Stammkunde` with `Kunde`,
+    `Bergbauingenieur` with `Ingenieur`, but not `Sekunde` with `Kunde` or
+    `Krankenhäuser` with `User`.
+
+    Only a word the list knows is judged. It keeps the rule when it names a
+    person (it has a feminine form, or does what a known word names:
+    Lohnarbeit, Lohnarbeiter) or when the splitter's last part is the
+    rule's word. Anything the list does not know is left to the rule, an
+    invented compound (`Katzenhure`) above all."""
+    index = nouns.index
+    if (
+        word.lower() == part.lower()
+        or not word.lower().endswith(part.lower())
+        or word.lower() not in index
+    ):
+        return True
+    if word.endswith(("in", "innen")) or any(
+        form.lower() in index for form in feminine_forms(word)
+    ):
+        return True
+
+    try:
+        split = nouns.parse_compound(word)
+    except (KeyError, IndexError):
+        return True
+    if not split:
+        return True
+
+    last, rule = split[-1].lower(), part.lower()
+    if rule in last or (len(last) >= 3 and rule.startswith(last)):
+        return True
+
+    return len(split) == 1 and word.lower() in (last + "er", last + "r")
+
 
 class RuleCheck:
     settings: Settings
@@ -431,6 +560,14 @@ class RuleCheck:
 
         return False
 
+    def compound_suffix_rules(self, token: Token, rules: list[Rule]) -> list[Rule]:
+        """The suffix rules whose word is a part of the token's compound.
+
+        The suffix pass finds `Kunde` in `Stammkunden` and in `Sekunden`
+        alike; `is_compound_with` tells them apart."""
+        word = token.lemma_
+        return [rule for rule in rules if is_compound_with(word, rule.lemma, self.nouns.nouns)]
+
     async def fetch_rules(
         self,
         language: Language,
@@ -449,6 +586,9 @@ class RuleCheck:
             suffix_check,
         )
 
+        if rules and suffix_check and language.lang == LangType.DE:
+            rules = self.compound_suffix_rules(token, rules)
+
         if rules and await self.is_written_in_inklusivum(language.lang, config, token):
             # Already gender neutral, so the gendered denomination rules would
             # only suggest rewriting it into the form it is already in.
@@ -458,6 +598,40 @@ class RuleCheck:
                 if not self.db.is_gendered_denom_rule(language.lang, rule.subcategories)
             ]
 
+        # After the rules from the database, so a longer one that matches
+        # (`sûr de soi`) comes first.
+        if language.lang == LangType.FR and is_about_unnamed_person(token_index, tokens):
+            male_form = token.text.lower()
+            female_form = self.adjectives.get_feminine_form_french(male_form)
+            if male_form != female_form:
+                rule = Rule(
+                    "fr_adjective_rule",
+                    LangType.FR,
+                    male_form,
+                    [male_form],
+                    [{"word_type": "", "lower_case": True, "lemmatize": False}],
+                    ["hidden_image"],
+                    utils.build_french_adjective_alternatives(male_form, female_form),
+                )
+                rule.adapt_alternatives = True
+                # Already written in both genders, with either conjunction:
+                # `connecté ou connectée`, `connecté et connectée`.
+                # The rule's own list, not `dynamic`: check_rules resets that
+                # before it checks the rule.
+                rule.false_positives = [
+                    first + conjunction + second
+                    for conjunction in self.static_rules[LangType.FR][
+                        "noun_conjunction"
+                    ].values()
+                    for first, second in (
+                        (male_form, female_form),
+                        (female_form, male_form),
+                    )
+                ]
+                rules.append(rule)
+
+            return rules
+
         if (
             language.lang == LangType.FR
             and len(rules) == 0
@@ -465,7 +639,11 @@ class RuleCheck:
                 language.lang, token, WordType.ADJECTIVE, True, True
             )
         ):
-            if self.model.is_token_plural(LangType.FR, token):
+            # A French plural adjective is written with -s or -x; the tagger
+            # also calls a word plural that is not (`en tant que superadmin`).
+            if self.model.is_token_plural(LangType.FR, token) and token.text.lower().endswith(
+                ("s", "x")
+            ):
                 male_form = pluralize(token.lemma_)
                 female_form = pluralize(
                     self.adjectives.get_feminine_form_french(token.lemma_)
@@ -496,14 +674,20 @@ class RuleCheck:
 
                     rules.append(rule)
             elif (
-                self.alternatives.is_previous_token_article(
+                # check_word_type takes an adverb for the adjective it was
+                # asked about, which the rules need; here it read `il ne`,
+                # `au moins` and `les plus` as adjectives naming a person.
+                token.pos_ != "ADV"
+                and self.alternatives.is_previous_token_article(
                     token_index, tokens, language.lang
                 )
+                # An adjective names a person only without a noun after it:
+                # `le dernier est arrivé`, not `le dernier compte`.
                 and (
                     token_index + 1 >= len(tokens)
                     or not await self.model.check_word_type(
                         language.lang,
-                        tokens[token_index],
+                        tokens[token_index + 1],
                         WordType.NOUN,
                         True,
                         True,

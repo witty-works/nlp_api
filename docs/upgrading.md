@@ -7,6 +7,10 @@ listed; the git history has them.
 
 ## 4.0.0
 
+- **Dashboard 2.0.0 needs 4.0.0-rc4 or later** for its API keys (`/managed_keys`),
+  the synced `teams`, `llm_requests_per_minute` and `french_gender_suffix`.
+  Update this API soon after the dashboard (see below for the order): the
+  dashboard retries key revocations for a day.
 - **`DASHBOARD_CLIENT_ID` accepts several client ids,** comma-separated, so
   the tokens of the browser extension and of the dashboard's write page are
   both accepted. One id works as before.
@@ -49,7 +53,7 @@ listed; the git history has them.
   `DASHBOARD_CLIENT_ID` set, `DASHBOARD_ISSUER` is required (the start is
   refused without it) and every dashboard token is checked for that `iss`. A
   dashboard token is accepted only with `email_verified: true`. Deploy, in
-  this order: first the dashboard release that puts `iss` and
+  this order: first dashboard 2.0.0, which puts `iss` and
   `email_verified` in its tokens, then this API with `DASHBOARD_ISSUER` set.
   Tokens the dashboard issued before carry neither and are refused, so users
   sign in again.

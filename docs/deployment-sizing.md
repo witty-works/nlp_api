@@ -297,7 +297,7 @@ A first check from outside, for the configuration in [What we are deploying](#wh
        curl -s -X POST $HOST/v2.4/check -H "x-key: $KEY" \
            -H 'Content-Type: application/json' -d '{"text":"Der Lehrer gibt dem Schüler den Stift."}'
 
-5. What the key may do: `/v2.0/features` with the key reports `"llm": {"available": true, "allowed": true}` where the deployment has a model and the key is in `LLM_ALLOWED_USERS`. Then open `/textarea` in a browser, enter the key, and try the example text, an AI suggestion and a short prompt.
+5. What the key may do: `/v2.0/features` with the key reports `"llm": {"available": true, "allowed": true}` where the deployment has a model, the key is in `LLM_ALLOWED_USERS`, and the key's configs leave `llm_alternatives` on: without a dashboard, `DEFAULT_USER_LLM_ALTERNATIVES=true`. Then open `/textarea` in a browser, enter the key, and try the example text, an AI suggestion and a short prompt.
 
        curl -s $HOST/v2.0/features -H "x-key: $KEY"
 

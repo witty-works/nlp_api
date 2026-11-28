@@ -198,6 +198,10 @@ class Nouns:
                     prefix = ""
 
                 while len(word) > 3 and forms is None:
+                    # Each pass has to shorten the word, or the loop never
+                    # ends: parse_compound returns a word it cannot split as
+                    # it is ("Vielfaches" -> ["Vielfaches"]).
+                    before = word
                     words = self.nouns.parse_compound(word)
                     if len(words) == 0:
                         for substring in self.static_rules[LangType.DE][
@@ -238,6 +242,8 @@ class Nouns:
                                 lower = True
                                 prefix += text.removesuffix(ending_lower + postfix)
                                 break
+                    elif len(word) >= len(before):
+                        break
 
         if forms is not None and (prefix != "" or postfix != ""):
             for form in forms:

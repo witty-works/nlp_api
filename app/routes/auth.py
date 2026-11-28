@@ -130,8 +130,17 @@ async def get_categories_2_0(
 CONFIG_OPTION_FIELDS = (
     "german_gender_ending",
     "french_gender_separator",
+    "french_gender_suffix",
     "gendered_roles_format",
 )
+
+
+async def _llm_alternatives_configured(user_email: str, context: AppContext) -> bool:
+    """Whether the user's configs leave LLM alternatives on, resolved as
+    /v1.0/write resolves them (app/llm_access.py): no config is a refusal too."""
+    request_in = BaseRequestIn()
+    configs = await fetch_configs_for_request(request_in, user_email, context)
+    return bool(configs) and bool(request_in.config.llm_alternatives)
 
 
 @router.get(
@@ -159,7 +168,9 @@ async def get_features_2_0(
     than an anonymous answer, so a client can tell a wrong key from none.
 
     - `llm`: the language model behind the prompt and AI suggestions
-      (LLM_MODEL; LLM_ACCESS and LLM_ALLOWED_USERS decide `allowed`).
+      (LLM_MODEL). `allowed` is what /v1.0/write will do for this key:
+      LLM_ACCESS and LLM_ALLOWED_USERS, and the key's user and team configs,
+      where a team can force LLM alternatives off.
     - `spelling_grammar`: LanguageTool's findings (LANGUAGETOOL_API).
     - `languages`: the languages this server checks (MODELS).
     """
@@ -180,7 +191,9 @@ async def get_features_2_0(
     settings = context.settings
     llm = FeatureOut(available=llm_available(settings))
     if sent:
-        llm.allowed = llm_alternatives_allowed(settings, user_email)
+        llm.allowed = llm_alternatives_allowed(
+            settings, user_email
+        ) and await _llm_alternatives_configured(user_email, context)
 
     # The same for everyone without a key; per key, it must not be shared.
     response.headers["Cache-Control"] = (

@@ -170,7 +170,7 @@ request sent. An organisation turns it on with
 
 ### Gender-Inclusive Formatting
 
-`GET /v2.0/config-options` returns these three fields' accepted values and
+`GET /v2.0/config-options` returns these fields' accepted values and
 defaults, read off the request model, so a client can offer them without
 hard-coding the lists below.
 
@@ -178,6 +178,7 @@ hard-coding the lists below.
 | ------------------------- | ---- | -------- |
 | `german_gender_ending`    | enum | `"*in"`  |
 | `french_gender_separator` | enum | `"·"`    |
+| `french_gender_suffix`    | enum | `"short"` |
 | `gendered_roles_format`   | enum | `"both"` |
 
 `german_gender_ending`: German gender-inclusive ending format. Supported values:
@@ -205,6 +206,18 @@ Support is currently limited to nouns and their articles.
 - `"/"` - Slash (e.g., `auteur/rice`)
 - `"/s"` - Slash with S (e.g., `auteur/rice/s`)
 
+`french_gender_suffix`: the feminine suffix of a French inclusive form, for the
+roles that have two. Supported values:
+
+- `"short"` - the part of the feminine that differs (e.g., `utilisateur·rice`, `vendeur·se`, `heureux·se`)
+- `"full"` - the whole feminine suffix (e.g., `utilisateur·trice`, `vendeur·euse`, `heureux·euse`)
+
+Only the -teur/-trice, -eur/-euse and -eux/-euse families have both forms;
+`enseignant·e`, `musicien·ne` or `actif·ve` are the same under either value. It
+combines with every `french_gender_separator`: `utilisateur.trice.s` is `full`
+with `".s"`. Suggestions come in the configured suffix, and a form written with
+the other one is switched like a form in another separator (see below).
+
 `gendered_roles_format`: How to suggest gendered role alternatives. Supported values:
 
 - `"none"` - No gendered role alternatives
@@ -220,7 +233,7 @@ The switch also genders roles written in the generic masculine: a job title, fun
 
 - Converted between all eight separator formats, both ways: nouns (`Lehrer*innen`, `Angestellte*r`), article and pronoun pairs in either order and in title case (`der*die`, `Der*Die`), determiners (`jede*r`, `Ein*e`), and compounds with the marker inside (`Mitarbeiter*innengespräch`, `Lehrer*innen-Team`; read from `*`, `_` and `:`, whose compounds stay one token). Binnen-I writes endings other than `in`/`innen` with a slash (`Angestellte/r`).
 - Only person nouns (stem plus feminine ending is a known noun) and forms from the article table are touched: `Podcasts/in`, `Klasse/n`, `und/oder` stay as written.
-- French works the same way for `french_gender_separator`: nouns and adjectives (`enseignant.e.s` ↔ `enseignant·es`, `directeur/rice`, `prêt·e·s`, moving the plural `s` between the formats that separate it and those that do not) and separated articles (`la·le`, `un·e`). Only a masculine word spaCy's French vocabulary knows, followed by a feminine suffix, is converted, so `site.fr` or `p.ex` stay as written. A French form in any format is not also read as a masculine; other feedback on it (leadership, for instance) is not reported while it is written inclusively. A doublet naming one role in both genders, in either order and with `et` or `ou`, is the French pair formula: `les enseignantes et les enseignants` → `les enseignant·es`, `le directeur ou la directrice` → `la·le directeur·rice`, `aux enseignants et enseignantes` → `aux enseignant·es`. It comes as `gendered_denominations_ending` (`_advanced` when binary forms are also suggested) and joins the switch like a German pair formula; with only binary forms wanted it is left alone. Two different roles (`les enseignants et les directrices`) are not a doublet, nor is a singular article that is not repeated (`le directeur et directrice`).
+- French works the same way for `french_gender_separator` and `french_gender_suffix`: nouns and adjectives (`enseignant.e.s` ↔ `enseignant·es`, `directeur/rice`, `prêt·e·s`, moving the plural `s` between the formats that separate it and those that do not) and separated articles (`la·le`, `un·e`). Only a masculine word spaCy's French vocabulary knows, followed by a feminine suffix, is converted, so `site.fr` or `p.ex` stay as written. A French form in any format is not also read as a masculine; other feedback on it (leadership, for instance) is not reported while it is written inclusively. A doublet naming one role in both genders, in either order and with `et` or `ou`, is the French pair formula: `les enseignantes et les enseignants` → `les enseignant·es`, `le directeur ou la directrice` → `la·le directeur·rice`, `aux enseignants et enseignantes` → `aux enseignant·es`. It comes as `gendered_denominations_ending` (`_advanced` when binary forms are also suggested) and joins the switch like a German pair formula; with only binary forms wanted it is left alone. Two different roles (`les enseignants et les directrices`) are not a doublet, nor is a singular article that is not repeated (`le directeur et directrice`).
 - Into the Inklusivum (`de-e`) from any of the eight separator formats: articles and pronouns from the article table (`die*der` → `de`, `jede/-r` → `jedey`), nouns declined for number and case (`Lehrer*innen` → `Lehrerne`, `den Schüler:innen` → `den Schülernen`, `des/der Kolleg/in` → `ders Kollegeres`; the second of two coordinated nouns takes the first one's case), and generic masculines and pair formulas as above (`Der Lehrer` → `De Lehrere`, `Schüler und Schülerinnen` → `Schülerne`). A form the switch cannot decline reliably stays as written rather than half converted: a compound (`Mitarbeiter*innenbefragung`), a noun whose masculine the lexicon does not know, a case neither the article before it nor spaCy settles.
 - Not covered: switching out of the Inklusivum, see [inklusivum.md](./inklusivum.md#8-switching-out-of-the-inklusivum).
 - A config that forces `german_gender_ending` overrules the requested one; `gender_separator` in the response is the format that applied. A forced `gendered_roles_format` of `binary_gender` or `none` means no such alerts at all.

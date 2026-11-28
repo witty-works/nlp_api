@@ -3,7 +3,7 @@ of the words checked, and set per API key."""
 
 import pytest
 
-from app.guardrail import failed_on, finding_level
+from app.guardrail import failed_on, finding_level, reask_findings
 from app.models import GuardrailThreshold, ResultOut
 from tests.test_api import set_redis  # noqa: F401  (fixture)
 from tests.test_api_keys import client, sync  # noqa: F401  (fixture)
@@ -98,7 +98,8 @@ def test_output_reports_the_levels_it_failed_on(set_redis, llm_calls):  # noqa: 
 
     assert body["verdict"] == "fail"
     assert body["failed_on"] == ["advanced"]
-    # The reask covers every finding, not only the advanced ones.
+    # The reask covers the findings of every level with a limit, not only
+    # the levels that failed.
     assert '"chairman"' in body["reask"]["content"]
 
 
@@ -114,9 +115,7 @@ def test_output_ratio_is_per_word(set_redis, llm_calls):  # noqa: F811
     assert verdict(0.17) == "pass"
 
 
-def test_ratio_counts_every_part_of_a_long_answer(
-    set_redis, llm_calls
-):  # noqa: F811
+def test_ratio_counts_every_part_of_a_long_answer(set_redis, llm_calls):  # noqa: F811
     """Past TEXT_MAX_LENGTH every part is checked, so the findings and the
     words of all of them make the ratio: one in three here."""
     text = "The chairman called. " * 100
@@ -235,3 +234,62 @@ def test_litellm_threshold_goes_through_the_config(client, llm_calls):  # noqa: 
 
     assert litellm(client, threshold={"advanced": {"count": 3}})["action"] == "NONE"
     assert litellm(client)["action"] == "GUARDRAIL_INTERVENED"
+
+
+def test_with_an_overall_limit_the_reask_covers_every_finding():
+    findings = [finding(1.0), finding(2.0), finding(3.0), finding(None)]
+
+    assert reask_findings(findings, GuardrailThreshold.parse(1)) == findings
+
+
+def test_the_reask_covers_only_the_levels_with_a_limit():
+    """A level without a limit is reported, and left to the person."""
+    threshold = GuardrailThreshold.parse(
+        {"openly_discriminating": {"count": 1}, "basic": {"count": 1}}
+    )
+    openly, basic, advanced, ungraded = (
+        finding(1.0),
+        finding(2.0),
+        finding(3.0),
+        finding(None),
+    )
+
+    assert reask_findings([openly, basic, advanced, ungraded], threshold) == [
+        openly,
+        basic,
+    ]
+
+
+def test_the_reask_keeps_a_limited_levels_finding_without_alternatives():
+    """The model is asked to rephrase it, as before."""
+    threshold = GuardrailThreshold.parse({"basic": {"count": 1}})
+    without = finding(2.0, alternatives=False)
+
+    assert reask_findings([finding(2.0), without, finding(3.0)], threshold) == [
+        finding(2.0),
+        without,
+    ]
+
+
+def test_output_leaves_an_unlimited_level_to_the_person(
+    set_redis, llm_calls
+):  # noqa: F811
+    body = post(
+        "/v1.0/guardrail/output",
+        {"response": MIXED, "lang": "en", "threshold": {"basic": {"count": 1}}},
+    ).json()
+
+    assert body["verdict"] == "fail"
+    assert {f["text"] for f in body["findings"]} >= {"old", "lady", "chairman"}
+    assert '"chairman"' in body["reask"]["content"]
+    assert '"old"' not in body["reask"]["content"]
+    assert '"lady"' not in body["reask"]["content"]
+
+
+def test_output_with_the_default_threshold_asks_to_fix_everything(
+    set_redis, llm_calls
+):  # noqa: F811
+    body = post("/v1.0/guardrail/output", {"response": MIXED, "lang": "en"}).json()
+
+    for text in ('"old"', '"lady"', '"chairman"'):
+        assert text in body["reask"]["content"]

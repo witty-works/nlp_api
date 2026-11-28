@@ -7,6 +7,7 @@ import litellm
 
 from app.settings import Settings
 from app.models import MetricsType
+from app.request_team import team_limit
 from app.alternatives import Alternatives
 from app.guidance import BARE_TEXT_INSTRUCTION, BASE_GUIDANCE
 import json_repair
@@ -72,25 +73,49 @@ class Prompt:
         )
 
     def _count_request(self) -> None:
-        """Count this call against LLM_MAX_REQUESTS_PER_MINUTE, refusing it
-        once the minute's budget is spent. A fixed window per wall-clock
+        """Count this call against the request's team limit, if any
+        (team_limit), and LLM_MAX_REQUESTS_PER_MINUTE, refusing it once a
+        minute's budget is spent. A fixed window per wall-clock
         minute: it can let up to twice the limit through around a minute's
         turn, which the provider's own limit absorbs; what matters is that a
         steady stream cannot exceed it."""
-        limit = self.settings.llm_max_requests_per_minute
-        if limit <= 0 or self.redis_db is None:
+        if self.redis_db is None:
             return
-
         now = time.time()
-        key = f"llm_requests:{int(now // 60)}"
+        minute = int(now // 60)
+        retry_after = 60 - int(now % 60)
+
+        # The team's own budget first, so a team over it does not use up the
+        # deployment's: one budget per team, whichever member or key asks.
+        team = team_limit.get()
+        team_key = None
+        if team is not None:
+            team_id, team_budget = team
+            team_key = f"llm_requests:team:{team_id}:{minute}"
+            pipe = self.redis_db.pipeline()
+            pipe.incr(team_key)
+            pipe.expire(team_key, 120)
+            if pipe.execute()[0] > team_budget:
+                raise TeamLimitReached(
+                    f"{team_budget} LLM requests this minute, the team's limit",
+                    retry_after=retry_after,
+                )
+
+        limit = self.settings.llm_max_requests_per_minute
+        if limit <= 0:
+            return
+        key = f"llm_requests:{minute}"
         pipe = self.redis_db.pipeline()
         pipe.incr(key)
         pipe.expire(key, 120)
         count = pipe.execute()[0]
         if count > limit:
+            # Refused before the provider: the team keeps what it counted.
+            if team_key is not None:
+                self.redis_db.decr(team_key)
             raise LlmUnavailable(
                 f"{limit} LLM requests this minute (LLM_MAX_REQUESTS_PER_MINUTE)",
-                retry_after=60 - int(now % 60),
+                retry_after=retry_after,
             )
 
     async def handle(
@@ -257,10 +282,21 @@ class Prompt:
         return json_repair.loads(result)
 
 
+class TeamLimitReached(LlmUnavailable):
+    """The request's team has used its LLM requests for this minute."""
+
+
 def llm_error(error: Exception, route: str) -> tuple[int, dict, str]:
     """Status, headers and message for an LLM call that failed, the same for
     every route that makes one. Logged here, so no failure goes unrecorded."""
     logger = logging.getLogger("nlp_api")
+    if isinstance(error, TeamLimitReached):
+        logger.warning("%s: %s", route, error)
+        return (
+            503,
+            {"Retry-After": str(error.retry_after)},
+            "Your team has used its share of the language model for this minute, try again shortly",
+        )
     if isinstance(error, LlmUnavailable):
         logger.warning("%s: LLM unavailable: %s", route, error)
         return (
