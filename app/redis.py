@@ -102,6 +102,14 @@ class Redis:
         if self.legacy_organization_configs(organization_id) is not None:
             self.db.delete(organization_id)
 
+    def has_organization_configs(self, organization_id: str) -> bool:
+        """Whether an organisation config is stored, where
+        fetch_organization_configs_from_redis would find it."""
+        return bool(
+            self.db.exists(self.get_organization_key(organization_id))
+            or self.legacy_organization_configs(organization_id)
+        )
+
     async def fetch_organization_configs_from_redis(
         self,
         organization_id: str,

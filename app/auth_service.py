@@ -433,8 +433,9 @@ def _synced_teams(redis: Redis, email: str) -> list[str] | None:
 
 def resolve_key(request: Request, redis: Redis, api_key: str) -> str | None:
     """The email an x-key resolves to. A managed key for a team only resolves
-    while the person's synced user config lists that team, and then makes it
-    the request's team (key_team); without a synced list it is refused."""
+    while the person's synced user config lists that team and the team's own
+    config is stored, and then makes it the request's team (key_team); without
+    either it is refused, rather than checking with no settings at all."""
     managed = managed_keys.lookup(redis, api_key)
     if managed is None:
         request.state.key_team = None
@@ -444,6 +445,8 @@ def resolve_key(request: Request, redis: Redis, api_key: str) -> str | None:
     if managed.team_id is not None:
         teams = _synced_teams(redis, managed.email)
         if teams is None or managed.team_id not in teams:
+            return None
+        if not redis.has_organization_configs(managed.team_id):
             return None
 
     request.state.key_team = managed.team_id

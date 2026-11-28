@@ -65,6 +65,34 @@ def test_team_key_refused_when_user_left_team(client):
     assert auth(client, mint("team-b")).status_code == 401
 
 
+def test_team_key_refused_while_its_team_has_no_config(client):
+    """Listed in the person's teams but not synced (yet), or deleted: without
+    the team's settings the request would run with none at all, so the key
+    is refused as for a team the person left."""
+    sync_user(client, teams=["team-a", "team-c"])
+    assert auth(client, mint("team-c")).status_code == 401
+
+    sync_user(client, teams=["team-a", "team-b"])
+    team_b = mint("team-b")
+    assert auth(client, team_b).status_code == 200
+    response = client.delete("/organization/configs", params={"organization_id": "team-b"})
+    assert response.status_code in (200, 204)
+    assert auth(client, team_b).status_code == 401
+
+
+def test_team_key_works_with_a_team_config_under_its_old_key(client):
+    """Not yet moved by bin.migrate_organization_keys: the config still loads
+    from the bare id, so the key works."""
+    db = app.state.context.redis.db
+    sync_user(client, teams=["team-a", "team-legacy"])
+    stored = json.loads(db.get(app.state.context.redis.get_organization_key("team-a")))
+    db.set("team-legacy", json.dumps({**stored, "id": "team-legacy", "name": "Legacy"}))
+    try:
+        assert auth(client, mint("team-legacy")).status_code == 200
+    finally:
+        db.delete("team-legacy")
+
+
 def test_team_key_refused_without_synced_teams(client):
     sync_user(client, teams=None)
     team_key = mint("team-a")
