@@ -1343,9 +1343,15 @@ class ResultOut(BaseModel):
             explanation = language.convert_sharp_ss(explanation)
 
         gravity = map_gravity(subcategory) if gravity is None else gravity
-        if written_as_alternative and not alternatives:
-            # The text is already what the rule suggests (`un·e
-            # propriétaire`): a confirmation, not an issue to fix.
+        if (
+            written_as_alternative
+            and not alternatives
+            and category == "gender-orientation"
+        ):
+            # The text is already the inclusive form the rule suggests (`un·e
+            # propriétaire`): a confirmation, not an issue to fix. Elsewhere,
+            # as an orthography finding that de-CH's ss turns into its own
+            # text, it stays a finding.
             gravity = None
 
         if language.locale == "en-GB":
