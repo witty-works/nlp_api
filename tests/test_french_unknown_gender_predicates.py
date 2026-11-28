@@ -61,3 +61,19 @@ def test_a_word_about_an_unnamed_person_gets_both_forms(text, word, alternative,
 )
 def test_a_word_that_agrees_with_someone_else_or_already_does_is_left(text, word, set_redis):  # noqa: F811
     assert word not in [r["text"].lower() for r in results(text)]
+
+
+@pytest.mark.parametrize(
+    "text, word",
+    [
+        ("Vous êtes connecté ou connectée.", "connecté"),
+        ("Vous êtes connectée ou connecté.", "connecté"),
+        ("Merci de vous être inscrit ou inscrite !", "inscrit"),
+        ("Je suis sûr ou sûre de vouloir continuer.", "sûr"),
+    ],
+)
+def test_a_word_already_written_in_both_genders_is_left(text, word, set_redis):  # noqa: F811
+    """No finding on the word alone: accepting its suggestion would write it a
+    third time (`connecté ou connectée ou connectée`). The configured format
+    may still suggest the pair's inclusive form (`inscrit·e`)."""
+    assert word not in [r["text"].lower() for r in results(text)], results(text)
