@@ -170,7 +170,7 @@ curl 'http://127.0.0.1:8000/v2.0/config-options'
     "german_gender_ending": {
       "values": ["/in", "/-in", "_in", "*in", ":in", "(-)", "()", "In"],
       "default": "*in",
-      "labels": { "*in": "Genderstar, f.e Expert*in" }   // one per value
+      "labels": { "*in": "Genderstar, e.g. Expert*in" }   // one per value
     },
     "french_gender_separator": {
       "values": ["·", "·s", ".", ".s", "/", "/s"],
