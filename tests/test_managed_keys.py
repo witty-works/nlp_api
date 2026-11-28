@@ -177,6 +177,30 @@ def test_at_most_twenty_keys_per_person(redis):
     managed_keys.mint(redis, "tom@acme.example", None, "Tom", "api", None)
 
 
+def test_the_limit_holds_when_another_key_is_minted_meanwhile(redis, monkeypatch):
+    """Two requests for the 20th key at once: the one that counted before the
+    other wrote must not get a 21st."""
+    email = "jane@acme.example"
+    for number in range(19):
+        managed_keys.mint(redis, email, None, f"K{number}", "api", None)
+
+    original = managed_keys._store
+    raced = []
+
+    def another_request_meanwhile(db, details, digest):
+        # As this request writes its key, after it counted, the other mints.
+        if not raced:
+            raced.append(True)
+            managed_keys.mint(redis, email, None, "Meanwhile", "api", None)
+        return original(db, details, digest)
+
+    monkeypatch.setattr(managed_keys, "_store", another_request_meanwhile)
+
+    with pytest.raises(TooManyKeys):
+        managed_keys.mint(redis, email, None, "One too many", "api", None)
+    assert len(managed_keys._ids(redis, managed_keys._email_index(email))) == 20
+
+
 def test_a_key_in_its_grace_period_cannot_be_replaced_again(redis):
     _, details = managed_keys.mint(redis, "jane@acme.example", None, "Editor", "api", None)
     managed_keys.replace(redis, details.id, 604800)
