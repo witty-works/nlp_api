@@ -434,12 +434,25 @@ def french_suffix_form(text: str, suffix: str, separators: str = "·./") -> str:
     `full` gives `utilisateur·trice`. Forms whose two suffixes do not differ
     (`enseignant·e`, `musicien·ne`) stay as written, and so does a form with
     a separator not in `separators`: given the configured one, a domain
-    such as `acteur.se` is no form."""
+    such as `acteur.se` is no form. Nor is one inside an address, which the
+    `.` separator cannot tell apart: a word with `@` or `://`, one starting
+    with `www.`, or one with a dot before the role (`contact.chanteur.se`)."""
     full = suffix == "full"
+
+    def is_address(match: re.Match) -> bool:
+        start = max(text.rfind(c, 0, match.start()) for c in " \t\n") + 1
+        ends = [i for i in (text.find(c, match.end()) for c in " \t\n") if i != -1]
+        word = text[start : min(ends, default=len(text))]
+        return (
+            "@" in word
+            or "://" in word
+            or word.lower().startswith("www.")
+            or "." in text[start : match.start()]
+        )
 
     def replace(match: re.Match) -> str:
         ending, separator, written = match.groups()
-        if separator not in separators:
+        if separator not in separators or is_address(match):
             return match.group(0)
         before = text[: match.start()].lower()
         for endings, short_suffix, full_suffix in FRENCH_SUFFIX_PAIRS:
