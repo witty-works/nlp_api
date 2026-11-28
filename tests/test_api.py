@@ -3325,10 +3325,11 @@ def test_features_vary_on_the_credential():
             assert {"x-key", "authorization"} <= vary
 
 
-def test_features_with_a_key_say_what_it_may_use(monkeypatch):
+def test_features_with_a_key_say_what_it_may_use(monkeypatch, set_redis):
     """`allowed` follows LLM_ALLOWED_USERS, so a client can offer the prompt
-    and AI suggestions only where the server will not refuse them."""
-    context.redis.set_api_key("features-key", "default@gmail.com")
+    and AI suggestions only where the server will not refuse them. The user's
+    team turns LLM alternatives on; one that does not is refused too (below)."""
+    context.redis.set_api_key("features-key", "test@gmail.com")
     monkeypatch.setattr(context.settings, "llm_model", "openai/gemma-4-26b")
 
     def llm():
@@ -3346,12 +3347,45 @@ def test_features_with_a_key_say_what_it_may_use(monkeypatch):
         assert llm() == {"available": True, "allowed": False}
 
         monkeypatch.setattr(
-            context.settings, "llm_allowed_users", ["Default@Gmail.com"]
+            context.settings, "llm_allowed_users", ["Test@Gmail.com"]
         )
         assert llm() == {"available": True, "allowed": True}
 
         monkeypatch.setattr(context.settings, "llm_model", "")
         assert llm() == {"available": False, "allowed": False}
+
+
+def test_features_allowed_follows_the_team_setting(llm_access, set_redis):
+    """`allowed` is what /v1.0/write will do: a team whose synced config forces
+    LLM alternatives off is refused there, so it is not allowed here either,
+    and a client does not offer a prompt that would be refused."""
+    llm_access(LlmAccessType.EVERYONE)
+    context.redis.set_api_key("features-team-key", "test@gmail.com")
+    auth = {"x-key": "features-team-key"}
+    key = context.redis.get_organization_key("test-org")
+    stored = json.loads(context.redis.db.get(key))
+
+    def allowed():
+        with TestClient(app) as client:
+            response = client.get("/v2.0/features", headers=auth)
+            assert response.status_code == 200
+            return response.json()["features"]["llm"]["allowed"]
+
+    try:
+        assert allowed() is True
+
+        off = json.loads(json.dumps(stored))
+        off["config"]["llm_alternatives"] = {"value": False, "status": "force"}
+        context.redis.set_organization_configs("test-org", json.dumps(off))
+        assert allowed() is False
+
+        with TestClient(app) as client:
+            response = client.post(
+                "/v1.0/write", json={"prompt": "Greet the team."}, headers=auth
+            )
+        assert response.status_code == 403
+    finally:
+        context.redis.set_organization_configs("test-org", json.dumps(stored))
 
 
 def test_features_refuse_a_key_that_does_not_work(monkeypatch):

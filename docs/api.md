@@ -222,7 +222,7 @@ curl 'http://127.0.0.1:8000/v2.0/features' -H 'x-key: your-api-key'
 
 The features that differ between deployments, so a client can show or hide them instead of finding out from a refused request. `available` says whether the deployment has the feature at all. `allowed` says whether the key sent may use it; it is only there when a key was sent, and only for features some keys are refused. `values` lists what a feature offers where that is a list.
 
-- `llm`: the language model behind `/v1.0/write`, `/v1.0/rephrase` and AI suggestions (`LLM_MODEL`). `LLM_ACCESS` and `LLM_ALLOWED_USERS` decide `allowed`; the `/textarea` page disables its prompt and AI suggestions where it is false, and links to `TEXTAREA_CONTACT` to ask for access.
+- `llm`: the language model behind `/v1.0/write`, `/v1.0/rephrase` and AI suggestions (`LLM_MODEL`). `allowed` is what `/v1.0/write` will do for the key: `LLM_ACCESS` and `LLM_ALLOWED_USERS` decide it, and so do the key's user and team configs, where a team can force `llm_alternatives` off, for a request that does not set `llm_alternatives` itself; the `/textarea` page disables its prompt and AI suggestions where it is false, and links to `TEXTAREA_CONTACT` to ask for access.
 - `spelling_grammar`: LanguageTool's spelling, grammar and style findings (`LANGUAGETOOL_API`); without it a check returns no orthography results.
 - `languages`: the languages this server checks (`MODELS`).
 
